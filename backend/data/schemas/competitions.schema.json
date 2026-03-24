@@ -1,0 +1,686 @@
+{
+  "COMPETITION_ID": {
+    "type": "int",
+    "default": 1
+  },
+  "IS_DELETED": {
+    "type": "bool",
+    "default": false
+  },
+  "NAME_ID": {
+    "type": "int",
+    "default": 1009
+  },
+  "COUNTRY_ID": {
+    "type": "int",
+    "default": 3
+  },
+  "SPORT_TYPE_ID": {
+    "type": "int",
+    "default": 1
+  },
+  "GENDER": {
+    "type": "int",
+    "default": 1
+  },
+  "COMPETITION_TYPE": {
+    "type": "int",
+    "default": 1
+  },
+  "CURRENT_SEASON": {
+    "type": "int",
+    "default": 1
+  },
+  "CURRENT_STAGE": {
+    "type": "int",
+    "default": 1
+  },
+  "IMG_VER": {
+    "type": "int",
+    "default": 1
+  },
+  "COMPETITION_IMAGE_URL": {
+    "type": "any",
+    "default": null
+  },
+  "MAIN_COLOR": {
+    "type": "int",
+    "default": 4417929
+  },
+  "SECONDARY_COLOR": {
+    "type": "int",
+    "default": 16777215
+  },
+  "AUTO_START_GAMES": {
+    "type": "bool",
+    "default": false
+  },
+  "SCORES_UPDATE_POLICY": {
+    "type": "int",
+    "default": 1
+  },
+  "ALWAYS_UPDATE_ABOVE_PRIORITY": {
+    "type": "int",
+    "default": 5
+  },
+  "CONNECT_BY_TEXT": {
+    "type": "bool",
+    "default": false
+  },
+  "TABLE_WINNER_POINTS": {
+    "type": "int",
+    "default": 4
+  },
+  "TABLE_DRAW_POINTS": {
+    "type": "int",
+    "default": 1
+  },
+  "TABLE_LOSER_POINTS": {
+    "type": "int",
+    "default": 1
+  },
+  "TABLE_IS_EVEN_EXISTS": {
+    "type": "bool",
+    "default": true
+  },
+  "TABLE_COUNT_ET_SCORE": {
+    "type": "bool",
+    "default": true
+  },
+  "TABLE_COUNT_PEN_SCORE": {
+    "type": "bool",
+    "default": true
+  },
+  "SUPPORT_COMPETITION_DASHBOARD": {
+    "type": "bool",
+    "default": false
+  },
+  "ENABLE_DASHBOARD_BUZZ": {
+    "type": "bool",
+    "default": false
+  },
+  "HIDE_ON_CATALOG": {
+    "type": "bool",
+    "default": false
+  },
+  "HIDE_ON_SEARCH": {
+    "type": "bool",
+    "default": true
+  },
+  "DONT_DISPLAY_FATHERS_H2H": {
+    "type": "bool",
+    "default": true
+  },
+  "HIDE_FROM_POPULAR_WHEN_NO_ACTIVE": {
+    "type": "bool",
+    "default": false
+  },
+  "PROMOTE_DURING_ACTIVE_SEASON": {
+    "type": "bool",
+    "default": false
+  },
+  "HIDE_LMT_IN_COMPETITION_GAMES": {
+    "type": "bool",
+    "default": false
+  },
+  "SUPPORT_FANS_RATE": {
+    "type": "bool",
+    "default": true
+  },
+  "RECENTLY_WON_TROPHY_CARD": {
+    "type": "bool",
+    "default": false
+  },
+  "PROMOTE_NEW_TROPHY": {
+    "type": "bool",
+    "default": false
+  },
+  "AUTOMATIC_STATUS_PROGRESS": {
+    "type": "bool",
+    "default": false
+  },
+  "AUTO_TRANSFER_WAIT_APPROVAL": {
+    "type": "bool",
+    "default": true
+  },
+  "TRANSFERS_WINDOW_START_DATE": {
+    "type": "string",
+    "default": "2026-01-05T09:20:00.000Z"
+  },
+  "TRANSFERS_WINDOW_END_DATE": {
+    "type": "string",
+    "default": "2026-01-24T07:20:00.000Z"
+  },
+  "UPDATE_RESULT_SECOND_SCANNER": {
+    "type": "bool",
+    "default": true
+  },
+  "AUTO_PROCESS_ADDED_TIME": {
+    "type": "bool",
+    "default": false
+  },
+  "SUPPORT_TIE_ON_90": {
+    "type": "bool",
+    "default": false
+  },
+  "ALLOW_NOTIFICATIONS": {
+    "type": "bool",
+    "default": false
+  },
+  "HIDE_PLAYER_GAME_CARD": {
+    "type": "bool",
+    "default": false
+  },
+  "LINEUPS_NOTIFICATION_DELAY": {
+    "type": "bool",
+    "default": false
+  },
+  "DISPLAY_TOP_PREFERS": {
+    "type": "bool",
+    "default": false
+  },
+  "HIDE_COMPETITION_STATS": {
+    "type": "bool",
+    "default": false
+  },
+  "PREDICTABLE_LINEUPS_RESTRICTION": {
+    "type": "bool",
+    "default": true
+  },
+  "REQUIRE_FORMATION": {
+    "type": "bool",
+    "default": false
+  },
+  "SHOW_DISCONNECTED_PLAYERS": {
+    "type": "bool",
+    "default": false
+  },
+  "CALCULATE_WIN_PROBABILITY_INSIGHTS": {
+    "type": "bool",
+    "default": false
+  },
+  "CALCULATE_LIVE_WIN_PROBABILITY": {
+    "type": "bool",
+    "default": false
+  },
+  "SUPPORT_INSIGHTS_POPUP_FOR_PROPS": {
+    "type": "bool",
+    "default": true
+  },
+  "SUPPORT_PROPS_BETTING": {
+    "type": "bool",
+    "default": false
+  },
+  "SUPPORT_TRENDS": {
+    "type": "bool",
+    "default": false
+  },
+  "BRACKET_FINAL": {
+    "type": "bool",
+    "default": false
+  },
+  "ROUND_NAME": {
+    "type": "bool",
+    "default": false
+  },
+  "TIER": {
+    "type": "int",
+    "default": 2
+  },
+  "IMAGE": {
+    "type": "string",
+    "default": ""
+  },
+  "SELECT_DESCRIPTION": {
+    "type": "string",
+    "default": ""
+  },
+  "SELECT_ROUND_NAME": {
+    "type": "string",
+    "default": ""
+  },
+  "CURRENT_ROUND": {
+    "type": "int",
+    "default": -1
+  },
+  "BRACKET_FINAL_DESCRIPTION": {
+    "type": "string",
+    "default": ""
+  },
+  "RECOGNITION_TIME_SPAN": {
+    "type": "int",
+    "default": 72
+  },
+  "ARTICLE_TIME_SPAN_BEFORE": {
+    "type": "any",
+    "default": null
+  },
+  "ARTICLE_TIME_SPAN_AFTER": {
+    "type": "any",
+    "default": null
+  },
+  "PREMIUM_SOCIAL_TIME_SPAN_BEFORE": {
+    "type": "any",
+    "default": null
+  },
+  "PREMIUM_SOCIAL_TIME_SPAN_AFTER": {
+    "type": "any",
+    "default": null
+  },
+  "GAME_SUMMARY_RELEVANCY": {
+    "type": "int",
+    "default": 72
+  },
+  "LINEUPS_NOTIFICATION_DELAY_VALUE": {
+    "type": "int",
+    "default": 5
+  },
+  "PREDICTABLE_LINEUPS_RESTRICTION_VALUE": {
+    "type": "string",
+    "default": "11"
+  },
+  "PROMOTE_NEW_TROPHY_VALUE": {
+    "type": "any",
+    "default": null
+  },
+  "RECENTLY_WON_TROPHY_CARD_VALUE": {
+    "type": "any",
+    "default": null
+  },
+  "TOP_ATHLETE_PCT": {
+    "type": "int",
+    "default": 60
+  },
+  "DISPLAY_TOP_PREFORMERS_STATUS": {
+    "type": "string",
+    "default": ""
+  },
+  "BUZZ_ITEM_TYPE": {
+    "type": "string",
+    "default": "PremiumSocial"
+  },
+  "H2H_LAYOUT": {
+    "type": "string",
+    "default": "Default"
+  },
+  "FATHER_COMPETITION": {
+    "type": "string",
+    "default": ""
+  },
+  "STANDING_TYPE": {
+    "type": "string",
+    "default": ""
+  },
+  "SUB_SPORT_TYPE": {
+    "type": "string",
+    "default": ""
+  },
+  "SURFACE_TYPE": {
+    "type": "string",
+    "default": ""
+  },
+  "TROPHY_IMAGE_URL": {
+    "type": "any",
+    "default": null
+  },
+  "COMPETITORS_TYPE": {
+    "type": "int",
+    "default": 1
+  },
+  "DESCRIPTION": {
+    "type": "string",
+    "default": ""
+  },
+  "LOCATION": {
+    "type": "int",
+    "default": -1
+  },
+  "ORDER_LEVEL": {
+    "type": "int",
+    "default": 1
+  },
+  "ORDER_BY": {
+    "type": "string",
+    "default": ""
+  },
+  "AUTO_PROGRESS_ADDED_TIME": {
+    "type": "bool",
+    "default": true
+  },
+  "TABLE_WIN_AFTER_EX_POINTS": {
+    "type": "int",
+    "default": -1
+  },
+  "TABLE_LOS_AFTER_EX_POINTS": {
+    "type": "int",
+    "default": -1
+  },
+  "TABLE_WIN_AFTER_PEN_POINTS": {
+    "type": "int",
+    "default": -1
+  },
+  "TABLE_LOS_AFTER_PEN_POINTS": {
+    "type": "int",
+    "default": -1
+  },
+  "SUPPORT_MISSING_PLAYERS": {
+    "type": "bool",
+    "default": true
+  },
+  "AUTO_PROGRESS_STATUSES": {
+    "type": "bool",
+    "default": false
+  },
+  "TABLE_OFF_BONUS_POINTS": {
+    "type": "any",
+    "default": null
+  },
+  "TABLE_DEFF_BONUS_POINTS": {
+    "type": "any",
+    "default": null
+  },
+  "MAN_OF_THE_MATCH_ENABLED": {
+    "type": "bool",
+    "default": false
+  },
+  "CALCULATE_TREND": {
+    "type": "bool",
+    "default": false
+  },
+  "DISPLAY_TREND": {
+    "type": "bool",
+    "default": false
+  },
+  "CALCULATE_TREND_IN_TABLE": {
+    "type": "bool",
+    "default": false
+  },
+  "DISPLAY_TREND_IN_TABLE": {
+    "type": "bool",
+    "default": false
+  },
+  "MIN_ROUND_PERIOD": {
+    "type": "int",
+    "default": -1
+  },
+  "MAX_ROUND_PERIOD": {
+    "type": "int",
+    "default": -1
+  },
+  "SHOW_RECORD": {
+    "type": "bool",
+    "default": false
+  },
+  "SELECTIONS_RANK": {
+    "type": "bool",
+    "default": false
+  },
+  "MONITORED": {
+    "type": "bool",
+    "default": false
+  },
+  "BLOCK_DASHBOARD_FILTER": {
+    "type": "bool",
+    "default": false
+  },
+  "HAS_LOGO": {
+    "type": "bool",
+    "default": true
+  },
+  "HAS_TEXTURE": {
+    "type": "bool",
+    "default": true
+  },
+  "IGNORE_AWAY_GOALS": {
+    "type": "bool",
+    "default": false
+  },
+  "SHOULD_DISPLAY_TOP_PERFORMERS": {
+    "type": "bool",
+    "default": true
+  },
+  "MINIMUM_ATHLETES_IN_LINEUPS": {
+    "type": "int",
+    "default": 1
+  },
+  "IS_SUPPORT_TRENDS": {
+    "type": "bool",
+    "default": true
+  },
+  "HIDE_ON_STATS": {
+    "type": "bool",
+    "default": false
+  },
+  "TEAM_FOULS": {
+    "type": "int",
+    "default": 5
+  },
+  "ALLOW_WARM_CACHE": {
+    "type": "bool",
+    "default": false
+  },
+  "HOST_CITY": {
+    "type": "string",
+    "default": ""
+  },
+  "MIN_PRIORITY_TO_CHANGE_STATUS": {
+    "type": "int",
+    "default": -1
+  },
+  "TRANSFERS_AMOUNT_LIMIT": {
+    "type": "int",
+    "default": 12
+  },
+  "TRANSFERS_DAYS_RANGE": {
+    "type": "any",
+    "default": null
+  },
+  "SHOW_SPREAD": {
+    "type": "bool",
+    "default": false
+  },
+  "MIN_ROUND_TO_SHOW_PRE_GAME_TOP_PERFORMERS": {
+    "type": "any",
+    "default": null
+  },
+  "TIME_TO_SHOW_PRE_GAME_TOP_PERFORMERS": {
+    "type": "string",
+    "default": ""
+  },
+  "NOTIFY_LINEUPS": {
+    "type": "bool",
+    "default": true
+  },
+  "NOTIFY_PROBABLE_LINEUPS": {
+    "type": "bool",
+    "default": false
+  },
+  "TIMEOUT_FOR_ATHLETES_CONNECTION": {
+    "type": "string",
+    "default": ""
+  },
+  "TIME_TO_NOTIFY_ANY_LINEUP": {
+    "type": "string",
+    "default": "00:05:00.0000000"
+  },
+  "HIDE_FROM_POPULAR_WHEN_NO_ACTIVE_SEASON": {
+    "type": "bool",
+    "default": false
+  },
+  "ATHLETES_ORIGIN_COMPETITION": {
+    "type": "any",
+    "default": null
+  },
+  "KNOCKOUT_TITLE_TERM": {
+    "type": "any",
+    "default": null
+  },
+  "PLAYER_STAT_MAX_POSITION": {
+    "type": "any",
+    "default": null
+  },
+  "HOME_AWAY_TEAM_ORDER": {
+    "type": "string",
+    "default": ""
+  },
+  "SHOW_PROMOTED_TRENDS": {
+    "type": "bool",
+    "default": false
+  },
+  "CALCULATE_WIN_PROBABILITY": {
+    "type": "bool",
+    "default": false
+  },
+  "PERSONAL_FOULS": {
+    "type": "int",
+    "default": 6
+  },
+  "ALLOW_ZERO_JERSEY_NUMBER": {
+    "type": "bool",
+    "default": false
+  },
+  "PLAYER_STATISTICS_UPDATE_DELAY": {
+    "type": "int",
+    "default": 5
+  },
+  "HALF_EXPANDED_MIN_VALUE": {
+    "type": "int",
+    "default": 7
+  },
+  "HALF_EXPANDED_MAX_VALUE": {
+    "type": "int",
+    "default": 4
+  },
+  "HALF_EXPANDED": {
+    "type": "bool",
+    "default": true
+  },
+  "WIN_DESCRIPTION_TEMPLATE_TERM_ID": {
+    "type": "any",
+    "default": null
+  },
+  "STANDING_TABLE_FORMAT": {
+    "type": "string",
+    "default": ""
+  },
+  "SUPPORT_CARDS": {
+    "type": "bool",
+    "default": true
+  },
+  "MAXIMUM_PLAYERS_IN_LINEUPS": {
+    "type": "int",
+    "default": 1
+  },
+  "TARGET_COMPETITION_ID": {
+    "type": "any",
+    "default": null
+  },
+  "SHOW_TROPHY_AS_FIRST_DAYS": {
+    "type": "any",
+    "default": null
+  },
+  "TIME_TO_PROMOTE_PERSONAL_TROPHY": {
+    "type": "any",
+    "default": null
+  },
+  "SHOW_RANKING_STANDINGS": {
+    "type": "bool",
+    "default": false
+  },
+  "DONT_DISPLAY_H2H_FATHER_COMPETITION": {
+    "type": "bool",
+    "default": true
+  },
+  "SUPPORT_PAST_FINALS_OR_STANDINGS": {
+    "type": "bool",
+    "default": true
+  },
+  "NOTIFY_STANDINGS": {
+    "type": "bool",
+    "default": false
+  },
+  "IS_GAME_SUMMARY_ENABLE": {
+    "type": "bool",
+    "default": false
+  },
+  "LINEUP_UPDATE_THRESHOLD": {
+    "type": "int",
+    "default": 72
+  },
+  "ALLOW_NOTIFICATION_FOR_FATHER_COMPETITION": {
+    "type": "bool",
+    "default": false
+  },
+  "IS_ALTERNATIVE": {
+    "type": "bool",
+    "default": false
+  },
+  "SHOW_TOP_PERFORMERS_PRE_MATCH": {
+    "type": "bool",
+    "default": true
+  },
+  "SHOW_TOP_PERFORMERS_LIVE": {
+    "type": "bool",
+    "default": true
+  },
+  "SHOW_TOP_PERFORMERS_POST_MATCH": {
+    "type": "bool",
+    "default": true
+  },
+  "HIDE_LMT": {
+    "type": "bool",
+    "default": false
+  },
+  "TOP_ATHLETES_MIN_APPEARANCES_PERCENTAGE": {
+    "type": "any",
+    "default": null
+  },
+  "WIN_DESCRIPTION_TERM_ID": {
+    "type": "any",
+    "default": null
+  },
+  "IS_GAME_SUMMARY_POP_UP_ENABLED": {
+    "type": "bool",
+    "default": false
+  },
+  "GAME_SUMMARY_POP_UP_RELEVANCY_HOURS": {
+    "type": "int",
+    "default": 72
+  },
+  "OUTRIGHTS_PROMOTION_STATUS": {
+    "type": "any",
+    "default": null
+  },
+  "LAST_OUTRIGHTS_PROMOTION_FORCE_EXPIRATION_TIME": {
+    "type": "any",
+    "default": null
+  },
+  "NOTIFY_TEAM_OF_THE_WEEK_PRIORITY": {
+    "type": "any",
+    "default": null
+  },
+  "IS_FRIENDLY": {
+    "type": "bool",
+    "default": false
+  },
+  "TOTW_UPDATE_CREATION_DELAY_HOURS": {
+    "type": "int",
+    "default": 20
+  },
+  "LINEUP_INSIGHTS_ENABLED": {
+    "type": "bool",
+    "default": true
+  },
+  "SUPPORT_SPECIAL_OUTRIGHTS": {
+    "type": "bool",
+    "default": false
+  },
+  "SPECIAL_OUTRIGHTS_START_DATE": {
+    "type": "any",
+    "default": null
+  },
+  "SPECIAL_OUTRIGHTS_END_DATE": {
+    "type": "any",
+    "default": null
+  }
+}

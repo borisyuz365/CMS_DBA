@@ -1,0 +1,92 @@
+[
+  {
+    "CURRENCY_ID": 1,
+    "NAME_ID": 1012,
+    "CURRENCY_CODE": "USD",
+    "SYMBOL": "$",
+    "name": "US Dollar",
+    "IS_DISPLAYED": true,
+    "IMG_VER": 1
+  },
+  {
+    "CURRENCY_ID": 2,
+    "NAME_ID": 1012,
+    "CURRENCY_CODE": "EUR",
+    "SYMBOL": "€",
+    "name": "Euro",
+    "IS_DISPLAYED": true,
+    "IMG_VER": 1
+  },
+  {
+    "CURRENCY_ID": 3,
+    "NAME_ID": 1012,
+    "CURRENCY_CODE": "GBP",
+    "SYMBOL": "£",
+    "name": "British Pound",
+    "IS_DISPLAYED": true,
+    "IMG_VER": 1
+  },
+  {
+    "CURRENCY_ID": 4,
+    "NAME_ID": 1012,
+    "CURRENCY_CODE": "JPY",
+    "SYMBOL": "¥",
+    "name": "Japanese Yen",
+    "IS_DISPLAYED": true,
+    "IMG_VER": 1
+  },
+  {
+    "CURRENCY_ID": 5,
+    "NAME_ID": 1012,
+    "CURRENCY_CODE": "CNY",
+    "SYMBOL": "¥",
+    "name": "Chinese Yuan",
+    "IS_DISPLAYED": true,
+    "IMG_VER": 1
+  },
+  {
+    "CURRENCY_ID": 6,
+    "NAME_ID": 1012,
+    "CURRENCY_CODE": "INR",
+    "SYMBOL": "₹",
+    "name": "Indian Rupee",
+    "IS_DISPLAYED": true,
+    "IMG_VER": 1
+  },
+  {
+    "CURRENCY_ID": 7,
+    "NAME_ID": 1012,
+    "CURRENCY_CODE": "AUD",
+    "SYMBOL": "A$",
+    "name": "Australian Dollar",
+    "IS_DISPLAYED": true,
+    "IMG_VER": 1
+  },
+  {
+    "CURRENCY_ID": 8,
+    "NAME_ID": 1012,
+    "CURRENCY_CODE": "CAD",
+    "SYMBOL": "C$",
+    "name": "Canadian Dollar",
+    "IS_DISPLAYED": true,
+    "IMG_VER": 1
+  },
+  {
+    "CURRENCY_ID": 9,
+    "NAME_ID": 1012,
+    "CURRENCY_CODE": "CHF",
+    "SYMBOL": "CHF",
+    "name": "Swiss Franc",
+    "IS_DISPLAYED": true,
+    "IMG_VER": 1
+  },
+  {
+    "CURRENCY_ID": 10,
+    "NAME_ID": 1012,
+    "CURRENCY_CODE": "ILS",
+    "SYMBOL": "₪",
+    "name": "Israeli Shekel",
+    "IS_DISPLAYED": true,
+    "IMG_VER": 1
+  }
+]

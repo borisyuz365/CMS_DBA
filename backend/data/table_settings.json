@@ -1,0 +1,28 @@
+[
+  {
+    "TABLE_SETTING_ID": 1,
+    "POSITION": 1,
+    "LAST_ROUND_POSITION": 1,
+    "GAMES_PLAYED": 0,
+    "GAMES_WON": 0,
+    "GAMES_LOST": 0,
+    "GAMES_EVEN": 0,
+    "FOR": 0,
+    "HOME_FOR": 0,
+    "AWAY_FOR": 0,
+    "AGAINST": 0,
+    "SUCCESS_RATE": 0,
+    "RATIO": 0,
+    "POINTS": 0,
+    "STRIKE": null,
+    "DISCIPLINARY": null,
+    "GAMES_WON_ON_OT": 0,
+    "GAMES_WON_ON_PEN": 0,
+    "GAMES_LOSS_ON_OT": 0,
+    "GAMES_LOSS_ON_PEN": 0,
+    "OFFENSIVE_BONUS_POINTS": 0,
+    "DEFENSIVE_BONUS_POINTS": 0,
+    "ORDER_DIRECTION": "Desc",
+    "INNER_TABLE": null
+  }
+]

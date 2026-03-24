@@ -1,0 +1,18 @@
+{
+  "TIME_ZONE_NAME": {
+    "type": "string",
+    "default": null
+  },
+  "CONNECTED_TIME_ZONE": {
+    "type": "int",
+    "default": null
+  },
+  "CREATE_TIME": {
+    "type": "string",
+    "default": null
+  },
+  "CONNECTED_COUNTRY_ID": {
+    "type": "int",
+    "default": null
+  }
+}

@@ -1,0 +1,154 @@
+{
+  "COMPETITOR_ID": {
+    "type": "int",
+    "default": 1
+  },
+  "NAME_ID": {
+    "type": "int",
+    "default": 2001
+  },
+  "SPORT_TYPE_ID": {
+    "type": "int",
+    "default": 1
+  },
+  "COMPETITOR_TYPE": {
+    "type": "int",
+    "default": 1
+  },
+  "COUNTRY_ID": {
+    "type": "int",
+    "default": 3
+  },
+  "HOME_MAIN_COLOR": {
+    "type": "int",
+    "default": 16711680
+  },
+  "HOME_SECONDARY_COLOR": {
+    "type": "int",
+    "default": 16777215
+  },
+  "AWAY_MAIN_COLOR": {
+    "type": "int",
+    "default": 16777215
+  },
+  "AWAY_SECONDARY_COLOR": {
+    "type": "int",
+    "default": 16711680
+  },
+  "CONNECT_BY_TEXT": {
+    "type": "bool",
+    "default": false
+  },
+  "SELECTIONS_RANK": {
+    "type": "int",
+    "default": 1
+  },
+  "SYMBOLIC_NAME": {
+    "type": "any",
+    "default": null
+  },
+  "GENDER": {
+    "type": "int",
+    "default": 1
+  },
+  "ENABLE_DASHBOARD_BUZZ": {
+    "type": "bool",
+    "default": false
+  },
+  "MAIN_COMPETITION": {
+    "type": "int",
+    "default": 52
+  },
+  "HIDE_ON_SEARCH": {
+    "type": "bool",
+    "default": false
+  },
+  "HIDE_ON_CATALOG": {
+    "type": "bool",
+    "default": false
+  },
+  "IMG_VER": {
+    "type": "int",
+    "default": 1
+  },
+  "MINIMUM_ATHLETES_IN_SQUAD": {
+    "type": "string",
+    "default": null
+  },
+  "FATHER_COMPETITOR": {
+    "type": "any",
+    "default": null
+  },
+  "CITY_ID": {
+    "type": "int",
+    "default": null
+  },
+  "TITLE_NAME": {
+    "type": "any",
+    "default": null
+  },
+  "SHOT_CHART_COLOR": {
+    "type": "int",
+    "default": 0
+  },
+  "FOUNDED": {
+    "type": "int",
+    "default": 1878
+  },
+  "VENUE_ID": {
+    "type": "int",
+    "default": null
+  },
+  "HIDE_PLAYER_GAME_CARD": {
+    "type": "bool",
+    "default": false
+  },
+  "SUPPORT_DASHBOARD": {
+    "type": "bool",
+    "default": true
+  },
+  "FEDERATION_TERM_ID": {
+    "type": "int",
+    "default": null
+  },
+  "STATISTICS_RESET_TYPE": {
+    "type": "int",
+    "default": null
+  },
+  "STATISTICS_RESET_DATE": {
+    "type": "string",
+    "default": null
+  },
+  "CAPTAIN": {
+    "type": "any",
+    "default": null
+  },
+  "SHOW_ATHLETES_SALARY": {
+    "type": "bool",
+    "default": false
+  },
+  "SHOULD_SHOW_TROPHIES": {
+    "type": "bool",
+    "default": true
+  },
+  "THIRD_COLOR": {
+    "type": "int",
+    "default": 0
+  },
+  "LINEUP_INSIGHTS_ENABLED": {
+    "type": "bool",
+    "default": true
+  },
+  "LIGHT_IMAGE_URL": {
+    "type": "any",
+    "default": null
+  },
+  "DARK_IMAGE_URL": {
+    "type": "any",
+    "default": null
+  },
+  "IS_DELETED": {
+    "type": "bool",
+    "default": false
+  }
+}

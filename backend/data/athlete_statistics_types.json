@@ -1,0 +1,42 @@
+[
+  {
+    "STATISTICS_TYPE_ID": 1,
+    "STATISTICS_TYPE": "Goals",
+    "NAME_ID": null
+  },
+  {
+    "STATISTICS_TYPE_ID": 2,
+    "STATISTICS_TYPE": "Assists",
+    "NAME_ID": null
+  },
+  {
+    "STATISTICS_TYPE_ID": 3,
+    "STATISTICS_TYPE": "YellowCards",
+    "NAME_ID": null
+  },
+  {
+    "STATISTICS_TYPE_ID": 4,
+    "STATISTICS_TYPE": "RedCards",
+    "NAME_ID": null
+  },
+  {
+    "STATISTICS_TYPE_ID": 5,
+    "STATISTICS_TYPE": "Appearances",
+    "NAME_ID": null
+  },
+  {
+    "STATISTICS_TYPE_ID": 6,
+    "STATISTICS_TYPE": "Lineups",
+    "NAME_ID": null
+  },
+  {
+    "STATISTICS_TYPE_ID": 7,
+    "STATISTICS_TYPE": "Substitutions",
+    "NAME_ID": null
+  },
+  {
+    "STATISTICS_TYPE_ID": 8,
+    "STATISTICS_TYPE": "TimePlayed",
+    "NAME_ID": null
+  }
+]

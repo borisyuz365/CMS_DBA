@@ -1,0 +1,10 @@
+[
+  {"ID": 1, "VALUE": -1, "NAME": "Ignore"},
+  {"ID": 2, "VALUE": 0, "NAME": "Nutral"},
+  {"ID": 3, "VALUE": 1, "NAME": "One"},
+  {"ID": 4, "VALUE": 2, "NAME": "Two"},
+  {"ID": 5, "VALUE": 3, "NAME": "Three"},
+  {"ID": 6, "VALUE": 4, "NAME": "Four"},
+  {"ID": 7, "VALUE": 5, "NAME": "Five"},
+  {"ID": 8, "VALUE": 6, "NAME": "Always Update"}
+]

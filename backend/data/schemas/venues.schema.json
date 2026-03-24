@@ -1,0 +1,62 @@
+{
+  "VENUE_ID": {
+    "type": "int",
+    "default": 1
+  },
+  "NAME_ID": {
+    "type": "int",
+    "default": 207
+  },
+  "ADDRESS": {
+    "type": "any",
+    "default": null
+  },
+  "CAPACITY": {
+    "type": "any",
+    "default": null
+  },
+  "CITY_ID": {
+    "type": "int",
+    "default": null
+  },
+  "COUNTRY_ID": {
+    "type": "int",
+    "default": null
+  },
+  "GMAPS_PLACE_ID": {
+    "type": "int",
+    "default": null
+  },
+  "LOCATION_LAT": {
+    "type": "any",
+    "default": null
+  },
+  "LOCATION_LNG": {
+    "type": "any",
+    "default": null
+  },
+  "OPENED": {
+    "type": "any",
+    "default": null
+  },
+  "PRIMARY": {
+    "type": "any",
+    "default": null
+  },
+  "SURFACE": {
+    "type": "any",
+    "default": null
+  },
+  "WEBSITE": {
+    "type": "any",
+    "default": null
+  },
+  "IMAGE_URL": {
+    "type": "any",
+    "default": null
+  },
+  "IS_DELETED": {
+    "type": "bool",
+    "default": false
+  }
+}

@@ -1,0 +1,218 @@
+[
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_NUM": 14,
+    "GROUP_NUM": 1,
+    "PARTICIPANT_NUM": 1,
+    "SEASON_NUM": 3,
+    "STAGE_NUM": 2
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_NUM": 15,
+    "GROUP_NUM": 1,
+    "PARTICIPANT_NUM": 2,
+    "SEASON_NUM": 3,
+    "STAGE_NUM": 2
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_NUM": 162,
+    "GROUP_NUM": 1,
+    "PARTICIPANT_NUM": 3,
+    "SEASON_NUM": 3,
+    "STAGE_NUM": 2
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_NUM": 32,
+    "GROUP_NUM": 1,
+    "PARTICIPANT_NUM": 4,
+    "SEASON_NUM": 3,
+    "STAGE_NUM": 2
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_NUM": 38,
+    "GROUP_NUM": 3,
+    "PARTICIPANT_NUM": 1,
+    "SEASON_NUM": 3,
+    "STAGE_NUM": 2
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_NUM": 37,
+    "GROUP_NUM": 3,
+    "PARTICIPANT_NUM": 2,
+    "SEASON_NUM": 3,
+    "STAGE_NUM": 2
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_NUM": 36,
+    "GROUP_NUM": 3,
+    "PARTICIPANT_NUM": 3,
+    "SEASON_NUM": 3,
+    "STAGE_NUM": 2
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_NUM": 31,
+    "GROUP_NUM": 3,
+    "PARTICIPANT_NUM": 4,
+    "SEASON_NUM": 3,
+    "STAGE_NUM": 2
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_NUM": 39,
+    "GROUP_NUM": 4,
+    "PARTICIPANT_NUM": 1,
+    "SEASON_NUM": 3,
+    "STAGE_NUM": 2
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_NUM": 8,
+    "GROUP_NUM": 4,
+    "PARTICIPANT_NUM": 2,
+    "SEASON_NUM": 3,
+    "STAGE_NUM": 2
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_NUM": 6,
+    "GROUP_NUM": 4,
+    "PARTICIPANT_NUM": 3,
+    "SEASON_NUM": 3,
+    "STAGE_NUM": 2
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_NUM": 1,
+    "GROUP_NUM": 4,
+    "PARTICIPANT_NUM": 4,
+    "SEASON_NUM": 3,
+    "STAGE_NUM": 2
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_NUM": 7,
+    "GROUP_NUM": 5,
+    "PARTICIPANT_NUM": 1,
+    "SEASON_NUM": 3,
+    "STAGE_NUM": 2
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_NUM": 40,
+    "GROUP_NUM": 5,
+    "PARTICIPANT_NUM": 2,
+    "SEASON_NUM": 3,
+    "STAGE_NUM": 2
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_NUM": 41,
+    "GROUP_NUM": 5,
+    "PARTICIPANT_NUM": 3,
+    "SEASON_NUM": 3,
+    "STAGE_NUM": 2
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_NUM": 43,
+    "GROUP_NUM": 5,
+    "PARTICIPANT_NUM": 4,
+    "SEASON_NUM": 3,
+    "STAGE_NUM": 2
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_NUM": 32,
+    "GROUP_NUM": 2,
+    "PARTICIPANT_NUM": 1,
+    "SEASON_NUM": 4,
+    "STAGE_NUM": 2
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_NUM": 162,
+    "GROUP_NUM": 2,
+    "PARTICIPANT_NUM": 2,
+    "SEASON_NUM": 4,
+    "STAGE_NUM": 2
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_NUM": 14,
+    "GROUP_NUM": 1,
+    "PARTICIPANT_NUM": 1,
+    "SEASON_NUM": 4,
+    "STAGE_NUM": 2
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_NUM": 15,
+    "GROUP_NUM": 1,
+    "PARTICIPANT_NUM": 2,
+    "SEASON_NUM": 4,
+    "STAGE_NUM": 2
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_NUM": 14,
+    "GROUP_NUM": 1,
+    "PARTICIPANT_NUM": 1,
+    "SEASON_NUM": 4,
+    "STAGE_NUM": 1
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_NUM": 162,
+    "GROUP_NUM": 1,
+    "PARTICIPANT_NUM": 2,
+    "SEASON_NUM": 4,
+    "STAGE_NUM": 1
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_NUM": 15,
+    "GROUP_NUM": 2,
+    "PARTICIPANT_NUM": 1,
+    "SEASON_NUM": 4,
+    "STAGE_NUM": 1
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_NUM": 32,
+    "GROUP_NUM": 2,
+    "PARTICIPANT_NUM": 2,
+    "SEASON_NUM": 4,
+    "STAGE_NUM": 1
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_NUM": 1,
+    "GROUP_NUM": 3,
+    "PARTICIPANT_NUM": 1,
+    "SEASON_NUM": 4,
+    "STAGE_NUM": 1
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_NUM": 2,
+    "GROUP_NUM": 3,
+    "PARTICIPANT_NUM": 2,
+    "SEASON_NUM": 4,
+    "STAGE_NUM": 1
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_NUM": 3,
+    "GROUP_NUM": 4,
+    "PARTICIPANT_NUM": 5,
+    "SEASON_NUM": 3,
+    "STAGE_NUM": 2
+  }
+]

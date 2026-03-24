@@ -1,0 +1,15 @@
+[
+  {"id": 1, "name": "Article"},
+  {"id": 2, "name": "GameCoverage"},
+  {"id": 3, "name": "GameBroadcast"},
+  {"id": 4, "name": "SpecialVideo"},
+  {"id": 5, "name": "Social"},
+  {"id": 6, "name": "Gossip"},
+  {"id": 7, "name": "Commentary"},
+  {"id": 8, "name": "Gallery"},
+  {"id": 9, "name": "Video"},
+  {"id": 10, "name": "EditorialPicks"},
+  {"id": 11, "name": "PremiumSocial"},
+  {"id": 12, "name": "DashboardBuzz"},
+  {"id": 13, "name": "Magazine"}
+]

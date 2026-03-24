@@ -1,0 +1,102 @@
+{
+  "ACTIVE": {
+    "type": "bool",
+    "default": true
+  },
+  "ATHLETE_ID": {
+    "type": "int",
+    "default": null
+  },
+  "BLOCK_AUTOMATIC_UPDATES": {
+    "type": "bool",
+    "default": false
+  },
+  "COMPETITOR_ID": {
+    "type": "int",
+    "default": null
+  },
+  "CREATE_TIME": {
+    "type": "string",
+    "default": null
+  },
+  "DRAFTED_BY": {
+    "type": "string",
+    "default": null
+  },
+  "DRAFT_PICK": {
+    "type": "int",
+    "default": null
+  },
+  "DRAFT_ROUND": {
+    "type": "int",
+    "default": null
+  },
+  "END_DATE": {
+    "type": "string",
+    "default": null
+  },
+  "FORMATION_POSITION": {
+    "type": "string",
+    "default": null
+  },
+  "HANDLED_BY": {
+    "type": "string",
+    "default": null
+  },
+  "HANDLED_DATE": {
+    "type": "string",
+    "default": null
+  },
+  "JERSEY_NUM": {
+    "type": "int",
+    "default": null
+  },
+  "ON_LOAN_UNTIL": {
+    "type": "string",
+    "default": null
+  },
+  "PERIOD": {
+    "type": "string",
+    "default": null
+  },
+  "POSITION": {
+    "type": "string",
+    "default": null
+  },
+  "PRICE": {
+    "type": "any",
+    "default": null
+  },
+  "PRICE_CURRENCY": {
+    "type": "string",
+    "default": "USD"
+  },
+  "PRICE_VALUE": {
+    "type": "any",
+    "default": null
+  },
+  "SALARY_CURRENCY": {
+    "type": "string",
+    "default": "USD"
+  },
+  "SALARY_VALUE": {
+    "type": "any",
+    "default": null
+  },
+  "START_DATE": {
+    "type": "string",
+    "default": null
+  },
+  "TRANSFER_ID": {
+    "type": "int",
+    "default": null
+  },
+  "TRANSFER_TYPE": {
+    "type": "string",
+    "default": null
+  },
+  "UPDATE_TIME": {
+    "type": "string",
+    "default": null
+  }
+}

@@ -1,0 +1,114 @@
+{
+  "DATA_SOURCE_ID": {
+    "type": "int",
+    "default": null
+  },
+  "NAME_ID": {
+    "type": "int",
+    "default": null
+  },
+  "SITE_ADDRESS": {
+    "type": "string",
+    "default": null
+  },
+  "LANG_ID": {
+    "type": "int",
+    "default": null
+  },
+  "UI_LANG_ID": {
+    "type": "int",
+    "default": null
+  },
+  "IS_ACTIVE": {
+    "type": "any",
+    "default": null
+  },
+  "LAST_SCAN_TIME": {
+    "type": "string",
+    "default": null
+  },
+  "TIME_ZONE_ID": {
+    "type": "string",
+    "default": "UTC"
+  },
+  "ALIAS_NAME": {
+    "type": "string",
+    "default": null
+  },
+  "ALWAYS_ADD_VALUE_IN_LANG": {
+    "type": "bool",
+    "default": null
+  },
+  "ADD_TO_LOG": {
+    "type": "bool",
+    "default": null
+  },
+  "HANDLE_PLAYER_WITH_INITIALS_NAMES": {
+    "type": "any",
+    "default": null
+  },
+  "WIDGET_URL_TEMPLATE": {
+    "type": "any",
+    "default": null
+  },
+  "WIDGET_ORDER": {
+    "type": "any",
+    "default": null
+  },
+  "WIDGET_RATIO": {
+    "type": "any",
+    "default": null
+  },
+  "WIDGET_ACTIVE": {
+    "type": "bool",
+    "default": null
+  },
+  "WIDGET_MIN_IOS_VERSION": {
+    "type": "any",
+    "default": null
+  },
+  "WIDGET_MIN_ANDROID_VERSION": {
+    "type": "any",
+    "default": null
+  },
+  "PBP_URL_TEMPLATE": {
+    "type": "any",
+    "default": null
+  },
+  "PBP_SUPPORTED_LANGS": {
+    "type": "any",
+    "default": null
+  },
+  "QA_PBP_URL_TEMPLATE": {
+    "type": "any",
+    "default": null
+  },
+  "PREMIUM": {
+    "type": "any",
+    "default": null
+  },
+  "WIDGET_TYPE": {
+    "type": "any",
+    "default": null
+  },
+  "PRIORITY_FALLBACK_TIME_MINS": {
+    "type": "any",
+    "default": null
+  },
+  "LIVE_PRIORITY_FALLBACK_TIME_SECS": {
+    "type": "any",
+    "default": null
+  },
+  "FEED_URL_TEMPLATE": {
+    "type": "any",
+    "default": null
+  },
+  "PBP_PRIORITY": {
+    "type": "any",
+    "default": null
+  },
+  "LOG_OPTION_ID": {
+    "type": "int",
+    "default": null
+  }
+}

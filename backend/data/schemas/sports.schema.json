@@ -1,0 +1,606 @@
+{
+  "SPORT_TYPE_ID": {
+    "type": "int",
+    "default": 1
+  },
+  "NAME_ID": {
+    "type": "int",
+    "default": 82
+  },
+  "CURRENT_SCORE_STAGE": {
+    "type": "int",
+    "default": 1
+  },
+  "ALIAS_NAME": {
+    "type": "string",
+    "default": "Soccer"
+  },
+  "STAGES_ENUM_ALIAS": {
+    "type": "string",
+    "default": "ESoccerStages"
+  },
+  "STATUSES_ENUM_ALIAS": {
+    "type": "string",
+    "default": "ESoccerStatuses"
+  },
+  "EVENT_TYPES_ENUM_ALIAS": {
+    "type": "string",
+    "default": "ESoccerEventTypes"
+  },
+  "RECOGNITION_TIME_SPAN": {
+    "type": "int",
+    "default": 60
+  },
+  "TABLE_DEF_WINNER_POINTS": {
+    "type": "int",
+    "default": 3
+  },
+  "TABLE_DEF_DRAW_POINTS": {
+    "type": "int",
+    "default": 1
+  },
+  "TABLE_DEF_LOSER_POINTS": {
+    "type": "int",
+    "default": 0
+  },
+  "TABLE_DEF_IS_EVEN_EXISTS": {
+    "type": "bool",
+    "default": true
+  },
+  "CANCELLED_SCORE_BAN_TIME": {
+    "type": "string",
+    "default": "00:01:00.0000000"
+  },
+  "IS_DISPLAYED": {
+    "type": "bool",
+    "default": true
+  },
+  "TIME_WITH_NO_SCORE_FIX": {
+    "type": "string",
+    "default": "00:00:30.0000000"
+  },
+  "STATUS_CHANGE_TERM": {
+    "type": "int",
+    "default": 309366
+  },
+  "STATISTIC_TYPES_ALIAS": {
+    "type": "string",
+    "default": "ESoccerGameStatisticTypes"
+  },
+  "STATISTIC_CATEGORIES_ALIAS": {
+    "type": "string",
+    "default": "ESoccerGameStatisticCategories"
+  },
+  "MATCH_REMINDER_TIME": {
+    "type": "int",
+    "default": 45
+  },
+  "CLOCK_DIRECTION": {
+    "type": "int",
+    "default": 1
+  },
+  "LMT_SHOW_BEFORE": {
+    "type": "any",
+    "default": null
+  },
+  "LMT_SHOW_AFTER_FINISHED": {
+    "type": "bool",
+    "default": true
+  },
+  "ORDER_BY": {
+    "type": "string",
+    "default": "Points:desc,Ratio:desc,For:desc,GamesWon:desc"
+  },
+  "TABLE_WIN_AFTER_EX_POINTS": {
+    "type": "int",
+    "default": 3
+  },
+  "TABLE_LOS_AFTER_EX_POINTS": {
+    "type": "int",
+    "default": 0
+  },
+  "TABLE_WIN_AFTER_PEN_POINTS": {
+    "type": "int",
+    "default": 3
+  },
+  "TABLE_LOS_AFTER_PEN_POINTS": {
+    "type": "int",
+    "default": 0
+  },
+  "MIN_COMPETITORS_NUM": {
+    "type": "int",
+    "default": 2
+  },
+  "TABLE_OFF_BONUS_POINTS": {
+    "type": "any",
+    "default": null
+  },
+  "TABLE_DEFF_BONUS_POINTS": {
+    "type": "any",
+    "default": null
+  },
+  "TABLE_COUNT_ET_SCORE": {
+    "type": "bool",
+    "default": true
+  },
+  "TABLE_COUNT_PEN_SCORE": {
+    "type": "bool",
+    "default": true
+  },
+  "SUPPORT_STAGE_TIMES": {
+    "type": "bool",
+    "default": false
+  },
+  "MATCH_WINNER_LINE_TYPE_ID": {
+    "type": "int",
+    "default": 1
+  },
+  "GAME_TIME_TOLERANCE": {
+    "type": "int",
+    "default": 2
+  },
+  "TIME_WITH_NO_SCORE_FIX_BLOCK_LAST": {
+    "type": "string",
+    "default": "00:00:30.0000000"
+  },
+  "MAX_POPULAR_COMPETITIONS": {
+    "type": "int",
+    "default": 6
+  },
+  "HAS_INTERNATIONAL_NATIONS_COMPETITIONS": {
+    "type": "bool",
+    "default": true
+  },
+  "HAS_INTERNATIONAL_CLUBS_COMPETITIONS": {
+    "type": "bool",
+    "default": true
+  },
+  "PLAYER_STATISTIC_TYPES_ENUM_ALIAS": {
+    "type": "string",
+    "default": "ESoccerPlayerStatistics"
+  },
+  "NUMBER_OF_STARTING_PLAYERS": {
+    "type": "int",
+    "default": 11
+  },
+  "USE_STATUSES_AS_CATEGORIES": {
+    "type": "any",
+    "default": null
+  },
+  "ATHLETE_FORMATION_POSITION_TYPES_ENUM_ALIAS": {
+    "type": "string",
+    "default": "ESoccerPlayerFormationPositions"
+  },
+  "IMG_VER": {
+    "type": "int",
+    "default": 1
+  },
+  "SPORT_IMAGE_URL": {
+    "type": "any",
+    "default": null
+  },
+  "MINIMUM_ATHLETES_IN_SQUAD": {
+    "type": "int",
+    "default": 15
+  },
+  "MINIMUM_ATHLETES_IN_LINEUPS": {
+    "type": "int",
+    "default": 11
+  },
+  "DEFAULT_COMPETITOR_TYPE": {
+    "type": "int",
+    "default": 1
+  },
+  "VAR_EVENT_TYPES_ENUM_ALIAS": {
+    "type": "string",
+    "default": "ESoccerVarEventType"
+  },
+  "GAME_STATISTIC_TIME_OF_RELEVANCY": {
+    "type": "string",
+    "default": "00:05:00.0000000"
+  },
+  "ALLOW_ATHLETE_SEARCH": {
+    "type": "bool",
+    "default": true
+  },
+  "SHOW_PLAYERS_STATISTICS": {
+    "type": "bool",
+    "default": false
+  },
+  "NUMBER_OF_TOP_PERSONAL_PLAYER_STATS_TO_USE": {
+    "type": "any",
+    "default": null
+  },
+  "HIDE_FROM_WIZARD": {
+    "type": "any",
+    "default": null
+  },
+  "ANDROID_MIN_VERSION": {
+    "type": "int",
+    "default": null
+  },
+  "IOS_MIN_VERSION": {
+    "type": "int",
+    "default": null
+  },
+  "DEFAULT_TEAM_FOULS": {
+    "type": "any",
+    "default": null
+  },
+  "MIN_PRIORITY_TO_CHANGE_STATUS": {
+    "type": "any",
+    "default": null
+  },
+  "FREEZE_BET_LINES_ON_SCORE_CHANGE": {
+    "type": "bool",
+    "default": true
+  },
+  "TRANSFERS_AMOUNT_LIMIT": {
+    "type": "any",
+    "default": null
+  },
+  "TRANSFERS_DAYS_RANGE": {
+    "type": "any",
+    "default": null
+  },
+  "ATHLETE_POSITION_TYPES_ENUM_ALIAS": {
+    "type": "string",
+    "default": "ESoccerPlayerPositions"
+  },
+  "SHOW_COLUMN_ICONS": {
+    "type": "bool",
+    "default": true
+  },
+  "MIN_IOS_VERSION_FOR_ATHLETES": {
+    "type": "string",
+    "default": "1.0.0"
+  },
+  "MIN_ANDROID_VERSION_FOR_ATHLETES": {
+    "type": "int",
+    "default": 1
+  },
+  "NUMBER_OF_REFEREES": {
+    "type": "int",
+    "default": 1
+  },
+  "TOP_PERFORMERS_LAYOUT": {
+    "type": "int",
+    "default": 2
+  },
+  "TOP_PERFORMERS_CATEGORY_TYPE": {
+    "type": "int",
+    "default": 2
+  },
+  "TOP_PERFORMERS_HIDE_MISSING": {
+    "type": "bool",
+    "default": true
+  },
+  "MIN_ROUND_TO_SHOW_PRE_GAME_TOP_PERFORMERS": {
+    "type": "int",
+    "default": 0
+  },
+  "TIME_TO_SHOW_PRE_GAME_TOP_PERFORMERS": {
+    "type": "int",
+    "default": 21
+  },
+  "SHOW_TOP_PERFORMERS_PRE_MATCH": {
+    "type": "bool",
+    "default": true
+  },
+  "SHOW_TOP_PERFORMERS_LIVE": {
+    "type": "any",
+    "default": null
+  },
+  "SHOW_TOP_PERFORMERS_POST_MATCH": {
+    "type": "any",
+    "default": null
+  },
+  "NOTIFY_LINEUPS": {
+    "type": "bool",
+    "default": true
+  },
+  "REQUIRE_FORMATION": {
+    "type": "bool",
+    "default": false
+  },
+  "TIMEOUT_FOR_ATHLETES_CONNECTION": {
+    "type": "string",
+    "default": null
+  },
+  "TIME_TO_NOTIFY_ANY_LINEUP": {
+    "type": "string",
+    "default": "00:10:00.0000000"
+  },
+  "TOP_PERFORMERS_MIN_IOS_VERSION": {
+    "type": "string",
+    "default": "5.4.6"
+  },
+  "TOP_PERFORMERS_MIN_ANDROID_VERSION": {
+    "type": "int",
+    "default": 1009
+  },
+  "KNOCKOUT_TITLE_TERM": {
+    "type": "int",
+    "default": 3075491
+  },
+  "SHOW_EVENTS_ORDER_FROM_BOTTOM": {
+    "type": "any",
+    "default": null
+  },
+  "RELATIVE_TIME_EVENTS": {
+    "type": "any",
+    "default": null
+  },
+  "TABLE_COUNT_OTL_SEPARATELY": {
+    "type": "any",
+    "default": null
+  },
+  "PLAYER_STAT_MAX_POSITION": {
+    "type": "any",
+    "default": null
+  },
+  "DOUBTFUL_TITLE_TERM": {
+    "type": "any",
+    "default": null
+  },
+  "ATHLETE_SUSPENSION_TYPES_ENUM_ALIAS_NAME": {
+    "type": "string",
+    "default": "ESoccerSuspensionTypes"
+  },
+  "HOME_AWAY_TEAM_ORDER": {
+    "type": "int",
+    "default": 70788670
+  },
+  "MIN_POTENTIAL_GAMES_PERCENTAGE_TO_SHOW_INJURED_ATHLETE": {
+    "type": "string",
+    "default": null
+  },
+  "IS_SUPPORT_TRENDS": {
+    "type": "bool",
+    "default": true
+  },
+  "SHOW_PROMOTED_TRENDS": {
+    "type": "any",
+    "default": null
+  },
+  "ATHLETE_CAREER_STATS_DISPLAY_TYPE": {
+    "type": "int",
+    "default": null
+  },
+  "SHOT_TYPES_ENUM_ALIAS": {
+    "type": "string",
+    "default": "ESoccerChartEventTypes"
+  },
+  "PERSONAL_FOULS": {
+    "type": "any",
+    "default": null
+  },
+  "IS_ATHLETE_POSITION_RELEVANT_TO_STATS": {
+    "type": "string",
+    "default": null
+  },
+  "WILL_NOT_PLAY_TITLE_TERM": {
+    "type": "float",
+    "default": 0.1
+  },
+  "ATHLETE_MIN_APPEARANCES_PERCENTAGE": {
+    "type": "bool",
+    "default": false
+  },
+  "SHOW_SCORE_BOARD": {
+    "type": "bool",
+    "default": true
+  },
+  "SHOW_CLOCK": {
+    "type": "any",
+    "default": null
+  },
+  "RANKING_TABLE_LAST_X_GAMES_AMOUNT": {
+    "type": "bool",
+    "default": true
+  },
+  "SHOW_PLAYER_DETAILS": {
+    "type": "any",
+    "default": null
+  },
+  "SHOW_MISSING_PLAYERS_WIDGET": {
+    "type": "bool",
+    "default": true
+  },
+  "INCLUDE_HEADERS_CATEGORIES": {
+    "type": "any",
+    "default": null
+  },
+  "LINEUP_STATISTIC_DEFAULT_VALUE": {
+    "type": "any",
+    "default": null
+  },
+  "TP_PREGAME_LAYOUT": {
+    "type": "int",
+    "default": 2
+  },
+  "TP_LIVEGAME_LAYOUT": {
+    "type": "int",
+    "default": 2
+  },
+  "TP_POSTGAME_LAYOUT": {
+    "type": "int",
+    "default": 2
+  },
+  "ROUND_NAME": {
+    "type": "int",
+    "default": 64155026
+  },
+  "SERIES_ROUND_NAME": {
+    "type": "int",
+    "default": 64155022
+  },
+  "EMPTY_PLAYERS_STATS_TEXT_TEMPLATE": {
+    "type": "any",
+    "default": null
+  },
+  "MIN_IOS_VERSION_FOR_EMPTY_PLAYERS_STATS_TEXT": {
+    "type": "int",
+    "default": null
+  },
+  "MIN_ANDROID_VERSION_FOR_EMPTY_PLAYERS_STATS_TEXT": {
+    "type": "int",
+    "default": null
+  },
+  "PLAYER_STATISTICS_UPDATE_DELAY": {
+    "type": "string",
+    "default": null
+  },
+  "TOP_ATHLETES_MIN_APPEARANCES_PERCENTAGE": {
+    "type": "string",
+    "default": null
+  },
+  "ODDS_PREVIEW_MODE": {
+    "type": "any",
+    "default": null
+  },
+  "SHOW_TEAM_NAMES_SPACE": {
+    "type": "any",
+    "default": null
+  },
+  "SCROLL_TO_THE_END": {
+    "type": "any",
+    "default": null
+  },
+  "INJURED_ATHLETE_MIN_APPEARANCES_FOR_STATS_PERCENTAGE": {
+    "type": "string",
+    "default": null
+  },
+  "USE_POSITION_FOR_STATS_SORT": {
+    "type": "bool",
+    "default": true
+  },
+  "SHOW_ATHLETE_CARD_NEXT_GAME": {
+    "type": "bool",
+    "default": true
+  },
+  "SHOW_ATHLETE_CARD_PREDICTONS": {
+    "type": "bool",
+    "default": true
+  },
+  "COMPETITOR_STATISTIC_TYPES_ENUM_ALIAS": {
+    "type": "string",
+    "default": "ESoccerCompetitorStatisticTypes"
+  },
+  "MINIMUM_CARDS_TO_DISPLAY": {
+    "type": "int",
+    "default": 2
+  },
+  "IS_ATHLETE_NONFORMATION_POSITION_RELEVANT_TO_STATS": {
+    "type": "bool",
+    "default": true
+  },
+  "SUPPORTS_COMPETITION_BET_LINES": {
+    "type": "bool",
+    "default": true
+  },
+  "SHOW_TROPHY_AS_FIRST_DAYS": {
+    "type": "int",
+    "default": 4
+  },
+  "TIME_TO_PROMOTE_PERSONAL_TROPHY": {
+    "type": "int",
+    "default": 7
+  },
+  "INCLUDE_SUMMARY": {
+    "type": "bool",
+    "default": true
+  },
+  "BOX_SCORE_ORDERING": {
+    "type": "int",
+    "default": 7
+  },
+  "SCORE_FIX_NO_CONFIRMATION_WINDOW_MINUTES": {
+    "type": "bool",
+    "default": true
+  },
+  "IS_SUPPORT_EXTENDED_TRENDS": {
+    "type": "bool",
+    "default": true
+  },
+  "IS_GAME_SUMMARY_ENABLE": {
+    "type": "bool",
+    "default": true
+  },
+  "IS_TRANSFER_APPROVED_NOTIFY_ENABLED": {
+    "type": "bool",
+    "default": true
+  },
+  "ATHLETE_EVENT_CHART_SUB_TYPE": {
+    "type": "int",
+    "default": 81
+  },
+  "EVENT_CHART_PARAMETER_TYPES_ENUM_ALIAS": {
+    "type": "string",
+    "default": "ESoccerEventChartParameterTypes"
+  },
+  "EVENT_CHART_PARAMETER_SUB_TYPES_ENUM_ALIAS": {
+    "type": "string",
+    "default": "ESoccerEventChartPARAMETERSubTypes"
+  },
+  "GAME_DURATION": {
+    "type": "int",
+    "default": 110
+  },
+  "LINEUP_UPDATE_THRESHOLD": {
+    "type": "int",
+    "default": 5
+  },
+  "DISPLAY_ON_COURT_FOR_PLAYERS": {
+    "type": "any",
+    "default": null
+  },
+  "SUPPORTS_PROPS": {
+    "type": "bool",
+    "default": true
+  },
+  "GAME_LINEUPS_ARE_EXPANDABLE": {
+    "type": "any",
+    "default": null
+  },
+  "LIVE_ODDS_VERSION": {
+    "type": "int",
+    "default": 15
+  },
+  "are_competitors_disconnected_from_competitions": {
+    "type": "any",
+    "default": null
+  },
+  "LAST_MATCHES_COUNT": {
+    "type": "bool",
+    "default": true
+  },
+  "IN_DASHBOARD_NOT_DISPLAY_TEAMS": {
+    "type": "bool",
+    "default": true
+  },
+  "SUPPORTS_GC_MOST_POPULAR_BET": {
+    "type": "any",
+    "default": null
+  },
+  "SUPPORTS_POPULAR_OPTIONS_FEATURE": {
+    "type": "bool",
+    "default": false
+  },
+  "IS_VISIBLE_FOR_ENTITIES_SEARCH": {
+    "type": "bool",
+    "default": true
+  },
+  "BOXSCORE_COLUMN_GROUPS_TYPE": {
+    "type": "int",
+    "default": null
+  },
+  "SHOW_MARKET_VALUE": {
+    "type": "bool",
+    "default": true
+  },
+  "IS_DELETED": {
+    "type": "bool",
+    "default": false
+  }
+}

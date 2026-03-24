@@ -1,0 +1,26 @@
+[
+  {
+    "SUB_SPORT_TYPE_ID": 1,
+    "SPORT_TYPE_ID": 3,
+    "SUB_SPORT_TYPE": "5 Sets",
+    "DESCRIPTION": "Tennis match format - best of 5 sets"
+  },
+  {
+    "SUB_SPORT_TYPE_ID": 2,
+    "SPORT_TYPE_ID": 3,
+    "SUB_SPORT_TYPE": "3 Sets",
+    "DESCRIPTION": "Tennis match format - best of 3 sets"
+  },
+  {
+    "SUB_SPORT_TYPE_ID": 3,
+    "SPORT_TYPE_ID": 2,
+    "SUB_SPORT_TYPE": "Halves",
+    "DESCRIPTION": "Basketball game format - two halves"
+  },
+  {
+    "SUB_SPORT_TYPE_ID": 4,
+    "SPORT_TYPE_ID": 2,
+    "SUB_SPORT_TYPE": "Quarters",
+    "DESCRIPTION": "Basketball game format - four quarters"
+  }
+]

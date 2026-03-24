@@ -1,0 +1,4838 @@
+[
+  {
+    "TIME_ZONE_NAME": "Abu Dhabi, Muscat",
+    "CONNECTED_TIME_ZONE": 24,
+    "CREATE_TIME": "2016-11-10T17:09:24.860",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Afr. centrale Ouest",
+    "CONNECTED_TIME_ZONE": 8,
+    "CREATE_TIME": "2016-11-09T15:14:38.570",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Abidjan",
+    "CONNECTED_TIME_ZONE": 3,
+    "CREATE_TIME": "2016-11-09T10:53:09.490",
+    "CONNECTED_COUNTRY_ID": 74
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Abuja",
+    "CONNECTED_TIME_ZONE": 8,
+    "CREATE_TIME": "2016-11-15T03:59:06.477",
+    "CONNECTED_COUNTRY_ID": 83
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Accra",
+    "CONNECTED_TIME_ZONE": 0,
+    "CREATE_TIME": "2016-11-09T10:52:47.853",
+    "CONNECTED_COUNTRY_ID": 65
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Addis_Ababa",
+    "CONNECTED_TIME_ZONE": 21,
+    "CREATE_TIME": "2016-11-09T14:34:39.550",
+    "CONNECTED_COUNTRY_ID": 70
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Algiers",
+    "CONNECTED_TIME_ZONE": 8,
+    "CREATE_TIME": "2016-11-09T10:52:42.393",
+    "CONNECTED_COUNTRY_ID": 139
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Asmara",
+    "CONNECTED_TIME_ZONE": 21,
+    "CREATE_TIME": "2016-11-09T11:08:51.483",
+    "CONNECTED_COUNTRY_ID": 68
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Bamako",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-09T11:37:01.377",
+    "CONNECTED_COUNTRY_ID": 128
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Bangui",
+    "CONNECTED_TIME_ZONE": 8,
+    "CREATE_TIME": "2016-11-11T06:14:03.360",
+    "CONNECTED_COUNTRY_ID": 204
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Banjul",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-09T11:17:27.557",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Bissau",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-09T15:28:16.507",
+    "CONNECTED_COUNTRY_ID": 230
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Blantyre",
+    "CONNECTED_TIME_ZONE": 13,
+    "CREATE_TIME": "2016-11-09T15:14:36.530",
+    "CONNECTED_COUNTRY_ID": 162
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Brazzaville",
+    "CONNECTED_TIME_ZONE": 8,
+    "CREATE_TIME": "2016-11-09T11:02:21.447",
+    "CONNECTED_COUNTRY_ID": 72
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Bujumbura",
+    "CONNECTED_TIME_ZONE": 13,
+    "CREATE_TIME": "2016-11-09T15:46:18.707",
+    "CONNECTED_COUNTRY_ID": 192
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Cairo",
+    "CONNECTED_TIME_ZONE": 12,
+    "CREATE_TIME": "2016-11-08T18:22:30.790",
+    "CONNECTED_COUNTRY_ID": 131
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Casablanca",
+    "CONNECTED_TIME_ZONE": 1,
+    "CREATE_TIME": "2016-11-08T18:22:30.723",
+    "CONNECTED_COUNTRY_ID": 127
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Ceuta",
+    "CONNECTED_TIME_ZONE": 6,
+    "CREATE_TIME": "2016-11-08T18:22:30.773",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Conakry",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-09T15:17:56.117",
+    "CONNECTED_COUNTRY_ID": 69
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Dakar",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-09T11:54:48.270",
+    "CONNECTED_COUNTRY_ID": 133
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Dar_es_Salaam",
+    "CONNECTED_TIME_ZONE": 21,
+    "CREATE_TIME": "2016-11-09T11:19:17.077",
+    "CONNECTED_COUNTRY_ID": 141
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Djibouti",
+    "CONNECTED_TIME_ZONE": 21,
+    "CREATE_TIME": "2016-11-09T16:46:18.927",
+    "CONNECTED_COUNTRY_ID": 189
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Dodoma",
+    "CONNECTED_TIME_ZONE": 21,
+    "CREATE_TIME": "2016-11-15T07:20:02.827",
+    "CONNECTED_COUNTRY_ID": 141
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Douala",
+    "CONNECTED_TIME_ZONE": 8,
+    "CREATE_TIME": "2016-11-09T14:59:39.733",
+    "CONNECTED_COUNTRY_ID": 73
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/El_Aaiun",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-09T17:52:28.123",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Freetown",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-09T17:12:26.247",
+    "CONNECTED_COUNTRY_ID": 67
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Gaborone",
+    "CONNECTED_TIME_ZONE": 13,
+    "CREATE_TIME": "2016-11-09T14:19:09.190",
+    "CONNECTED_COUNTRY_ID": 63
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Harare",
+    "CONNECTED_TIME_ZONE": 13,
+    "CREATE_TIME": "2016-11-08T18:22:30.790",
+    "CONNECTED_COUNTRY_ID": 60
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Johannesburg",
+    "CONNECTED_TIME_ZONE": 13,
+    "CREATE_TIME": "2016-11-08T18:22:30.790",
+    "CONNECTED_COUNTRY_ID": 134
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Juba",
+    "CONNECTED_TIME_ZONE": 21,
+    "CREATE_TIME": "2016-11-09T16:27:57.287",
+    "CONNECTED_COUNTRY_ID": 261
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Kampala",
+    "CONNECTED_TIME_ZONE": 21,
+    "CREATE_TIME": "2016-11-09T12:40:36.017",
+    "CONNECTED_COUNTRY_ID": 137
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Khartoum",
+    "CONNECTED_TIME_ZONE": 12,
+    "CREATE_TIME": "2016-11-09T10:44:06.537",
+    "CONNECTED_COUNTRY_ID": 130
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Kigali",
+    "CONNECTED_TIME_ZONE": 13,
+    "CREATE_TIME": "2016-11-09T15:38:24.790",
+    "CONNECTED_COUNTRY_ID": 142
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Kinshasa",
+    "CONNECTED_TIME_ZONE": 8,
+    "CREATE_TIME": "2016-11-09T11:28:16.450",
+    "CONNECTED_COUNTRY_ID": 235
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Lagos",
+    "CONNECTED_TIME_ZONE": 8,
+    "CREATE_TIME": "2016-11-09T10:42:23.840",
+    "CONNECTED_COUNTRY_ID": 83
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Libreville",
+    "CONNECTED_TIME_ZONE": 8,
+    "CREATE_TIME": "2016-11-09T15:11:03.193",
+    "CONNECTED_COUNTRY_ID": 143
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Lome",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-09T12:22:03.520",
+    "CONNECTED_COUNTRY_ID": 71
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Luanda",
+    "CONNECTED_TIME_ZONE": 8,
+    "CREATE_TIME": "2016-11-09T10:45:59.507",
+    "CONNECTED_COUNTRY_ID": 136
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Lubumbashi",
+    "CONNECTED_TIME_ZONE": 13,
+    "CREATE_TIME": "2016-11-09T16:22:52.737",
+    "CONNECTED_COUNTRY_ID": 235
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Lusaka",
+    "CONNECTED_TIME_ZONE": 13,
+    "CREATE_TIME": "2016-11-09T12:50:25.687",
+    "CONNECTED_COUNTRY_ID": 132
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Malabo",
+    "CONNECTED_TIME_ZONE": 8,
+    "CREATE_TIME": "2016-11-09T15:08:03.287",
+    "CONNECTED_COUNTRY_ID": 229
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Maputo",
+    "CONNECTED_TIME_ZONE": 13,
+    "CREATE_TIME": "2016-11-09T11:49:54.440",
+    "CONNECTED_COUNTRY_ID": 149
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Maseru",
+    "CONNECTED_TIME_ZONE": 13,
+    "CREATE_TIME": "2016-11-09T22:19:27.887",
+    "CONNECTED_COUNTRY_ID": 58
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Mbabane",
+    "CONNECTED_TIME_ZONE": 13,
+    "CREATE_TIME": "2016-11-09T21:25:28.047",
+    "CONNECTED_COUNTRY_ID": 59
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Mogadishu",
+    "CONNECTED_TIME_ZONE": 21,
+    "CREATE_TIME": "2016-11-09T11:30:23.820",
+    "CONNECTED_COUNTRY_ID": 284
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Monrovia",
+    "CONNECTED_TIME_ZONE": 3,
+    "CREATE_TIME": "2016-11-08T18:22:30.743",
+    "CONNECTED_COUNTRY_ID": 138
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Nairobi",
+    "CONNECTED_TIME_ZONE": 21,
+    "CREATE_TIME": "2016-11-08T18:22:30.810",
+    "CONNECTED_COUNTRY_ID": 144
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Ndjamena",
+    "CONNECTED_TIME_ZONE": 8,
+    "CREATE_TIME": "2016-11-09T11:35:07.207",
+    "CONNECTED_COUNTRY_ID": 206
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Niamey",
+    "CONNECTED_TIME_ZONE": 8,
+    "CREATE_TIME": "2016-11-09T11:15:35.177",
+    "CONNECTED_COUNTRY_ID": 201
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Nouakchott",
+    "CONNECTED_TIME_ZONE": 3,
+    "CREATE_TIME": "2016-11-09T14:52:05.333",
+    "CONNECTED_COUNTRY_ID": 191
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Ouagadougou",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-09T10:52:44.400",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Porto-Novo",
+    "CONNECTED_TIME_ZONE": 8,
+    "CREATE_TIME": "2016-11-09T15:19:35.663",
+    "CONNECTED_COUNTRY_ID": 129
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Sao_Tome",
+    "CONNECTED_TIME_ZONE": 0,
+    "CREATE_TIME": "2016-11-09T14:55:35.937",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Tripoli",
+    "CONNECTED_TIME_ZONE": 94,
+    "CREATE_TIME": "2016-11-08T18:22:30.963",
+    "CONNECTED_COUNTRY_ID": 161
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Tunis",
+    "CONNECTED_TIME_ZONE": 8,
+    "CREATE_TIME": "2016-11-09T10:45:15.083",
+    "CONNECTED_COUNTRY_ID": 135
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Windhoek",
+    "CONNECTED_TIME_ZONE": 17,
+    "CREATE_TIME": "2016-11-08T18:22:30.803",
+    "CONNECTED_COUNTRY_ID": 64
+  },
+  {
+    "TIME_ZONE_NAME": "Africa/Yamoussoukro",
+    "CONNECTED_TIME_ZONE": 0,
+    "CREATE_TIME": "2016-11-13T11:01:14.520",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Amér. du Sud - Pac.",
+    "CONNECTED_TIME_ZONE": 72,
+    "CREATE_TIME": "2016-11-16T01:18:51.367",
+    "CONNECTED_COUNTRY_ID": 17
+  },
+  {
+    "TIME_ZONE_NAME": "America/Adak",
+    "CONNECTED_TIME_ZONE": 89,
+    "CREATE_TIME": "2016-11-11T02:32:15.373",
+    "CONNECTED_COUNTRY_ID": 18
+  },
+  {
+    "TIME_ZONE_NAME": "America/Anchorage",
+    "CONNECTED_TIME_ZONE": 88,
+    "CREATE_TIME": "2016-11-09T15:14:36.773",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "America/Anguilla",
+    "CONNECTED_TIME_ZONE": 73,
+    "CREATE_TIME": "2016-11-09T13:27:52.040",
+    "CONNECTED_COUNTRY_ID": 234
+  },
+  {
+    "TIME_ZONE_NAME": "America/Antigua",
+    "CONNECTED_TIME_ZONE": 73,
+    "CREATE_TIME": "2016-11-09T13:57:44.367",
+    "CONNECTED_COUNTRY_ID": 187
+  },
+  {
+    "TIME_ZONE_NAME": "America/Araguaina",
+    "CONNECTED_TIME_ZONE": 63,
+    "CREATE_TIME": "2016-11-09T10:45:54.677",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "America/Argentina/Buenos_Aires",
+    "CONNECTED_TIME_ZONE": 64,
+    "CREATE_TIME": "2016-11-08T18:22:30.890",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "America/Argentina/Catamarca",
+    "CONNECTED_TIME_ZONE": 64,
+    "CREATE_TIME": "2016-11-08T18:22:30.893",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "America/Argentina/ComodRivadavia",
+    "CONNECTED_TIME_ZONE": 64,
+    "CREATE_TIME": "2016-11-08T18:22:30.893",
+    "CONNECTED_COUNTRY_ID": 10
+  },
+  {
+    "TIME_ZONE_NAME": "America/Argentina/Cordoba",
+    "CONNECTED_TIME_ZONE": 64,
+    "CREATE_TIME": "2016-11-08T18:22:30.893",
+    "CONNECTED_COUNTRY_ID": 10
+  },
+  {
+    "TIME_ZONE_NAME": "America/Argentina/Jujuy",
+    "CONNECTED_TIME_ZONE": 64,
+    "CREATE_TIME": "2016-11-08T18:22:30.897",
+    "CONNECTED_COUNTRY_ID": 10
+  },
+  {
+    "TIME_ZONE_NAME": "America/Argentina/La_Rioja",
+    "CONNECTED_TIME_ZONE": 64,
+    "CREATE_TIME": "2016-11-08T18:22:30.897",
+    "CONNECTED_COUNTRY_ID": 10
+  },
+  {
+    "TIME_ZONE_NAME": "America/Argentina/Mendoza",
+    "CONNECTED_TIME_ZONE": 64,
+    "CREATE_TIME": "2016-11-08T18:22:30.897",
+    "CONNECTED_COUNTRY_ID": 10
+  },
+  {
+    "TIME_ZONE_NAME": "America/Argentina/Rio_Gallegos",
+    "CONNECTED_TIME_ZONE": 64,
+    "CREATE_TIME": "2016-11-08T18:22:30.900",
+    "CONNECTED_COUNTRY_ID": 10
+  },
+  {
+    "TIME_ZONE_NAME": "America/Argentina/Salta",
+    "CONNECTED_TIME_ZONE": 64,
+    "CREATE_TIME": "2016-11-08T18:22:30.900",
+    "CONNECTED_COUNTRY_ID": 10
+  },
+  {
+    "TIME_ZONE_NAME": "America/Argentina/San_Juan",
+    "CONNECTED_TIME_ZONE": 64,
+    "CREATE_TIME": "2016-11-08T18:22:30.900",
+    "CONNECTED_COUNTRY_ID": 10
+  },
+  {
+    "TIME_ZONE_NAME": "America/Argentina/San_Luis",
+    "CONNECTED_TIME_ZONE": 64,
+    "CREATE_TIME": "2016-11-08T18:22:30.900",
+    "CONNECTED_COUNTRY_ID": 10
+  },
+  {
+    "TIME_ZONE_NAME": "America/Argentina/Tucuman",
+    "CONNECTED_TIME_ZONE": 64,
+    "CREATE_TIME": "2016-11-08T18:22:30.900",
+    "CONNECTED_COUNTRY_ID": 10
+  },
+  {
+    "TIME_ZONE_NAME": "America/Argentina/Ushuaia",
+    "CONNECTED_TIME_ZONE": 64,
+    "CREATE_TIME": "2016-11-08T18:22:30.903",
+    "CONNECTED_COUNTRY_ID": 10
+  },
+  {
+    "TIME_ZONE_NAME": "America/Aruba",
+    "CONNECTED_TIME_ZONE": 73,
+    "CREATE_TIME": "2016-11-09T15:32:22.650",
+    "CONNECTED_COUNTRY_ID": 252
+  },
+  {
+    "TIME_ZONE_NAME": "America/Asuncion",
+    "CONNECTED_TIME_ZONE": 92,
+    "CREATE_TIME": "2016-11-08T18:22:30.960",
+    "CONNECTED_COUNTRY_ID": 108
+  },
+  {
+    "TIME_ZONE_NAME": "America/Atikokan",
+    "CONNECTED_TIME_ZONE": 75,
+    "CREATE_TIME": "2016-11-09T15:55:09.617",
+    "CONNECTED_COUNTRY_ID": 66
+  },
+  {
+    "TIME_ZONE_NAME": "America/Bahia",
+    "CONNECTED_TIME_ZONE": 96,
+    "CREATE_TIME": "2016-11-08T18:22:30.963",
+    "CONNECTED_COUNTRY_ID": 21
+  },
+  {
+    "TIME_ZONE_NAME": "America/Bahia_Banderas",
+    "CONNECTED_TIME_ZONE": 79,
+    "CREATE_TIME": "2016-11-09T17:03:10.767",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "America/Barbados",
+    "CONNECTED_TIME_ZONE": 73,
+    "CREATE_TIME": "2016-11-09T11:17:24.887",
+    "CONNECTED_COUNTRY_ID": 196
+  },
+  {
+    "TIME_ZONE_NAME": "America/Belem",
+    "CONNECTED_TIME_ZONE": 96,
+    "CREATE_TIME": "2016-11-09T10:40:36.943",
+    "CONNECTED_COUNTRY_ID": 21
+  },
+  {
+    "TIME_ZONE_NAME": "America/Belize",
+    "CONNECTED_TIME_ZONE": 77,
+    "CREATE_TIME": "2016-11-09T16:46:26.417",
+    "CONNECTED_COUNTRY_ID": 195
+  },
+  {
+    "TIME_ZONE_NAME": "America/Boa_Vista",
+    "CONNECTED_TIME_ZONE": 71,
+    "CREATE_TIME": "2016-11-08T18:22:30.910",
+    "CONNECTED_COUNTRY_ID": 21
+  },
+  {
+    "TIME_ZONE_NAME": "America/Bogota",
+    "CONNECTED_TIME_ZONE": 74,
+    "CREATE_TIME": "2016-11-08T18:22:30.913",
+    "CONNECTED_COUNTRY_ID": 109
+  },
+  {
+    "TIME_ZONE_NAME": "America/Boise",
+    "CONNECTED_TIME_ZONE": 85,
+    "CREATE_TIME": "2016-11-09T15:38:43.407",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "America/Buenos_Aires",
+    "CONNECTED_TIME_ZONE": 64,
+    "CREATE_TIME": "2016-11-08T18:22:30.890",
+    "CONNECTED_COUNTRY_ID": 10
+  },
+  {
+    "TIME_ZONE_NAME": "America/Cambridge_Bay",
+    "CONNECTED_TIME_ZONE": 85,
+    "CREATE_TIME": "2016-11-13T12:08:54.467",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "America/Campo_Grande",
+    "CONNECTED_TIME_ZONE": 110,
+    "CREATE_TIME": "2016-11-09T11:07:29.383",
+    "CONNECTED_COUNTRY_ID": 21
+  },
+  {
+    "TIME_ZONE_NAME": "America/Cancun",
+    "CONNECTED_TIME_ZONE": 74,
+    "CREATE_TIME": "2016-11-08T18:22:30.937",
+    "CONNECTED_COUNTRY_ID": 31
+  },
+  {
+    "TIME_ZONE_NAME": "America/Caracas",
+    "CONNECTED_TIME_ZONE": 73,
+    "CREATE_TIME": "2016-11-08T18:22:30.913",
+    "CONNECTED_COUNTRY_ID": 110
+  },
+  {
+    "TIME_ZONE_NAME": "America/Catamarca",
+    "CONNECTED_TIME_ZONE": 64,
+    "CREATE_TIME": "2016-11-08T18:22:30.893",
+    "CONNECTED_COUNTRY_ID": 10
+  },
+  {
+    "TIME_ZONE_NAME": "America/Cayenne",
+    "CONNECTED_TIME_ZONE": 93,
+    "CREATE_TIME": "2016-11-08T18:22:30.960",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "America/Cayman",
+    "CONNECTED_TIME_ZONE": 74,
+    "CREATE_TIME": "2016-11-09T15:33:11.470",
+    "CONNECTED_COUNTRY_ID": 214
+  },
+  {
+    "TIME_ZONE_NAME": "America/Chicago",
+    "CONNECTED_TIME_ZONE": 78,
+    "CREATE_TIME": "2016-11-08T18:22:30.930",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "America/Chihuahua",
+    "CONNECTED_TIME_ZONE": 83,
+    "CREATE_TIME": "2016-11-08T18:22:30.940",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "America/Cordoba",
+    "CONNECTED_TIME_ZONE": 64,
+    "CREATE_TIME": "2016-11-08T18:22:30.897",
+    "CONNECTED_COUNTRY_ID": 10
+  },
+  {
+    "TIME_ZONE_NAME": "America/Costa_Rica",
+    "CONNECTED_TIME_ZONE": 77,
+    "CREATE_TIME": "2016-11-09T11:16:50.823",
+    "CONNECTED_COUNTRY_ID": 153
+  },
+  {
+    "TIME_ZONE_NAME": "America/Cuiaba",
+    "CONNECTED_TIME_ZONE": 110,
+    "CREATE_TIME": "2016-11-09T14:46:20.920",
+    "CONNECTED_COUNTRY_ID": 21
+  },
+  {
+    "TIME_ZONE_NAME": "America/Curacao",
+    "CONNECTED_TIME_ZONE": 73,
+    "CREATE_TIME": "2016-11-09T15:29:02",
+    "CONNECTED_COUNTRY_ID": 232
+  },
+  {
+    "TIME_ZONE_NAME": "America/Danmarkshavn",
+    "CONNECTED_TIME_ZONE": 66,
+    "CREATE_TIME": "2016-11-11T18:39:49",
+    "CONNECTED_COUNTRY_ID": 213
+  },
+  {
+    "TIME_ZONE_NAME": "America/Dawson",
+    "CONNECTED_TIME_ZONE": 86,
+    "CREATE_TIME": "2016-11-09T17:02:38.017",
+    "CONNECTED_COUNTRY_ID": 66
+  },
+  {
+    "TIME_ZONE_NAME": "America/Dawson_Creek",
+    "CONNECTED_TIME_ZONE": 85,
+    "CREATE_TIME": "2016-11-09T20:53:32.420",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "America/Denver",
+    "CONNECTED_TIME_ZONE": 85,
+    "CREATE_TIME": "2016-11-08T18:22:30.943",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "America/Detroit",
+    "CONNECTED_TIME_ZONE": 75,
+    "CREATE_TIME": "2016-11-08T18:22:30.920",
+    "CONNECTED_COUNTRY_ID": 18
+  },
+  {
+    "TIME_ZONE_NAME": "America/Dominica",
+    "CONNECTED_TIME_ZONE": 73,
+    "CREATE_TIME": "2016-11-09T23:24:21.743",
+    "CONNECTED_COUNTRY_ID": 291
+  },
+  {
+    "TIME_ZONE_NAME": "America/Edmonton",
+    "CONNECTED_TIME_ZONE": 85,
+    "CREATE_TIME": "2016-11-09T12:50:22.550",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "America/Eirunepe",
+    "CONNECTED_TIME_ZONE": 71,
+    "CREATE_TIME": "2016-11-09T13:42:44.827",
+    "CONNECTED_COUNTRY_ID": 214
+  },
+  {
+    "TIME_ZONE_NAME": "America/El_Salvador",
+    "CONNECTED_TIME_ZONE": 77,
+    "CREATE_TIME": "2016-11-09T10:58:30.690",
+    "CONNECTED_COUNTRY_ID": 147
+  },
+  {
+    "TIME_ZONE_NAME": "America/Fort_Nelson",
+    "CONNECTED_TIME_ZONE": 85,
+    "CREATE_TIME": "2016-11-11T17:07:02.990",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "America/Fortaleza",
+    "CONNECTED_TIME_ZONE": 93,
+    "CREATE_TIME": "2016-11-08T18:22:30.960",
+    "CONNECTED_COUNTRY_ID": 21
+  },
+  {
+    "TIME_ZONE_NAME": "America/Glace_Bay",
+    "CONNECTED_TIME_ZONE": 69,
+    "CREATE_TIME": "2016-11-09T15:14:35.937",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "America/Godthab",
+    "CONNECTED_TIME_ZONE": 66,
+    "CREATE_TIME": "2016-11-09T15:00:58.973",
+    "CONNECTED_COUNTRY_ID": 213
+  },
+  {
+    "TIME_ZONE_NAME": "America/Goose_Bay",
+    "CONNECTED_TIME_ZONE": 69,
+    "CREATE_TIME": "2016-11-14T22:58:06.503",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "America/Grand_Turk",
+    "CONNECTED_TIME_ZONE": 69,
+    "CREATE_TIME": "2016-11-09T16:50:19.387",
+    "CONNECTED_COUNTRY_ID": 253
+  },
+  {
+    "TIME_ZONE_NAME": "America/Grenada",
+    "CONNECTED_TIME_ZONE": 73,
+    "CREATE_TIME": "2016-11-09T17:03:06.707",
+    "CONNECTED_COUNTRY_ID": 177
+  },
+  {
+    "TIME_ZONE_NAME": "America/Guadeloupe",
+    "CONNECTED_TIME_ZONE": 73,
+    "CREATE_TIME": "2016-11-09T14:08:21.767",
+    "CONNECTED_COUNTRY_ID": 256
+  },
+  {
+    "TIME_ZONE_NAME": "America/Guatemala",
+    "CONNECTED_TIME_ZONE": 77,
+    "CREATE_TIME": "2016-11-09T12:29:53.143",
+    "CONNECTED_COUNTRY_ID": 140
+  },
+  {
+    "TIME_ZONE_NAME": "America/Guayaquil",
+    "CONNECTED_TIME_ZONE": 74,
+    "CREATE_TIME": "2016-11-09T11:02:16.153",
+    "CONNECTED_COUNTRY_ID": 51
+  },
+  {
+    "TIME_ZONE_NAME": "America/Guyana",
+    "CONNECTED_TIME_ZONE": 71,
+    "CREATE_TIME": "2016-11-09T15:32:53.973",
+    "CONNECTED_COUNTRY_ID": 199
+  },
+  {
+    "TIME_ZONE_NAME": "America/Halifax",
+    "CONNECTED_TIME_ZONE": 69,
+    "CREATE_TIME": "2016-11-09T11:09:20.697",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "America/Havana",
+    "CONNECTED_TIME_ZONE": 111,
+    "CREATE_TIME": "2016-11-09T12:14:11.117",
+    "CONNECTED_COUNTRY_ID": 175
+  },
+  {
+    "TIME_ZONE_NAME": "America/Hermosillo",
+    "CONNECTED_TIME_ZONE": 82,
+    "CREATE_TIME": "2016-11-09T15:17:30.417",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "America/Indiana/Indianapolis",
+    "CONNECTED_TIME_ZONE": 76,
+    "CREATE_TIME": "2016-11-08T18:22:30.923",
+    "CONNECTED_COUNTRY_ID": 18
+  },
+  {
+    "TIME_ZONE_NAME": "America/Indiana/Knox",
+    "CONNECTED_TIME_ZONE": 76,
+    "CREATE_TIME": "2016-11-08T18:22:30.923",
+    "CONNECTED_COUNTRY_ID": 18
+  },
+  {
+    "TIME_ZONE_NAME": "America/Indiana/Marengo",
+    "CONNECTED_TIME_ZONE": 76,
+    "CREATE_TIME": "2016-11-08T18:22:30.923",
+    "CONNECTED_COUNTRY_ID": 18
+  },
+  {
+    "TIME_ZONE_NAME": "America/Indiana/Petersburg",
+    "CONNECTED_TIME_ZONE": 76,
+    "CREATE_TIME": "2016-11-08T18:22:30.923",
+    "CONNECTED_COUNTRY_ID": 18
+  },
+  {
+    "TIME_ZONE_NAME": "America/Indiana/Tell_City",
+    "CONNECTED_TIME_ZONE": 76,
+    "CREATE_TIME": "2016-11-08T18:22:30.927",
+    "CONNECTED_COUNTRY_ID": 18
+  },
+  {
+    "TIME_ZONE_NAME": "America/Indiana/Vevay",
+    "CONNECTED_TIME_ZONE": 76,
+    "CREATE_TIME": "2016-11-08T18:22:30.927",
+    "CONNECTED_COUNTRY_ID": 18
+  },
+  {
+    "TIME_ZONE_NAME": "America/Indiana/Vincennes",
+    "CONNECTED_TIME_ZONE": 76,
+    "CREATE_TIME": "2016-11-08T18:22:30.927",
+    "CONNECTED_COUNTRY_ID": 18
+  },
+  {
+    "TIME_ZONE_NAME": "America/Indiana/Winamac",
+    "CONNECTED_TIME_ZONE": 76,
+    "CREATE_TIME": "2016-11-08T18:22:30.927",
+    "CONNECTED_COUNTRY_ID": 18
+  },
+  {
+    "TIME_ZONE_NAME": "America/Indianapolis",
+    "CONNECTED_TIME_ZONE": 76,
+    "CREATE_TIME": "2016-11-08T18:22:30.927",
+    "CONNECTED_COUNTRY_ID": 18
+  },
+  {
+    "TIME_ZONE_NAME": "America/Iqaluit",
+    "CONNECTED_TIME_ZONE": 75,
+    "CREATE_TIME": "2016-11-12T00:35:47.270",
+    "CONNECTED_COUNTRY_ID": 66
+  },
+  {
+    "TIME_ZONE_NAME": "America/Jamaica",
+    "CONNECTED_TIME_ZONE": 74,
+    "CREATE_TIME": "2016-11-09T10:58:12.880",
+    "CONNECTED_COUNTRY_ID": 151
+  },
+  {
+    "TIME_ZONE_NAME": "America/Jujuy",
+    "CONNECTED_TIME_ZONE": 64,
+    "CREATE_TIME": "2016-11-08T18:22:30.897",
+    "CONNECTED_COUNTRY_ID": 10
+  },
+  {
+    "TIME_ZONE_NAME": "America/Juneau",
+    "CONNECTED_TIME_ZONE": 88,
+    "CREATE_TIME": "2016-11-10T05:28:46.273",
+    "CONNECTED_COUNTRY_ID": 18
+  },
+  {
+    "TIME_ZONE_NAME": "America/Kentucky/Louisville",
+    "CONNECTED_TIME_ZONE": 75,
+    "CREATE_TIME": "2016-11-10T09:04:13.373",
+    "CONNECTED_COUNTRY_ID": 18
+  },
+  {
+    "TIME_ZONE_NAME": "America/Kralendijk",
+    "CONNECTED_TIME_ZONE": 69,
+    "CREATE_TIME": "2016-11-09T16:53:59.187",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "America/La_Paz",
+    "CONNECTED_TIME_ZONE": 70,
+    "CREATE_TIME": "2016-11-08T18:22:30.907",
+    "CONNECTED_COUNTRY_ID": 269
+  },
+  {
+    "TIME_ZONE_NAME": "America/Lima",
+    "CONNECTED_TIME_ZONE": 74,
+    "CREATE_TIME": "2016-11-08T18:22:30.913",
+    "CONNECTED_COUNTRY_ID": 112
+  },
+  {
+    "TIME_ZONE_NAME": "America/Los_Angeles",
+    "CONNECTED_TIME_ZONE": 86,
+    "CREATE_TIME": "2016-11-08T18:22:30.947",
+    "CONNECTED_COUNTRY_ID": 18
+  },
+  {
+    "TIME_ZONE_NAME": "America/Louisville",
+    "CONNECTED_TIME_ZONE": 75,
+    "CREATE_TIME": "2016-11-08T18:22:30.920",
+    "CONNECTED_COUNTRY_ID": 18
+  },
+  {
+    "TIME_ZONE_NAME": "America/Lower_Princes",
+    "CONNECTED_TIME_ZONE": 75,
+    "CREATE_TIME": "2016-11-09T22:28:21.337",
+    "CONNECTED_COUNTRY_ID": 250
+  },
+  {
+    "TIME_ZONE_NAME": "America/Maceio",
+    "CONNECTED_TIME_ZONE": 96,
+    "CREATE_TIME": "2016-11-09T10:43:21.393",
+    "CONNECTED_COUNTRY_ID": 21
+  },
+  {
+    "TIME_ZONE_NAME": "America/Managua",
+    "CONNECTED_TIME_ZONE": 77,
+    "CREATE_TIME": "2016-11-09T15:10:16.160",
+    "CONNECTED_COUNTRY_ID": 182
+  },
+  {
+    "TIME_ZONE_NAME": "America/Manaus",
+    "CONNECTED_TIME_ZONE": 71,
+    "CREATE_TIME": "2016-11-08T18:22:30.910",
+    "CONNECTED_COUNTRY_ID": 21
+  },
+  {
+    "TIME_ZONE_NAME": "America/Marigot",
+    "CONNECTED_TIME_ZONE": 69,
+    "CREATE_TIME": "2016-11-09T15:19:18.160",
+    "CONNECTED_COUNTRY_ID": 295
+  },
+  {
+    "TIME_ZONE_NAME": "America/Martinique",
+    "CONNECTED_TIME_ZONE": 69,
+    "CREATE_TIME": "2016-11-09T13:30:07.147",
+    "CONNECTED_COUNTRY_ID": 283
+  },
+  {
+    "TIME_ZONE_NAME": "America/Matamoros",
+    "CONNECTED_TIME_ZONE": 78,
+    "CREATE_TIME": "2016-11-09T15:23:53.173",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "America/Mazatlan",
+    "CONNECTED_TIME_ZONE": 83,
+    "CREATE_TIME": "2016-11-08T18:22:30.940",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "America/Mendoza",
+    "CONNECTED_TIME_ZONE": 64,
+    "CREATE_TIME": "2016-11-08T18:22:30.900",
+    "CONNECTED_COUNTRY_ID": 10
+  },
+  {
+    "TIME_ZONE_NAME": "America/Menominee",
+    "CONNECTED_TIME_ZONE": 78,
+    "CREATE_TIME": "2016-11-10T02:03:05.500",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "America/Merida",
+    "CONNECTED_TIME_ZONE": 79,
+    "CREATE_TIME": "2016-11-09T14:17:34.070",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "America/Mexico_City",
+    "CONNECTED_TIME_ZONE": 79,
+    "CREATE_TIME": "2016-11-08T18:22:30.937",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "America/Miquelon",
+    "CONNECTED_TIME_ZONE": 66,
+    "CREATE_TIME": "2016-11-09T12:06:48.840",
+    "CONNECTED_COUNTRY_ID": 66
+  },
+  {
+    "TIME_ZONE_NAME": "America/Moncton",
+    "CONNECTED_TIME_ZONE": 69,
+    "CREATE_TIME": "2016-11-09T19:59:36.873",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "America/Monterrey",
+    "CONNECTED_TIME_ZONE": 79,
+    "CREATE_TIME": "2016-11-08T18:22:30.933",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "America/Montevideo",
+    "CONNECTED_TIME_ZONE": 67,
+    "CREATE_TIME": "2016-11-08T18:22:30.903",
+    "CONNECTED_COUNTRY_ID": 111
+  },
+  {
+    "TIME_ZONE_NAME": "America/Montreal",
+    "CONNECTED_TIME_ZONE": 75,
+    "CREATE_TIME": "2016-11-08T18:22:30.920",
+    "CONNECTED_COUNTRY_ID": 66
+  },
+  {
+    "TIME_ZONE_NAME": "America/Nassau",
+    "CONNECTED_TIME_ZONE": 75,
+    "CREATE_TIME": "2016-11-08T18:22:30.920",
+    "CONNECTED_COUNTRY_ID": 186
+  },
+  {
+    "TIME_ZONE_NAME": "America/New_York",
+    "CONNECTED_TIME_ZONE": 75,
+    "CREATE_TIME": "2016-11-08T18:22:30.917",
+    "CONNECTED_COUNTRY_ID": 18
+  },
+  {
+    "TIME_ZONE_NAME": "America/Nome",
+    "CONNECTED_TIME_ZONE": 88,
+    "CREATE_TIME": "2016-11-10T15:57:43.830",
+    "CONNECTED_COUNTRY_ID": 18
+  },
+  {
+    "TIME_ZONE_NAME": "America/Noronha",
+    "CONNECTED_TIME_ZONE": 62,
+    "CREATE_TIME": "2016-11-09T10:56:48.553",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "America/North_Dakota/Center",
+    "CONNECTED_TIME_ZONE": 78,
+    "CREATE_TIME": "2016-11-08T18:22:30.933",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "America/North_Dakota/New_Salem",
+    "CONNECTED_TIME_ZONE": 78,
+    "CREATE_TIME": "2016-11-08T18:22:30.933",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "America/Ojinaga",
+    "CONNECTED_TIME_ZONE": 85,
+    "CREATE_TIME": "2016-11-09T15:22:43.150",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "America/Panama",
+    "CONNECTED_TIME_ZONE": 74,
+    "CREATE_TIME": "2016-11-08T18:22:30.930",
+    "CONNECTED_COUNTRY_ID": 146
+  },
+  {
+    "TIME_ZONE_NAME": "America/Paramaribo",
+    "CONNECTED_TIME_ZONE": 65,
+    "CREATE_TIME": "2016-11-09T10:41:58.700",
+    "CONNECTED_COUNTRY_ID": 212
+  },
+  {
+    "TIME_ZONE_NAME": "America/Phoenix",
+    "CONNECTED_TIME_ZONE": 82,
+    "CREATE_TIME": "2016-11-08T18:22:30.940",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "America/Port-au-Prince",
+    "CONNECTED_TIME_ZONE": 75,
+    "CREATE_TIME": "2016-11-09T14:54:07.697",
+    "CONNECTED_COUNTRY_ID": 152
+  },
+  {
+    "TIME_ZONE_NAME": "America/Port_of_Spain",
+    "CONNECTED_TIME_ZONE": 69,
+    "CREATE_TIME": "2016-11-09T10:48:32.803",
+    "CONNECTED_COUNTRY_ID": 148
+  },
+  {
+    "TIME_ZONE_NAME": "America/Porto_Velho",
+    "CONNECTED_TIME_ZONE": 71,
+    "CREATE_TIME": "2016-11-09T13:40:00.770",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "America/Puerto_Rico",
+    "CONNECTED_TIME_ZONE": 73,
+    "CREATE_TIME": "2016-11-09T14:59:46.550",
+    "CONNECTED_COUNTRY_ID": 178
+  },
+  {
+    "TIME_ZONE_NAME": "America/Punta_Arenas",
+    "CONNECTED_TIME_ZONE": 67,
+    "CREATE_TIME": "2017-04-11T01:15:36.080",
+    "CONNECTED_COUNTRY_ID": 28
+  },
+  {
+    "TIME_ZONE_NAME": "America/Recife",
+    "CONNECTED_TIME_ZONE": 96,
+    "CREATE_TIME": "2016-11-09T10:41:36.473",
+    "CONNECTED_COUNTRY_ID": 21
+  },
+  {
+    "TIME_ZONE_NAME": "America/Regina",
+    "CONNECTED_TIME_ZONE": 78,
+    "CREATE_TIME": "2016-11-09T15:16:28.553",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "America/Resolute",
+    "CONNECTED_TIME_ZONE": 78,
+    "CREATE_TIME": "2016-11-09T14:59:39.217",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "America/Rio",
+    "CONNECTED_TIME_ZONE": 63,
+    "CREATE_TIME": "2021-10-31T12:43:54.303",
+    "CONNECTED_COUNTRY_ID": 21
+  },
+  {
+    "TIME_ZONE_NAME": "America/Rio_Branco",
+    "CONNECTED_TIME_ZONE": 74,
+    "CREATE_TIME": "2016-11-08T18:22:30.917",
+    "CONNECTED_COUNTRY_ID": 21
+  },
+  {
+    "TIME_ZONE_NAME": "America/rio_de_janeiro",
+    "CONNECTED_TIME_ZONE": 63,
+    "CREATE_TIME": "2023-10-15T20:21:27.570",
+    "CONNECTED_COUNTRY_ID": 21
+  },
+  {
+    "TIME_ZONE_NAME": "America/Rosario",
+    "CONNECTED_TIME_ZONE": 64,
+    "CREATE_TIME": "2016-11-12T16:10:48.697",
+    "CONNECTED_COUNTRY_ID": 10
+  },
+  {
+    "TIME_ZONE_NAME": "America/Santa_Isabel",
+    "CONNECTED_TIME_ZONE": 63,
+    "CREATE_TIME": "2016-11-09T16:10:39.760",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "America/Santarem",
+    "CONNECTED_TIME_ZONE": 63,
+    "CREATE_TIME": "2016-11-09T10:48:44.527",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "America/Santiago",
+    "CONNECTED_TIME_ZONE": 72,
+    "CREATE_TIME": "2016-11-08T18:22:30.910",
+    "CONNECTED_COUNTRY_ID": 28
+  },
+  {
+    "TIME_ZONE_NAME": "America/Santo_Domingo",
+    "CONNECTED_TIME_ZONE": 73,
+    "CREATE_TIME": "2016-11-09T13:16:13.833",
+    "CONNECTED_COUNTRY_ID": 183
+  },
+  {
+    "TIME_ZONE_NAME": "America/Sao_Paulo",
+    "CONNECTED_TIME_ZONE": 63,
+    "CREATE_TIME": "2016-11-08T18:22:30.890",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "America/Scoresbysund",
+    "CONNECTED_TIME_ZONE": 66,
+    "CREATE_TIME": "2016-11-11T02:23:30.597",
+    "CONNECTED_COUNTRY_ID": 213
+  },
+  {
+    "TIME_ZONE_NAME": "America/Sitka",
+    "CONNECTED_TIME_ZONE": 88,
+    "CREATE_TIME": "2016-11-19T22:23:23.240",
+    "CONNECTED_COUNTRY_ID": 18
+  },
+  {
+    "TIME_ZONE_NAME": "America/St_Barthelemy",
+    "CONNECTED_TIME_ZONE": 69,
+    "CREATE_TIME": "2016-11-09T16:50:38.370",
+    "CONNECTED_COUNTRY_ID": 265
+  },
+  {
+    "TIME_ZONE_NAME": "America/St_Johns",
+    "CONNECTED_TIME_ZONE": 68,
+    "CREATE_TIME": "2016-11-09T11:31:06.493",
+    "CONNECTED_COUNTRY_ID": 66
+  },
+  {
+    "TIME_ZONE_NAME": "America/St_Kitts",
+    "CONNECTED_TIME_ZONE": 73,
+    "CREATE_TIME": "2016-11-09T15:41:33.270",
+    "CONNECTED_COUNTRY_ID": 215
+  },
+  {
+    "TIME_ZONE_NAME": "America/St_Lucia",
+    "CONNECTED_TIME_ZONE": 73,
+    "CREATE_TIME": "2016-11-09T15:42:38.503",
+    "CONNECTED_COUNTRY_ID": 286
+  },
+  {
+    "TIME_ZONE_NAME": "America/St_Thomas",
+    "CONNECTED_TIME_ZONE": 73,
+    "CREATE_TIME": "2016-11-10T00:37:48.057",
+    "CONNECTED_COUNTRY_ID": 220
+  },
+  {
+    "TIME_ZONE_NAME": "America/St_Vincent",
+    "CONNECTED_TIME_ZONE": 73,
+    "CREATE_TIME": "2016-11-09T19:42:58.163",
+    "CONNECTED_COUNTRY_ID": 233
+  },
+  {
+    "TIME_ZONE_NAME": "America/Swift_Current",
+    "CONNECTED_TIME_ZONE": 78,
+    "CREATE_TIME": "2016-11-10T20:11:51.403",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "America/Tegucigalpa",
+    "CONNECTED_TIME_ZONE": 77,
+    "CREATE_TIME": "2016-11-09T12:04:13.853",
+    "CONNECTED_COUNTRY_ID": 169
+  },
+  {
+    "TIME_ZONE_NAME": "America/Thule",
+    "CONNECTED_TIME_ZONE": 69,
+    "CREATE_TIME": "2016-11-10T17:28:22.480",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "America/Thunder_Bay",
+    "CONNECTED_TIME_ZONE": 75,
+    "CREATE_TIME": "2016-11-09T23:00:08.767",
+    "CONNECTED_COUNTRY_ID": 66
+  },
+  {
+    "TIME_ZONE_NAME": "America/Tijuana",
+    "CONNECTED_TIME_ZONE": 87,
+    "CREATE_TIME": "2016-11-08T18:22:30.950",
+    "CONNECTED_COUNTRY_ID": 31
+  },
+  {
+    "TIME_ZONE_NAME": "America/Toronto",
+    "CONNECTED_TIME_ZONE": 75,
+    "CREATE_TIME": "2016-11-08T18:22:30.920",
+    "CONNECTED_COUNTRY_ID": 66
+  },
+  {
+    "TIME_ZONE_NAME": "America/Tortola",
+    "CONNECTED_TIME_ZONE": 69,
+    "CREATE_TIME": "2016-11-10T00:00:26.330",
+    "CONNECTED_COUNTRY_ID": 220
+  },
+  {
+    "TIME_ZONE_NAME": "America/Vancouver",
+    "CONNECTED_TIME_ZONE": 86,
+    "CREATE_TIME": "2016-11-09T15:31:51.980",
+    "CONNECTED_COUNTRY_ID": 66
+  },
+  {
+    "TIME_ZONE_NAME": "America/Virgin",
+    "CONNECTED_TIME_ZONE": 69,
+    "CREATE_TIME": "2016-11-11T20:43:39.057",
+    "CONNECTED_COUNTRY_ID": 297
+  },
+  {
+    "TIME_ZONE_NAME": "America/Whitehorse",
+    "CONNECTED_TIME_ZONE": 86,
+    "CREATE_TIME": "2016-11-10T20:41:05.833",
+    "CONNECTED_COUNTRY_ID": 66
+  },
+  {
+    "TIME_ZONE_NAME": "America/Winnipeg",
+    "CONNECTED_TIME_ZONE": 78,
+    "CREATE_TIME": "2016-11-09T16:18:54.537",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "America/Yellowknife",
+    "CONNECTED_TIME_ZONE": 85,
+    "CREATE_TIME": "2016-11-09T23:35:50.450",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Amman",
+    "CONNECTED_TIME_ZONE": 9,
+    "CREATE_TIME": "2016-11-10T17:41:52.100",
+    "CONNECTED_COUNTRY_ID": 119
+  },
+  {
+    "TIME_ZONE_NAME": "Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna",
+    "CONNECTED_TIME_ZONE": 4,
+    "CREATE_TIME": "2016-11-09T15:14:41.813",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Antarctica/Casey",
+    "CONNECTED_TIME_ZONE": 97,
+    "CREATE_TIME": "2016-11-09T19:38:29.153",
+    "CONNECTED_COUNTRY_ID": 36
+  },
+  {
+    "TIME_ZONE_NAME": "Antarctica/Davis",
+    "CONNECTED_TIME_ZONE": 95,
+    "CREATE_TIME": "2016-11-09T14:52:22.320",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Antarctica/DumontDUrville",
+    "CONNECTED_TIME_ZONE": 56,
+    "CREATE_TIME": "2016-11-19T04:25:28.677",
+    "CONNECTED_COUNTRY_ID": 296
+  },
+  {
+    "TIME_ZONE_NAME": "Antarctica/Macquarie",
+    "CONNECTED_TIME_ZONE": 48,
+    "CREATE_TIME": "2016-11-10T03:35:51.380",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Antarctica/Mawson",
+    "CONNECTED_TIME_ZONE": 32,
+    "CREATE_TIME": "2016-11-09T15:44:02.480",
+    "CONNECTED_COUNTRY_ID": 296
+  },
+  {
+    "TIME_ZONE_NAME": "Antarctica/Palmer",
+    "CONNECTED_TIME_ZONE": 66,
+    "CREATE_TIME": "2016-11-09T20:41:51.470",
+    "CONNECTED_COUNTRY_ID": 296
+  },
+  {
+    "TIME_ZONE_NAME": "Antarctica/Rothera",
+    "CONNECTED_TIME_ZONE": 66,
+    "CREATE_TIME": "2016-11-09T20:49:40.327",
+    "CONNECTED_COUNTRY_ID": 296
+  },
+  {
+    "TIME_ZONE_NAME": "Antarctica/Syowa",
+    "CONNECTED_TIME_ZONE": 20,
+    "CREATE_TIME": "2016-11-09T15:14:31.667",
+    "CONNECTED_COUNTRY_ID": 296
+  },
+  {
+    "TIME_ZONE_NAME": "Antarctica/Vostok",
+    "CONNECTED_TIME_ZONE": 30,
+    "CREATE_TIME": "2016-11-09T16:47:41.170",
+    "CONNECTED_COUNTRY_ID": 296
+  },
+  {
+    "TIME_ZONE_NAME": "Arab Standard Time",
+    "CONNECTED_TIME_ZONE": 19,
+    "CREATE_TIME": "2016-11-09T22:38:52.460",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Arabian Standard Time",
+    "CONNECTED_TIME_ZONE": 19,
+    "CREATE_TIME": "2016-11-10T02:02:26.537",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Arabic Standard Time",
+    "CONNECTED_TIME_ZONE": 19,
+    "CREATE_TIME": "2016-11-09T19:33:37.737",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Arap Standart Saati",
+    "CONNECTED_TIME_ZONE": 19,
+    "CREATE_TIME": "2016-11-11T19:50:04.110",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Arctic/Longyearbyen",
+    "CONNECTED_TIME_ZONE": 4,
+    "CREATE_TIME": "2016-11-10T18:16:00.970",
+    "CONNECTED_COUNTRY_ID": 27
+  },
+  {
+    "TIME_ZONE_NAME": "Argentina Standard Time",
+    "CONNECTED_TIME_ZONE": 64,
+    "CREATE_TIME": "2016-11-16T14:08:10.717",
+    "CONNECTED_COUNTRY_ID": 10
+  },
+  {
+    "TIME_ZONE_NAME": "Arizona",
+    "CONNECTED_TIME_ZONE": 82,
+    "CREATE_TIME": "2016-11-12T14:55:14.320",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Aden",
+    "CONNECTED_TIME_ZONE": 19,
+    "CREATE_TIME": "2016-11-09T10:51:24.627",
+    "CONNECTED_COUNTRY_ID": 170
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Almaty",
+    "CONNECTED_TIME_ZONE": 36,
+    "CREATE_TIME": "2016-11-08T18:22:30.830",
+    "CONNECTED_COUNTRY_ID": 105
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Am-an",
+    "CONNECTED_TIME_ZONE": 9,
+    "CREATE_TIME": "2019-08-25T13:03:32.013",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Amman",
+    "CONNECTED_TIME_ZONE": 9,
+    "CREATE_TIME": "2016-11-08T18:22:30.780",
+    "CONNECTED_COUNTRY_ID": 119
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Anadyr",
+    "CONNECTED_TIME_ZONE": 58,
+    "CREATE_TIME": "2016-11-09T17:58:22.733",
+    "CONNECTED_COUNTRY_ID": 14
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Aqtau",
+    "CONNECTED_TIME_ZONE": 32,
+    "CREATE_TIME": "2016-11-09T14:35:34.703",
+    "CONNECTED_COUNTRY_ID": 105
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Aqtobe",
+    "CONNECTED_TIME_ZONE": 32,
+    "CREATE_TIME": "2016-11-09T15:22:24.013",
+    "CONNECTED_COUNTRY_ID": 105
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Ashgabat",
+    "CONNECTED_TIME_ZONE": 32,
+    "CREATE_TIME": "2016-11-09T11:59:20.570",
+    "CONNECTED_COUNTRY_ID": 120
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Ashkhabad",
+    "CONNECTED_TIME_ZONE": 32,
+    "CREATE_TIME": "2016-11-08T18:22:30.820",
+    "CONNECTED_COUNTRY_ID": 120
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Baghdad",
+    "CONNECTED_TIME_ZONE": 18,
+    "CREATE_TIME": "2016-11-08T18:22:30.803",
+    "CONNECTED_COUNTRY_ID": 114
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Bahrain",
+    "CONNECTED_TIME_ZONE": 19,
+    "CREATE_TIME": "2016-11-08T18:22:30.807",
+    "CONNECTED_COUNTRY_ID": 116
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Baku",
+    "CONNECTED_TIME_ZONE": 25,
+    "CREATE_TIME": "2016-11-08T18:22:30.817",
+    "CONNECTED_COUNTRY_ID": 77
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Bangkok",
+    "CONNECTED_TIME_ZONE": 39,
+    "CREATE_TIME": "2016-11-08T18:22:30.833",
+    "CONNECTED_COUNTRY_ID": 118
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Beirut",
+    "CONNECTED_TIME_ZONE": 11,
+    "CREATE_TIME": "2016-11-08T18:22:30.787",
+    "CONNECTED_COUNTRY_ID": 123
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Bishkek",
+    "CONNECTED_TIME_ZONE": 36,
+    "CREATE_TIME": "2016-11-09T12:42:28.040",
+    "CONNECTED_COUNTRY_ID": 202
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Brunei",
+    "CONNECTED_TIME_ZONE": 43,
+    "CREATE_TIME": "2016-11-09T16:44:05.620",
+    "CONNECTED_COUNTRY_ID": 276
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Calcutta",
+    "CONNECTED_TIME_ZONE": 33,
+    "CREATE_TIME": "2016-11-08T18:22:30.827",
+    "CONNECTED_COUNTRY_ID": 80
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Chita",
+    "CONNECTED_TIME_ZONE": 48,
+    "CREATE_TIME": "2016-11-17T18:08:15.853",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Choibalsan",
+    "CONNECTED_TIME_ZONE": 42,
+    "CREATE_TIME": "2016-11-09T15:10:12.743",
+    "CONNECTED_COUNTRY_ID": 181
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Chongqing",
+    "CONNECTED_TIME_ZONE": 41,
+    "CREATE_TIME": "2016-11-08T18:22:30.853",
+    "CONNECTED_COUNTRY_ID": 35
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Chungking",
+    "CONNECTED_TIME_ZONE": 41,
+    "CREATE_TIME": "2016-11-08T18:22:30.853",
+    "CONNECTED_COUNTRY_ID": 35
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Colombo",
+    "CONNECTED_TIME_ZONE": 34,
+    "CREATE_TIME": "2016-11-09T12:21:58.667",
+    "CONNECTED_COUNTRY_ID": 156
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Dacca",
+    "CONNECTED_TIME_ZONE": 37,
+    "CREATE_TIME": "2016-11-16T00:15:00.683",
+    "CONNECTED_COUNTRY_ID": 219
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Damascus",
+    "CONNECTED_TIME_ZONE": 19,
+    "CREATE_TIME": "2016-11-09T10:51:48.893",
+    "CONNECTED_COUNTRY_ID": 125
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Dhaka",
+    "CONNECTED_TIME_ZONE": 37,
+    "CREATE_TIME": "2016-11-09T10:50:25.283",
+    "CONNECTED_COUNTRY_ID": 219
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Dili",
+    "CONNECTED_TIME_ZONE": 47,
+    "CREATE_TIME": "2016-11-09T23:20:41.167",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Dubai",
+    "CONNECTED_TIME_ZONE": 24,
+    "CREATE_TIME": "2016-11-08T18:22:30.817",
+    "CONNECTED_COUNTRY_ID": 124
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Dushanbe",
+    "CONNECTED_TIME_ZONE": 32,
+    "CREATE_TIME": "2016-11-09T11:25:47.753",
+    "CONNECTED_COUNTRY_ID": 184
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Famagusta",
+    "CONNECTED_TIME_ZONE": 10,
+    "CREATE_TIME": "2017-07-14T20:04:59.653",
+    "CONNECTED_COUNTRY_ID": 39
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Gaza",
+    "CONNECTED_TIME_ZONE": 15,
+    "CREATE_TIME": "2016-11-09T11:07:24.713",
+    "CONNECTED_COUNTRY_ID": 6
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Harbin",
+    "CONNECTED_TIME_ZONE": 41,
+    "CREATE_TIME": "2016-11-11T00:58:00.280",
+    "CONNECTED_COUNTRY_ID": 35
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Hebron",
+    "CONNECTED_TIME_ZONE": 15,
+    "CREATE_TIME": "2016-11-09T10:51:26.910",
+    "CONNECTED_COUNTRY_ID": 6
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Ho_Chi_Minh",
+    "CONNECTED_TIME_ZONE": 39,
+    "CREATE_TIME": "2016-11-09T14:51:40.480",
+    "CONNECTED_COUNTRY_ID": 155
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Hong_Kong",
+    "CONNECTED_TIME_ZONE": 41,
+    "CREATE_TIME": "2016-11-08T18:22:30.850",
+    "CONNECTED_COUNTRY_ID": 79
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Hovd",
+    "CONNECTED_TIME_ZONE": 95,
+    "CREATE_TIME": "2016-11-13T08:29:07.353",
+    "CONNECTED_COUNTRY_ID": 181
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Irkutsk",
+    "CONNECTED_TIME_ZONE": 42,
+    "CREATE_TIME": "2016-11-08T18:22:30.857",
+    "CONNECTED_COUNTRY_ID": 14
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Istanbul",
+    "CONNECTED_TIME_ZONE": 98,
+    "CREATE_TIME": "2016-11-08T18:22:30.967",
+    "CONNECTED_COUNTRY_ID": 12
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Jakarta",
+    "CONNECTED_TIME_ZONE": 39,
+    "CREATE_TIME": "2016-11-08T18:22:30.837",
+    "CONNECTED_COUNTRY_ID": 75
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Jayapura",
+    "CONNECTED_TIME_ZONE": 47,
+    "CREATE_TIME": "2016-11-09T16:04:29.233",
+    "CONNECTED_COUNTRY_ID": 75
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Jerusalem",
+    "CONNECTED_TIME_ZONE": 15,
+    "CREATE_TIME": "2016-11-08T18:22:30.800",
+    "CONNECTED_COUNTRY_ID": 6
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Kabul",
+    "CONNECTED_TIME_ZONE": 29,
+    "CREATE_TIME": "2016-11-08T18:22:30.820",
+    "CONNECTED_COUNTRY_ID": 185
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Kamchatka",
+    "CONNECTED_TIME_ZONE": 58,
+    "CREATE_TIME": "2016-11-08T18:22:30.883",
+    "CONNECTED_COUNTRY_ID": 14
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Karachi",
+    "CONNECTED_TIME_ZONE": 31,
+    "CREATE_TIME": "2016-11-08T18:22:30.823",
+    "CONNECTED_COUNTRY_ID": 172
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Kathmandu",
+    "CONNECTED_TIME_ZONE": 35,
+    "CREATE_TIME": "2016-11-08T18:22:30.827",
+    "CONNECTED_COUNTRY_ID": 216
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Katmandu",
+    "CONNECTED_TIME_ZONE": 35,
+    "CREATE_TIME": "2016-11-08T18:22:30.830",
+    "CONNECTED_COUNTRY_ID": 216
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Kolkata",
+    "CONNECTED_TIME_ZONE": 33,
+    "CREATE_TIME": "2016-11-08T18:22:30.827",
+    "CONNECTED_COUNTRY_ID": 80
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Krasnoyarsk",
+    "CONNECTED_TIME_ZONE": 40,
+    "CREATE_TIME": "2016-11-08T18:22:30.843",
+    "CONNECTED_COUNTRY_ID": 14
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Kuala_Lumpur",
+    "CONNECTED_TIME_ZONE": 43,
+    "CREATE_TIME": "2016-11-08T18:22:30.857",
+    "CONNECTED_COUNTRY_ID": 82
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Kuching",
+    "CONNECTED_TIME_ZONE": 43,
+    "CREATE_TIME": "2016-11-09T11:28:38.657",
+    "CONNECTED_COUNTRY_ID": 82
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Kuwait",
+    "CONNECTED_TIME_ZONE": 19,
+    "CREATE_TIME": "2016-11-08T18:22:30.807",
+    "CONNECTED_COUNTRY_ID": 126
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Macao",
+    "CONNECTED_TIME_ZONE": 41,
+    "CREATE_TIME": "2016-11-08T18:22:30.850",
+    "CONNECTED_COUNTRY_ID": 154
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Macau",
+    "CONNECTED_TIME_ZONE": 41,
+    "CREATE_TIME": "2016-11-08T18:22:30.850",
+    "CONNECTED_COUNTRY_ID": 154
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Magadan",
+    "CONNECTED_TIME_ZONE": 56,
+    "CREATE_TIME": "2016-11-08T18:22:30.880",
+    "CONNECTED_COUNTRY_ID": 14
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Makassar",
+    "CONNECTED_TIME_ZONE": 43,
+    "CREATE_TIME": "2016-11-09T12:50:21.587",
+    "CONNECTED_COUNTRY_ID": 75
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Manila",
+    "CONNECTED_TIME_ZONE": 45,
+    "CREATE_TIME": "2016-11-09T14:41:31.417",
+    "CONNECTED_COUNTRY_ID": 200
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Muscat",
+    "CONNECTED_TIME_ZONE": 24,
+    "CREATE_TIME": "2016-11-08T18:22:30.817",
+    "CONNECTED_COUNTRY_ID": 117
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Nicosia",
+    "CONNECTED_TIME_ZONE": 10,
+    "CREATE_TIME": "2016-11-08T18:22:30.787",
+    "CONNECTED_COUNTRY_ID": 39
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Novokuznetsk",
+    "CONNECTED_TIME_ZONE": 95,
+    "CREATE_TIME": "2016-11-08T18:22:30.830",
+    "CONNECTED_COUNTRY_ID": 14
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Novosibirsk",
+    "CONNECTED_TIME_ZONE": 95,
+    "CREATE_TIME": "2016-11-08T18:22:30.963",
+    "CONNECTED_COUNTRY_ID": 14
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Omsk",
+    "CONNECTED_TIME_ZONE": 30,
+    "CREATE_TIME": "2016-11-09T15:57:34.170",
+    "CONNECTED_COUNTRY_ID": 14
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Oral",
+    "CONNECTED_TIME_ZONE": 32,
+    "CREATE_TIME": "2016-11-09T14:59:30.497",
+    "CONNECTED_COUNTRY_ID": 105
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Philippine",
+    "CONNECTED_TIME_ZONE": 43,
+    "CREATE_TIME": "2016-11-15T00:33:37.797",
+    "CONNECTED_COUNTRY_ID": 200
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Phnom_Penh",
+    "CONNECTED_TIME_ZONE": 39,
+    "CREATE_TIME": "2016-11-09T14:58:44.643",
+    "CONNECTED_COUNTRY_ID": 203
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Pontianak",
+    "CONNECTED_TIME_ZONE": 39,
+    "CREATE_TIME": "2016-11-09T23:11:42.977",
+    "CONNECTED_COUNTRY_ID": 75
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Qatar",
+    "CONNECTED_TIME_ZONE": 19,
+    "CREATE_TIME": "2016-11-08T18:22:30.807",
+    "CONNECTED_COUNTRY_ID": 115
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Qyzylorda",
+    "CONNECTED_TIME_ZONE": 36,
+    "CREATE_TIME": "2016-11-09T15:57:33.083",
+    "CONNECTED_COUNTRY_ID": 105
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Rangoon",
+    "CONNECTED_TIME_ZONE": 38,
+    "CREATE_TIME": "2016-11-08T18:22:30.833",
+    "CONNECTED_COUNTRY_ID": 55
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Riyadh",
+    "CONNECTED_TIME_ZONE": 19,
+    "CREATE_TIME": "2016-11-08T18:22:30.807",
+    "CONNECTED_COUNTRY_ID": 122
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Saigon",
+    "CONNECTED_TIME_ZONE": 39,
+    "CREATE_TIME": "2016-11-08T18:22:30.833",
+    "CONNECTED_COUNTRY_ID": 155
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Sakhalin",
+    "CONNECTED_TIME_ZONE": 97,
+    "CREATE_TIME": "2016-11-08T18:22:30.967",
+    "CONNECTED_COUNTRY_ID": 14
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Samarkand",
+    "CONNECTED_TIME_ZONE": 32,
+    "CREATE_TIME": "2016-11-09T11:01:25.140",
+    "CONNECTED_COUNTRY_ID": 121
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Seoul",
+    "CONNECTED_TIME_ZONE": 47,
+    "CREATE_TIME": "2016-11-08T18:22:30.863",
+    "CONNECTED_COUNTRY_ID": 86
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Shanghai",
+    "CONNECTED_TIME_ZONE": 41,
+    "CREATE_TIME": "2016-11-08T18:22:30.847",
+    "CONNECTED_COUNTRY_ID": 35
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Singapore",
+    "CONNECTED_TIME_ZONE": 43,
+    "CREATE_TIME": "2016-11-08T18:22:30.860",
+    "CONNECTED_COUNTRY_ID": 50
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Taipei",
+    "CONNECTED_TIME_ZONE": 45,
+    "CREATE_TIME": "2016-11-08T18:22:30.860",
+    "CONNECTED_COUNTRY_ID": 163
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Tashkent",
+    "CONNECTED_TIME_ZONE": 32,
+    "CREATE_TIME": "2016-11-08T18:22:30.827",
+    "CONNECTED_COUNTRY_ID": 121
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Tbilisi",
+    "CONNECTED_TIME_ZONE": 22,
+    "CREATE_TIME": "2016-11-08T18:22:30.813",
+    "CONNECTED_COUNTRY_ID": 78
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Tehran",
+    "CONNECTED_TIME_ZONE": 23,
+    "CREATE_TIME": "2016-11-08T18:22:30.813",
+    "CONNECTED_COUNTRY_ID": 81
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Tel_Aviv",
+    "CONNECTED_TIME_ZONE": 15,
+    "CREATE_TIME": "2016-11-08T18:22:30.800",
+    "CONNECTED_COUNTRY_ID": 6
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Thimphu",
+    "CONNECTED_TIME_ZONE": 37,
+    "CREATE_TIME": "2016-11-09T23:52:39.497",
+    "CONNECTED_COUNTRY_ID": 224
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Tokyo",
+    "CONNECTED_TIME_ZONE": 46,
+    "CREATE_TIME": "2016-11-08T18:22:30.863",
+    "CONNECTED_COUNTRY_ID": 34
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Ulaanbaatar",
+    "CONNECTED_TIME_ZONE": 42,
+    "CREATE_TIME": "2016-11-08T18:22:30.857",
+    "CONNECTED_COUNTRY_ID": 181
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Ulan_Bator",
+    "CONNECTED_TIME_ZONE": 42,
+    "CREATE_TIME": "2016-11-08T18:22:30.857",
+    "CONNECTED_COUNTRY_ID": 181
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Urumqi",
+    "CONNECTED_TIME_ZONE": 41,
+    "CREATE_TIME": "2016-11-08T18:22:30.853",
+    "CONNECTED_COUNTRY_ID": 35
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Vientiane",
+    "CONNECTED_TIME_ZONE": 39,
+    "CREATE_TIME": "2016-11-08T18:22:30.840",
+    "CONNECTED_COUNTRY_ID": 160
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Vladivostok",
+    "CONNECTED_TIME_ZONE": 55,
+    "CREATE_TIME": "2016-11-08T18:22:30.880",
+    "CONNECTED_COUNTRY_ID": 14
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Yakutsk",
+    "CONNECTED_TIME_ZONE": 48,
+    "CREATE_TIME": "2016-11-08T18:22:30.863",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Yekaterinburg",
+    "CONNECTED_TIME_ZONE": 30,
+    "CREATE_TIME": "2016-11-08T18:22:30.820",
+    "CONNECTED_COUNTRY_ID": 14
+  },
+  {
+    "TIME_ZONE_NAME": "Asia/Yerevan",
+    "CONNECTED_TIME_ZONE": 28,
+    "CREATE_TIME": "2016-11-08T18:22:30.820",
+    "CONNECTED_COUNTRY_ID": 49
+  },
+  {
+    "TIME_ZONE_NAME": "Astana, Dhaka",
+    "CONNECTED_TIME_ZONE": 37,
+    "CREATE_TIME": "2016-11-10T17:47:29.340",
+    "CONNECTED_COUNTRY_ID": 219
+  },
+  {
+    "TIME_ZONE_NAME": "Asuncion",
+    "CONNECTED_TIME_ZONE": 92,
+    "CREATE_TIME": "2016-11-10T22:48:51.743",
+    "CONNECTED_COUNTRY_ID": 108
+  },
+  {
+    "TIME_ZONE_NAME": "Asunción",
+    "CONNECTED_TIME_ZONE": 92,
+    "CREATE_TIME": "2016-11-09T19:22:31.530",
+    "CONNECTED_COUNTRY_ID": 108
+  },
+  {
+    "TIME_ZONE_NAME": "Athens, Bucharest",
+    "CONNECTED_TIME_ZONE": 10,
+    "CREATE_TIME": "2016-11-09T16:01:15.083",
+    "CONNECTED_COUNTRY_ID": 29
+  },
+  {
+    "TIME_ZONE_NAME": "Athens, Bucharest, Istanbul",
+    "CONNECTED_TIME_ZONE": 10,
+    "CREATE_TIME": "2016-11-09T16:17:53.927",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Atlantic Time (Canada)",
+    "CONNECTED_TIME_ZONE": 69,
+    "CREATE_TIME": "2016-11-09T16:18:30.697",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Atlantic/Azores",
+    "CONNECTED_TIME_ZONE": 60,
+    "CREATE_TIME": "2016-11-08T18:22:30.887",
+    "CONNECTED_COUNTRY_ID": 11
+  },
+  {
+    "TIME_ZONE_NAME": "Atlantic/Bermuda",
+    "CONNECTED_TIME_ZONE": 69,
+    "CREATE_TIME": "2016-11-08T18:22:30.907",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Atlantic/Canary",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-08T18:22:30.770",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Atlantic/Cape_Verde",
+    "CONNECTED_TIME_ZONE": 61,
+    "CREATE_TIME": "2016-11-08T18:22:30.887",
+    "CONNECTED_COUNTRY_ID": 145
+  },
+  {
+    "TIME_ZONE_NAME": "Atlantic/Faeroe",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-08T18:22:30.770",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Atlantic/Faroe",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-08T18:22:30.773",
+    "CONNECTED_COUNTRY_ID": 106
+  },
+  {
+    "TIME_ZONE_NAME": "Atlantic/Jan_Mayen",
+    "CONNECTED_TIME_ZONE": 4,
+    "CREATE_TIME": "2016-11-08T18:22:30.753",
+    "CONNECTED_COUNTRY_ID": 138
+  },
+  {
+    "TIME_ZONE_NAME": "Atlantic/Madeira",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-08T18:22:30.770",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Atlantic/Reykjavik",
+    "CONNECTED_TIME_ZONE": 3,
+    "CREATE_TIME": "2016-11-08T18:22:30.743",
+    "CONNECTED_COUNTRY_ID": 32
+  },
+  {
+    "TIME_ZONE_NAME": "Atlantic/South_Georgia",
+    "CONNECTED_TIME_ZONE": 62,
+    "CREATE_TIME": "2016-11-08T18:22:30.887",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Atlantic/St_Helena",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-08T18:22:30.723",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Atlantic/Stanley",
+    "CONNECTED_TIME_ZONE": 62,
+    "CREATE_TIME": "2016-11-08T18:22:30.903",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "AUS Eastern Standard Time",
+    "CONNECTED_TIME_ZONE": 52,
+    "CREATE_TIME": "2016-11-14T06:38:24.990",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Australia/ACT",
+    "CONNECTED_TIME_ZONE": 52,
+    "CREATE_TIME": "2016-11-08T18:22:30.870",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Australia/Adelaide",
+    "CONNECTED_TIME_ZONE": 49,
+    "CREATE_TIME": "2016-11-08T18:22:30.867",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Australia/Brisbane",
+    "CONNECTED_TIME_ZONE": 51,
+    "CREATE_TIME": "2016-11-08T18:22:30.870",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Australia/Broken_Hill",
+    "CONNECTED_TIME_ZONE": 49,
+    "CREATE_TIME": "2016-11-08T18:22:30.867",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Australia/Canberra",
+    "CONNECTED_TIME_ZONE": 52,
+    "CREATE_TIME": "2016-11-08T18:22:30.870",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Australia/Currie",
+    "CONNECTED_TIME_ZONE": 54,
+    "CREATE_TIME": "2016-11-08T18:22:30.880",
+    "CONNECTED_COUNTRY_ID": 36
+  },
+  {
+    "TIME_ZONE_NAME": "Australia/Darwin",
+    "CONNECTED_TIME_ZONE": 50,
+    "CREATE_TIME": "2016-11-08T18:22:30.867",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Australia/Eucla",
+    "CONNECTED_TIME_ZONE": 44,
+    "CREATE_TIME": "2016-11-08T18:22:30.860",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Australia/Hobart",
+    "CONNECTED_TIME_ZONE": 54,
+    "CREATE_TIME": "2016-11-08T18:22:30.880",
+    "CONNECTED_COUNTRY_ID": 36
+  },
+  {
+    "TIME_ZONE_NAME": "Australia/LHI",
+    "CONNECTED_TIME_ZONE": 52,
+    "CREATE_TIME": "2016-11-08T18:22:30.870",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Australia/Lindeman",
+    "CONNECTED_TIME_ZONE": 52,
+    "CREATE_TIME": "2016-11-08T18:22:30.873",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Australia/Lord_Howe",
+    "CONNECTED_TIME_ZONE": 54,
+    "CREATE_TIME": "2016-11-08T18:22:30.880",
+    "CONNECTED_COUNTRY_ID": 36
+  },
+  {
+    "TIME_ZONE_NAME": "Australia/Melbourne",
+    "CONNECTED_TIME_ZONE": 52,
+    "CREATE_TIME": "2016-11-08T18:22:30.870",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Australia/North",
+    "CONNECTED_TIME_ZONE": 50,
+    "CREATE_TIME": "2016-11-08T18:22:30.867",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Australia/NSW",
+    "CONNECTED_TIME_ZONE": 52,
+    "CREATE_TIME": "2016-11-08T18:22:30.873",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Australia/Perth",
+    "CONNECTED_TIME_ZONE": 44,
+    "CREATE_TIME": "2016-11-08T18:22:30.860",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Australia/Queensland",
+    "CONNECTED_TIME_ZONE": 52,
+    "CREATE_TIME": "2016-11-08T18:22:30.873",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Australia/South",
+    "CONNECTED_TIME_ZONE": 52,
+    "CREATE_TIME": "2016-11-08T18:22:30.873",
+    "CONNECTED_COUNTRY_ID": 36
+  },
+  {
+    "TIME_ZONE_NAME": "Australia/Sydney",
+    "CONNECTED_TIME_ZONE": 52,
+    "CREATE_TIME": "2016-11-08T18:22:30.870",
+    "CONNECTED_COUNTRY_ID": 36
+  },
+  {
+    "TIME_ZONE_NAME": "Australia/Tasmania",
+    "CONNECTED_TIME_ZONE": 54,
+    "CREATE_TIME": "2016-11-08T18:22:30.880",
+    "CONNECTED_COUNTRY_ID": 36
+  },
+  {
+    "TIME_ZONE_NAME": "Australia/Victoria",
+    "CONNECTED_TIME_ZONE": 52,
+    "CREATE_TIME": "2016-11-08T18:22:30.873",
+    "CONNECTED_COUNTRY_ID": 36
+  },
+  {
+    "TIME_ZONE_NAME": "Australia/West",
+    "CONNECTED_TIME_ZONE": 44,
+    "CREATE_TIME": "2016-11-08T18:22:30.860",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Australia/Yancowinna",
+    "CONNECTED_TIME_ZONE": 52,
+    "CREATE_TIME": "2016-11-08T18:22:30.877",
+    "CONNECTED_COUNTRY_ID": 36
+  },
+  {
+    "TIME_ZONE_NAME": "Az?rbaycan Standart Vaxti",
+    "CONNECTED_TIME_ZONE": 25,
+    "CREATE_TIME": "2016-11-21T12:34:52.717",
+    "CONNECTED_COUNTRY_ID": 77
+  },
+  {
+    "TIME_ZONE_NAME": "Azerbaycan Standart Saati",
+    "CONNECTED_TIME_ZONE": 25,
+    "CREATE_TIME": "2016-11-20T19:40:54.440",
+    "CONNECTED_COUNTRY_ID": 77
+  },
+  {
+    "TIME_ZONE_NAME": "Azores",
+    "CONNECTED_TIME_ZONE": 60,
+    "CREATE_TIME": "2016-11-18T23:31:20.887",
+    "CONNECTED_COUNTRY_ID": 11
+  },
+  {
+    "TIME_ZONE_NAME": "B. Merkez Afrika Standart Saati",
+    "CONNECTED_TIME_ZONE": 25,
+    "CREATE_TIME": "2016-11-20T06:41:08.720",
+    "CONNECTED_COUNTRY_ID": 141
+  },
+  {
+    "TIME_ZONE_NAME": "Baghdad",
+    "CONNECTED_TIME_ZONE": 18,
+    "CREATE_TIME": "2016-11-11T02:17:03.327",
+    "CONNECTED_COUNTRY_ID": 114
+  },
+  {
+    "TIME_ZONE_NAME": "Bahia Standard Time",
+    "CONNECTED_TIME_ZONE": 96,
+    "CREATE_TIME": "2016-11-20T19:04:52.670",
+    "CONNECTED_COUNTRY_ID": 21
+  },
+  {
+    "TIME_ZONE_NAME": "Bangkok, Hanoi, Jakarta",
+    "CONNECTED_TIME_ZONE": 39,
+    "CREATE_TIME": "2016-11-09T16:40:20.977",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Bangladesh Standard Time",
+    "CONNECTED_TIME_ZONE": 37,
+    "CREATE_TIME": "2016-11-10T12:35:51.423",
+    "CONNECTED_COUNTRY_ID": 219
+  },
+  {
+    "TIME_ZONE_NAME": "Bati Avrupa Standart Saati",
+    "CONNECTED_TIME_ZONE": 4,
+    "CREATE_TIME": "2016-11-11T00:22:13.790",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Beijing, Chongqing, Hong Kong, Urumqi",
+    "CONNECTED_TIME_ZONE": 41,
+    "CREATE_TIME": "2016-11-09T17:20:54.023",
+    "CONNECTED_COUNTRY_ID": 35
+  },
+  {
+    "TIME_ZONE_NAME": "Beirut",
+    "CONNECTED_TIME_ZONE": 11,
+    "CREATE_TIME": "2016-11-10T14:20:00.383",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Belarus Standart Saati",
+    "CONNECTED_TIME_ZONE": 20,
+    "CREATE_TIME": "2016-11-13T21:34:19.450",
+    "CONNECTED_COUNTRY_ID": 104
+  },
+  {
+    "TIME_ZONE_NAME": "Belgrade, Bratislava, Budapest, Ljubljana, Prague",
+    "CONNECTED_TIME_ZONE": 5,
+    "CREATE_TIME": "2016-11-09T15:11:16.740",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Bogota, Lima, Quito, Rio Branco",
+    "CONNECTED_TIME_ZONE": 74,
+    "CREATE_TIME": "2016-11-09T20:16:01.540",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Bogotá, Lima, Quito, Rio Branco",
+    "CONNECTED_TIME_ZONE": 74,
+    "CREATE_TIME": "2016-11-09T10:45:24.430",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Brasilia",
+    "CONNECTED_TIME_ZONE": 63,
+    "CREATE_TIME": "2016-11-09T10:45:38.853",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Brazil/Acre",
+    "CONNECTED_TIME_ZONE": 71,
+    "CREATE_TIME": "2016-11-08T18:22:30.907",
+    "CONNECTED_COUNTRY_ID": 21
+  },
+  {
+    "TIME_ZONE_NAME": "Brazil/DeNoronha",
+    "CONNECTED_TIME_ZONE": 63,
+    "CREATE_TIME": "2016-11-08T18:22:30.890",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Brazil/East",
+    "CONNECTED_TIME_ZONE": 63,
+    "CREATE_TIME": "2016-11-08T18:22:30.890",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Brazil/West",
+    "CONNECTED_TIME_ZONE": 71,
+    "CREATE_TIME": "2016-11-08T18:22:30.907",
+    "CONNECTED_COUNTRY_ID": 21
+  },
+  {
+    "TIME_ZONE_NAME": "Buenos Aires",
+    "CONNECTED_TIME_ZONE": 64,
+    "CREATE_TIME": "2016-11-09T12:03:03.943",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Cabo Verde Standard Time",
+    "CONNECTED_TIME_ZONE": 61,
+    "CREATE_TIME": "2016-11-19T00:57:37.883",
+    "CONNECTED_COUNTRY_ID": 145
+  },
+  {
+    "TIME_ZONE_NAME": "Cairo",
+    "CONNECTED_TIME_ZONE": 12,
+    "CREATE_TIME": "2016-11-09T15:30:13.873",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Canada/Atlantic",
+    "CONNECTED_TIME_ZONE": 69,
+    "CREATE_TIME": "2016-11-08T18:22:30.907",
+    "CONNECTED_COUNTRY_ID": 66
+  },
+  {
+    "TIME_ZONE_NAME": "Canada/Central",
+    "CONNECTED_TIME_ZONE": 78,
+    "CREATE_TIME": "2016-11-08T18:22:30.930",
+    "CONNECTED_COUNTRY_ID": 66
+  },
+  {
+    "TIME_ZONE_NAME": "Canada/East-Saskatchewan",
+    "CONNECTED_TIME_ZONE": 81,
+    "CREATE_TIME": "2016-11-08T18:22:30.940",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Canada/Eastern",
+    "CONNECTED_TIME_ZONE": 75,
+    "CREATE_TIME": "2016-11-08T18:22:30.917",
+    "CONNECTED_COUNTRY_ID": 66
+  },
+  {
+    "TIME_ZONE_NAME": "Canada/Mountain",
+    "CONNECTED_TIME_ZONE": 85,
+    "CREATE_TIME": "2016-11-08T18:22:30.943",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Canada/Newfoundland",
+    "CONNECTED_TIME_ZONE": 68,
+    "CREATE_TIME": "2016-11-08T18:22:30.903",
+    "CONNECTED_COUNTRY_ID": 66
+  },
+  {
+    "TIME_ZONE_NAME": "Canada/Pacific",
+    "CONNECTED_TIME_ZONE": 86,
+    "CREATE_TIME": "2016-11-08T18:22:30.947",
+    "CONNECTED_COUNTRY_ID": 66
+  },
+  {
+    "TIME_ZONE_NAME": "Canada/Saskatchewan",
+    "CONNECTED_TIME_ZONE": 81,
+    "CREATE_TIME": "2016-11-08T18:22:30.937",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Canada/Yukon",
+    "CONNECTED_TIME_ZONE": 86,
+    "CREATE_TIME": "2016-11-08T18:22:30.947",
+    "CONNECTED_COUNTRY_ID": 66
+  },
+  {
+    "TIME_ZONE_NAME": "Canberra, Melbourne, Sydney",
+    "CONNECTED_TIME_ZONE": 52,
+    "CREATE_TIME": "2016-11-10T22:56:16.543",
+    "CONNECTED_COUNTRY_ID": 36
+  },
+  {
+    "TIME_ZONE_NAME": "Cape Verde Is.",
+    "CONNECTED_TIME_ZONE": 61,
+    "CREATE_TIME": "2016-11-09T12:41:39.587",
+    "CONNECTED_COUNTRY_ID": 145
+  },
+  {
+    "TIME_ZONE_NAME": "Caracas",
+    "CONNECTED_TIME_ZONE": 73,
+    "CREATE_TIME": "2016-11-09T15:11:13.907",
+    "CONNECTED_COUNTRY_ID": 110
+  },
+  {
+    "TIME_ZONE_NAME": "Casablanca",
+    "CONNECTED_TIME_ZONE": 1,
+    "CREATE_TIME": "2016-11-09T12:01:10.073",
+    "CONNECTED_COUNTRY_ID": 127
+  },
+  {
+    "TIME_ZONE_NAME": "Central America",
+    "CONNECTED_TIME_ZONE": 77,
+    "CREATE_TIME": "2016-11-09T15:11:26.673",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Central America Standard Time",
+    "CONNECTED_TIME_ZONE": 77,
+    "CREATE_TIME": "2016-11-10T17:00:51.630",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Central Europe Standard Time",
+    "CONNECTED_TIME_ZONE": 4,
+    "CREATE_TIME": "2016-11-09T15:54:25.093",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Central European Standard Time",
+    "CONNECTED_TIME_ZONE": 4,
+    "CREATE_TIME": "2016-11-10T00:48:48.480",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Central Standard Time",
+    "CONNECTED_TIME_ZONE": 78,
+    "CREATE_TIME": "2016-11-11T22:48:23.203",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Central Time (US ",
+    "CONNECTED_TIME_ZONE": 78,
+    "CREATE_TIME": "2016-11-09T16:49:15.507",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Centre de l’Europe",
+    "CONNECTED_TIME_ZONE": 5,
+    "CREATE_TIME": "2016-11-11T11:47:32.287",
+    "CONNECTED_COUNTRY_ID": 19
+  },
+  {
+    "TIME_ZONE_NAME": "CET",
+    "CONNECTED_TIME_ZONE": 5,
+    "CREATE_TIME": "2016-11-08T18:22:30.760",
+    "CONNECTED_COUNTRY_ID": 19
+  },
+  {
+    "TIME_ZONE_NAME": "Chennai, Kolkata, Mumbai, New Delhi",
+    "CONNECTED_TIME_ZONE": 33,
+    "CREATE_TIME": "2016-11-09T15:55:22.707",
+    "CONNECTED_COUNTRY_ID": 80
+  },
+  {
+    "TIME_ZONE_NAME": "Chihuahua, La Paz, Mazatlan",
+    "CONNECTED_TIME_ZONE": 83,
+    "CREATE_TIME": "2016-11-10T02:26:59.913",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Chile/Continental",
+    "CONNECTED_TIME_ZONE": 72,
+    "CREATE_TIME": "2016-11-08T18:22:30.910",
+    "CONNECTED_COUNTRY_ID": 28
+  },
+  {
+    "TIME_ZONE_NAME": "Chile/EasterIsland",
+    "CONNECTED_TIME_ZONE": 74,
+    "CREATE_TIME": "2016-11-08T18:22:30.910",
+    "CONNECTED_COUNTRY_ID": 28
+  },
+  {
+    "TIME_ZONE_NAME": "China Standard Time",
+    "CONNECTED_TIME_ZONE": 41,
+    "CREATE_TIME": "2016-11-13T08:55:01.610",
+    "CONNECTED_COUNTRY_ID": 35
+  },
+  {
+    "TIME_ZONE_NAME": "Co-ordinated Universal Time",
+    "CONNECTED_TIME_ZONE": 0,
+    "CREATE_TIME": "2016-11-12T13:17:03.273",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Coordinated Universal Time",
+    "CONNECTED_TIME_ZONE": 0,
+    "CREATE_TIME": "2016-11-10T09:38:42.510",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Dateline Standard Time",
+    "CONNECTED_TIME_ZONE": 91,
+    "CREATE_TIME": "2016-11-09T22:34:31.187",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "E. Africa Standard Time",
+    "CONNECTED_TIME_ZONE": 21,
+    "CREATE_TIME": "2016-11-09T18:38:34.493",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "E. Europe Standard Time",
+    "CONNECTED_TIME_ZONE": 5,
+    "CREATE_TIME": "2016-11-10T11:08:39.190",
+    "CONNECTED_COUNTRY_ID": 19
+  },
+  {
+    "TIME_ZONE_NAME": "E. South America Standard Time",
+    "CONNECTED_TIME_ZONE": 63,
+    "CREATE_TIME": "2016-11-16T22:22:50.427",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Eastern Standard Time",
+    "CONNECTED_TIME_ZONE": 75,
+    "CREATE_TIME": "2016-11-12T13:56:06.740",
+    "CONNECTED_COUNTRY_ID": 18
+  },
+  {
+    "TIME_ZONE_NAME": "Eastern Time (US ",
+    "CONNECTED_TIME_ZONE": 75,
+    "CREATE_TIME": "2016-11-09T14:50:26.770",
+    "CONNECTED_COUNTRY_ID": 18
+  },
+  {
+    "TIME_ZONE_NAME": "Egypt",
+    "CONNECTED_TIME_ZONE": 12,
+    "CREATE_TIME": "2016-11-08T18:22:30.790",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Egypt Standard Time",
+    "CONNECTED_TIME_ZONE": 12,
+    "CREATE_TIME": "2016-11-09T15:15:59.683",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Eire",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-08T18:22:30.733",
+    "CONNECTED_COUNTRY_ID": 9
+  },
+  {
+    "TIME_ZONE_NAME": "Ekaterinburg",
+    "CONNECTED_TIME_ZONE": 30,
+    "CREATE_TIME": "2016-11-19T09:32:39.290",
+    "CONNECTED_COUNTRY_ID": 14
+  },
+  {
+    "TIME_ZONE_NAME": "Est",
+    "CONNECTED_TIME_ZONE": 0,
+    "CREATE_TIME": "2016-11-11T14:37:46.083",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Etc/GMT",
+    "CONNECTED_TIME_ZONE": 1,
+    "CREATE_TIME": "2016-11-08T18:22:30.723",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Etc/GMT 2",
+    "CONNECTED_TIME_ZONE": 62,
+    "CREATE_TIME": "2016-11-13T14:55:50.380",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Etc/GMT 3",
+    "CONNECTED_TIME_ZONE": 63,
+    "CREATE_TIME": "2016-11-10T15:52:35.370",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Etc/GMT 4",
+    "CONNECTED_TIME_ZONE": 63,
+    "CREATE_TIME": "2016-11-10T16:16:19.240",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Etc/GMT 5",
+    "CONNECTED_TIME_ZONE": 75,
+    "CREATE_TIME": "2016-11-10T23:07:40.713",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Etc/GMT+0",
+    "CONNECTED_TIME_ZONE": 1,
+    "CREATE_TIME": "2016-11-08T18:22:30.737",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Etc/GMT+1",
+    "CONNECTED_TIME_ZONE": 61,
+    "CREATE_TIME": "2016-11-08T18:22:30.753",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Etc/GMT+10",
+    "CONNECTED_TIME_ZONE": 89,
+    "CREATE_TIME": "2016-11-08T18:22:30.877",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Etc/GMT+11",
+    "CONNECTED_TIME_ZONE": 90,
+    "CREATE_TIME": "2016-11-08T18:22:30.883",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Etc/GMT+12",
+    "CONNECTED_TIME_ZONE": 91,
+    "CREATE_TIME": "2016-11-08T18:22:30.883",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Etc/GMT+2",
+    "CONNECTED_TIME_ZONE": 62,
+    "CREATE_TIME": "2016-11-08T18:22:30.787",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Etc/GMT+3",
+    "CONNECTED_TIME_ZONE": 63,
+    "CREATE_TIME": "2016-11-08T18:22:30.807",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Etc/GMT+4",
+    "CONNECTED_TIME_ZONE": 69,
+    "CREATE_TIME": "2016-11-08T18:22:30.820",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Etc/GMT+5",
+    "CONNECTED_TIME_ZONE": 75,
+    "CREATE_TIME": "2016-11-08T18:22:30.823",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Etc/GMT+6",
+    "CONNECTED_TIME_ZONE": 78,
+    "CREATE_TIME": "2016-11-08T18:22:30.833",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Etc/GMT+7",
+    "CONNECTED_TIME_ZONE": 85,
+    "CREATE_TIME": "2016-11-08T18:22:30.840",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Etc/GMT+8",
+    "CONNECTED_TIME_ZONE": 86,
+    "CREATE_TIME": "2016-11-08T18:22:30.853",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Etc/GMT+9",
+    "CONNECTED_TIME_ZONE": 88,
+    "CREATE_TIME": "2016-11-08T18:22:30.863",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Etc/GMT-0",
+    "CONNECTED_TIME_ZONE": 1,
+    "CREATE_TIME": "2016-11-08T18:22:30.740",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Etc/GMT-1",
+    "CONNECTED_TIME_ZONE": 4,
+    "CREATE_TIME": "2016-11-08T18:22:30.887",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Etc/GMT-10",
+    "CONNECTED_TIME_ZONE": 52,
+    "CREATE_TIME": "2016-11-08T18:22:30.953",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Etc/GMT-11",
+    "CONNECTED_TIME_ZONE": 97,
+    "CREATE_TIME": "2016-11-08T18:22:30.957",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Etc/GMT-12",
+    "CONNECTED_TIME_ZONE": 57,
+    "CREATE_TIME": "2016-11-08T18:22:30.960",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Etc/GMT-13",
+    "CONNECTED_TIME_ZONE": 59,
+    "CREATE_TIME": "2016-11-08T18:22:30.960",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Etc/GMT-14",
+    "CONNECTED_TIME_ZONE": 91,
+    "CREATE_TIME": "2016-11-08T18:22:30.960",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Etc/GMT-2",
+    "CONNECTED_TIME_ZONE": 12,
+    "CREATE_TIME": "2016-11-08T18:22:30.887",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Etc/GMT-3",
+    "CONNECTED_TIME_ZONE": 98,
+    "CREATE_TIME": "2016-11-08T18:22:30.890",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Etc/GMT-4",
+    "CONNECTED_TIME_ZONE": 24,
+    "CREATE_TIME": "2016-11-08T18:22:30.913",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Etc/GMT-5",
+    "CONNECTED_TIME_ZONE": 32,
+    "CREATE_TIME": "2016-11-08T18:22:30.920",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Etc/GMT-6",
+    "CONNECTED_TIME_ZONE": 36,
+    "CREATE_TIME": "2016-11-08T18:22:30.933",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Etc/GMT-7",
+    "CONNECTED_TIME_ZONE": 95,
+    "CREATE_TIME": "2016-11-08T18:22:30.943",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Etc/GMT-8",
+    "CONNECTED_TIME_ZONE": 43,
+    "CREATE_TIME": "2016-11-08T18:22:30.950",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Etc/GMT-9",
+    "CONNECTED_TIME_ZONE": 46,
+    "CREATE_TIME": "2016-11-08T18:22:30.953",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Etc/GMT0",
+    "CONNECTED_TIME_ZONE": 0,
+    "CREATE_TIME": "2016-11-08T18:22:30.740",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Etc/Greenwich",
+    "CONNECTED_TIME_ZONE": 0,
+    "CREATE_TIME": "2016-11-08T18:22:30.740",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Etc/Universal",
+    "CONNECTED_TIME_ZONE": 91,
+    "CREATE_TIME": "2016-11-08T18:22:30.957",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Etc/UTC",
+    "CONNECTED_TIME_ZONE": 0,
+    "CREATE_TIME": "2016-11-08T18:22:30.720",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Europa de Vest, ora standard",
+    "CONNECTED_TIME_ZONE": 4,
+    "CREATE_TIME": "2016-11-20T06:55:17.927",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Europa Latina, ora standard",
+    "CONNECTED_TIME_ZONE": 6,
+    "CREATE_TIME": "2016-11-09T21:50:46.743",
+    "CONNECTED_COUNTRY_ID": 19
+  },
+  {
+    "TIME_ZONE_NAME": "Europa Srodkowa (czas stand.)",
+    "CONNECTED_TIME_ZONE": 7,
+    "CREATE_TIME": "2016-11-11T08:49:11.227",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Europa Zachodnia (czas stand.)",
+    "CONNECTED_TIME_ZONE": 7,
+    "CREATE_TIME": "2016-11-12T06:53:55.133",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Europe centrale",
+    "CONNECTED_TIME_ZONE": 4,
+    "CREATE_TIME": "2016-11-10T03:57:00.423",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Europe de l’Ouest",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-09T16:05:59.093",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Amsterdam",
+    "CONNECTED_TIME_ZONE": 4,
+    "CREATE_TIME": "2016-11-08T18:22:30.747",
+    "CONNECTED_COUNTRY_ID": 7
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Andorra",
+    "CONNECTED_TIME_ZONE": 6,
+    "CREATE_TIME": "2016-11-08T18:22:30.763",
+    "CONNECTED_COUNTRY_ID": 103
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Athens",
+    "CONNECTED_TIME_ZONE": 10,
+    "CREATE_TIME": "2016-11-08T18:22:30.783",
+    "CONNECTED_COUNTRY_ID": 13
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Belfast",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-08T18:22:30.730",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Belgrade",
+    "CONNECTED_TIME_ZONE": 5,
+    "CREATE_TIME": "2016-11-08T18:22:30.753",
+    "CONNECTED_COUNTRY_ID": 85
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Berlin",
+    "CONNECTED_TIME_ZONE": 4,
+    "CREATE_TIME": "2016-11-08T18:22:30.747",
+    "CONNECTED_COUNTRY_ID": 4
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Bratislava",
+    "CONNECTED_TIME_ZONE": 5,
+    "CREATE_TIME": "2016-11-08T18:22:30.753",
+    "CONNECTED_COUNTRY_ID": 33
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Brussels",
+    "CONNECTED_TIME_ZONE": 6,
+    "CREATE_TIME": "2016-11-08T18:22:30.760",
+    "CONNECTED_COUNTRY_ID": 16
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Bucharest",
+    "CONNECTED_TIME_ZONE": 10,
+    "CREATE_TIME": "2016-11-08T18:22:30.783",
+    "CONNECTED_COUNTRY_ID": 29
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Budapest",
+    "CONNECTED_TIME_ZONE": 5,
+    "CREATE_TIME": "2016-11-08T18:22:30.757",
+    "CONNECTED_COUNTRY_ID": 30
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Busingen",
+    "CONNECTED_TIME_ZONE": 4,
+    "CREATE_TIME": "2021-01-15T21:06:55.873",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Chisinau",
+    "CONNECTED_TIME_ZONE": 10,
+    "CREATE_TIME": "2016-11-08T18:22:30.800",
+    "CONNECTED_COUNTRY_ID": 91
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Copenhagen",
+    "CONNECTED_TIME_ZONE": 6,
+    "CREATE_TIME": "2016-11-08T18:22:30.760",
+    "CONNECTED_COUNTRY_ID": 23
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Dublin",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-08T18:22:30.727",
+    "CONNECTED_COUNTRY_ID": 9
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Gibraltar",
+    "CONNECTED_TIME_ZONE": 6,
+    "CREATE_TIME": "2016-11-08T18:22:30.767",
+    "CONNECTED_COUNTRY_ID": 209
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Guernsey",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-08T18:22:30.733",
+    "CONNECTED_COUNTRY_ID": 258
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Helsinki",
+    "CONNECTED_TIME_ZONE": 14,
+    "CREATE_TIME": "2016-11-08T18:22:30.793",
+    "CONNECTED_COUNTRY_ID": 25
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Isle_of_Man",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-08T18:22:30.730",
+    "CONNECTED_COUNTRY_ID": 289
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Istanbul",
+    "CONNECTED_TIME_ZONE": 98,
+    "CREATE_TIME": "2016-11-08T18:22:30.967",
+    "CONNECTED_COUNTRY_ID": 12
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Jersey",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-08T18:22:30.730",
+    "CONNECTED_COUNTRY_ID": 1
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Kaliningrad",
+    "CONNECTED_TIME_ZONE": 20,
+    "CREATE_TIME": "2016-11-08T18:22:30.810",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Kiev",
+    "CONNECTED_TIME_ZONE": 14,
+    "CREATE_TIME": "2016-11-08T18:22:30.793",
+    "CONNECTED_COUNTRY_ID": 26
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Lisbon",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-08T18:22:30.730",
+    "CONNECTED_COUNTRY_ID": 11
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Ljubljana",
+    "CONNECTED_TIME_ZONE": 5,
+    "CREATE_TIME": "2016-11-08T18:22:30.757",
+    "CONNECTED_COUNTRY_ID": 46
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/London",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-08T18:22:30.727",
+    "CONNECTED_COUNTRY_ID": 1
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Luxembourg",
+    "CONNECTED_TIME_ZONE": 4,
+    "CREATE_TIME": "2016-11-08T18:22:30.780",
+    "CONNECTED_COUNTRY_ID": 92
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Madrid",
+    "CONNECTED_TIME_ZONE": 6,
+    "CREATE_TIME": "2016-11-08T18:22:30.760",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Malta",
+    "CONNECTED_TIME_ZONE": 4,
+    "CREATE_TIME": "2016-11-08T18:22:30.780",
+    "CONNECTED_COUNTRY_ID": 93
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Mariehamn",
+    "CONNECTED_TIME_ZONE": 14,
+    "CREATE_TIME": "2016-11-08T18:22:30.793",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Minsk",
+    "CONNECTED_TIME_ZONE": 20,
+    "CREATE_TIME": "2016-11-08T18:22:30.803",
+    "CONNECTED_COUNTRY_ID": 104
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Monaco",
+    "CONNECTED_TIME_ZONE": 6,
+    "CREATE_TIME": "2016-11-08T18:22:30.763",
+    "CONNECTED_COUNTRY_ID": 231
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Moscow",
+    "CONNECTED_TIME_ZONE": 20,
+    "CREATE_TIME": "2016-11-08T18:22:30.810",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Nicosia",
+    "CONNECTED_TIME_ZONE": 10,
+    "CREATE_TIME": "2016-11-08T18:22:30.783",
+    "CONNECTED_COUNTRY_ID": 39
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Oslo",
+    "CONNECTED_TIME_ZONE": 4,
+    "CREATE_TIME": "2016-11-08T18:22:30.750",
+    "CONNECTED_COUNTRY_ID": 27
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Paris",
+    "CONNECTED_TIME_ZONE": 6,
+    "CREATE_TIME": "2016-11-08T18:22:30.763",
+    "CONNECTED_COUNTRY_ID": 5
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Podgorica",
+    "CONNECTED_TIME_ZONE": 6,
+    "CREATE_TIME": "2016-11-08T18:22:30.767",
+    "CONNECTED_COUNTRY_ID": 84
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Prague",
+    "CONNECTED_TIME_ZONE": 5,
+    "CREATE_TIME": "2016-11-08T18:22:30.757",
+    "CONNECTED_COUNTRY_ID": 22
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Riga",
+    "CONNECTED_TIME_ZONE": 14,
+    "CREATE_TIME": "2016-11-08T18:22:30.797",
+    "CONNECTED_COUNTRY_ID": 41
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Rome",
+    "CONNECTED_TIME_ZONE": 4,
+    "CREATE_TIME": "2016-11-08T18:22:30.747",
+    "CONNECTED_COUNTRY_ID": 3
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Samara",
+    "CONNECTED_TIME_ZONE": 26,
+    "CREATE_TIME": "2016-11-08T18:22:30.810",
+    "CONNECTED_COUNTRY_ID": 14
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/San_Marino",
+    "CONNECTED_TIME_ZONE": 6,
+    "CREATE_TIME": "2016-11-08T18:22:30.767",
+    "CONNECTED_COUNTRY_ID": 94
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Sarajevo",
+    "CONNECTED_TIME_ZONE": 7,
+    "CREATE_TIME": "2016-11-08T18:22:30.773",
+    "CONNECTED_COUNTRY_ID": 57
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Simferopol",
+    "CONNECTED_TIME_ZONE": 14,
+    "CREATE_TIME": "2016-11-08T18:22:30.797",
+    "CONNECTED_COUNTRY_ID": 14
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Skopje",
+    "CONNECTED_TIME_ZONE": 7,
+    "CREATE_TIME": "2016-11-08T18:22:30.777",
+    "CONNECTED_COUNTRY_ID": 56
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Sofia",
+    "CONNECTED_TIME_ZONE": 14,
+    "CREATE_TIME": "2016-11-08T18:22:30.797",
+    "CONNECTED_COUNTRY_ID": 40
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Stockholm",
+    "CONNECTED_TIME_ZONE": 4,
+    "CREATE_TIME": "2016-11-08T18:22:30.747",
+    "CONNECTED_COUNTRY_ID": 24
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Tallinn",
+    "CONNECTED_TIME_ZONE": 14,
+    "CREATE_TIME": "2016-11-08T18:22:30.797",
+    "CONNECTED_COUNTRY_ID": 102
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Tirane",
+    "CONNECTED_TIME_ZONE": 5,
+    "CREATE_TIME": "2016-11-08T18:22:30.770",
+    "CONNECTED_COUNTRY_ID": 76
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Tiraspol",
+    "CONNECTED_TIME_ZONE": 10,
+    "CREATE_TIME": "2016-11-08T18:22:30.800",
+    "CONNECTED_COUNTRY_ID": 91
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Uzhgorod",
+    "CONNECTED_TIME_ZONE": 5,
+    "CREATE_TIME": "2016-11-08T18:22:30.800",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Vaduz",
+    "CONNECTED_TIME_ZONE": 6,
+    "CREATE_TIME": "2016-11-08T18:22:30.770",
+    "CONNECTED_COUNTRY_ID": 101
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Vatican",
+    "CONNECTED_TIME_ZONE": 4,
+    "CREATE_TIME": "2016-11-08T18:22:30.750",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Vienna",
+    "CONNECTED_TIME_ZONE": 4,
+    "CREATE_TIME": "2016-11-08T18:22:30.750",
+    "CONNECTED_COUNTRY_ID": 20
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Vilnius",
+    "CONNECTED_TIME_ZONE": 14,
+    "CREATE_TIME": "2016-11-08T18:22:30.800",
+    "CONNECTED_COUNTRY_ID": 42
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Volgograd",
+    "CONNECTED_TIME_ZONE": 20,
+    "CREATE_TIME": "2016-11-08T18:22:30.810",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Warsaw",
+    "CONNECTED_TIME_ZONE": 7,
+    "CREATE_TIME": "2016-11-08T18:22:30.777",
+    "CONNECTED_COUNTRY_ID": 37
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Zagreb",
+    "CONNECTED_TIME_ZONE": 7,
+    "CREATE_TIME": "2016-11-08T18:22:30.777",
+    "CONNECTED_COUNTRY_ID": 38
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Zaporozhye",
+    "CONNECTED_TIME_ZONE": 14,
+    "CREATE_TIME": "2016-11-08T18:22:30.797",
+    "CONNECTED_COUNTRY_ID": 26
+  },
+  {
+    "TIME_ZONE_NAME": "Europe/Zurich",
+    "CONNECTED_TIME_ZONE": 4,
+    "CREATE_TIME": "2016-11-08T18:22:30.750",
+    "CONNECTED_COUNTRY_ID": 15
+  },
+  {
+    "TIME_ZONE_NAME": "Fiji, Kamchatka, Marshall Is.",
+    "CONNECTED_TIME_ZONE": 58,
+    "CREATE_TIME": "2016-11-13T04:49:32.840",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "FLE Standard Time",
+    "CONNECTED_TIME_ZONE": 14,
+    "CREATE_TIME": "2016-11-11T22:19:37.187",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "FLE standartinis laik",
+    "CONNECTED_TIME_ZONE": 14,
+    "CREATE_TIME": "2016-11-10T19:36:45.057",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "FLE, ora standard",
+    "CONNECTED_TIME_ZONE": 10,
+    "CREATE_TIME": "2016-11-19T21:20:52.223",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Fortaleza, Recife",
+    "CONNECTED_TIME_ZONE": 93,
+    "CREATE_TIME": "2016-11-10T23:50:26.197",
+    "CONNECTED_COUNTRY_ID": 21
+  },
+  {
+    "TIME_ZONE_NAME": "GB",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-08T18:22:30.727",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "GB-Eire",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-08T18:22:30.730",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Georgian Standard Time",
+    "CONNECTED_TIME_ZONE": 22,
+    "CREATE_TIME": "2016-11-11T19:28:28.510",
+    "CONNECTED_COUNTRY_ID": 78
+  },
+  {
+    "TIME_ZONE_NAME": "Gio` Chuâ?n Ðông Nam A´",
+    "CONNECTED_TIME_ZONE": 39,
+    "CREATE_TIME": "2016-11-11T09:46:46.730",
+    "CONNECTED_COUNTRY_ID": 155
+  },
+  {
+    "TIME_ZONE_NAME": "GMT",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-08T18:22:30.737",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "GMT (czas standardowy)",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-14T15:15:08.837",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "GMT 00:00",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-10T18:07:33.560",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "GMT 01:00",
+    "CONNECTED_TIME_ZONE": 4,
+    "CREATE_TIME": "2016-11-11T09:47:36.833",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "GMT 03:00",
+    "CONNECTED_TIME_ZONE": 18,
+    "CREATE_TIME": "2016-11-10T17:03:10.447",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "GMT 05:30",
+    "CONNECTED_TIME_ZONE": 33,
+    "CREATE_TIME": "2016-11-17T13:00:20.040",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "GMT Standard Time",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-10T01:50:05.350",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "GMT+0",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-08T18:22:30.737",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "GMT+03:00",
+    "CONNECTED_TIME_ZONE": 19,
+    "CREATE_TIME": "2016-11-10T07:25:59.200",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "GMT, ora standard",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-20T11:37:34.600",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "GMT-0",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-08T18:22:30.740",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "GMT-03:00",
+    "CONNECTED_TIME_ZONE": 67,
+    "CREATE_TIME": "2016-11-16T10:48:44.440",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "GMT-05:00",
+    "CONNECTED_TIME_ZONE": 75,
+    "CREATE_TIME": "2016-11-10T01:37:53.163",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "GMT-08:00",
+    "CONNECTED_TIME_ZONE": 86,
+    "CREATE_TIME": "2016-11-13T16:41:16.110",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "GMT0",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-08T18:22:30.740",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Greenland",
+    "CONNECTED_TIME_ZONE": 66,
+    "CREATE_TIME": "2016-11-10T08:19:44.443",
+    "CONNECTED_COUNTRY_ID": 213
+  },
+  {
+    "TIME_ZONE_NAME": "Greenland Standard Time",
+    "CONNECTED_TIME_ZONE": 66,
+    "CREATE_TIME": "2016-11-15T10:01:14.453",
+    "CONNECTED_COUNTRY_ID": 213
+  },
+  {
+    "TIME_ZONE_NAME": "Greenwich",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-08T18:22:30.743",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Greenwich Mean Time : Dublin, Edinburgh, Lisbon, London",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-09T12:59:15.390",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Greenwich Mean Time: Lisboa, Londres,  Dublin, Edimburgo",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-09T11:45:54.003",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Greenwich Standard Time",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-09T20:58:26.167",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "GTB",
+    "CONNECTED_TIME_ZONE": 10,
+    "CREATE_TIME": "2016-11-15T17:03:51.693",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "GTB Standard Time",
+    "CONNECTED_TIME_ZONE": 10,
+    "CREATE_TIME": "2016-11-09T20:28:52.020",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "GTB Standart Saati",
+    "CONNECTED_TIME_ZONE": 10,
+    "CREATE_TIME": "2016-11-09T17:13:05.837",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "GTB téli ido",
+    "CONNECTED_TIME_ZONE": 10,
+    "CREATE_TIME": "2016-11-19T08:18:18.650",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "GTB, ora standard",
+    "CONNECTED_TIME_ZONE": 10,
+    "CREATE_TIME": "2016-11-09T16:35:12.217",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Guadalajara, Mexico City, Monterrey",
+    "CONNECTED_TIME_ZONE": 79,
+    "CREATE_TIME": "2016-11-09T12:19:47.693",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "H. Padrão do Meridiano de Data",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-10T02:44:30.467",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Harare, Pretoria",
+    "CONNECTED_TIME_ZONE": 13,
+    "CREATE_TIME": "2016-11-09T15:50:15.460",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hawaii",
+    "CONNECTED_TIME_ZONE": 89,
+    "CREATE_TIME": "2016-11-09T18:40:06.520",
+    "CONNECTED_COUNTRY_ID": 18
+  },
+  {
+    "TIME_ZONE_NAME": "Hawaiian Standard Time",
+    "CONNECTED_TIME_ZONE": 89,
+    "CREATE_TIME": "2016-11-20T06:34:07.010",
+    "CONNECTED_COUNTRY_ID": 18
+  },
+  {
+    "TIME_ZONE_NAME": "Helsinki, Kyiv, Riga, Sofia, Tallinn, Vilnius",
+    "CONNECTED_TIME_ZONE": 14,
+    "CREATE_TIME": "2016-11-09T15:19:28.823",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hongkong",
+    "CONNECTED_TIME_ZONE": 41,
+    "CREATE_TIME": "2016-11-08T18:22:30.850",
+    "CONNECTED_COUNTRY_ID": 79
+  },
+  {
+    "TIME_ZONE_NAME": "Hora de padrão de Cabo Verde",
+    "CONNECTED_TIME_ZONE": 61,
+    "CREATE_TIME": "2016-11-16T13:28:22.600",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora est. África Central Occid.",
+    "CONNECTED_TIME_ZONE": 8,
+    "CREATE_TIME": "2016-11-10T15:42:06.937",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora est. Pacífico, Sudamérica",
+    "CONNECTED_TIME_ZONE": 74,
+    "CREATE_TIME": "2016-11-09T12:41:02.840",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora est. Sudamérica Pacífico",
+    "CONNECTED_TIME_ZONE": 74,
+    "CREATE_TIME": "2016-11-09T17:59:49.680",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora estándar central (México)",
+    "CONNECTED_TIME_ZONE": 79,
+    "CREATE_TIME": "2016-11-09T14:52:06.647",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora estándar de Argentina",
+    "CONNECTED_TIME_ZONE": 64,
+    "CREATE_TIME": "2016-11-09T16:24:09.477",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora estándar de Asia Central",
+    "CONNECTED_TIME_ZONE": 37,
+    "CREATE_TIME": "2016-11-20T16:22:03.963",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora estándar de Asia Sureste",
+    "CONNECTED_TIME_ZONE": 39,
+    "CREATE_TIME": "2016-11-11T00:43:01.927",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora estándar de Brasil central",
+    "CONNECTED_TIME_ZONE": 63,
+    "CREATE_TIME": "2016-11-13T13:16:36.583",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora estándar de Canadá central",
+    "CONNECTED_TIME_ZONE": 78,
+    "CREATE_TIME": "2016-11-18T14:03:02.780",
+    "CONNECTED_COUNTRY_ID": 66
+  },
+  {
+    "TIME_ZONE_NAME": "Hora estándar de las Montañas",
+    "CONNECTED_TIME_ZONE": 85,
+    "CREATE_TIME": "2016-11-14T23:14:22.963",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora estándar de línea de fecha",
+    "CONNECTED_TIME_ZONE": 0,
+    "CREATE_TIME": "2016-11-15T23:07:41.577",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora estándar de Marruecos",
+    "CONNECTED_TIME_ZONE": 1,
+    "CREATE_TIME": "2016-11-12T16:57:10.427",
+    "CONNECTED_COUNTRY_ID": 127
+  },
+  {
+    "TIME_ZONE_NAME": "Hora estándar de Montevideo",
+    "CONNECTED_TIME_ZONE": 67,
+    "CREATE_TIME": "2016-11-10T19:02:46.263",
+    "CONNECTED_COUNTRY_ID": 111
+  },
+  {
+    "TIME_ZONE_NAME": "Hora estándar de Paraguay",
+    "CONNECTED_TIME_ZONE": 92,
+    "CREATE_TIME": "2016-11-09T19:22:17.663",
+    "CONNECTED_COUNTRY_ID": 108
+  },
+  {
+    "TIME_ZONE_NAME": "Hora estándar de Venezuela",
+    "CONNECTED_TIME_ZONE": 73,
+    "CREATE_TIME": "2016-11-10T00:33:22.180",
+    "CONNECTED_COUNTRY_ID": 110
+  },
+  {
+    "TIME_ZONE_NAME": "Hora estándar del Atlántico",
+    "CONNECTED_TIME_ZONE": 69,
+    "CREATE_TIME": "2016-11-10T20:46:15.410",
+    "CONNECTED_COUNTRY_ID": 109
+  },
+  {
+    "TIME_ZONE_NAME": "Hora estándar del Centro",
+    "CONNECTED_TIME_ZONE": 78,
+    "CREATE_TIME": "2016-11-12T01:34:21.590",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora estándar del Este",
+    "CONNECTED_TIME_ZONE": 75,
+    "CREATE_TIME": "2016-11-10T06:57:01.187",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora estándar del Este (México)",
+    "CONNECTED_TIME_ZONE": 79,
+    "CREATE_TIME": "2016-11-10T16:15:42.620",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora estándar del Pacífico",
+    "CONNECTED_TIME_ZONE": 86,
+    "CREATE_TIME": "2016-11-10T22:17:54.550",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora estándar este, Sudamérica",
+    "CONNECTED_TIME_ZONE": 93,
+    "CREATE_TIME": "2016-11-20T02:53:23.780",
+    "CONNECTED_COUNTRY_ID": 28
+  },
+  {
+    "TIME_ZONE_NAME": "Hora estándar Europa Occidental",
+    "CONNECTED_TIME_ZONE": 4,
+    "CREATE_TIME": "2016-11-09T22:50:40.560",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora estándar GMT",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-15T20:16:40.913",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora estándar Montañas (México)",
+    "CONNECTED_TIME_ZONE": 85,
+    "CREATE_TIME": "2016-11-10T00:37:15.407",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora estándar Montañas, EE.UU.",
+    "CONNECTED_TIME_ZONE": 85,
+    "CREATE_TIME": "2016-11-15T22:35:48.413",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora estándar oeste, Sudamérica",
+    "CONNECTED_TIME_ZONE": 75,
+    "CREATE_TIME": "2016-11-09T18:17:20.327",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora estándar Pacífico (México)",
+    "CONNECTED_TIME_ZONE": 87,
+    "CREATE_TIME": "2016-11-10T19:26:24.360",
+    "CONNECTED_COUNTRY_ID": 31
+  },
+  {
+    "TIME_ZONE_NAME": "Hora estándar romance",
+    "CONNECTED_TIME_ZONE": 4,
+    "CREATE_TIME": "2016-11-10T18:52:50.810",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora estándar Sudamérica este",
+    "CONNECTED_TIME_ZONE": 74,
+    "CREATE_TIME": "2016-11-11T22:07:59.780",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora estándar, América Central",
+    "CONNECTED_TIME_ZONE": 77,
+    "CREATE_TIME": "2016-11-09T14:04:41.707",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora oficial do Brasil",
+    "CONNECTED_TIME_ZONE": 63,
+    "CREATE_TIME": "2016-11-09T11:12:47.110",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora padrão África Centro Oeste",
+    "CONNECTED_TIME_ZONE": 8,
+    "CREATE_TIME": "2016-11-09T21:12:38.240",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora padrão América do Sul Or.",
+    "CONNECTED_TIME_ZONE": 74,
+    "CREATE_TIME": "2016-11-10T20:47:29.953",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora Padrão Atlântico Central",
+    "CONNECTED_TIME_ZONE": 69,
+    "CREATE_TIME": "2016-11-16T22:36:44.837",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora Padrão Brasil Central",
+    "CONNECTED_TIME_ZONE": 63,
+    "CREATE_TIME": "2016-11-09T18:18:05.760",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora padrão da África do Sul",
+    "CONNECTED_TIME_ZONE": 13,
+    "CREATE_TIME": "2016-11-10T18:47:08.990",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora Padrão da Argentina",
+    "CONNECTED_TIME_ZONE": 64,
+    "CREATE_TIME": "2016-11-10T16:15:51.513",
+    "CONNECTED_COUNTRY_ID": 10
+  },
+  {
+    "TIME_ZONE_NAME": "Hora Padrão da Bahia",
+    "CONNECTED_TIME_ZONE": 96,
+    "CREATE_TIME": "2016-11-09T11:15:51.217",
+    "CONNECTED_COUNTRY_ID": 21
+  },
+  {
+    "TIME_ZONE_NAME": "Hora Padrão da Baía",
+    "CONNECTED_TIME_ZONE": 96,
+    "CREATE_TIME": "2016-11-14T21:37:07.853",
+    "CONNECTED_COUNTRY_ID": 21
+  },
+  {
+    "TIME_ZONE_NAME": "Hora Padrão da Coréia",
+    "CONNECTED_TIME_ZONE": 47,
+    "CREATE_TIME": "2016-11-15T21:12:30.880",
+    "CONNECTED_COUNTRY_ID": 86
+  },
+  {
+    "TIME_ZONE_NAME": "Hora Padrão da Europa Central",
+    "CONNECTED_TIME_ZONE": 4,
+    "CREATE_TIME": "2016-11-16T16:15:43.370",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora padrão da Europa do Leste",
+    "CONNECTED_TIME_ZONE": 14,
+    "CREATE_TIME": "2016-11-09T16:50:18.153",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora padrão da Europa do Oeste",
+    "CONNECTED_TIME_ZONE": 4,
+    "CREATE_TIME": "2016-11-15T17:45:59.043",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora Padrão de Bogotá",
+    "CONNECTED_TIME_ZONE": 74,
+    "CREATE_TIME": "2016-11-17T20:59:23.340",
+    "CONNECTED_COUNTRY_ID": 109
+  },
+  {
+    "TIME_ZONE_NAME": "Hora Padrão de Buenos Aires",
+    "CONNECTED_TIME_ZONE": 64,
+    "CREATE_TIME": "2016-11-09T12:49:16.017",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora Padrão de Cabo Verde",
+    "CONNECTED_TIME_ZONE": 61,
+    "CREATE_TIME": "2016-11-12T16:13:21.063",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora Padrão de Caracas",
+    "CONNECTED_TIME_ZONE": 73,
+    "CREATE_TIME": "2016-11-09T21:45:14.813",
+    "CONNECTED_COUNTRY_ID": 110
+  },
+  {
+    "TIME_ZONE_NAME": "Hora padrão de GMT",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-09T15:49:33.680",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora Padrão de Greenwich",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-10T00:48:26.953",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora Padrão de Marrocos",
+    "CONNECTED_TIME_ZONE": 1,
+    "CREATE_TIME": "2016-11-18T14:57:05.907",
+    "CONNECTED_COUNTRY_ID": 127
+  },
+  {
+    "TIME_ZONE_NAME": "Hora Padrão de Montevidéu",
+    "CONNECTED_TIME_ZONE": 64,
+    "CREATE_TIME": "2016-11-17T22:16:05.697",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora Padrão de Newfoundland",
+    "CONNECTED_TIME_ZONE": 68,
+    "CREATE_TIME": "2016-11-19T13:47:17.307",
+    "CONNECTED_COUNTRY_ID": 66
+  },
+  {
+    "TIME_ZONE_NAME": "Hora padrão de Romance",
+    "CONNECTED_TIME_ZONE": 4,
+    "CREATE_TIME": "2016-11-12T08:00:39.210",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora padrão do Atlântico",
+    "CONNECTED_TIME_ZONE": 69,
+    "CREATE_TIME": "2016-11-19T22:51:48.353",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora Padrão do Egito",
+    "CONNECTED_TIME_ZONE": 12,
+    "CREATE_TIME": "2016-11-21T09:02:43.390",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora Padrão do Leste da AS",
+    "CONNECTED_TIME_ZONE": 74,
+    "CREATE_TIME": "2016-11-10T23:18:20.420",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora padrão do Pacífico",
+    "CONNECTED_TIME_ZONE": 86,
+    "CREATE_TIME": "2016-11-09T23:26:32.987",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora Padrão do Pacífico (EUA)",
+    "CONNECTED_TIME_ZONE": 86,
+    "CREATE_TIME": "2016-11-12T08:49:11.303",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora padrão dos Açores",
+    "CONNECTED_TIME_ZONE": 60,
+    "CREATE_TIME": "2016-11-09T17:29:03.850",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora Padrão Pacífico Ocidental",
+    "CONNECTED_TIME_ZONE": 86,
+    "CREATE_TIME": "2016-11-09T20:15:56.847",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora Padrão Românica",
+    "CONNECTED_TIME_ZONE": 4,
+    "CREATE_TIME": "2016-11-18T10:20:42.867",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora Padrão: Austrália Oriental",
+    "CONNECTED_TIME_ZONE": 53,
+    "CREATE_TIME": "2016-11-20T18:17:30",
+    "CONNECTED_COUNTRY_ID": 36
+  },
+  {
+    "TIME_ZONE_NAME": "Hora Padrão: Greenwich",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-13T16:35:18.920",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Hora Universal Coordenada",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-09T18:36:51.203",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Horário padrão - Pacífico",
+    "CONNECTED_TIME_ZONE": 86,
+    "CREATE_TIME": "2016-11-17T18:54:01.380",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Horário Padrão de Tocantins",
+    "CONNECTED_TIME_ZONE": 63,
+    "CREATE_TIME": "2016-11-20T19:24:36.043",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Iceland",
+    "CONNECTED_TIME_ZONE": 3,
+    "CREATE_TIME": "2025-06-02T17:36:42.577",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "India Standard Time",
+    "CONNECTED_TIME_ZONE": 33,
+    "CREATE_TIME": "2016-11-10T03:40:01.953",
+    "CONNECTED_COUNTRY_ID": 80
+  },
+  {
+    "TIME_ZONE_NAME": "Indian/Antananarivo",
+    "CONNECTED_TIME_ZONE": 21,
+    "CREATE_TIME": "2016-11-08T18:22:30.810",
+    "CONNECTED_COUNTRY_ID": 174
+  },
+  {
+    "TIME_ZONE_NAME": "Indian/Chagos",
+    "CONNECTED_TIME_ZONE": 37,
+    "CREATE_TIME": "2016-11-08T18:22:30.830",
+    "CONNECTED_COUNTRY_ID": 263
+  },
+  {
+    "TIME_ZONE_NAME": "Indian/Christmas",
+    "CONNECTED_TIME_ZONE": 39,
+    "CREATE_TIME": "2016-11-08T18:22:30.830",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Indian/Cocos",
+    "CONNECTED_TIME_ZONE": 38,
+    "CREATE_TIME": "2016-11-08T18:22:30.833",
+    "CONNECTED_COUNTRY_ID": 270
+  },
+  {
+    "TIME_ZONE_NAME": "Indian/Comoro",
+    "CONNECTED_TIME_ZONE": 21,
+    "CREATE_TIME": "2016-11-08T18:22:30.813",
+    "CONNECTED_COUNTRY_ID": 173
+  },
+  {
+    "TIME_ZONE_NAME": "Indian/Kerguelen",
+    "CONNECTED_TIME_ZONE": 31,
+    "CREATE_TIME": "2016-11-08T18:22:30.823",
+    "CONNECTED_COUNTRY_ID": 277
+  },
+  {
+    "TIME_ZONE_NAME": "Indian/Mahe",
+    "CONNECTED_TIME_ZONE": 27,
+    "CREATE_TIME": "2016-11-08T18:22:30.827",
+    "CONNECTED_COUNTRY_ID": 80
+  },
+  {
+    "TIME_ZONE_NAME": "Indian/Maldives",
+    "CONNECTED_TIME_ZONE": 31,
+    "CREATE_TIME": "2016-11-08T18:22:30.823",
+    "CONNECTED_COUNTRY_ID": 158
+  },
+  {
+    "TIME_ZONE_NAME": "Indian/Mauritius",
+    "CONNECTED_TIME_ZONE": 27,
+    "CREATE_TIME": "2016-11-08T18:22:30.817",
+    "CONNECTED_COUNTRY_ID": 190
+  },
+  {
+    "TIME_ZONE_NAME": "Indian/Mayotte",
+    "CONNECTED_TIME_ZONE": 21,
+    "CREATE_TIME": "2016-11-08T18:22:30.813",
+    "CONNECTED_COUNTRY_ID": 260
+  },
+  {
+    "TIME_ZONE_NAME": "Indian/Reunion",
+    "CONNECTED_TIME_ZONE": 27,
+    "CREATE_TIME": "2016-11-08T18:22:30.820",
+    "CONNECTED_COUNTRY_ID": 282
+  },
+  {
+    "TIME_ZONE_NAME": "Indiana (East)",
+    "CONNECTED_TIME_ZONE": 76,
+    "CREATE_TIME": "2016-11-09T17:12:19.637",
+    "CONNECTED_COUNTRY_ID": 18
+  },
+  {
+    "TIME_ZONE_NAME": "International Date Line West",
+    "CONNECTED_TIME_ZONE": 91,
+    "CREATE_TIME": "2016-11-11T19:01:41.687",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Iran",
+    "CONNECTED_TIME_ZONE": 23,
+    "CREATE_TIME": "2016-11-08T18:22:30.817",
+    "CONNECTED_COUNTRY_ID": 81
+  },
+  {
+    "TIME_ZONE_NAME": "Iran Standard Time",
+    "CONNECTED_TIME_ZONE": 23,
+    "CREATE_TIME": "2016-11-09T19:11:47.350",
+    "CONNECTED_COUNTRY_ID": 81
+  },
+  {
+    "TIME_ZONE_NAME": "Islamabad, Karachi",
+    "CONNECTED_TIME_ZONE": 31,
+    "CREATE_TIME": "2016-11-09T16:43:20.187",
+    "CONNECTED_COUNTRY_ID": 172
+  },
+  {
+    "TIME_ZONE_NAME": "Israel",
+    "CONNECTED_TIME_ZONE": 15,
+    "CREATE_TIME": "2016-11-08T18:22:30.803",
+    "CONNECTED_COUNTRY_ID": 6
+  },
+  {
+    "TIME_ZONE_NAME": "Istanbul",
+    "CONNECTED_TIME_ZONE": 98,
+    "CREATE_TIME": "2016-11-09T15:54:40.690",
+    "CONNECTED_COUNTRY_ID": 12
+  },
+  {
+    "TIME_ZONE_NAME": "Jamaica",
+    "CONNECTED_TIME_ZONE": 75,
+    "CREATE_TIME": "2016-11-09T21:02:23.067",
+    "CONNECTED_COUNTRY_ID": 151
+  },
+  {
+    "TIME_ZONE_NAME": "Japan",
+    "CONNECTED_TIME_ZONE": 46,
+    "CREATE_TIME": "2016-11-08T18:22:30.863",
+    "CONNECTED_COUNTRY_ID": 34
+  },
+  {
+    "TIME_ZONE_NAME": "Jerusalem",
+    "CONNECTED_TIME_ZONE": 15,
+    "CREATE_TIME": "2016-11-10T15:45:18.947",
+    "CONNECTED_COUNTRY_ID": 6
+  },
+  {
+    "TIME_ZONE_NAME": "Jerusalem Standard Time",
+    "CONNECTED_TIME_ZONE": 15,
+    "CREATE_TIME": "2016-11-09T18:48:57.090",
+    "CONNECTED_COUNTRY_ID": 6
+  },
+  {
+    "TIME_ZONE_NAME": "Jordan Standard Time",
+    "CONNECTED_TIME_ZONE": 9,
+    "CREATE_TIME": "2016-11-10T02:27:19.643",
+    "CONNECTED_COUNTRY_ID": 119
+  },
+  {
+    "TIME_ZONE_NAME": "Kabul",
+    "CONNECTED_TIME_ZONE": 29,
+    "CREATE_TIME": "2016-11-11T14:30:29.870",
+    "CONNECTED_COUNTRY_ID": 185
+  },
+  {
+    "TIME_ZONE_NAME": "Kathmandu",
+    "CONNECTED_TIME_ZONE": 35,
+    "CREATE_TIME": "2016-11-14T16:49:19.997",
+    "CONNECTED_COUNTRY_ID": 216
+  },
+  {
+    "TIME_ZONE_NAME": "Közép-európai téli ido ",
+    "CONNECTED_TIME_ZONE": 5,
+    "CREATE_TIME": "2016-11-09T20:40:16.063",
+    "CONNECTED_COUNTRY_ID": 19
+  },
+  {
+    "TIME_ZONE_NAME": "Kuala Lumpur, Singapore",
+    "CONNECTED_TIME_ZONE": 43,
+    "CREATE_TIME": "2016-11-10T15:07:08.603",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Kuwait, Riyadh",
+    "CONNECTED_TIME_ZONE": 19,
+    "CREATE_TIME": "2016-11-09T23:54:02.663",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "La Paz",
+    "CONNECTED_TIME_ZONE": 70,
+    "CREATE_TIME": "2016-11-09T11:48:03.170",
+    "CONNECTED_COUNTRY_ID": 113
+  },
+  {
+    "TIME_ZONE_NAME": "Les Açores",
+    "CONNECTED_TIME_ZONE": 60,
+    "CREATE_TIME": "2016-11-12T01:00:45.513",
+    "CONNECTED_COUNTRY_ID": 11
+  },
+  {
+    "TIME_ZONE_NAME": "Libya",
+    "CONNECTED_TIME_ZONE": 94,
+    "CREATE_TIME": "2016-11-08T18:22:30.963",
+    "CONNECTED_COUNTRY_ID": 161
+  },
+  {
+    "TIME_ZONE_NAME": "Libya Standard Time",
+    "CONNECTED_TIME_ZONE": 12,
+    "CREATE_TIME": "2016-11-18T09:29:56.517",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Madrid, Paris, Brussels, Copenhagen",
+    "CONNECTED_TIME_ZONE": 6,
+    "CREATE_TIME": "2016-11-09T15:33:37.307",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Malay Peninsula Standard Time",
+    "CONNECTED_TIME_ZONE": 43,
+    "CREATE_TIME": "2016-11-10T17:30:25.003",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Manaus",
+    "CONNECTED_TIME_ZONE": 71,
+    "CREATE_TIME": "2016-11-09T16:51:28.070",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Maroc",
+    "CONNECTED_TIME_ZONE": 1,
+    "CREATE_TIME": "2016-11-09T16:04:48.687",
+    "CONNECTED_COUNTRY_ID": 127
+  },
+  {
+    "TIME_ZONE_NAME": "Mauritius Standard Time",
+    "CONNECTED_TIME_ZONE": 27,
+    "CREATE_TIME": "2016-11-15T14:06:45.553",
+    "CONNECTED_COUNTRY_ID": 190
+  },
+  {
+    "TIME_ZONE_NAME": "Mexico/BajaNorte",
+    "CONNECTED_TIME_ZONE": 87,
+    "CREATE_TIME": "2016-11-08T18:22:30.950",
+    "CONNECTED_COUNTRY_ID": 31
+  },
+  {
+    "TIME_ZONE_NAME": "Mexico/BajaSur",
+    "CONNECTED_TIME_ZONE": 87,
+    "CREATE_TIME": "2016-11-08T18:22:30.950",
+    "CONNECTED_COUNTRY_ID": 31
+  },
+  {
+    "TIME_ZONE_NAME": "Mexico/General",
+    "CONNECTED_TIME_ZONE": 79,
+    "CREATE_TIME": "2016-11-08T18:22:30.937",
+    "CONNECTED_COUNTRY_ID": 31
+  },
+  {
+    "TIME_ZONE_NAME": "Mid-Atlantic Standard Time",
+    "CONNECTED_TIME_ZONE": 62,
+    "CREATE_TIME": "2016-11-18T01:24:46.850",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Middle East Standard Time",
+    "CONNECTED_TIME_ZONE": 11,
+    "CREATE_TIME": "2016-11-10T22:48:56.573",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Mitteleuropäische Zeit",
+    "CONNECTED_TIME_ZONE": 4,
+    "CREATE_TIME": "2016-11-09T18:20:53.257",
+    "CONNECTED_COUNTRY_ID": 25
+  },
+  {
+    "TIME_ZONE_NAME": "Monrovia, Reykjavik",
+    "CONNECTED_TIME_ZONE": 3,
+    "CREATE_TIME": "2016-11-09T14:39:55.653",
+    "CONNECTED_COUNTRY_ID": 138
+  },
+  {
+    "TIME_ZONE_NAME": "Montevideo",
+    "CONNECTED_TIME_ZONE": 67,
+    "CREATE_TIME": "2016-11-09T11:18:32.843",
+    "CONNECTED_COUNTRY_ID": 111
+  },
+  {
+    "TIME_ZONE_NAME": "Montevideo Standard Time",
+    "CONNECTED_TIME_ZONE": 64,
+    "CREATE_TIME": "2016-11-13T19:07:54.300",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Morocco Standard Time",
+    "CONNECTED_TIME_ZONE": 1,
+    "CREATE_TIME": "2016-11-13T14:45:47.250",
+    "CONNECTED_COUNTRY_ID": 127
+  },
+  {
+    "TIME_ZONE_NAME": "Moscow, St. Petersburg, Volgograd",
+    "CONNECTED_TIME_ZONE": 20,
+    "CREATE_TIME": "2016-11-10T07:35:22.800",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Mountain Standard Time",
+    "CONNECTED_TIME_ZONE": 86,
+    "CREATE_TIME": "2016-11-09T19:32:19.323",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Mountain Standard Time (Mexico)",
+    "CONNECTED_TIME_ZONE": 85,
+    "CREATE_TIME": "2016-11-18T02:54:12.823",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Mountain Time (US ",
+    "CONNECTED_TIME_ZONE": 86,
+    "CREATE_TIME": "2016-11-19T20:00:08.233",
+    "CONNECTED_COUNTRY_ID": 18
+  },
+  {
+    "TIME_ZONE_NAME": "Myanmar Standard Time",
+    "CONNECTED_TIME_ZONE": 38,
+    "CREATE_TIME": "2016-11-10T03:45:51.160",
+    "CONNECTED_COUNTRY_ID": 55
+  },
+  {
+    "TIME_ZONE_NAME": "Nairobi",
+    "CONNECTED_TIME_ZONE": 21,
+    "CREATE_TIME": "2016-11-09T15:22:16.030",
+    "CONNECTED_COUNTRY_ID": 144
+  },
+  {
+    "TIME_ZONE_NAME": "Namibia Normalzeit",
+    "CONNECTED_TIME_ZONE": 17,
+    "CREATE_TIME": "2016-11-17T17:41:18.737",
+    "CONNECTED_COUNTRY_ID": 64
+  },
+  {
+    "TIME_ZONE_NAME": "Namibija - st. vrij.",
+    "CONNECTED_TIME_ZONE": 17,
+    "CREATE_TIME": "2016-11-18T18:48:45.507",
+    "CONNECTED_COUNTRY_ID": 64
+  },
+  {
+    "TIME_ZONE_NAME": "Nepal Standard Time",
+    "CONNECTED_TIME_ZONE": 35,
+    "CREATE_TIME": "2016-11-14T02:53:20.790",
+    "CONNECTED_COUNTRY_ID": 216
+  },
+  {
+    "TIME_ZONE_NAME": "New Zealand Standard Time",
+    "CONNECTED_TIME_ZONE": 59,
+    "CREATE_TIME": "2016-11-19T08:45:10.763",
+    "CONNECTED_COUNTRY_ID": 159
+  },
+  {
+    "TIME_ZONE_NAME": "ora solare Eur. Cen.",
+    "CONNECTED_TIME_ZONE": 5,
+    "CREATE_TIME": "2016-11-10T20:14:00.473",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "ora solare Europa occ.",
+    "CONNECTED_TIME_ZONE": 4,
+    "CREATE_TIME": "2016-11-15T22:25:33.147",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "ora solare Europa occidentale",
+    "CONNECTED_TIME_ZONE": 4,
+    "CREATE_TIME": "2016-11-09T17:53:41.640",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "ora solare Europa orientale",
+    "CONNECTED_TIME_ZONE": 7,
+    "CREATE_TIME": "2016-11-20T12:06:07.747",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Ora standarde e Evropës Perëndimore",
+    "CONNECTED_TIME_ZONE": 5,
+    "CREATE_TIME": "2016-11-09T22:50:52.533",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Ora standarde e Evropës Qendrore",
+    "CONNECTED_TIME_ZONE": 5,
+    "CREATE_TIME": "2016-11-15T07:36:01.600",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Ora standarde e Paqësorit",
+    "CONNECTED_TIME_ZONE": 86,
+    "CREATE_TIME": "2016-11-14T18:03:18.837",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Osaka, Sapporo, Tokyo",
+    "CONNECTED_TIME_ZONE": 46,
+    "CREATE_TIME": "2016-11-10T23:37:49.063",
+    "CONNECTED_COUNTRY_ID": 34
+  },
+  {
+    "TIME_ZONE_NAME": "Pacific SA Standard Time",
+    "CONNECTED_TIME_ZONE": 74,
+    "CREATE_TIME": "2016-11-19T21:39:26.430",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Pacific Standard Time",
+    "CONNECTED_TIME_ZONE": 86,
+    "CREATE_TIME": "2016-11-09T23:36:02.237",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Pacific Standard Time (Mexico)",
+    "CONNECTED_TIME_ZONE": 86,
+    "CREATE_TIME": "2016-11-14T02:30:22.450",
+    "CONNECTED_COUNTRY_ID": 31
+  },
+  {
+    "TIME_ZONE_NAME": "Pacific Time (US ",
+    "CONNECTED_TIME_ZONE": 86,
+    "CREATE_TIME": "2016-11-11T04:36:47.167",
+    "CONNECTED_COUNTRY_ID": 18
+  },
+  {
+    "TIME_ZONE_NAME": "Pacific/Auckland",
+    "CONNECTED_TIME_ZONE": 57,
+    "CREATE_TIME": "2016-11-08T18:22:30.883",
+    "CONNECTED_COUNTRY_ID": 159
+  },
+  {
+    "TIME_ZONE_NAME": "Pacific/Easter",
+    "CONNECTED_TIME_ZONE": 72,
+    "CREATE_TIME": "2016-11-08T18:22:30.910",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Pacific/Fiji",
+    "CONNECTED_TIME_ZONE": 58,
+    "CREATE_TIME": "2016-11-08T18:22:30.883",
+    "CONNECTED_COUNTRY_ID": 61
+  },
+  {
+    "TIME_ZONE_NAME": "Pacific/Galapagos",
+    "CONNECTED_TIME_ZONE": 77,
+    "CREATE_TIME": "2016-11-09T16:28:07.300",
+    "CONNECTED_COUNTRY_ID": 51
+  },
+  {
+    "TIME_ZONE_NAME": "Pacific/Guadalcanal",
+    "CONNECTED_TIME_ZONE": 97,
+    "CREATE_TIME": "2016-11-13T13:32:22.387",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Pacific/Guam",
+    "CONNECTED_TIME_ZONE": 53,
+    "CREATE_TIME": "2016-11-08T18:22:30.877",
+    "CONNECTED_COUNTRY_ID": 254
+  },
+  {
+    "TIME_ZONE_NAME": "Pacific/Honolulu",
+    "CONNECTED_TIME_ZONE": 89,
+    "CREATE_TIME": "2016-11-09T14:38:17.707",
+    "CONNECTED_COUNTRY_ID": 18
+  },
+  {
+    "TIME_ZONE_NAME": "Pacific/Kwajalein",
+    "CONNECTED_TIME_ZONE": 58,
+    "CREATE_TIME": "2016-11-12T17:28:58.867",
+    "CONNECTED_COUNTRY_ID": 272
+  },
+  {
+    "TIME_ZONE_NAME": "Pacific/Majuro",
+    "CONNECTED_TIME_ZONE": 58,
+    "CREATE_TIME": "2016-11-09T11:06:26.193",
+    "CONNECTED_COUNTRY_ID": 272
+  },
+  {
+    "TIME_ZONE_NAME": "Pacific/Midway",
+    "CONNECTED_TIME_ZONE": 90,
+    "CREATE_TIME": "2016-11-09T11:20:16.927",
+    "CONNECTED_COUNTRY_ID": 18
+  },
+  {
+    "TIME_ZONE_NAME": "Pacific/Nauru",
+    "CONNECTED_TIME_ZONE": 58,
+    "CREATE_TIME": "2016-11-19T02:24:46.207",
+    "CONNECTED_COUNTRY_ID": 249
+  },
+  {
+    "TIME_ZONE_NAME": "Pacific/Niue",
+    "CONNECTED_TIME_ZONE": 90,
+    "CREATE_TIME": "2016-11-16T22:19:14.313",
+    "CONNECTED_COUNTRY_ID": 159
+  },
+  {
+    "TIME_ZONE_NAME": "Pacific/Norfolk",
+    "CONNECTED_TIME_ZONE": 97,
+    "CREATE_TIME": "2016-11-19T14:56:49.990",
+    "CONNECTED_COUNTRY_ID": 293
+  },
+  {
+    "TIME_ZONE_NAME": "Pacific/Noumea",
+    "CONNECTED_TIME_ZONE": 97,
+    "CREATE_TIME": "2016-11-09T20:37:12.553",
+    "CONNECTED_COUNTRY_ID": 266
+  },
+  {
+    "TIME_ZONE_NAME": "Pacific/Pago_Pago",
+    "CONNECTED_TIME_ZONE": 90,
+    "CREATE_TIME": "2016-11-10T14:58:19.727",
+    "CONNECTED_COUNTRY_ID": 218
+  },
+  {
+    "TIME_ZONE_NAME": "Pacific/Palau",
+    "CONNECTED_TIME_ZONE": 46,
+    "CREATE_TIME": "2016-11-14T14:57:56.133",
+    "CONNECTED_COUNTRY_ID": 264
+  },
+  {
+    "TIME_ZONE_NAME": "Pacific/Pitcairn",
+    "CONNECTED_TIME_ZONE": 86,
+    "CREATE_TIME": "2016-11-12T17:49:10.800",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Pacific/Port_Moresby",
+    "CONNECTED_TIME_ZONE": 53,
+    "CREATE_TIME": "2016-11-08T18:22:30.877",
+    "CONNECTED_COUNTRY_ID": 228
+  },
+  {
+    "TIME_ZONE_NAME": "Pacific/Rarotonga",
+    "CONNECTED_TIME_ZONE": 89,
+    "CREATE_TIME": "2016-11-12T02:50:30.660",
+    "CONNECTED_COUNTRY_ID": 210
+  },
+  {
+    "TIME_ZONE_NAME": "Pacific/Tahiti",
+    "CONNECTED_TIME_ZONE": 89,
+    "CREATE_TIME": "2016-11-09T19:28:26.543",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Pacific/Tongatapu",
+    "CONNECTED_TIME_ZONE": 59,
+    "CREATE_TIME": "2016-11-09T15:25:17.160",
+    "CONNECTED_COUNTRY_ID": 217
+  },
+  {
+    "TIME_ZONE_NAME": "Pacificko standardno vreme",
+    "CONNECTED_TIME_ZONE": 86,
+    "CREATE_TIME": "2016-11-09T23:39:19.840",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Pacifique",
+    "CONNECTED_TIME_ZONE": 86,
+    "CREATE_TIME": "2016-11-15T17:14:33.187",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Pakistan Standard Time",
+    "CONNECTED_TIME_ZONE": 31,
+    "CREATE_TIME": "2016-11-11T03:11:49.093",
+    "CONNECTED_COUNTRY_ID": 172
+  },
+  {
+    "TIME_ZONE_NAME": "Paraguay Standard Time",
+    "CONNECTED_TIME_ZONE": 92,
+    "CREATE_TIME": "2016-11-14T20:44:11.850",
+    "CONNECTED_COUNTRY_ID": 108
+  },
+  {
+    "TIME_ZONE_NAME": "Paris, Bruxelles, Madrid, Copenhague",
+    "CONNECTED_TIME_ZONE": 6,
+    "CREATE_TIME": "2016-11-11T19:54:02",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Paris, Madrid",
+    "CONNECTED_TIME_ZONE": 6,
+    "CREATE_TIME": "2016-11-09T18:24:53.330",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Poland",
+    "CONNECTED_TIME_ZONE": 7,
+    "CREATE_TIME": "2016-11-08T18:22:30.780",
+    "CONNECTED_COUNTRY_ID": 37
+  },
+  {
+    "TIME_ZONE_NAME": "Port Louis",
+    "CONNECTED_TIME_ZONE": 27,
+    "CREATE_TIME": "2016-11-12T16:34:14.910",
+    "CONNECTED_COUNTRY_ID": 190
+  },
+  {
+    "TIME_ZONE_NAME": "Portugal",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-08T18:22:30.733",
+    "CONNECTED_COUNTRY_ID": 11
+  },
+  {
+    "TIME_ZONE_NAME": "Rom, normaltid",
+    "CONNECTED_TIME_ZONE": 4,
+    "CREATE_TIME": "2016-11-14T18:38:45.690",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Roma, Berna, Amsterdam, Berlino, Stoccolma, Vienna",
+    "CONNECTED_TIME_ZONE": 4,
+    "CREATE_TIME": "2016-11-20T12:16:24.997",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Romance (standaardtijd)",
+    "CONNECTED_TIME_ZONE": 4,
+    "CREATE_TIME": "2016-11-09T16:17:54.260",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Romance Standard Time",
+    "CONNECTED_TIME_ZONE": 4,
+    "CREATE_TIME": "2016-11-10T11:45:48.800",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Romansk (normaltid)",
+    "CONNECTED_TIME_ZONE": 4,
+    "CREATE_TIME": "2016-11-18T18:47:23.387",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Russia TZ 1 Standard Time",
+    "CONNECTED_TIME_ZONE": 14,
+    "CREATE_TIME": "2016-11-13T08:17:34.090",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Russia TZ 2 Standard Time",
+    "CONNECTED_TIME_ZONE": 20,
+    "CREATE_TIME": "2016-11-09T11:59:54.643",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Russia TZ 3 Standard Time",
+    "CONNECTED_TIME_ZONE": 26,
+    "CREATE_TIME": "2016-11-13T17:36:14.370",
+    "CONNECTED_COUNTRY_ID": 14
+  },
+  {
+    "TIME_ZONE_NAME": "Russia TZ 4 Standard Time",
+    "CONNECTED_TIME_ZONE": 32,
+    "CREATE_TIME": "2016-11-12T10:13:02.097",
+    "CONNECTED_COUNTRY_ID": 14
+  },
+  {
+    "TIME_ZONE_NAME": "Russia TZ 5 Standard Time",
+    "CONNECTED_TIME_ZONE": 30,
+    "CREATE_TIME": "2016-11-17T12:46:02.430",
+    "CONNECTED_COUNTRY_ID": 14
+  },
+  {
+    "TIME_ZONE_NAME": "Russia TZ 6 Standard Time",
+    "CONNECTED_TIME_ZONE": 95,
+    "CREATE_TIME": "2016-11-11T06:31:17.590",
+    "CONNECTED_COUNTRY_ID": 14
+  },
+  {
+    "TIME_ZONE_NAME": "Russia TZ 7 Standard Time",
+    "CONNECTED_TIME_ZONE": 40,
+    "CREATE_TIME": "2016-11-16T10:37:39.893",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Russia TZ 9 Standard Time",
+    "CONNECTED_TIME_ZONE": 55,
+    "CREATE_TIME": "2016-11-16T02:27:57.783",
+    "CONNECTED_COUNTRY_ID": 14
+  },
+  {
+    "TIME_ZONE_NAME": "SA Eastern (standaardtijd)",
+    "CONNECTED_TIME_ZONE": 39,
+    "CREATE_TIME": "2016-11-12T00:14:03.917",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "SA Eastern Standard Time",
+    "CONNECTED_TIME_ZONE": 93,
+    "CREATE_TIME": "2016-11-12T16:52:47.840",
+    "CONNECTED_COUNTRY_ID": 146
+  },
+  {
+    "TIME_ZONE_NAME": "SA Pacific Standard Time",
+    "CONNECTED_TIME_ZONE": 74,
+    "CREATE_TIME": "2016-11-09T21:10:32.940",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "SA Western Standard Time",
+    "CONNECTED_TIME_ZONE": 39,
+    "CREATE_TIME": "2016-11-15T22:12:04.493",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Salvador",
+    "CONNECTED_TIME_ZONE": 96,
+    "CREATE_TIME": "2016-11-09T15:23:41.003",
+    "CONNECTED_COUNTRY_ID": 147
+  },
+  {
+    "TIME_ZONE_NAME": "Samoa Standard Time",
+    "CONNECTED_TIME_ZONE": 90,
+    "CREATE_TIME": "2021-01-24T13:14:05.233",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Santiago",
+    "CONNECTED_TIME_ZONE": 72,
+    "CREATE_TIME": "2016-11-09T16:13:44.607",
+    "CONNECTED_COUNTRY_ID": 28
+  },
+  {
+    "TIME_ZONE_NAME": "Sarajevo, Skopje, Warsaw, Zagreb",
+    "CONNECTED_TIME_ZONE": 7,
+    "CREATE_TIME": "2016-11-09T14:40:18.387",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Saskatchewan",
+    "CONNECTED_TIME_ZONE": 81,
+    "CREATE_TIME": "2016-11-11T04:43:25.313",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "SE Asia Standard Time",
+    "CONNECTED_TIME_ZONE": 39,
+    "CREATE_TIME": "2016-11-11T06:00:33.307",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Seoul",
+    "CONNECTED_TIME_ZONE": 47,
+    "CREATE_TIME": "2016-11-10T06:16:42.070",
+    "CONNECTED_COUNTRY_ID": 86
+  },
+  {
+    "TIME_ZONE_NAME": "Singapore",
+    "CONNECTED_TIME_ZONE": 43,
+    "CREATE_TIME": "2016-11-08T18:22:30.860",
+    "CONNECTED_COUNTRY_ID": 50
+  },
+  {
+    "TIME_ZONE_NAME": "South Africa Standard Time",
+    "CONNECTED_TIME_ZONE": 13,
+    "CREATE_TIME": "2016-11-09T17:17:13.130",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Srednja Europa - st. vrij.",
+    "CONNECTED_TIME_ZONE": 5,
+    "CREATE_TIME": "2016-11-09T18:00:30.740",
+    "CONNECTED_COUNTRY_ID": 19
+  },
+  {
+    "TIME_ZONE_NAME": "Srednjeevropski standardni cas",
+    "CONNECTED_TIME_ZONE": 4,
+    "CREATE_TIME": "2016-11-18T12:43:08.773",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Srednjeevropsko standard. vreme",
+    "CONNECTED_TIME_ZONE": 5,
+    "CREATE_TIME": "2016-11-10T20:05:01.813",
+    "CONNECTED_COUNTRY_ID": 19
+  },
+  {
+    "TIME_ZONE_NAME": "Sri Jayawardenepura",
+    "CONNECTED_TIME_ZONE": 34,
+    "CREATE_TIME": "2016-11-10T14:06:56.307",
+    "CONNECTED_COUNTRY_ID": 156
+  },
+  {
+    "TIME_ZONE_NAME": "Sri Lanka Standard Time",
+    "CONNECTED_TIME_ZONE": 34,
+    "CREATE_TIME": "2016-11-16T00:45:12.753",
+    "CONNECTED_COUNTRY_ID": 156
+  },
+  {
+    "TIME_ZONE_NAME": "Srodkowoeuropejski czas stand.",
+    "CONNECTED_TIME_ZONE": 7,
+    "CREATE_TIME": "2016-11-09T20:01:15.827",
+    "CONNECTED_COUNTRY_ID": 19
+  },
+  {
+    "TIME_ZONE_NAME": "Standard. vreme u Centr. Evropi",
+    "CONNECTED_TIME_ZONE": 4,
+    "CREATE_TIME": "2016-11-10T15:52:48.260",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Strední cas (bežný cas)",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-16T09:38:52.467",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Strední Evropa (bežný cas)",
+    "CONNECTED_TIME_ZONE": 5,
+    "CREATE_TIME": "2016-11-09T17:43:11.713",
+    "CONNECTED_COUNTRY_ID": 19
+  },
+  {
+    "TIME_ZONE_NAME": "Stredoeurópsky cas (normálny)",
+    "CONNECTED_TIME_ZONE": 5,
+    "CREATE_TIME": "2016-11-11T21:53:22.187",
+    "CONNECTED_COUNTRY_ID": 19
+  },
+  {
+    "TIME_ZONE_NAME": "Suriye Standart Saati",
+    "CONNECTED_TIME_ZONE": 11,
+    "CREATE_TIME": "2016-11-15T18:07:24.113",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Syria Standard Time",
+    "CONNECTED_TIME_ZONE": 11,
+    "CREATE_TIME": "2016-11-11T22:04:32.490",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Tehran",
+    "CONNECTED_TIME_ZONE": 23,
+    "CREATE_TIME": "2016-11-09T17:53:55.500",
+    "CONNECTED_COUNTRY_ID": 81
+  },
+  {
+    "TIME_ZONE_NAME": "Temps universel coordonné",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-09T21:33:46.060",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Terre-Neuve-et-Labrador",
+    "CONNECTED_TIME_ZONE": 68,
+    "CREATE_TIME": "2016-11-11T14:54:01.897",
+    "CONNECTED_COUNTRY_ID": 66
+  },
+  {
+    "TIME_ZONE_NAME": "Tijuana, Baja California",
+    "CONNECTED_TIME_ZONE": 87,
+    "CREATE_TIME": "2016-11-12T04:00:23.800",
+    "CONNECTED_COUNTRY_ID": 31
+  },
+  {
+    "TIME_ZONE_NAME": "Turkey",
+    "CONNECTED_TIME_ZONE": 98,
+    "CREATE_TIME": "2016-11-08T18:22:30.787",
+    "CONNECTED_COUNTRY_ID": 12
+  },
+  {
+    "TIME_ZONE_NAME": "Türkiye Standart Saati",
+    "CONNECTED_TIME_ZONE": 98,
+    "CREATE_TIME": "2016-11-09T17:09:32.407",
+    "CONNECTED_COUNTRY_ID": 12
+  },
+  {
+    "TIME_ZONE_NAME": "Universal",
+    "CONNECTED_TIME_ZONE": 0,
+    "CREATE_TIME": "2016-11-08T18:22:30.957",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "US/Alaska",
+    "CONNECTED_TIME_ZONE": 88,
+    "CREATE_TIME": "2016-11-08T18:22:30.953",
+    "CONNECTED_COUNTRY_ID": 18
+  },
+  {
+    "TIME_ZONE_NAME": "US/Aleutian",
+    "CONNECTED_TIME_ZONE": 89,
+    "CREATE_TIME": "2016-11-08T18:22:30.953",
+    "CONNECTED_COUNTRY_ID": 18
+  },
+  {
+    "TIME_ZONE_NAME": "US/Arizona",
+    "CONNECTED_TIME_ZONE": 82,
+    "CREATE_TIME": "2016-11-08T18:22:30.940",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "US/Central",
+    "CONNECTED_TIME_ZONE": 78,
+    "CREATE_TIME": "2016-11-08T18:22:30.930",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "US/East-Indiana",
+    "CONNECTED_TIME_ZONE": 76,
+    "CREATE_TIME": "2016-11-08T18:22:30.930",
+    "CONNECTED_COUNTRY_ID": 18
+  },
+  {
+    "TIME_ZONE_NAME": "US/Eastern",
+    "CONNECTED_TIME_ZONE": 75,
+    "CREATE_TIME": "2016-11-08T18:22:30.917",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "US/Hawaii",
+    "CONNECTED_TIME_ZONE": 89,
+    "CREATE_TIME": "2016-11-08T18:22:30.953",
+    "CONNECTED_COUNTRY_ID": 18
+  },
+  {
+    "TIME_ZONE_NAME": "US/Indiana-Starke",
+    "CONNECTED_TIME_ZONE": 76,
+    "CREATE_TIME": "2016-11-08T18:22:30.930",
+    "CONNECTED_COUNTRY_ID": 18
+  },
+  {
+    "TIME_ZONE_NAME": "US/Michigan",
+    "CONNECTED_TIME_ZONE": 75,
+    "CREATE_TIME": "2016-11-08T18:22:30.917",
+    "CONNECTED_COUNTRY_ID": 18
+  },
+  {
+    "TIME_ZONE_NAME": "US/Mountain",
+    "CONNECTED_TIME_ZONE": 85,
+    "CREATE_TIME": "2016-11-08T18:22:30.940",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "US/Pacific",
+    "CONNECTED_TIME_ZONE": 86,
+    "CREATE_TIME": "2016-11-08T18:22:30.943",
+    "CONNECTED_COUNTRY_ID": 18
+  },
+  {
+    "TIME_ZONE_NAME": "US/Pacific-New",
+    "CONNECTED_TIME_ZONE": 86,
+    "CREATE_TIME": "2016-11-08T18:22:30.947",
+    "CONNECTED_COUNTRY_ID": 18
+  },
+  {
+    "TIME_ZONE_NAME": "US/Samoa",
+    "CONNECTED_TIME_ZONE": 90,
+    "CREATE_TIME": "2016-11-08T18:22:30.957",
+    "CONNECTED_COUNTRY_ID": 218
+  },
+  {
+    "TIME_ZONE_NAME": "UTC",
+    "CONNECTED_TIME_ZONE": 0,
+    "CREATE_TIME": "2016-11-08T18:22:30.720",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "UTC 12",
+    "CONNECTED_TIME_ZONE": 58,
+    "CREATE_TIME": "2016-11-18T08:48:32.080",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "UTC-11",
+    "CONNECTED_TIME_ZONE": 90,
+    "CREATE_TIME": "2016-11-18T04:47:28.170",
+    "CONNECTED_COUNTRY_ID": 14
+  },
+  {
+    "TIME_ZONE_NAME": "Västeuropa, normaltid",
+    "CONNECTED_TIME_ZONE": 4,
+    "CREATE_TIME": "2016-11-18T01:02:33.767",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Venezuela Standard Time",
+    "CONNECTED_TIME_ZONE": 73,
+    "CREATE_TIME": "2016-12-12T22:04:02.863",
+    "CONNECTED_COUNTRY_ID": 110
+  },
+  {
+    "TIME_ZONE_NAME": "Vest-Europa (normaltid)",
+    "CONNECTED_TIME_ZONE": 6,
+    "CREATE_TIME": "2016-11-12T14:58:52.383",
+    "CONNECTED_COUNTRY_ID": 19
+  },
+  {
+    "TIME_ZONE_NAME": "W-SU",
+    "CONNECTED_TIME_ZONE": 20,
+    "CREATE_TIME": "2016-11-09T19:57:03.447",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "W. Australia Standard Time",
+    "CONNECTED_TIME_ZONE": 44,
+    "CREATE_TIME": "2016-11-21T00:40:51.507",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "W. Central Africa Standard Time",
+    "CONNECTED_TIME_ZONE": 8,
+    "CREATE_TIME": "2016-11-09T15:26:24.180",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "W. Europe Standard Time",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-09T17:18:36.277",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Waktu Standar Asia Tenggara",
+    "CONNECTED_TIME_ZONE": 39,
+    "CREATE_TIME": "2016-11-09T21:49:06.547",
+    "CONNECTED_COUNTRY_ID": 75
+  },
+  {
+    "TIME_ZONE_NAME": "Waktu Standar Semenanjung Malaysia",
+    "CONNECTED_TIME_ZONE": 43,
+    "CREATE_TIME": "2016-11-13T10:44:24.710",
+    "CONNECTED_COUNTRY_ID": 82
+  },
+  {
+    "TIME_ZONE_NAME": "West Central Africa",
+    "CONNECTED_TIME_ZONE": 8,
+    "CREATE_TIME": "2016-11-09T15:12:07.150",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "West-Europa (standaardtijd)",
+    "CONNECTED_TIME_ZONE": 6,
+    "CREATE_TIME": "2016-11-10T20:09:19.783",
+    "CONNECTED_COUNTRY_ID": 19
+  },
+  {
+    "TIME_ZONE_NAME": "WET",
+    "CONNECTED_TIME_ZONE": 4,
+    "CREATE_TIME": "2016-11-15T18:31:51.917",
+    "CONNECTED_COUNTRY_ID": null
+  },
+  {
+    "TIME_ZONE_NAME": "Windhoek",
+    "CONNECTED_TIME_ZONE": 17,
+    "CREATE_TIME": "2016-11-16T12:53:49.967",
+    "CONNECTED_COUNTRY_ID": 64
+  },
+  {
+    "TIME_ZONE_NAME": "Yangon (Rangoon)",
+    "CONNECTED_TIME_ZONE": 38,
+    "CREATE_TIME": "2016-11-09T16:05:38.660",
+    "CONNECTED_COUNTRY_ID": 55
+  },
+  {
+    "TIME_ZONE_NAME": "Zulu",
+    "CONNECTED_TIME_ZONE": 2,
+    "CREATE_TIME": "2016-11-09T20:14:35.887",
+    "CONNECTED_COUNTRY_ID": 134
+  }
+]

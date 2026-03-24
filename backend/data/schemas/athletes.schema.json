@@ -1,0 +1,150 @@
+{
+  "ATHLETE_ID": {
+    "type": "int",
+    "default": 1
+  },
+  "NAME_ID": {
+    "type": "int",
+    "default": 77565924
+  },
+  "SPORT_TYPE_ID": {
+    "type": "int",
+    "default": 1
+  },
+  "BIRTHDATE": {
+    "type": "string",
+    "default": "2000-01-01"
+  },
+  "GENDER": {
+    "type": "int",
+    "default": 1
+  },
+  "HEIGHT": {
+    "type": "int",
+    "default": 169
+  },
+  "WEIGHT": {
+    "type": "int",
+    "default": 81
+  },
+  "NATIONALITY": {
+    "type": "int",
+    "default": 2
+  },
+  "COUNTRY_OF_BIRTH": {
+    "type": "int",
+    "default": 3
+  },
+  "PLACE_OF_BIRTH": {
+    "type": "any",
+    "default": null
+  },
+  "POSITION": {
+    "type": "int",
+    "default": 4
+  },
+  "FORMATION_POSITION": {
+    "type": "int",
+    "default": 17
+  },
+  "BOOT_ID": {
+    "type": "int",
+    "default": null
+  },
+  "IMG_VER": {
+    "type": "int",
+    "default": 1
+  },
+  "STATUS": {
+    "type": "int",
+    "default": 1
+  },
+  "DATE_OF_DEATH": {
+    "type": "string",
+    "default": null
+  },
+  "CONNECT_BY_TEXT": {
+    "type": "bool",
+    "default": false
+  },
+  "TOTAL_SOCIAL_FOLLOWERS": {
+    "type": "int",
+    "default": 7064315
+  },
+  "SELECTION_RANK": {
+    "type": "int",
+    "default": 77
+  },
+  "HIDE_ON_CATALOG": {
+    "type": "bool",
+    "default": false
+  },
+  "BUZZ_TYPE": {
+    "type": "int",
+    "default": null
+  },
+  "ENABLE_BUZZ": {
+    "type": "bool",
+    "default": true
+  },
+  "HIDE_ON_SEARCH": {
+    "type": "bool",
+    "default": false
+  },
+  "DATE_OF_RETIREMENT": {
+    "type": "string",
+    "default": null
+  },
+  "HAS_LOGO": {
+    "type": "bool",
+    "default": false
+  },
+  "HIDE_PLAYER_GAME_CARD": {
+    "type": "bool",
+    "default": false
+  },
+  "PREFERRED_SIDE": {
+    "type": "string",
+    "default": "Left"
+  },
+  "MARKET_VALUE": {
+    "type": "any",
+    "default": null
+  },
+  "PREFERRED_SURFACE": {
+    "type": "any",
+    "default": null
+  },
+  "BACKHAND_TYPE": {
+    "type": "int",
+    "default": null
+  },
+  "PRIZE_MONEY": {
+    "type": "any",
+    "default": null
+  },
+  "HIGHEST_CAREER_RANKING": {
+    "type": "any",
+    "default": null
+  },
+  "CURRENT_CLUB_ID": {
+    "type": "int",
+    "default": 1
+  },
+  "IS_DELETED": {
+    "type": "bool",
+    "default": false
+  },
+  "CLUB_IMAGE_URL": {
+    "type": "string",
+    "default": "https://b.fssta.com/uploads/application/soccer/headshots/711.vresize.350.350.medium.1.png"
+  },
+  "NATIONAL_IMAGE_URL": {
+    "type": "string",
+    "default": "https://s.ndtvimg.com/images/entities/300/lionel-messi-90996.png"
+  },
+  "MARKET_VALUE_CURRENCY": {
+    "type": "any",
+    "default": null
+  }
+}

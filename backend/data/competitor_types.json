@@ -1,0 +1,32 @@
+[
+  {
+    "COMPETITOR_TYPE_ID": 1,
+    "COMPETITOR_TYPE": "Team",
+    "DESCRIPTION": "Team competitor"
+  },
+  {
+    "COMPETITOR_TYPE_ID": 2,
+    "COMPETITOR_TYPE": "National Team",
+    "DESCRIPTION": "National team competitor"
+  },
+  {
+    "COMPETITOR_TYPE_ID": 3,
+    "COMPETITOR_TYPE": "Player",
+    "DESCRIPTION": "Individual player competitor"
+  },
+  {
+    "COMPETITOR_TYPE_ID": 4,
+    "COMPETITOR_TYPE": "Couple",
+    "DESCRIPTION": "Couple competitor"
+  },
+  {
+    "COMPETITOR_TYPE_ID": 5,
+    "COMPETITOR_TYPE": "Exhibition",
+    "DESCRIPTION": "Exhibition competitor"
+  },
+  {
+    "COMPETITOR_TYPE_ID": 6,
+    "COMPETITOR_TYPE": "College",
+    "DESCRIPTION": "College competitor"
+  }
+]

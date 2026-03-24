@@ -1,0 +1,517 @@
+[
+  {
+    "id": 46,
+    "aliasName": "All Categories",
+    "nameId": null,
+    "description": "Root category for all categories",
+    "fatherCategoryId": null,
+    "name": "All Categories",
+    "fatherCategory": null
+  },
+  {
+    "id": 1,
+    "aliasName": "Competitors Names",
+    "nameId": null,
+    "description": "Main category for competitor names",
+    "fatherCategoryId": 46,
+    "name": "Competitors Names",
+    "fatherCategory": "All Categories"
+  },
+  {
+    "id": 2,
+    "aliasName": "Countries names",
+    "nameId": null,
+    "description": "Category for country names in sports context",
+    "fatherCategoryId": 46,
+    "name": "Countries names",
+    "fatherCategory": "All Categories"
+  },
+  {
+    "id": 3,
+    "aliasName": "Cities",
+    "nameId": null,
+    "description": "Category for city names in sports context",
+    "fatherCategoryId": 46,
+    "name": "Cities",
+    "fatherCategory": "All Categories"
+  },
+  {
+    "id": 4,
+    "aliasName": "Competitions Names",
+    "nameId": null,
+    "description": "Competitions related to countries",
+    "fatherCategoryId": 2,
+    "name": "Competitions Names",
+    "fatherCategory": "Countries names"
+  },
+  {
+    "id": 5,
+    "aliasName": "Sport Type",
+    "nameId": null,
+    "description": "Main category for sport types",
+    "fatherCategoryId": 46,
+    "name": "Sport Type",
+    "fatherCategory": "All Categories"
+  },
+  {
+    "id": 6,
+    "aliasName": "Sport Type names",
+    "nameId": null,
+    "description": "Specific sport type names",
+    "fatherCategoryId": 5,
+    "name": "Sport Type names",
+    "fatherCategory": "Sport Type"
+  },
+  {
+    "id": 7,
+    "aliasName": "Athlete Positions",
+    "nameId": null,
+    "description": "Main category for athlete positions.",
+    "fatherCategoryId": 46,
+    "name": "Athlete Positions",
+    "fatherCategory": "All Categories"
+  },
+  {
+    "id": 8,
+    "aliasName": "Athlete Position Types",
+    "nameId": null,
+    "description": "Specific athlete position types",
+    "fatherCategoryId": 7,
+    "name": "Athlete Position Types",
+    "fatherCategory": "Athlete Positions"
+  },
+  {
+    "id": 9,
+    "aliasName": "Athlete Formation Position Types",
+    "nameId": null,
+    "description": "Formation position types for athletes.test",
+    "fatherCategoryId": 7,
+    "name": "Athlete Formation Position Types",
+    "fatherCategory": "Athlete Positions"
+  },
+  {
+    "id": 10,
+    "aliasName": "Teams",
+    "nameId": null,
+    "description": "Category for team names",
+    "fatherCategoryId": 46,
+    "name": "Teams",
+    "fatherCategory": "All Categories"
+  },
+  {
+    "id": 11,
+    "aliasName": "Team Types",
+    "nameId": null,
+    "description": "Different types of sports teams",
+    "fatherCategoryId": 10,
+    "name": "Team Types",
+    "fatherCategory": "Teams"
+  },
+  {
+    "id": 12,
+    "aliasName": "Leagues",
+    "nameId": null,
+    "description": "Category for sports leagues",
+    "fatherCategoryId": 46,
+    "name": "Leagues",
+    "fatherCategory": "All Categories"
+  },
+  {
+    "id": 13,
+    "aliasName": "League Types",
+    "nameId": null,
+    "description": "Different types of sports leagues",
+    "fatherCategoryId": 12,
+    "name": "League Types",
+    "fatherCategory": "Leagues"
+  },
+  {
+    "id": 14,
+    "aliasName": "Venues",
+    "nameId": null,
+    "description": "Category for sports venues and stadiums",
+    "fatherCategoryId": 46,
+    "name": "Venues",
+    "fatherCategory": "All Categories"
+  },
+  {
+    "id": 15,
+    "aliasName": "Venue Types",
+    "nameId": null,
+    "description": "Different types of sports venues",
+    "fatherCategoryId": 14,
+    "name": "Venue Types",
+    "fatherCategory": "Venues"
+  },
+  {
+    "id": 16,
+    "aliasName": "Equipment",
+    "nameId": null,
+    "description": "Category for sports equipment",
+    "fatherCategoryId": 46,
+    "name": "Equipment",
+    "fatherCategory": "All Categories"
+  },
+  {
+    "id": 17,
+    "aliasName": "Equipment Types",
+    "nameId": null,
+    "description": "Different types of sports equipment",
+    "fatherCategoryId": 16,
+    "name": "Equipment Types",
+    "fatherCategory": "Equipment"
+  },
+  {
+    "id": 18,
+    "aliasName": "Rules & Regulations",
+    "nameId": null,
+    "description": "Category for sports rules and regulations",
+    "fatherCategoryId": 46,
+    "name": "Rules & Regulations",
+    "fatherCategory": "All Categories"
+  },
+  {
+    "id": 19,
+    "aliasName": "Rule Types",
+    "nameId": null,
+    "description": "Different types of sports rules",
+    "fatherCategoryId": 18,
+    "name": "Rule Types",
+    "fatherCategory": "Rules & Regulations"
+  },
+  {
+    "id": 20,
+    "aliasName": "Statistics",
+    "nameId": null,
+    "description": "Category for sports statistics",
+    "fatherCategoryId": 46,
+    "name": "Statistics",
+    "fatherCategory": "All Categories"
+  },
+  {
+    "id": 21,
+    "aliasName": "Statistic Types",
+    "nameId": null,
+    "description": "Different types of sports statistics",
+    "fatherCategoryId": 20,
+    "name": "Statistic Types",
+    "fatherCategory": "Statistics"
+  },
+  {
+    "id": 22,
+    "aliasName": "Events",
+    "nameId": null,
+    "description": "Category for sports events",
+    "fatherCategoryId": 46,
+    "name": "Events",
+    "fatherCategory": "All Categories"
+  },
+  {
+    "id": 23,
+    "aliasName": "Event Types",
+    "nameId": null,
+    "description": "Different types of sports events",
+    "fatherCategoryId": 22,
+    "name": "Event Types",
+    "fatherCategory": "Events"
+  },
+  {
+    "id": 24,
+    "aliasName": "Coaches",
+    "nameId": null,
+    "description": "Category for coach names and roles",
+    "fatherCategoryId": 46,
+    "name": "Coaches",
+    "fatherCategory": "All Categories"
+  },
+  {
+    "id": 25,
+    "aliasName": "Coach Types",
+    "nameId": null,
+    "description": "Different types of coaching roles",
+    "fatherCategoryId": 24,
+    "name": "Coach Types",
+    "fatherCategory": "Coaches"
+  },
+  {
+    "id": 26,
+    "aliasName": "Officials",
+    "nameId": null,
+    "description": "Category for sports officials and referees",
+    "fatherCategoryId": 46,
+    "name": "Officials",
+    "fatherCategory": "All Categories"
+  },
+  {
+    "id": 27,
+    "aliasName": "Official Types",
+    "nameId": null,
+    "description": "Different types of sports officials",
+    "fatherCategoryId": 26,
+    "name": "Official Types",
+    "fatherCategory": "Officials"
+  },
+  {
+    "id": 28,
+    "aliasName": "Training Methods",
+    "nameId": null,
+    "description": "Category for training methods and techniques",
+    "fatherCategoryId": 46,
+    "name": "Training Methods",
+    "fatherCategory": "All Categories"
+  },
+  {
+    "id": 29,
+    "aliasName": "Training Types",
+    "nameId": null,
+    "description": "Different types of training methods",
+    "fatherCategoryId": 28,
+    "name": "Training Types",
+    "fatherCategory": "Training Methods"
+  },
+  {
+    "id": 30,
+    "aliasName": "Awards & Honors",
+    "nameId": null,
+    "description": "Category for sports awards and honors",
+    "fatherCategoryId": 46,
+    "name": "Awards & Honors",
+    "fatherCategory": "All Categories"
+  },
+  {
+    "id": 31,
+    "aliasName": "Award Types",
+    "nameId": null,
+    "description": "Different types of sports awards",
+    "fatherCategoryId": 30,
+    "name": "Award Types",
+    "fatherCategory": "Awards & Honors"
+  },
+  {
+    "id": 32,
+    "aliasName": "Sports Organizations",
+    "nameId": null,
+    "description": "Category for sports organizations and federations",
+    "fatherCategoryId": 46,
+    "name": "Sports Organizations",
+    "fatherCategory": "All Categories"
+  },
+  {
+    "id": 33,
+    "aliasName": "IFA",
+    "nameId": null,
+    "description": null,
+    "fatherCategoryId": 32,
+    "name": "IFA",
+    "fatherCategory": "Sports Organizations"
+  },
+  {
+    "id": 34,
+    "aliasName": "Provinces",
+    "nameId": null,
+    "description": null,
+    "fatherCategoryId": 3,
+    "name": "Provinces",
+    "fatherCategory": "Cities"
+  },
+  {
+    "id": 35,
+    "aliasName": "Test",
+    "nameId": null,
+    "description": null,
+    "fatherCategoryId": 22,
+    "name": "Test",
+    "fatherCategory": "Events"
+  },
+  {
+    "id": 36,
+    "aliasName": "DESCRIPTION",
+    "nameId": null,
+    "description": "Category for descriptions",
+    "fatherCategoryId": 46,
+    "name": "DESCRIPTION",
+    "fatherCategory": "All Categories"
+  },
+  {
+    "name": "test1",
+    "fatherCategory": "Provinces",
+    "description": "",
+    "id": 37
+  },
+  {
+    "name": "test2",
+    "fatherCategory": "test1",
+    "description": "",
+    "id": 38
+  },
+  {
+    "name": "test3",
+    "fatherCategory": "test2",
+    "description": "",
+    "id": 39
+  },
+  {
+    "name": "test4",
+    "fatherCategory": "test3",
+    "description": "",
+    "id": 40
+  },
+  {
+    "name": "test5",
+    "fatherCategory": "test4",
+    "description": "",
+    "id": 41
+  },
+  {
+    "name": "test6",
+    "fatherCategory": "test5",
+    "description": "",
+    "id": 42
+  },
+  {
+    "name": "test7",
+    "fatherCategory": "test6",
+    "description": "",
+    "id": 43
+  },
+  {
+    "name": "test8",
+    "fatherCategory": "test7",
+    "description": "",
+    "id": 44
+  },
+  {
+    "name": "test9",
+    "fatherCategory": "test8",
+    "description": "",
+    "id": 45
+  },
+  {
+    "id": 47,
+    "aliasName": "Seasons Names",
+    "nameId": null,
+    "description": "Category for season names in competitions",
+    "fatherCategoryId": 4,
+    "name": "Seasons Names",
+    "fatherCategory": "Competitions Names"
+  },
+  {
+    "id": 48,
+    "aliasName": "Stages Names",
+    "nameId": null,
+    "description": "Category for stage names in competitions",
+    "fatherCategoryId": 4,
+    "name": "Stages Names",
+    "fatherCategory": "Competitions Names"
+  },
+  {
+    "id": 49,
+    "aliasName": "Groups Names",
+    "nameId": null,
+    "description": "Category for group names in competitions",
+    "fatherCategoryId": 4,
+    "name": "Groups Names",
+    "fatherCategory": "Competitions Names"
+  },
+  {
+    "id": 53,
+    "aliasName": "Phases Names",
+    "nameId": null,
+    "description": "Category for phase names in competitions",
+    "fatherCategoryId": 4,
+    "name": "Phases Names",
+    "fatherCategory": "Competitions Names"
+  },
+  {
+    "id": 50,
+    "aliasName": "Athletes Names",
+    "nameId": null,
+    "description": "Category for individual athlete names",
+    "fatherCategoryId": 46,
+    "name": "Athletes Names",
+    "fatherCategory": "All Categories"
+  },
+  {
+    "id": 51,
+    "name": "Symbolic Names"
+  },
+  {
+    "id": 52,
+    "name": "Title Names"
+  },
+  {
+    "id": 54,
+    "aliasName": "Data Sources",
+    "nameId": null,
+    "description": "Category for data source names (e.g. OPTA, SportRadar)",
+    "fatherCategoryId": 46,
+    "name": "Data Sources",
+    "fatherCategory": "All Categories"
+  },
+  {
+    "id": 55,
+    "aliasName": "Time Zone names",
+    "nameId": null,
+    "description": "Category for time zone display names",
+    "fatherCategoryId": 46,
+    "name": "Time Zone names",
+    "fatherCategory": "All Categories"
+  },
+  {
+    "id": 56,
+    "aliasName": "Language names",
+    "nameId": null,
+    "description": "Category for language display names",
+    "fatherCategoryId": 46,
+    "name": "Language names",
+    "fatherCategory": "All Categories"
+  },
+  {
+    "name": "Finals",
+    "fatherCategory": "DESCRIPTION",
+    "description": "",
+    "id": 57
+  },
+  {
+    "name": "Rounds Names",
+    "fatherCategory": "Competitions Names",
+    "description": "",
+    "id": 58
+  },
+  {
+    "name": "Participants Names",
+    "fatherCategory": "Groups Names",
+    "description": "",
+    "id": 59
+  },
+  {
+    "name": "Table Destinations",
+    "fatherCategory": "Stages Names",
+    "description": "",
+    "id": 60
+  },
+  {
+    "name": "Points Deduction Reasons",
+    "fatherCategory": "Stages Names",
+    "description": "",
+    "id": 61
+  },
+  {
+    "name": "Points Deduction Reasons",
+    "fatherCategory": "Stages Names",
+    "description": "",
+    "id": 62
+  },
+  {
+    "name": "Position Table Names",
+    "fatherCategory": "Stages Names",
+    "description": "",
+    "id": 63
+  },
+  {
+    "name": "Update Types",
+    "fatherCategory": "All Categories",
+    "description": "",
+    "id": 64
+  }
+]

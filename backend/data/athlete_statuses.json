@@ -1,0 +1,22 @@
+[
+  {
+    "STATUS_TYPE_ID": 1,
+    "STATUS_TYPE": "active",
+    "REQUIRES_DATE": false,
+    "DESCRIPTION": "Active athlete"
+  },
+  {
+    "STATUS_TYPE_ID": 2,
+    "STATUS_TYPE": "retired",
+    "REQUIRES_DATE": true,
+    "DATE_FIELD": "DATE_OF_RETIREMENT",
+    "DESCRIPTION": "Retired athlete"
+  },
+  {
+    "STATUS_TYPE_ID": 3,
+    "STATUS_TYPE": "dead",
+    "REQUIRES_DATE": true,
+    "DATE_FIELD": "DATE_OF_DEATH",
+    "DESCRIPTION": "Deceased athlete"
+  }
+]

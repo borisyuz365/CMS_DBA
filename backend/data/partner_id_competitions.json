@@ -1,0 +1,18 @@
+[
+  {
+    "COMPETITION_ID": 1,
+    "DATA_SOURCE_ID": 169,
+    "PARTNER_ID": 12345678,
+    "CREATE_TIME": null,
+    "UPDATE_TIME": null,
+    "UPDATE_BY": null
+  },
+  {
+    "COMPETITION_ID": 1,
+    "DATA_SOURCE_ID": 169,
+    "PARTNER_ID": 98765432,
+    "CREATE_TIME": null,
+    "UPDATE_TIME": null,
+    "UPDATE_BY": null
+  }
+]

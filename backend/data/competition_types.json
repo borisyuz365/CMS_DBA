@@ -1,0 +1,32 @@
+[
+  {
+    "COMPETITION_TYPE_ID": 1,
+    "COMPETITION_TYPE": "League",
+    "DESCRIPTION": "League competition"
+  },
+  {
+    "COMPETITION_TYPE_ID": 2,
+    "COMPETITION_TYPE": "Cup",
+    "DESCRIPTION": "Cup competition"
+  },
+  {
+    "COMPETITION_TYPE_ID": 3,
+    "COMPETITION_TYPE": "Tournament",
+    "DESCRIPTION": "Tournament competition"
+  },
+  {
+    "COMPETITION_TYPE_ID": 4,
+    "COMPETITION_TYPE": "Exhibition",
+    "DESCRIPTION": "Exhibition competition"
+  },
+  {
+    "COMPETITION_TYPE_ID": 5,
+    "COMPETITION_TYPE": "Rankings",
+    "DESCRIPTION": "Rankings competition"
+  },
+  {
+    "COMPETITION_TYPE_ID": 6,
+    "COMPETITION_TYPE": "Qualifications",
+    "DESCRIPTION": "Qualifications competition"
+  }
+]
