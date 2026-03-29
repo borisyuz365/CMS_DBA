@@ -1,0 +1,11 @@
+{
+  "COMPETITION_ID": {"type": "int", "default": 0},
+  "SEASON_NUM": {"type": "int", "default": 0},
+  "PHASE_NUM": {"type": "int", "default": 0},
+  "PHASE_NAME_ID": {"type": "int", "default": 0},
+  "PARENT_PHASE_NUM": {"type": "any", "default": null},
+  "SHOW_STATS": {"type": "bool", "default": true},
+  "USE_NAME": {"type": "bool", "default": false},
+  "OVERTIME_LENGTH": {"type": "int", "default": 5},
+  "TOP_ATHLETES_MIN_APPEARANCES_PERCENTAGE": {"type": "any", "default": 0.5}
+}

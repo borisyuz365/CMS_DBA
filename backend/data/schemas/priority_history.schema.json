@@ -1,0 +1,50 @@
+{
+  "DATA_SOURCE": {
+    "type": "int",
+    "default": null
+  },
+  "UPDATE_TYPE": {
+    "type": "int",
+    "default": null
+  },
+  "PRIORITY_LEVEL": {
+    "type": "int",
+    "default": null
+  },
+  "CUT_TYPE": {
+    "type": "int",
+    "default": null
+  },
+  "CUT_VALUE": {
+    "type": "int",
+    "default": null
+  },
+  "COMMENT": {
+    "type": "string",
+    "default": ""
+  },
+  "START_DATE": {
+    "type": "string",
+    "default": null
+  },
+  "EXPIRATION_DATE": {
+    "type": "string",
+    "default": null
+  },
+  "AFTER_EXPIRED_PRIORITY": {
+    "type": "int",
+    "default": null
+  },
+  "SCHEDULE_PRIORITY": {
+    "type": "int",
+    "default": null
+  },
+  "USER_NAME": {
+    "type": "string",
+    "default": null
+  },
+  "UPDATE_TIME": {
+    "type": "string",
+    "default": "UTC_NOW"
+  }
+}

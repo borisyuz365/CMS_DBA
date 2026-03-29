@@ -1,0 +1,39 @@
+[
+  {
+    "TV_NETWORK_ID": 8869,
+    "NAME_ID": 77566392,
+    "COUNTRY_ID": 1,
+    "WEBSITE": "https://sport1.maariv.co.il/",
+    "CHANNEL_TYPE": 2,
+    "IS_INTERNATIONAL": true,
+    "LANG_ID": 1,
+    "CONNECTED_BOOKMAKER": null,
+    "IMG_VER": 1,
+    "NETWORK_IMAGE_URL": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjrNBJ7VsEny2EppFX2YlEFun3CyqlIereGA&s",
+    "PROMOTE_IN_MATCH_REMINDER_NOTIFICATION": true,
+    "ORDER_LEVEL": 1,
+    "IS_DELETED": false,
+    "COUNTRY_IDS": [
+      1,
+      174,
+      2,
+      4,
+      5
+    ]
+  },
+  {
+    "TV_NETWORK_ID": 8870,
+    "NAME_ID": 77566393,
+    "COUNTRY_ID": 6,
+    "WEBSITE": "WWW.ESPN.COM",
+    "CHANNEL_TYPE": null,
+    "IS_INTERNATIONAL": false,
+    "LANG_ID": null,
+    "CONNECTED_BOOKMAKER": null,
+    "IMG_VER": 1,
+    "NETWORK_IMAGE_URL": null,
+    "PROMOTE_IN_MATCH_REMINDER_NOTIFICATION": true,
+    "ORDER_LEVEL": null,
+    "IS_DELETED": false
+  }
+]

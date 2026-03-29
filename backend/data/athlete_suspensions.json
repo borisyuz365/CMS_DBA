@@ -1,0 +1,14 @@
+[
+  {
+    "SUSPENSION_ID": 2,
+    "ATHLETE_ID": 1,
+    "COMPETITION_ID": 10,
+    "START_DATE": null,
+    "END_DATE": null,
+    "GAMES_COUNT": 6,
+    "SUSPENSION_TYPE": "Red Card",
+    "CREATE_TIME": "2026-01-25T14:58:41.317Z",
+    "UPDATE_TIME": "2026-01-25T14:58:41.317Z",
+    "UPDATE_BY": null
+  }
+]

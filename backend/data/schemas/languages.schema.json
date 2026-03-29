@@ -1,0 +1,82 @@
+{
+  "id": {
+    "type": "int",
+    "default": 1
+  },
+  "nameId": {
+    "type": "any",
+    "default": null
+  },
+  "direction": {
+    "type": "int",
+    "default": 0
+  },
+  "cultureName": {
+    "type": "string",
+    "default": "en-US"
+  },
+  "iso2LettersCode": {
+    "type": "string",
+    "default": "en"
+  },
+  "iso3LettersCode": {
+    "type": "string",
+    "default": "eng"
+  },
+  "win3LettersCode": {
+    "type": "any",
+    "default": null
+  },
+  "fatherLangId": {
+    "type": "any",
+    "default": null
+  },
+  "langType": {
+    "type": "any",
+    "default": null
+  },
+  "isDisplayed": {
+    "type": "bool",
+    "default": true
+  },
+  "fbCode": {
+    "type": "any",
+    "default": null
+  },
+  "androidLocale": {
+    "type": "string",
+    "default": "en-US"
+  },
+  "minLettersInSearch": {
+    "type": "any",
+    "default": null
+  },
+  "imgVer": {
+    "type": "int",
+    "default": 0
+  },
+  "websiteLang": {
+    "type": "string",
+    "default": "en"
+  },
+  "isMetricSystem": {
+    "type": "any",
+    "default": null
+  },
+  "didomiCode": {
+    "type": "any",
+    "default": null
+  },
+  "name": {
+    "type": "string",
+    "default": "English"
+  },
+  "code": {
+    "type": "string",
+    "default": "en"
+  },
+  "isUI": {
+    "type": "bool",
+    "default": true
+  }
+}

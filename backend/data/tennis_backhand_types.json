@@ -1,0 +1,12 @@
+[
+  {
+    "BACKHAND_TYPE_ID": 1,
+    "BACKHAND_TYPE_NAME": "One-Handed",
+    "DESCRIPTION": "One-handed backhand"
+  },
+  {
+    "BACKHAND_TYPE_ID": 2,
+    "BACKHAND_TYPE_NAME": "Two-Handed",
+    "DESCRIPTION": "Two-handed backhand"
+  }
+]

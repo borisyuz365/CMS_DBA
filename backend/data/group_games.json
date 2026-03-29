@@ -1,0 +1,19 @@
+[
+  {
+    "COMPETITION_ID": 2,
+    "GAME_ID": 1001,
+    "GAME_NUM": 1,
+    "COMPETITOR_NUM": 0,
+    "GROUP_NUM": 1,
+    "NAME_ID": 0,
+    "ORIGIN_GROUP_NUM": null,
+    "ORIGIN_GROUP_POSITION": null,
+    "ORIGIN_STAGE_NUM": null,
+    "PARTICIPANT_NUM": 0,
+    "SEASON_NUM": 4,
+    "STAGE_NUM": 2,
+    "USE_NAME": true,
+    "START_TIME": "2026-03-06T22:00:00.000Z",
+    "VENUE_ID": 0
+  }
+]

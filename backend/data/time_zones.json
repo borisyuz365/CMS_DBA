@@ -1,0 +1,590 @@
+[
+  {
+    "TIME_ZONE_ID": 1,
+    "NAME_ID": 52000001,
+    "TIME_ZONE_NAME": "Morocco Standard Time",
+    "UTC_OFFSET": 0
+  },
+  {
+    "TIME_ZONE_ID": 2,
+    "NAME_ID": 52000002,
+    "TIME_ZONE_NAME": "GMT Standard Time",
+    "UTC_OFFSET": 0
+  },
+  {
+    "TIME_ZONE_ID": 3,
+    "NAME_ID": 52000003,
+    "TIME_ZONE_NAME": "Greenwich Standard Time",
+    "UTC_OFFSET": 0
+  },
+  {
+    "TIME_ZONE_ID": 4,
+    "NAME_ID": 52000004,
+    "TIME_ZONE_NAME": "W. Europe Standard Time",
+    "UTC_OFFSET": 1
+  },
+  {
+    "TIME_ZONE_ID": 5,
+    "NAME_ID": 52000005,
+    "TIME_ZONE_NAME": "Central Europe Standard Time",
+    "UTC_OFFSET": 1
+  },
+  {
+    "TIME_ZONE_ID": 6,
+    "NAME_ID": 52000006,
+    "TIME_ZONE_NAME": "Romance Standard Time",
+    "UTC_OFFSET": 1
+  },
+  {
+    "TIME_ZONE_ID": 7,
+    "NAME_ID": 52000007,
+    "TIME_ZONE_NAME": "Central European Standard Time",
+    "UTC_OFFSET": 1
+  },
+  {
+    "TIME_ZONE_ID": 8,
+    "NAME_ID": 52000008,
+    "TIME_ZONE_NAME": "W. Central Africa Standard Time",
+    "UTC_OFFSET": 1
+  },
+  {
+    "TIME_ZONE_ID": 9,
+    "NAME_ID": 52000009,
+    "TIME_ZONE_NAME": "Arab Standard Time",
+    "UTC_OFFSET": 2
+  },
+  {
+    "TIME_ZONE_ID": 10,
+    "NAME_ID": 52000010,
+    "TIME_ZONE_NAME": "GTB Standard Time",
+    "UTC_OFFSET": 2
+  },
+  {
+    "TIME_ZONE_ID": 11,
+    "NAME_ID": 52000011,
+    "TIME_ZONE_NAME": "Middle East Standard Time",
+    "UTC_OFFSET": 2
+  },
+  {
+    "TIME_ZONE_ID": 12,
+    "NAME_ID": 52000012,
+    "TIME_ZONE_NAME": "Egypt Standard Time",
+    "UTC_OFFSET": 2
+  },
+  {
+    "TIME_ZONE_ID": 13,
+    "NAME_ID": 52000013,
+    "TIME_ZONE_NAME": "South Africa Standard Time",
+    "UTC_OFFSET": 2
+  },
+  {
+    "TIME_ZONE_ID": 14,
+    "NAME_ID": 52000014,
+    "TIME_ZONE_NAME": "FLE Standard Time",
+    "UTC_OFFSET": 2
+  },
+  {
+    "TIME_ZONE_ID": 15,
+    "NAME_ID": 52000015,
+    "TIME_ZONE_NAME": "Israel Standard Time",
+    "UTC_OFFSET": 2
+  },
+  {
+    "TIME_ZONE_ID": 16,
+    "NAME_ID": 52000016,
+    "TIME_ZONE_NAME": "Kaliningrad Standard Time",
+    "UTC_OFFSET": 3
+  },
+  {
+    "TIME_ZONE_ID": 17,
+    "NAME_ID": 52000017,
+    "TIME_ZONE_NAME": "Namibia Standard Time",
+    "UTC_OFFSET": 2
+  },
+  {
+    "TIME_ZONE_ID": 18,
+    "NAME_ID": 52000018,
+    "TIME_ZONE_NAME": "Arabic Standard Time",
+    "UTC_OFFSET": 3
+  },
+  {
+    "TIME_ZONE_ID": 19,
+    "NAME_ID": 52000019,
+    "TIME_ZONE_NAME": "Arab Standard Time",
+    "UTC_OFFSET": 3
+  },
+  {
+    "TIME_ZONE_ID": 20,
+    "NAME_ID": 52000020,
+    "TIME_ZONE_NAME": "Russian Standard Time",
+    "UTC_OFFSET": 4
+  },
+  {
+    "TIME_ZONE_ID": 21,
+    "NAME_ID": 52000021,
+    "TIME_ZONE_NAME": "E. Africa Standard Time",
+    "UTC_OFFSET": 3
+  },
+  {
+    "TIME_ZONE_ID": 22,
+    "NAME_ID": 52000022,
+    "TIME_ZONE_NAME": "Georgian Standard Time",
+    "UTC_OFFSET": 3
+  },
+  {
+    "TIME_ZONE_ID": 23,
+    "NAME_ID": 52000023,
+    "TIME_ZONE_NAME": "Iran Standard Time",
+    "UTC_OFFSET": 3.5
+  },
+  {
+    "TIME_ZONE_ID": 24,
+    "NAME_ID": 52000024,
+    "TIME_ZONE_NAME": "Arabian Standard Time",
+    "UTC_OFFSET": 4
+  },
+  {
+    "TIME_ZONE_ID": 25,
+    "NAME_ID": 52000025,
+    "TIME_ZONE_NAME": "Azerbaijan Standard Time",
+    "UTC_OFFSET": 4
+  },
+  {
+    "TIME_ZONE_ID": 26,
+    "NAME_ID": 52000026,
+    "TIME_ZONE_NAME": "Caucasus Standard Time",
+    "UTC_OFFSET": 4
+  },
+  {
+    "TIME_ZONE_ID": 27,
+    "NAME_ID": 52000027,
+    "TIME_ZONE_NAME": "Mauritius Standard Time",
+    "UTC_OFFSET": 4
+  },
+  {
+    "TIME_ZONE_ID": 28,
+    "NAME_ID": 52000028,
+    "TIME_ZONE_NAME": "Caucasus Standard Time",
+    "UTC_OFFSET": 4
+  },
+  {
+    "TIME_ZONE_ID": 29,
+    "NAME_ID": 52000029,
+    "TIME_ZONE_NAME": "Afghanistan Standard Time",
+    "UTC_OFFSET": 4.5
+  },
+  {
+    "TIME_ZONE_ID": 30,
+    "NAME_ID": 52000030,
+    "TIME_ZONE_NAME": "Ekaterinburg Standard Time",
+    "UTC_OFFSET": 6
+  },
+  {
+    "TIME_ZONE_ID": 31,
+    "NAME_ID": 52000031,
+    "TIME_ZONE_NAME": "Pakistan Standard Time",
+    "UTC_OFFSET": 5
+  },
+  {
+    "TIME_ZONE_ID": 32,
+    "NAME_ID": 52000032,
+    "TIME_ZONE_NAME": "West Asia Standard Time",
+    "UTC_OFFSET": 5
+  },
+  {
+    "TIME_ZONE_ID": 33,
+    "NAME_ID": 52000033,
+    "TIME_ZONE_NAME": "India Standard Time",
+    "UTC_OFFSET": 5.5
+  },
+  {
+    "TIME_ZONE_ID": 34,
+    "NAME_ID": 52000034,
+    "TIME_ZONE_NAME": "Sri Lanka Standard Time",
+    "UTC_OFFSET": 5.5
+  },
+  {
+    "TIME_ZONE_ID": 35,
+    "NAME_ID": 52000035,
+    "TIME_ZONE_NAME": "Nepal Standard Time",
+    "UTC_OFFSET": 5.75
+  },
+  {
+    "TIME_ZONE_ID": 36,
+    "NAME_ID": 52000036,
+    "TIME_ZONE_NAME": "Central Asia Standard Time",
+    "UTC_OFFSET": 6
+  },
+  {
+    "TIME_ZONE_ID": 37,
+    "NAME_ID": 52000037,
+    "TIME_ZONE_NAME": "Central Asia Standard Time",
+    "UTC_OFFSET": 6
+  },
+  {
+    "TIME_ZONE_ID": 38,
+    "NAME_ID": 52000038,
+    "TIME_ZONE_NAME": "Myanmar Standard Time",
+    "UTC_OFFSET": 6.5
+  },
+  {
+    "TIME_ZONE_ID": 39,
+    "NAME_ID": 52000039,
+    "TIME_ZONE_NAME": "SE Asia Standard Time",
+    "UTC_OFFSET": 7
+  },
+  {
+    "TIME_ZONE_ID": 40,
+    "NAME_ID": 52000040,
+    "TIME_ZONE_NAME": "North Asia Standard Time",
+    "UTC_OFFSET": 8
+  },
+  {
+    "TIME_ZONE_ID": 41,
+    "NAME_ID": 52000041,
+    "TIME_ZONE_NAME": "China Standard Time",
+    "UTC_OFFSET": 8
+  },
+  {
+    "TIME_ZONE_ID": 42,
+    "NAME_ID": 52000042,
+    "TIME_ZONE_NAME": "North Asia East Standard Time",
+    "UTC_OFFSET": 8
+  },
+  {
+    "TIME_ZONE_ID": 43,
+    "NAME_ID": 52000043,
+    "TIME_ZONE_NAME": "Singapore Standard Time",
+    "UTC_OFFSET": 8
+  },
+  {
+    "TIME_ZONE_ID": 44,
+    "NAME_ID": 52000044,
+    "TIME_ZONE_NAME": "W. Australia Standard Time",
+    "UTC_OFFSET": 8
+  },
+  {
+    "TIME_ZONE_ID": 45,
+    "NAME_ID": 52000045,
+    "TIME_ZONE_NAME": "Taipei Standard Time",
+    "UTC_OFFSET": 8
+  },
+  {
+    "TIME_ZONE_ID": 46,
+    "NAME_ID": 52000046,
+    "TIME_ZONE_NAME": "Tokyo Standard Time",
+    "UTC_OFFSET": 9
+  },
+  {
+    "TIME_ZONE_ID": 47,
+    "NAME_ID": 52000047,
+    "TIME_ZONE_NAME": "Korea Standard Time",
+    "UTC_OFFSET": 9
+  },
+  {
+    "TIME_ZONE_ID": 48,
+    "NAME_ID": 52000048,
+    "TIME_ZONE_NAME": "Yakutsk Standard Time",
+    "UTC_OFFSET": 10
+  },
+  {
+    "TIME_ZONE_ID": 49,
+    "NAME_ID": 52000049,
+    "TIME_ZONE_NAME": "Cen. Australia Standard Time",
+    "UTC_OFFSET": 9.5
+  },
+  {
+    "TIME_ZONE_ID": 50,
+    "NAME_ID": 52000050,
+    "TIME_ZONE_NAME": "AUS Central Standard Time",
+    "UTC_OFFSET": 9.5
+  },
+  {
+    "TIME_ZONE_ID": 51,
+    "NAME_ID": 52000051,
+    "TIME_ZONE_NAME": "E. Australia Standard Time",
+    "UTC_OFFSET": 10
+  },
+  {
+    "TIME_ZONE_ID": 52,
+    "NAME_ID": 52000052,
+    "TIME_ZONE_NAME": "AUS Eastern Standard Time",
+    "UTC_OFFSET": 10
+  },
+  {
+    "TIME_ZONE_ID": 53,
+    "NAME_ID": 52000053,
+    "TIME_ZONE_NAME": "West Pacific Standard Time",
+    "UTC_OFFSET": 10
+  },
+  {
+    "TIME_ZONE_ID": 54,
+    "NAME_ID": 52000054,
+    "TIME_ZONE_NAME": "Tasmania Standard Time",
+    "UTC_OFFSET": 10
+  },
+  {
+    "TIME_ZONE_ID": 55,
+    "NAME_ID": 52000055,
+    "TIME_ZONE_NAME": "Vladivostok Standard Time",
+    "UTC_OFFSET": 11
+  },
+  {
+    "TIME_ZONE_ID": 56,
+    "NAME_ID": 52000056,
+    "TIME_ZONE_NAME": "Central Pacific Standard Time",
+    "UTC_OFFSET": 11
+  },
+  {
+    "TIME_ZONE_ID": 57,
+    "NAME_ID": 52000057,
+    "TIME_ZONE_NAME": "New Zealand Standard Time",
+    "UTC_OFFSET": 12
+  },
+  {
+    "TIME_ZONE_ID": 58,
+    "NAME_ID": 52000058,
+    "TIME_ZONE_NAME": "Fiji Standard Time",
+    "UTC_OFFSET": 12
+  },
+  {
+    "TIME_ZONE_ID": 59,
+    "NAME_ID": 52000059,
+    "TIME_ZONE_NAME": "Eastern Standard Time",
+    "UTC_OFFSET": 13
+  },
+  {
+    "TIME_ZONE_ID": 60,
+    "NAME_ID": 52000060,
+    "TIME_ZONE_NAME": "Azores Standard Time",
+    "UTC_OFFSET": -1
+  },
+  {
+    "TIME_ZONE_ID": 61,
+    "NAME_ID": 52000061,
+    "TIME_ZONE_NAME": "Cape Verde Standard Time",
+    "UTC_OFFSET": -1
+  },
+  {
+    "TIME_ZONE_ID": 62,
+    "NAME_ID": 52000062,
+    "TIME_ZONE_NAME": "Mid-Atlantic Standard Time",
+    "UTC_OFFSET": -2
+  },
+  {
+    "TIME_ZONE_ID": 63,
+    "NAME_ID": 52000063,
+    "TIME_ZONE_NAME": "E. South America Standard Time",
+    "UTC_OFFSET": -3
+  },
+  {
+    "TIME_ZONE_ID": 64,
+    "NAME_ID": 52000064,
+    "TIME_ZONE_NAME": "Argentina Standard Time",
+    "UTC_OFFSET": -3
+  },
+  {
+    "TIME_ZONE_ID": 65,
+    "NAME_ID": 52000065,
+    "TIME_ZONE_NAME": "SA Eastern Standard Time",
+    "UTC_OFFSET": -3
+  },
+  {
+    "TIME_ZONE_ID": 66,
+    "NAME_ID": 52000066,
+    "TIME_ZONE_NAME": "Greenland Standard Time",
+    "UTC_OFFSET": -3
+  },
+  {
+    "TIME_ZONE_ID": 67,
+    "NAME_ID": 52000067,
+    "TIME_ZONE_NAME": "Montevideo Standard Time",
+    "UTC_OFFSET": -3
+  },
+  {
+    "TIME_ZONE_ID": 68,
+    "NAME_ID": 52000068,
+    "TIME_ZONE_NAME": "Newfoundland Standard Time",
+    "UTC_OFFSET": -3.5
+  },
+  {
+    "TIME_ZONE_ID": 69,
+    "NAME_ID": 52000069,
+    "TIME_ZONE_NAME": "Atlantic Standard Time",
+    "UTC_OFFSET": -4
+  },
+  {
+    "TIME_ZONE_ID": 70,
+    "NAME_ID": 52000070,
+    "TIME_ZONE_NAME": "SA Western Standard Time",
+    "UTC_OFFSET": -4
+  },
+  {
+    "TIME_ZONE_ID": 71,
+    "NAME_ID": 52000071,
+    "TIME_ZONE_NAME": "SA Western Standard Time",
+    "UTC_OFFSET": -4
+  },
+  {
+    "TIME_ZONE_ID": 72,
+    "NAME_ID": 52000072,
+    "TIME_ZONE_NAME": "Pacific SA Standard Time",
+    "UTC_OFFSET": -4
+  },
+  {
+    "TIME_ZONE_ID": 73,
+    "NAME_ID": 52000073,
+    "TIME_ZONE_NAME": "SA Western Standard Time",
+    "UTC_OFFSET": -4.5
+  },
+  {
+    "TIME_ZONE_ID": 74,
+    "NAME_ID": 52000074,
+    "TIME_ZONE_NAME": "SA Pacific Standard Time",
+    "UTC_OFFSET": -5
+  },
+  {
+    "TIME_ZONE_ID": 75,
+    "NAME_ID": 52000075,
+    "TIME_ZONE_NAME": "Eastern Standard Time",
+    "UTC_OFFSET": -5
+  },
+  {
+    "TIME_ZONE_ID": 76,
+    "NAME_ID": 52000076,
+    "TIME_ZONE_NAME": "US Eastern Standard Time",
+    "UTC_OFFSET": -5
+  },
+  {
+    "TIME_ZONE_ID": 77,
+    "NAME_ID": 52000077,
+    "TIME_ZONE_NAME": "Central America Standard Time",
+    "UTC_OFFSET": -6
+  },
+  {
+    "TIME_ZONE_ID": 78,
+    "NAME_ID": 52000078,
+    "TIME_ZONE_NAME": "Central Standard Time",
+    "UTC_OFFSET": -6
+  },
+  {
+    "TIME_ZONE_ID": 79,
+    "NAME_ID": 52000079,
+    "TIME_ZONE_NAME": "Central Standard Time (Mexico)",
+    "UTC_OFFSET": -6
+  },
+  {
+    "TIME_ZONE_ID": 81,
+    "NAME_ID": 52000080,
+    "TIME_ZONE_NAME": "Canada Central Standard Time",
+    "UTC_OFFSET": -6
+  },
+  {
+    "TIME_ZONE_ID": 82,
+    "NAME_ID": 52000081,
+    "TIME_ZONE_NAME": "US Mountain Standard Time",
+    "UTC_OFFSET": -7
+  },
+  {
+    "TIME_ZONE_ID": 83,
+    "NAME_ID": 52000082,
+    "TIME_ZONE_NAME": "Mountain Standard Time (Mexico)",
+    "UTC_OFFSET": -6
+  },
+  {
+    "TIME_ZONE_ID": 85,
+    "NAME_ID": 52000083,
+    "TIME_ZONE_NAME": "Mountain Standard Time",
+    "UTC_OFFSET": -7
+  },
+  {
+    "TIME_ZONE_ID": 86,
+    "NAME_ID": 52000084,
+    "TIME_ZONE_NAME": "Pacific Standard Time",
+    "UTC_OFFSET": -8
+  },
+  {
+    "TIME_ZONE_ID": 87,
+    "NAME_ID": 52000085,
+    "TIME_ZONE_NAME": "Pacific Standard Time (Mexico)",
+    "UTC_OFFSET": -8
+  },
+  {
+    "TIME_ZONE_ID": 88,
+    "NAME_ID": 52000086,
+    "TIME_ZONE_NAME": "Alaskan Standard Time",
+    "UTC_OFFSET": -9
+  },
+  {
+    "TIME_ZONE_ID": 89,
+    "NAME_ID": 52000087,
+    "TIME_ZONE_NAME": "Hawaiian Standard Time",
+    "UTC_OFFSET": -10
+  },
+  {
+    "TIME_ZONE_ID": 90,
+    "NAME_ID": 52000088,
+    "TIME_ZONE_NAME": "Samoa Standard Time",
+    "UTC_OFFSET": -11
+  },
+  {
+    "TIME_ZONE_ID": 91,
+    "NAME_ID": 52000089,
+    "TIME_ZONE_NAME": "Dateline Standard Time",
+    "UTC_OFFSET": -12
+  },
+  {
+    "TIME_ZONE_ID": 92,
+    "NAME_ID": 52000090,
+    "TIME_ZONE_NAME": "Paraguay Standard Time",
+    "UTC_OFFSET": -4
+  },
+  {
+    "TIME_ZONE_ID": 93,
+    "NAME_ID": 52000091,
+    "TIME_ZONE_NAME": "SA Eastern Standard Time",
+    "UTC_OFFSET": -3
+  },
+  {
+    "TIME_ZONE_ID": 94,
+    "NAME_ID": 52000092,
+    "TIME_ZONE_NAME": "Libya Standard Time",
+    "UTC_OFFSET": 2
+  },
+  {
+    "TIME_ZONE_ID": 95,
+    "NAME_ID": 52000093,
+    "TIME_ZONE_NAME": "N. Central Asia Standard Time",
+    "UTC_OFFSET": 7
+  },
+  {
+    "TIME_ZONE_ID": 96,
+    "NAME_ID": 52000094,
+    "TIME_ZONE_NAME": "Bahia Standard Time",
+    "UTC_OFFSET": -3
+  },
+  {
+    "TIME_ZONE_ID": 97,
+    "NAME_ID": 52000095,
+    "TIME_ZONE_NAME": "Central Pacific Standard Time",
+    "UTC_OFFSET": 11
+  },
+  {
+    "TIME_ZONE_ID": 98,
+    "NAME_ID": 52000096,
+    "TIME_ZONE_NAME": "Arab Standard Time",
+    "UTC_OFFSET": 2
+  },
+  {
+    "TIME_ZONE_ID": 110,
+    "NAME_ID": 52000097,
+    "TIME_ZONE_NAME": "Central Brazilian Standard Time",
+    "UTC_OFFSET": -4
+  },
+  {
+    "TIME_ZONE_ID": 111,
+    "NAME_ID": 52000098,
+    "TIME_ZONE_NAME": "Cuba Standard Time",
+    "UTC_OFFSET": -5
+  }
+]

@@ -1,0 +1,54 @@
+{
+  "TV_NETWORK_ID": {
+    "type": "int",
+    "default": 8869
+  },
+  "NAME_ID": {
+    "type": "int",
+    "default": 77566392
+  },
+  "COUNTRY_ID": {
+    "type": "int",
+    "default": 6
+  },
+  "WEBSITE": {
+    "type": "string",
+    "default": "https://sport1.maariv.co.il/"
+  },
+  "CHANNEL_TYPE": {
+    "type": "int",
+    "default": 1
+  },
+  "IS_INTERNATIONAL": {
+    "type": "bool",
+    "default": true
+  },
+  "LANG_ID": {
+    "type": "int",
+    "default": null
+  },
+  "CONNECTED_BOOKMAKER": {
+    "type": "any",
+    "default": null
+  },
+  "IMG_VER": {
+    "type": "int",
+    "default": 1
+  },
+  "NETWORK_IMAGE_URL": {
+    "type": "any",
+    "default": null
+  },
+  "PROMOTE_IN_MATCH_REMINDER_NOTIFICATION": {
+    "type": "bool",
+    "default": true
+  },
+  "ORDER_LEVEL": {
+    "type": "int",
+    "default": 1
+  },
+  "IS_DELETED": {
+    "type": "bool",
+    "default": false
+  }
+}

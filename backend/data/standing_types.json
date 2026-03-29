@@ -1,0 +1,27 @@
+[
+  {
+    "STANDING_TYPE_ID": 1,
+    "STANDING_TYPE": "Pct",
+    "DESCRIPTION": "Percentage format"
+  },
+  {
+    "STANDING_TYPE_ID": 2,
+    "STANDING_TYPE": "Points",
+    "DESCRIPTION": "Points format"
+  },
+  {
+    "STANDING_TYPE_ID": 3,
+    "STANDING_TYPE": "PlusMinus",
+    "DESCRIPTION": "Plus/minus format"
+  },
+  {
+    "STANDING_TYPE_ID": 4,
+    "STANDING_TYPE": "Nba",
+    "DESCRIPTION": "NBA format"
+  },
+  {
+    "STANDING_TYPE_ID": 5,
+    "STANDING_TYPE": "AmericanPercentageFormat",
+    "DESCRIPTION": "American percentage format"
+  }
+]

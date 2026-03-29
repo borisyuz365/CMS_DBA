@@ -1,0 +1,22 @@
+[
+  {
+    "GENDER_ID": 0,
+    "GENDER": "Unknown",
+    "DESCRIPTION": "Unknown gender"
+  },
+  {
+    "GENDER_ID": 1,
+    "GENDER": "Male",
+    "DESCRIPTION": "Male"
+  },
+  {
+    "GENDER_ID": 2,
+    "GENDER": "Female",
+    "DESCRIPTION": "Female"
+  },
+  {
+    "GENDER_ID": 3,
+    "GENDER": "Mixed",
+    "DESCRIPTION": "Mixed gender"
+  }
+]

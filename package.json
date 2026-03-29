@@ -1,0 +1,15 @@
+{
+  "name": "athlete-management-system",
+  "version": "1.0.0",
+  "description": "Full-stack Athletes Management System",
+  "scripts": {
+    "both": "concurrently -n \"BACKEND,FRONTEND\" -c \"blue,green\" \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd backend && npm start",
+    "dev:frontend": "cd frontend && npm run dev",
+    "kill": "node ./scripts/kill-dev-processes.js",
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

@@ -1,0 +1,652 @@
+[
+  {
+    "COMPETITION_ID": 10,
+    "SEASON_NUM": 2,
+    "COMPETITOR_ID": 39
+  },
+  {
+    "COMPETITION_ID": 10,
+    "SEASON_NUM": 2,
+    "COMPETITOR_ID": 50
+  },
+  {
+    "COMPETITION_ID": 10,
+    "SEASON_NUM": 2,
+    "COMPETITOR_ID": 1
+  },
+  {
+    "COMPETITION_ID": 10,
+    "SEASON_NUM": 2,
+    "COMPETITOR_ID": 2
+  },
+  {
+    "COMPETITION_ID": 10,
+    "SEASON_NUM": 2,
+    "COMPETITOR_ID": 4
+  },
+  {
+    "COMPETITION_ID": 10,
+    "SEASON_NUM": 2,
+    "COMPETITOR_ID": 5
+  },
+  {
+    "COMPETITION_ID": 10,
+    "SEASON_NUM": 2,
+    "COMPETITOR_ID": 36
+  },
+  {
+    "COMPETITION_ID": 10,
+    "SEASON_NUM": 2,
+    "COMPETITOR_ID": 37
+  },
+  {
+    "COMPETITION_ID": 10,
+    "SEASON_NUM": 2,
+    "COMPETITOR_ID": 38
+  },
+  {
+    "COMPETITION_ID": 10,
+    "SEASON_NUM": 2,
+    "COMPETITOR_ID": 40
+  },
+  {
+    "COMPETITION_ID": 10,
+    "SEASON_NUM": 2,
+    "COMPETITOR_ID": 41
+  },
+  {
+    "COMPETITION_ID": 10,
+    "SEASON_NUM": 2,
+    "COMPETITOR_ID": 42
+  },
+  {
+    "COMPETITION_ID": 10,
+    "SEASON_NUM": 2,
+    "COMPETITOR_ID": 43
+  },
+  {
+    "COMPETITION_ID": 10,
+    "SEASON_NUM": 2,
+    "COMPETITOR_ID": 44
+  },
+  {
+    "COMPETITION_ID": 10,
+    "SEASON_NUM": 2,
+    "COMPETITOR_ID": 45
+  },
+  {
+    "COMPETITION_ID": 10,
+    "SEASON_NUM": 2,
+    "COMPETITOR_ID": 46
+  },
+  {
+    "COMPETITION_ID": 10,
+    "SEASON_NUM": 2,
+    "COMPETITOR_ID": 47
+  },
+  {
+    "COMPETITION_ID": 10,
+    "SEASON_NUM": 2,
+    "COMPETITOR_ID": 48
+  },
+  {
+    "COMPETITION_ID": 10,
+    "SEASON_NUM": 2,
+    "COMPETITOR_ID": 49
+  },
+  {
+    "COMPETITION_ID": 10,
+    "SEASON_NUM": 3,
+    "COMPETITOR_ID": 1
+  },
+  {
+    "COMPETITION_ID": 10,
+    "SEASON_NUM": 3,
+    "COMPETITOR_ID": 2
+  },
+  {
+    "COMPETITION_ID": 10,
+    "SEASON_NUM": 3,
+    "COMPETITOR_ID": 3
+  },
+  {
+    "COMPETITION_ID": 10,
+    "SEASON_NUM": 3,
+    "COMPETITOR_ID": 4
+  },
+  {
+    "COMPETITION_ID": 10,
+    "SEASON_NUM": 3,
+    "COMPETITOR_ID": 5
+  },
+  {
+    "COMPETITION_ID": 10,
+    "SEASON_NUM": 3,
+    "COMPETITOR_ID": 36
+  },
+  {
+    "COMPETITION_ID": 10,
+    "SEASON_NUM": 3,
+    "COMPETITOR_ID": 37
+  },
+  {
+    "COMPETITION_ID": 10,
+    "SEASON_NUM": 3,
+    "COMPETITOR_ID": 38
+  },
+  {
+    "COMPETITION_ID": 10,
+    "SEASON_NUM": 3,
+    "COMPETITOR_ID": 39
+  },
+  {
+    "COMPETITION_ID": 10,
+    "SEASON_NUM": 3,
+    "COMPETITOR_ID": 40
+  },
+  {
+    "COMPETITION_ID": 10,
+    "SEASON_NUM": 3,
+    "COMPETITOR_ID": 41
+  },
+  {
+    "COMPETITION_ID": 10,
+    "SEASON_NUM": 3,
+    "COMPETITOR_ID": 42
+  },
+  {
+    "COMPETITION_ID": 10,
+    "SEASON_NUM": 3,
+    "COMPETITOR_ID": 43
+  },
+  {
+    "COMPETITION_ID": 10,
+    "SEASON_NUM": 3,
+    "COMPETITOR_ID": 44
+  },
+  {
+    "COMPETITION_ID": 10,
+    "SEASON_NUM": 3,
+    "COMPETITOR_ID": 45
+  },
+  {
+    "COMPETITION_ID": 10,
+    "SEASON_NUM": 3,
+    "COMPETITOR_ID": 46
+  },
+  {
+    "COMPETITION_ID": 10,
+    "SEASON_NUM": 3,
+    "COMPETITOR_ID": 47
+  },
+  {
+    "COMPETITION_ID": 10,
+    "SEASON_NUM": 3,
+    "COMPETITOR_ID": 48
+  },
+  {
+    "COMPETITION_ID": 10,
+    "SEASON_NUM": 3,
+    "COMPETITOR_ID": 49
+  },
+  {
+    "COMPETITION_ID": 10,
+    "SEASON_NUM": 3,
+    "COMPETITOR_ID": 50
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_ID": 162,
+    "COMPETITOR_NUM": 0,
+    "CREATE_TIME": "0001-01-01T00:00:00.000Z",
+    "HOST": true,
+    "JOIN_TYPE": 0,
+    "NOT_IN_SEASON": false,
+    "ORIGIN_COMPETITION_ID": null,
+    "SEASON_NUM": 3,
+    "SEED": null,
+    "WINNER": true
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_ID": 14,
+    "COMPETITOR_NUM": 0,
+    "CREATE_TIME": "0001-01-01T00:00:00.000Z",
+    "HOST": false,
+    "JOIN_TYPE": 1,
+    "NOT_IN_SEASON": false,
+    "ORIGIN_COMPETITION_ID": 7,
+    "SEASON_NUM": 3,
+    "SEED": null,
+    "WINNER": false
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_ID": 15,
+    "COMPETITOR_NUM": 0,
+    "CREATE_TIME": "0001-01-01T00:00:00.000Z",
+    "HOST": false,
+    "JOIN_TYPE": 1,
+    "NOT_IN_SEASON": false,
+    "ORIGIN_COMPETITION_ID": 7,
+    "SEASON_NUM": 3,
+    "SEED": null,
+    "WINNER": false
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_ID": 32,
+    "COMPETITOR_NUM": 0,
+    "CREATE_TIME": "0001-01-01T00:00:00.000Z",
+    "HOST": false,
+    "JOIN_TYPE": 0,
+    "NOT_IN_SEASON": false,
+    "ORIGIN_COMPETITION_ID": null,
+    "SEASON_NUM": 3,
+    "SEED": null,
+    "WINNER": false
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_ID": 1,
+    "COMPETITOR_NUM": 0,
+    "CREATE_TIME": "0001-01-01T00:00:00.000Z",
+    "HOST": false,
+    "JOIN_TYPE": 0,
+    "NOT_IN_SEASON": false,
+    "ORIGIN_COMPETITION_ID": null,
+    "SEASON_NUM": 3,
+    "SEED": null,
+    "WINNER": false
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_ID": 2,
+    "COMPETITOR_NUM": 0,
+    "CREATE_TIME": "0001-01-01T00:00:00.000Z",
+    "HOST": false,
+    "JOIN_TYPE": 0,
+    "NOT_IN_SEASON": false,
+    "ORIGIN_COMPETITION_ID": null,
+    "SEASON_NUM": 3,
+    "SEED": null,
+    "WINNER": false
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_ID": 3,
+    "COMPETITOR_NUM": 0,
+    "CREATE_TIME": "0001-01-01T00:00:00.000Z",
+    "HOST": false,
+    "JOIN_TYPE": 0,
+    "NOT_IN_SEASON": false,
+    "ORIGIN_COMPETITION_ID": null,
+    "SEASON_NUM": 3,
+    "SEED": null,
+    "WINNER": false
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_ID": 4,
+    "COMPETITOR_NUM": 0,
+    "CREATE_TIME": "0001-01-01T00:00:00.000Z",
+    "HOST": false,
+    "JOIN_TYPE": 0,
+    "NOT_IN_SEASON": false,
+    "ORIGIN_COMPETITION_ID": null,
+    "SEASON_NUM": 3,
+    "SEED": null,
+    "WINNER": false
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_ID": 5,
+    "COMPETITOR_NUM": 0,
+    "CREATE_TIME": "0001-01-01T00:00:00.000Z",
+    "HOST": false,
+    "JOIN_TYPE": 0,
+    "NOT_IN_SEASON": false,
+    "ORIGIN_COMPETITION_ID": null,
+    "SEASON_NUM": 3,
+    "SEED": null,
+    "WINNER": false
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_ID": 7,
+    "COMPETITOR_NUM": 0,
+    "CREATE_TIME": "0001-01-01T00:00:00.000Z",
+    "HOST": false,
+    "JOIN_TYPE": 0,
+    "NOT_IN_SEASON": false,
+    "ORIGIN_COMPETITION_ID": null,
+    "SEASON_NUM": 3,
+    "SEED": null,
+    "WINNER": false
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_ID": 6,
+    "COMPETITOR_NUM": 0,
+    "CREATE_TIME": "0001-01-01T00:00:00.000Z",
+    "HOST": false,
+    "JOIN_TYPE": 0,
+    "NOT_IN_SEASON": false,
+    "ORIGIN_COMPETITION_ID": null,
+    "SEASON_NUM": 3,
+    "SEED": null,
+    "WINNER": false
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_ID": 8,
+    "COMPETITOR_NUM": 0,
+    "CREATE_TIME": "0001-01-01T00:00:00.000Z",
+    "HOST": false,
+    "JOIN_TYPE": 0,
+    "NOT_IN_SEASON": false,
+    "ORIGIN_COMPETITION_ID": null,
+    "SEASON_NUM": 3,
+    "SEED": null,
+    "WINNER": false
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_ID": 31,
+    "COMPETITOR_NUM": 0,
+    "CREATE_TIME": "0001-01-01T00:00:00.000Z",
+    "HOST": false,
+    "JOIN_TYPE": 0,
+    "NOT_IN_SEASON": false,
+    "ORIGIN_COMPETITION_ID": null,
+    "SEASON_NUM": 3,
+    "SEED": null,
+    "WINNER": false
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_ID": 36,
+    "COMPETITOR_NUM": 0,
+    "CREATE_TIME": "0001-01-01T00:00:00.000Z",
+    "HOST": false,
+    "JOIN_TYPE": 0,
+    "NOT_IN_SEASON": false,
+    "ORIGIN_COMPETITION_ID": null,
+    "SEASON_NUM": 3,
+    "SEED": null,
+    "WINNER": false
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_ID": 37,
+    "COMPETITOR_NUM": 0,
+    "CREATE_TIME": "0001-01-01T00:00:00.000Z",
+    "HOST": false,
+    "JOIN_TYPE": 0,
+    "NOT_IN_SEASON": false,
+    "ORIGIN_COMPETITION_ID": null,
+    "SEASON_NUM": 3,
+    "SEED": null,
+    "WINNER": false
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_ID": 38,
+    "COMPETITOR_NUM": 0,
+    "CREATE_TIME": "0001-01-01T00:00:00.000Z",
+    "HOST": false,
+    "JOIN_TYPE": 0,
+    "NOT_IN_SEASON": false,
+    "ORIGIN_COMPETITION_ID": null,
+    "SEASON_NUM": 3,
+    "SEED": null,
+    "WINNER": false
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_ID": 39,
+    "COMPETITOR_NUM": 0,
+    "CREATE_TIME": "0001-01-01T00:00:00.000Z",
+    "HOST": false,
+    "JOIN_TYPE": 0,
+    "NOT_IN_SEASON": false,
+    "ORIGIN_COMPETITION_ID": null,
+    "SEASON_NUM": 3,
+    "SEED": null,
+    "WINNER": false
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_ID": 40,
+    "COMPETITOR_NUM": 0,
+    "CREATE_TIME": "0001-01-01T00:00:00.000Z",
+    "HOST": false,
+    "JOIN_TYPE": 0,
+    "NOT_IN_SEASON": false,
+    "ORIGIN_COMPETITION_ID": null,
+    "SEASON_NUM": 3,
+    "SEED": null,
+    "WINNER": false
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_ID": 41,
+    "COMPETITOR_NUM": 0,
+    "CREATE_TIME": "0001-01-01T00:00:00.000Z",
+    "HOST": false,
+    "JOIN_TYPE": 0,
+    "NOT_IN_SEASON": false,
+    "ORIGIN_COMPETITION_ID": null,
+    "SEASON_NUM": 3,
+    "SEED": null,
+    "WINNER": false
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_ID": 43,
+    "COMPETITOR_NUM": 0,
+    "CREATE_TIME": "0001-01-01T00:00:00.000Z",
+    "HOST": false,
+    "JOIN_TYPE": 0,
+    "NOT_IN_SEASON": false,
+    "ORIGIN_COMPETITION_ID": null,
+    "SEASON_NUM": 3,
+    "SEED": null,
+    "WINNER": false
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_ID": 14,
+    "COMPETITOR_NUM": 0,
+    "CREATE_TIME": "0001-01-01T00:00:00.000Z",
+    "HOST": false,
+    "JOIN_TYPE": 0,
+    "NOT_IN_SEASON": false,
+    "ORIGIN_COMPETITION_ID": null,
+    "SEASON_NUM": 4,
+    "SEED": 1,
+    "WINNER": false
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_ID": 15,
+    "COMPETITOR_NUM": 0,
+    "CREATE_TIME": "0001-01-01T00:00:00.000Z",
+    "HOST": false,
+    "JOIN_TYPE": 0,
+    "NOT_IN_SEASON": false,
+    "ORIGIN_COMPETITION_ID": null,
+    "SEASON_NUM": 4,
+    "SEED": null,
+    "WINNER": false
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_ID": 32,
+    "COMPETITOR_NUM": 0,
+    "CREATE_TIME": "0001-01-01T00:00:00.000Z",
+    "HOST": false,
+    "JOIN_TYPE": 0,
+    "NOT_IN_SEASON": false,
+    "ORIGIN_COMPETITION_ID": null,
+    "SEASON_NUM": 4,
+    "SEED": null,
+    "WINNER": true
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_ID": 162,
+    "COMPETITOR_NUM": 0,
+    "CREATE_TIME": "0001-01-01T00:00:00.000Z",
+    "HOST": false,
+    "JOIN_TYPE": 0,
+    "NOT_IN_SEASON": false,
+    "ORIGIN_COMPETITION_ID": null,
+    "SEASON_NUM": 4,
+    "SEED": null,
+    "WINNER": false
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_ID": 1,
+    "COMPETITOR_NUM": 0,
+    "CREATE_TIME": "0001-01-01T00:00:00.000Z",
+    "HOST": false,
+    "JOIN_TYPE": 0,
+    "NOT_IN_SEASON": false,
+    "ORIGIN_COMPETITION_ID": null,
+    "SEASON_NUM": 4,
+    "SEED": null,
+    "WINNER": false
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_ID": 3,
+    "COMPETITOR_NUM": 0,
+    "CREATE_TIME": "0001-01-01T00:00:00.000Z",
+    "HOST": false,
+    "JOIN_TYPE": 0,
+    "NOT_IN_SEASON": false,
+    "ORIGIN_COMPETITION_ID": null,
+    "SEASON_NUM": 4,
+    "SEED": null,
+    "WINNER": false
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_ID": 2,
+    "COMPETITOR_NUM": 0,
+    "CREATE_TIME": "0001-01-01T00:00:00.000Z",
+    "HOST": false,
+    "JOIN_TYPE": 0,
+    "NOT_IN_SEASON": false,
+    "ORIGIN_COMPETITION_ID": null,
+    "SEASON_NUM": 4,
+    "SEED": null,
+    "WINNER": false
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_ID": 4,
+    "COMPETITOR_NUM": 0,
+    "CREATE_TIME": "0001-01-01T00:00:00.000Z",
+    "HOST": false,
+    "JOIN_TYPE": 0,
+    "NOT_IN_SEASON": false,
+    "ORIGIN_COMPETITION_ID": null,
+    "SEASON_NUM": 4,
+    "SEED": null,
+    "WINNER": false
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_ID": 5,
+    "COMPETITOR_NUM": 0,
+    "CREATE_TIME": "0001-01-01T00:00:00.000Z",
+    "HOST": false,
+    "JOIN_TYPE": 0,
+    "NOT_IN_SEASON": false,
+    "ORIGIN_COMPETITION_ID": null,
+    "SEASON_NUM": 4,
+    "SEED": null,
+    "WINNER": false
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_ID": 6,
+    "COMPETITOR_NUM": 0,
+    "CREATE_TIME": "0001-01-01T00:00:00.000Z",
+    "HOST": false,
+    "JOIN_TYPE": 0,
+    "NOT_IN_SEASON": false,
+    "ORIGIN_COMPETITION_ID": null,
+    "SEASON_NUM": 4,
+    "SEED": null,
+    "WINNER": false
+  },
+  {
+    "COMPETITION_ID": 4,
+    "COMPETITOR_ID": 166,
+    "COMPETITOR_NUM": 0,
+    "CREATE_TIME": "0001-01-01T00:00:00.000Z",
+    "HOST": false,
+    "JOIN_TYPE": 0,
+    "NOT_IN_SEASON": false,
+    "ORIGIN_COMPETITION_ID": null,
+    "SEASON_NUM": 1,
+    "SEED": null,
+    "WINNER": false
+  },
+  {
+    "COMPETITION_ID": 4,
+    "COMPETITOR_ID": 167,
+    "COMPETITOR_NUM": 0,
+    "CREATE_TIME": "0001-01-01T00:00:00.000Z",
+    "HOST": false,
+    "JOIN_TYPE": 0,
+    "NOT_IN_SEASON": false,
+    "ORIGIN_COMPETITION_ID": null,
+    "SEASON_NUM": 1,
+    "SEED": null,
+    "WINNER": false
+  },
+  {
+    "COMPETITION_ID": 8,
+    "COMPETITOR_ID": 168,
+    "COMPETITOR_NUM": 0,
+    "CREATE_TIME": "0001-01-01T00:00:00.000Z",
+    "HOST": false,
+    "JOIN_TYPE": 0,
+    "NOT_IN_SEASON": false,
+    "ORIGIN_COMPETITION_ID": null,
+    "SEASON_NUM": 1,
+    "SEED": null,
+    "WINNER": false
+  },
+  {
+    "COMPETITION_ID": 8,
+    "COMPETITOR_ID": 169,
+    "COMPETITOR_NUM": 0,
+    "CREATE_TIME": "0001-01-01T00:00:00.000Z",
+    "HOST": false,
+    "JOIN_TYPE": 0,
+    "NOT_IN_SEASON": false,
+    "ORIGIN_COMPETITION_ID": null,
+    "SEASON_NUM": 1,
+    "SEED": null,
+    "WINNER": false
+  },
+  {
+    "COMPETITION_ID": 2,
+    "COMPETITOR_ID": 170,
+    "COMPETITOR_NUM": 0,
+    "CREATE_TIME": "0001-01-01T00:00:00.000Z",
+    "HOST": false,
+    "JOIN_TYPE": 0,
+    "NOT_IN_SEASON": false,
+    "ORIGIN_COMPETITION_ID": null,
+    "SEASON_NUM": 2,
+    "SEED": null,
+    "WINNER": true
+  }
+]

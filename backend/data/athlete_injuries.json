@@ -1,0 +1,34 @@
+[
+  {
+    "INJURY_ID": 1,
+    "ATHLETE_ID": 2,
+    "START_DATE": "2026-01-18",
+    "END_DATE": "2026-01-21",
+    "INJURY_TYPE": "ACL",
+    "INJURY_CATEGORY": "Knee",
+    "EXPECTED_RETURN": "2026-01-29",
+    "ACTIVE": true,
+    "DOUBTFUL": false,
+    "INJURY_TYPE_UNKNOWN": false,
+    "IRRELEVANT": false,
+    "CREATE_TIME": "2026-01-22T16:52:17.314Z",
+    "UPDATE_TIME": "2026-01-22T16:53:43.590Z",
+    "UPDATE_BY": null
+  },
+  {
+    "INJURY_ID": 2,
+    "ATHLETE_ID": 1,
+    "START_DATE": "2026-01-01",
+    "END_DATE": "2027-01-27",
+    "INJURY_TYPE": "Leg",
+    "INJURY_CATEGORY": "Broken Leg",
+    "EXPECTED_RETURN": "2027-01-31",
+    "ACTIVE": true,
+    "DOUBTFUL": false,
+    "INJURY_TYPE_UNKNOWN": false,
+    "IRRELEVANT": false,
+    "CREATE_TIME": "2026-01-25T14:58:13.142Z",
+    "UPDATE_TIME": "2026-01-25T14:58:13.142Z",
+    "UPDATE_BY": null
+  }
+]

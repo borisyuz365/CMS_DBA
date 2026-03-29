@@ -1,0 +1,99 @@
+{
+  "TABLE_SETTING_ID": {
+    "type": "int",
+    "default": 1
+  },
+  "POSITION": {
+    "type": "int",
+    "default": 0
+  },
+  "LAST_ROUND_POSITION": {
+    "type": "int",
+    "default": 0
+  },
+  "GAMES_PLAYED": {
+    "type": "int",
+    "default": 0
+  },
+  "GAMES_WON": {
+    "type": "int",
+    "default": 0
+  },
+  "GAMES_LOST": {
+    "type": "int",
+    "default": 0
+  },
+  "GAMES_EVEN": {
+    "type": "int",
+    "default": 0
+  },
+  "FOR": {
+    "type": "int",
+    "default": 0
+  },
+  "HOME_FOR": {
+    "type": "int",
+    "default": 0
+  },
+  "AWAY_FOR": {
+    "type": "int",
+    "default": 0
+  },
+  "AGAINST": {
+    "type": "int",
+    "default": 0
+  },
+  "SUCCESS_RATE": {
+    "type": "float",
+    "default": 0
+  },
+  "RATIO": {
+    "type": "float",
+    "default": 0
+  },
+  "POINTS": {
+    "type": "int",
+    "default": 0
+  },
+  "STRIKE": {
+    "type": "any",
+    "default": null
+  },
+  "DISCIPLINARY": {
+    "type": "any",
+    "default": null
+  },
+  "GAMES_WON_ON_OT": {
+    "type": "int",
+    "default": 0
+  },
+  "GAMES_WON_ON_PEN": {
+    "type": "int",
+    "default": 0
+  },
+  "GAMES_LOSS_ON_OT": {
+    "type": "int",
+    "default": 0
+  },
+  "GAMES_LOSS_ON_PEN": {
+    "type": "int",
+    "default": 0
+  },
+  "OFFENSIVE_BONUS_POINTS": {
+    "type": "int",
+    "default": 0
+  },
+  "DEFENSIVE_BONUS_POINTS": {
+    "type": "int",
+    "default": 0
+  },
+  "ORDER_DIRECTION": {
+    "type": "string",
+    "default": "Desc",
+    "enum": ["Descending", "Ascending", "Desc", "Asce"]
+  },
+  "INNER_TABLE": {
+    "type": "any",
+    "default": null
+  }
+}

@@ -1,0 +1,386 @@
+[
+  {
+    "POSITION_ID": 1,
+    "SPORT_TYPE_ID": 1,
+    "POSITION_NAME": "Goalkeeper",
+    "FORMATION_POSITIONS": [
+      {
+        "FORMATION_POSITION_ID": 1,
+        "FORMATION_POSITION_NAME": "Goalkeeper"
+      }
+    ]
+  },
+  {
+    "POSITION_ID": 2,
+    "SPORT_TYPE_ID": 1,
+    "POSITION_NAME": "Defender",
+    "FORMATION_POSITIONS": [
+      {
+        "FORMATION_POSITION_ID": 2,
+        "FORMATION_POSITION_NAME": "Left Back"
+      },
+      {
+        "FORMATION_POSITION_ID": 3,
+        "FORMATION_POSITION_NAME": "Right Back"
+      },
+      {
+        "FORMATION_POSITION_ID": 4,
+        "FORMATION_POSITION_NAME": "Center Back"
+      },
+      {
+        "FORMATION_POSITION_ID": 5,
+        "FORMATION_POSITION_NAME": "Sweeper"
+      },
+      {
+        "FORMATION_POSITION_ID": 6,
+        "FORMATION_POSITION_NAME": "Wing Back"
+      }
+    ]
+  },
+  {
+    "POSITION_ID": 3,
+    "SPORT_TYPE_ID": 1,
+    "POSITION_NAME": "Midfielder",
+    "FORMATION_POSITIONS": [
+      {
+        "FORMATION_POSITION_ID": 7,
+        "FORMATION_POSITION_NAME": "Central Midfielder"
+      },
+      {
+        "FORMATION_POSITION_ID": 8,
+        "FORMATION_POSITION_NAME": "Defensive Midfielder"
+      },
+      {
+        "FORMATION_POSITION_ID": 9,
+        "FORMATION_POSITION_NAME": "Attacking Midfielder"
+      },
+      {
+        "FORMATION_POSITION_ID": 10,
+        "FORMATION_POSITION_NAME": "Left Midfielder"
+      },
+      {
+        "FORMATION_POSITION_ID": 11,
+        "FORMATION_POSITION_NAME": "Right Midfielder"
+      },
+      {
+        "FORMATION_POSITION_ID": 12,
+        "FORMATION_POSITION_NAME": "Wide Midfielder"
+      }
+    ]
+  },
+  {
+    "POSITION_ID": 4,
+    "SPORT_TYPE_ID": 1,
+    "POSITION_NAME": "Forward",
+    "FORMATION_POSITIONS": [
+      {
+        "FORMATION_POSITION_ID": 13,
+        "FORMATION_POSITION_NAME": "Striker"
+      },
+      {
+        "FORMATION_POSITION_ID": 14,
+        "FORMATION_POSITION_NAME": "Center Forward"
+      },
+      {
+        "FORMATION_POSITION_ID": 15,
+        "FORMATION_POSITION_NAME": "Second Striker"
+      },
+      {
+        "FORMATION_POSITION_ID": 16,
+        "FORMATION_POSITION_NAME": "Left Winger"
+      },
+      {
+        "FORMATION_POSITION_ID": 17,
+        "FORMATION_POSITION_NAME": "Right Winger"
+      }
+    ]
+  },
+  {
+    "POSITION_ID": 5,
+    "SPORT_TYPE_ID": 2,
+    "POSITION_NAME": "Guard",
+    "FORMATION_POSITIONS": [
+      {
+        "FORMATION_POSITION_ID": 18,
+        "FORMATION_POSITION_NAME": "Point Guard"
+      },
+      {
+        "FORMATION_POSITION_ID": 19,
+        "FORMATION_POSITION_NAME": "Shooting Guard"
+      }
+    ]
+  },
+  {
+    "POSITION_ID": 6,
+    "SPORT_TYPE_ID": 2,
+    "POSITION_NAME": "Forward",
+    "FORMATION_POSITIONS": [
+      {
+        "FORMATION_POSITION_ID": 20,
+        "FORMATION_POSITION_NAME": "Small Forward"
+      },
+      {
+        "FORMATION_POSITION_ID": 21,
+        "FORMATION_POSITION_NAME": "Power Forward"
+      }
+    ]
+  },
+  {
+    "POSITION_ID": 7,
+    "SPORT_TYPE_ID": 2,
+    "POSITION_NAME": "Center",
+    "FORMATION_POSITIONS": [
+      {
+        "FORMATION_POSITION_ID": 22,
+        "FORMATION_POSITION_NAME": "Center"
+      }
+    ]
+  },
+  {
+    "POSITION_ID": 8,
+    "SPORT_TYPE_ID": 1,
+    "POSITION_NAME": "Management",
+    "FORMATION_POSITIONS": [
+      {
+        "FORMATION_POSITION_ID": 23,
+        "FORMATION_POSITION_NAME": "Manager"
+      },
+      {
+        "FORMATION_POSITION_ID": 24,
+        "FORMATION_POSITION_NAME": "Coach"
+      },
+      {
+        "FORMATION_POSITION_ID": 25,
+        "FORMATION_POSITION_NAME": "AssistCoach"
+      }
+    ]
+  },
+  {
+    "POSITION_ID": 9,
+    "SPORT_TYPE_ID": 2,
+    "POSITION_NAME": "Management",
+    "FORMATION_POSITIONS": [
+      {
+        "FORMATION_POSITION_ID": 23,
+        "FORMATION_POSITION_NAME": "Manager"
+      },
+      {
+        "FORMATION_POSITION_ID": 24,
+        "FORMATION_POSITION_NAME": "Coach"
+      },
+      {
+        "FORMATION_POSITION_ID": 25,
+        "FORMATION_POSITION_NAME": "AssistCoach"
+      }
+    ]
+  },
+  {
+    "POSITION_ID": 10,
+    "SPORT_TYPE_ID": 3,
+    "POSITION_NAME": "Management",
+    "FORMATION_POSITIONS": [
+      {
+        "FORMATION_POSITION_ID": 23,
+        "FORMATION_POSITION_NAME": "Manager"
+      },
+      {
+        "FORMATION_POSITION_ID": 24,
+        "FORMATION_POSITION_NAME": "Coach"
+      },
+      {
+        "FORMATION_POSITION_ID": 25,
+        "FORMATION_POSITION_NAME": "AssistCoach"
+      }
+    ]
+  },
+  {
+    "POSITION_ID": 11,
+    "SPORT_TYPE_ID": 4,
+    "POSITION_NAME": "Management",
+    "FORMATION_POSITIONS": [
+      {
+        "FORMATION_POSITION_ID": 23,
+        "FORMATION_POSITION_NAME": "Manager"
+      },
+      {
+        "FORMATION_POSITION_ID": 24,
+        "FORMATION_POSITION_NAME": "Coach"
+      },
+      {
+        "FORMATION_POSITION_ID": 25,
+        "FORMATION_POSITION_NAME": "AssistCoach"
+      }
+    ]
+  },
+  {
+    "POSITION_ID": 12,
+    "SPORT_TYPE_ID": 5,
+    "POSITION_NAME": "Management",
+    "FORMATION_POSITIONS": [
+      {
+        "FORMATION_POSITION_ID": 23,
+        "FORMATION_POSITION_NAME": "Manager"
+      },
+      {
+        "FORMATION_POSITION_ID": 24,
+        "FORMATION_POSITION_NAME": "Coach"
+      },
+      {
+        "FORMATION_POSITION_ID": 25,
+        "FORMATION_POSITION_NAME": "AssistCoach"
+      }
+    ]
+  },
+  {
+    "POSITION_ID": 13,
+    "SPORT_TYPE_ID": 6,
+    "POSITION_NAME": "Management",
+    "FORMATION_POSITIONS": [
+      {
+        "FORMATION_POSITION_ID": 23,
+        "FORMATION_POSITION_NAME": "Manager"
+      },
+      {
+        "FORMATION_POSITION_ID": 24,
+        "FORMATION_POSITION_NAME": "Coach"
+      },
+      {
+        "FORMATION_POSITION_ID": 25,
+        "FORMATION_POSITION_NAME": "AssistCoach"
+      }
+    ]
+  },
+  {
+    "POSITION_ID": 14,
+    "SPORT_TYPE_ID": 7,
+    "POSITION_NAME": "Management",
+    "FORMATION_POSITIONS": [
+      {
+        "FORMATION_POSITION_ID": 23,
+        "FORMATION_POSITION_NAME": "Manager"
+      },
+      {
+        "FORMATION_POSITION_ID": 24,
+        "FORMATION_POSITION_NAME": "Coach"
+      },
+      {
+        "FORMATION_POSITION_ID": 25,
+        "FORMATION_POSITION_NAME": "AssistCoach"
+      }
+    ]
+  },
+  {
+    "POSITION_ID": 15,
+    "SPORT_TYPE_ID": 8,
+    "POSITION_NAME": "Management",
+    "FORMATION_POSITIONS": [
+      {
+        "FORMATION_POSITION_ID": 23,
+        "FORMATION_POSITION_NAME": "Manager"
+      },
+      {
+        "FORMATION_POSITION_ID": 24,
+        "FORMATION_POSITION_NAME": "Coach"
+      },
+      {
+        "FORMATION_POSITION_ID": 25,
+        "FORMATION_POSITION_NAME": "AssistCoach"
+      }
+    ]
+  },
+  {
+    "POSITION_ID": 16,
+    "SPORT_TYPE_ID": 9,
+    "POSITION_NAME": "Management",
+    "FORMATION_POSITIONS": [
+      {
+        "FORMATION_POSITION_ID": 23,
+        "FORMATION_POSITION_NAME": "Manager"
+      },
+      {
+        "FORMATION_POSITION_ID": 24,
+        "FORMATION_POSITION_NAME": "Coach"
+      },
+      {
+        "FORMATION_POSITION_ID": 25,
+        "FORMATION_POSITION_NAME": "AssistCoach"
+      }
+    ]
+  },
+  {
+    "POSITION_ID": 17,
+    "SPORT_TYPE_ID": 10,
+    "POSITION_NAME": "Management",
+    "FORMATION_POSITIONS": [
+      {
+        "FORMATION_POSITION_ID": 23,
+        "FORMATION_POSITION_NAME": "Manager"
+      },
+      {
+        "FORMATION_POSITION_ID": 24,
+        "FORMATION_POSITION_NAME": "Coach"
+      },
+      {
+        "FORMATION_POSITION_ID": 25,
+        "FORMATION_POSITION_NAME": "AssistCoach"
+      }
+    ]
+  },
+  {
+    "POSITION_ID": 18,
+    "SPORT_TYPE_ID": 11,
+    "POSITION_NAME": "Management",
+    "FORMATION_POSITIONS": [
+      {
+        "FORMATION_POSITION_ID": 23,
+        "FORMATION_POSITION_NAME": "Manager"
+      },
+      {
+        "FORMATION_POSITION_ID": 24,
+        "FORMATION_POSITION_NAME": "Coach"
+      },
+      {
+        "FORMATION_POSITION_ID": 25,
+        "FORMATION_POSITION_NAME": "AssistCoach"
+      }
+    ]
+  },
+  {
+    "POSITION_ID": 19,
+    "SPORT_TYPE_ID": 12,
+    "POSITION_NAME": "Management",
+    "FORMATION_POSITIONS": [
+      {
+        "FORMATION_POSITION_ID": 23,
+        "FORMATION_POSITION_NAME": "Manager"
+      },
+      {
+        "FORMATION_POSITION_ID": 24,
+        "FORMATION_POSITION_NAME": "Coach"
+      },
+      {
+        "FORMATION_POSITION_ID": 25,
+        "FORMATION_POSITION_NAME": "AssistCoach"
+      }
+    ]
+  },
+  {
+    "POSITION_ID": 20,
+    "SPORT_TYPE_ID": 13,
+    "POSITION_NAME": "Management",
+    "FORMATION_POSITIONS": [
+      {
+        "FORMATION_POSITION_ID": 23,
+        "FORMATION_POSITION_NAME": "Manager"
+      },
+      {
+        "FORMATION_POSITION_ID": 24,
+        "FORMATION_POSITION_NAME": "Coach"
+      },
+      {
+        "FORMATION_POSITION_ID": 25,
+        "FORMATION_POSITION_NAME": "AssistCoach"
+      }
+    ]
+  }
+]

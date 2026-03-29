@@ -1,0 +1,134 @@
+{
+  "COUNTRY_ID": {
+    "type": "int",
+    "default": 1
+  },
+  "NAME_ID": {
+    "type": "int",
+    "default": 20
+  },
+  "COUNTRY_CODE": {
+    "type": "string",
+    "default": "DE"
+  },
+  "TIME_ZONE_ID": {
+    "type": "int",
+    "default": 1
+  },
+  "FATHER_COUNTRY_ID": {
+    "type": "int",
+    "default": null
+  },
+  "IS_NOT_REAL": {
+    "type": "bool",
+    "default": false
+  },
+  "ALLOW_BETTING": {
+    "type": "bool",
+    "default": true
+  },
+  "EMOJI": {
+    "type": "string",
+    "default": "🇩🇪"
+  },
+  "CONNECT_BY_TEXT": {
+    "type": "bool",
+    "default": false
+  },
+  "ALLOW_PREMIUM_INSIGHTS": {
+    "type": "bool",
+    "default": true
+  },
+  "TRANSFER_SEASON_ACTIVE": {
+    "type": "any",
+    "default": null
+  },
+  "PHONE_CODE": {
+    "type": "any",
+    "default": null
+  },
+  "ALLOW_BETS_IN_ALL_SCORES": {
+    "type": "bool",
+    "default": true
+  },
+  "LOGIN_AVAILABLE": {
+    "type": "bool",
+    "default": true
+  },
+  "MAIN_COLOR": {
+    "type": "int",
+    "default": 0
+  },
+  "SECONDARY_COLOR": {
+    "type": "int",
+    "default": 16711680
+  },
+  "IMG_VER": {
+    "type": "int",
+    "default": 1
+  },
+  "COUNTRY_IMAGE_URL": {
+    "type": "any",
+    "default": null
+  },
+  "PLATFORM": {
+    "type": "any",
+    "default": null
+  },
+  "FORCE_RAFFLE_TOP_BOOKMAKER": {
+    "type": "any",
+    "default": null
+  },
+  "ALLOW_SUB_TERRITORY_DETECTION": {
+    "type": "any",
+    "default": null
+  },
+  "ODDS_TYPE": {
+    "type": "int",
+    "default": 2
+  },
+  "TYPE": {
+    "type": "int",
+    "default": null
+  },
+  "CONTINENT_ID": {
+    "type": "int",
+    "default": null
+  },
+  "BLOCK_LIVE_BETTING": {
+    "type": "bool",
+    "default": false
+  },
+  "CURRENCY_SYMBOL": {
+    "type": "any",
+    "default": null
+  },
+  "ALLOW_PREMIUM_USERS": {
+    "type": "any",
+    "default": null
+  },
+  "MIN_USERS_FOR_MOST_POPULAR_BET": {
+    "type": "int",
+    "default": 100
+  },
+  "MIN_USERS_AMOUNT_FOR_POPULAR_OPTIONS": {
+    "type": "int",
+    "default": 50
+  },
+  "LINEUPS_BET_VALUE": {
+    "type": "any",
+    "default": null
+  },
+  "BET_VALUE": {
+    "type": "any",
+    "default": null
+  },
+  "IS_DELETED": {
+    "type": "bool",
+    "default": false
+  },
+  "name": {
+    "type": "string",
+    "default": "Germany"
+  }
+}

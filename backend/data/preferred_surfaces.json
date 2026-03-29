@@ -1,0 +1,22 @@
+[
+  {
+    "SURFACE_ID": 1,
+    "SURFACE_NAME": "Hard",
+    "DESCRIPTION": "Hard court surface"
+  },
+  {
+    "SURFACE_ID": 2,
+    "SURFACE_NAME": "Clay",
+    "DESCRIPTION": "Clay court surface"
+  },
+  {
+    "SURFACE_ID": 3,
+    "SURFACE_NAME": "Grass",
+    "DESCRIPTION": "Grass court surface"
+  },
+  {
+    "SURFACE_ID": 4,
+    "SURFACE_NAME": "Carpet",
+    "DESCRIPTION": "Carpet court surface"
+  }
+]
