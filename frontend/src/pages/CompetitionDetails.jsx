@@ -84,7 +84,7 @@ const TABLE_ORDER_EXCLUDE_KEYS = ['TABLE_SETTING_ID', 'ORDER_DIRECTION', 'INNER_
 const GENERAL_DETAILS_KEYS = [
   'COUNTRY_ID', 'SPORT_TYPE_ID', 'GENDER', 'COMPETITION_TYPE', 'FATHER_COMPETITION', 'CURRENT_ROUND',
   'SUB_SPORT_TYPE', 'COMPETITORS_TYPE', 'HOST_CITY', 'MAIN_COLOR', 'SECONDARY_COLOR',
-  'COMPETITION_IMAGE_URL', 'TROPHY_IMAGE_URL', 'HIDE_ON_SEARCH', 'HIDE_ON_CATALOG', 'ENABLE_DASHBOARD_BUZZ',
+  'COMPETITION_IMAGE_URL', 'COMPETITION_DARK_IMAGE_URL', 'TROPHY_IMAGE_URL', 'HIDE_ON_SEARCH', 'HIDE_ON_CATALOG', 'ENABLE_DASHBOARD_BUZZ',
   'SUPPORT_COMPETITION_DASHBOARD', 'HIDE_LMT',
 ];
 
@@ -295,9 +295,10 @@ function CompetitionDetails() {
   const [partnerIdSaving, setPartnerIdSaving] = useState(false);
   // Image edit: one dialog with tabs (Competition / Trophy) per UI-STANDARDS
   const [imageDialogOpen, setImageDialogOpen] = useState(false);
-  const [editingImageType, setEditingImageType] = useState('competition'); // 'competition' | 'trophy'
+  const [editingImageType, setEditingImageType] = useState('competition'); // 'competition' | 'dark' | 'trophy'
   const [imageUrlValue, setImageUrlValue] = useState('');
   const [competitionImageError, setCompetitionImageError] = useState(false);
+  const [darkImageError, setDarkImageError] = useState(false);
   const [trophyImageError, setTrophyImageError] = useState(false);
   const [createCityDialogOpen, setCreateCityDialogOpen] = useState(false);
   const [createCityName, setCreateCityName] = useState('');
@@ -352,6 +353,7 @@ function CompetitionDetails() {
     GENDER: '',
     COMPETITION_TYPE: '',
     COMPETITION_IMAGE_URL: '',
+    COMPETITION_DARK_IMAGE_URL: '',
     TROPHY_IMAGE_URL: '',
     MAIN_COLOR: '',
     SECONDARY_COLOR: '',
@@ -2940,6 +2942,8 @@ function CompetitionDetails() {
     setEditingImageType(initialType);
     if (initialType === 'competition') {
       setImageUrlValue(formData.COMPETITION_IMAGE_URL || competition?.COMPETITION_IMAGE_URL || '');
+    } else if (initialType === 'dark') {
+      setImageUrlValue(formData.COMPETITION_DARK_IMAGE_URL || competition?.COMPETITION_DARK_IMAGE_URL || '');
     } else {
       setImageUrlValue(formData.TROPHY_IMAGE_URL || competition?.TROPHY_IMAGE_URL || '');
     }
@@ -2959,6 +2963,10 @@ function CompetitionDetails() {
         await api.updateCompetition(id, { COMPETITION_IMAGE_URL: imageUrlValue.trim() || null });
         setFormData((prev) => ({ ...prev, COMPETITION_IMAGE_URL: imageUrlValue.trim() || '' }));
         setCompetitionImageError(false);
+      } else if (editingImageType === 'dark') {
+        await api.updateCompetition(id, { COMPETITION_DARK_IMAGE_URL: imageUrlValue.trim() || null });
+        setFormData((prev) => ({ ...prev, COMPETITION_DARK_IMAGE_URL: imageUrlValue.trim() || '' }));
+        setDarkImageError(false);
       } else {
         await api.updateCompetition(id, { TROPHY_IMAGE_URL: imageUrlValue.trim() || null });
         setFormData((prev) => ({ ...prev, TROPHY_IMAGE_URL: imageUrlValue.trim() || '' }));
@@ -3102,7 +3110,7 @@ function CompetitionDetails() {
 
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, alignItems: 'stretch' }}>
           {/* Left: Media (compact) – 72×72, one Upload Image, Image Version */}
-          <Box sx={{ flex: { xs: '1 1 100%', md: '0 0 200px' }, minWidth: 0 }}>
+          <Box sx={{ flex: { xs: '1 1 100%', md: '0 0 270px' }, minWidth: 0 }}>
             <Paper
               sx={{
                 p: 1.25,
@@ -3132,7 +3140,26 @@ function CompetitionDetails() {
                     )}
                   </Avatar>
                   <Typography variant="body2" sx={{ fontWeight: 500, textAlign: 'center', fontSize: '0.7rem' }}>
-                    Competition Image
+                    Light Image
+                  </Typography>
+                </Box>
+                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0.5 }}>
+                  <Avatar
+                    src={formData.COMPETITION_DARK_IMAGE_URL || competition?.COMPETITION_DARK_IMAGE_URL || null}
+                    sx={{
+                      width: 72,
+                      height: 72,
+                      bgcolor: ((formData.COMPETITION_DARK_IMAGE_URL || competition?.COMPETITION_DARK_IMAGE_URL) && !darkImageError) ? 'transparent' : '#f5f5f5',
+                      border: '1px solid #e0e0e0',
+                    }}
+                    onError={() => setDarkImageError(true)}
+                  >
+                    {(!(formData.COMPETITION_DARK_IMAGE_URL || competition?.COMPETITION_DARK_IMAGE_URL) || darkImageError) && (
+                      <EmojiEventsIcon sx={{ fontSize: 36, color: '#999999' }} />
+                    )}
+                  </Avatar>
+                  <Typography variant="body2" sx={{ fontWeight: 500, textAlign: 'center', fontSize: '0.7rem' }}>
+                    Dark Image
                   </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0.5 }}>
@@ -7660,12 +7687,15 @@ function CompetitionDetails() {
         <DialogContent>
           <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2, mt: 1 }}>
             <Tabs
-              value={editingImageType === 'competition' ? 0 : 1}
+              value={editingImageType === 'competition' ? 0 : editingImageType === 'dark' ? 1 : 2}
               onChange={(e, newValue) => {
-                const newType = newValue === 0 ? 'competition' : 'trophy';
+                const typeMap = { 0: 'competition', 1: 'dark', 2: 'trophy' };
+                const newType = typeMap[newValue];
                 setEditingImageType(newType);
                 if (newType === 'competition') {
                   setImageUrlValue(formData.COMPETITION_IMAGE_URL || competition?.COMPETITION_IMAGE_URL || '');
+                } else if (newType === 'dark') {
+                  setImageUrlValue(formData.COMPETITION_DARK_IMAGE_URL || competition?.COMPETITION_DARK_IMAGE_URL || '');
                 } else {
                   setImageUrlValue(formData.TROPHY_IMAGE_URL || competition?.TROPHY_IMAGE_URL || '');
                 }
@@ -7675,7 +7705,8 @@ function CompetitionDetails() {
                 '& .Mui-selected': { color: '#1976d2' },
               }}
             >
-              <Tab label="Competition Image" />
+              <Tab label="Light Image" />
+              <Tab label="Dark Image" />
               <Tab label="Trophy Image" />
             </Tabs>
           </Box>

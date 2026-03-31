@@ -1,0 +1,26 @@
+{
+  "COMPETITION_ID": {
+    "type": "int",
+    "default": null
+  },
+  "DATA_SOURCE_ID": {
+    "type": "int",
+    "default": null
+  },
+  "PARTNER_ID": {
+    "type": "any",
+    "default": null
+  },
+  "CREATE_TIME": {
+    "type": "string",
+    "default": null
+  },
+  "UPDATE_TIME": {
+    "type": "string",
+    "default": null
+  },
+  "UPDATE_BY": {
+    "type": "string",
+    "default": null
+  }
+}

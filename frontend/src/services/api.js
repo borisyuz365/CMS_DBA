@@ -405,6 +405,17 @@ class ApiService {
   }
 
   /**
+   * Bulk-save all partner ID entries for a competition (replaces existing).
+   */
+  async savePartnerIdsBulk(competitionId, entries) {
+    const response = await this.fetch(
+      `/data/competitions/${competitionId}/partner-ids/bulk`,
+      { method: 'PUT', body: JSON.stringify({ entries }) }
+    );
+    return response.data || [];
+  }
+
+  /**
    * Get all languages
    */
   async getLanguages() {

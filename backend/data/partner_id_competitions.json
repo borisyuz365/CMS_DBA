@@ -14,5 +14,349 @@
     "CREATE_TIME": null,
     "UPDATE_TIME": null,
     "UPDATE_BY": null
+  },
+  {
+    "COMPETITION_ID": 1,
+    "DATA_SOURCE_ID": 291,
+    "PARTNER_ID": "21321dvdv",
+    "CREATE_TIME": null,
+    "UPDATE_TIME": null,
+    "UPDATE_BY": null
+  },
+  {
+    "COMPETITION_ID": 2,
+    "DATA_SOURCE_ID": 256,
+    "PARTNER_ID": "Season 1",
+    "CREATE_TIME": "31/03/2026 14:34",
+    "UPDATE_TIME": "31/03/2026 14:34",
+    "UPDATE_BY": "DanielBelgi"
+  },
+  {
+    "COMPETITION_ID": 2,
+    "DATA_SOURCE_ID": 290,
+    "PARTNER_ID": "test1",
+    "CREATE_TIME": "31/03/2026 14:34",
+    "UPDATE_TIME": "31/03/2026 14:35",
+    "UPDATE_BY": "DanielBelgi"
+  },
+  {
+    "COMPETITION_ID": 2,
+    "DATA_SOURCE_ID": 169,
+    "PARTNER_ID": 5001,
+    "CREATE_TIME": "15/01/2025 09:12",
+    "UPDATE_TIME": "15/01/2025 09:12",
+    "UPDATE_BY": "DanielBelgi"
+  },
+  {
+    "COMPETITION_ID": 2,
+    "DATA_SOURCE_ID": 169,
+    "PARTNER_ID": 5002,
+    "CREATE_TIME": "15/01/2025 09:13",
+    "UPDATE_TIME": "20/02/2025 11:30",
+    "UPDATE_BY": "DanielBelgi"
+  },
+  {
+    "COMPETITION_ID": 2,
+    "DATA_SOURCE_ID": 109,
+    "PARTNER_ID": "ACB-101",
+    "CREATE_TIME": "27/12/2023 19:56",
+    "UPDATE_TIME": "27/12/2023 19:56",
+    "UPDATE_BY": "DanielBelgi"
+  },
+  {
+    "COMPETITION_ID": 2,
+    "DATA_SOURCE_ID": 109,
+    "PARTNER_ID": "ACB-102",
+    "CREATE_TIME": "27/12/2023 19:57",
+    "UPDATE_TIME": "05/03/2024 08:40",
+    "UPDATE_BY": "DanielBelgi"
+  },
+  {
+    "COMPETITION_ID": 2,
+    "DATA_SOURCE_ID": 291,
+    "PARTNER_ID": 1601,
+    "CREATE_TIME": "17/12/2023 10:06",
+    "UPDATE_TIME": "17/12/2023 10:06",
+    "UPDATE_BY": "DanielBelgi"
+  },
+  {
+    "COMPETITION_ID": 2,
+    "DATA_SOURCE_ID": 291,
+    "PARTNER_ID": 1602,
+    "CREATE_TIME": "17/12/2023 10:07",
+    "UPDATE_TIME": "17/12/2023 10:07",
+    "UPDATE_BY": "DanielBelgi"
+  },
+  {
+    "COMPETITION_ID": 2,
+    "DATA_SOURCE_ID": 292,
+    "PARTNER_ID": 84653,
+    "CREATE_TIME": "17/10/2024 16:30",
+    "UPDATE_TIME": "17/10/2024 16:30",
+    "UPDATE_BY": "DanielBelgi"
+  },
+  {
+    "COMPETITION_ID": 2,
+    "DATA_SOURCE_ID": 292,
+    "PARTNER_ID": 84654,
+    "CREATE_TIME": "17/10/2024 16:31",
+    "UPDATE_TIME": "17/10/2024 16:31",
+    "UPDATE_BY": "DanielBelgi"
+  },
+  {
+    "COMPETITION_ID": 2,
+    "DATA_SOURCE_ID": 256,
+    "PARTNER_ID": 5339,
+    "CREATE_TIME": "27/12/2023 19:55",
+    "UPDATE_TIME": "27/12/2023 19:55",
+    "UPDATE_BY": "DanielBelgi"
+  },
+  {
+    "COMPETITION_ID": 2,
+    "DATA_SOURCE_ID": 256,
+    "PARTNER_ID": 854,
+    "CREATE_TIME": "05/11/2023 10:59",
+    "UPDATE_TIME": "05/11/2023 10:59",
+    "UPDATE_BY": "DanielBelgi"
+  },
+  {
+    "COMPETITION_ID": 2,
+    "DATA_SOURCE_ID": 169,
+    "PARTNER_ID": 11700,
+    "CREATE_TIME": "05/11/2023 10:48",
+    "UPDATE_TIME": "05/11/2023 10:48",
+    "UPDATE_BY": "DanielBelgi"
+  },
+  {
+    "COMPETITION_ID": 2,
+    "DATA_SOURCE_ID": 290,
+    "PARTNER_ID": 3301,
+    "CREATE_TIME": "12/06/2024 14:22",
+    "UPDATE_TIME": "12/06/2024 14:22",
+    "UPDATE_BY": "DanielBelgi"
+  },
+  {
+    "COMPETITION_ID": 2,
+    "DATA_SOURCE_ID": 290,
+    "PARTNER_ID": 3302,
+    "CREATE_TIME": "12/06/2024 14:23",
+    "UPDATE_TIME": "12/06/2024 14:23",
+    "UPDATE_BY": "DanielBelgi"
+  },
+  {
+    "COMPETITION_ID": 2,
+    "DATA_SOURCE_ID": 169,
+    "PARTNER_ID": 7710,
+    "CREATE_TIME": "01/03/2024 08:15",
+    "UPDATE_TIME": "15/05/2024 12:00",
+    "UPDATE_BY": "DanielBelgi"
+  },
+  {
+    "COMPETITION_ID": 2,
+    "DATA_SOURCE_ID": 169,
+    "PARTNER_ID": "7711111111111",
+    "CREATE_TIME": "01/03/2024 08:16",
+    "UPDATE_TIME": "31/03/2026 15:54",
+    "UPDATE_BY": "DanielBelgi"
+  },
+  {
+    "COMPETITION_ID": 2,
+    "DATA_SOURCE_ID": 256,
+    "PARTNER_ID": 2200,
+    "CREATE_TIME": "18/07/2024 09:00",
+    "UPDATE_TIME": "18/07/2024 09:00",
+    "UPDATE_BY": "DanielBelgi"
+  },
+  {
+    "COMPETITION_ID": 2,
+    "DATA_SOURCE_ID": 256,
+    "PARTNER_ID": "22011",
+    "CREATE_TIME": "18/07/2024 09:01",
+    "UPDATE_TIME": "31/03/2026 15:54",
+    "UPDATE_BY": "DanielBelgi"
+  },
+  {
+    "COMPETITION_ID": 2,
+    "DATA_SOURCE_ID": 109,
+    "PARTNER_ID": "ACB-200",
+    "CREATE_TIME": "25/08/2024 11:30",
+    "UPDATE_TIME": "25/08/2024 11:30",
+    "UPDATE_BY": "DanielBelgi"
+  },
+  {
+    "COMPETITION_ID": 2,
+    "DATA_SOURCE_ID": 109,
+    "PARTNER_ID": "ACB-201",
+    "CREATE_TIME": "25/08/2024 11:31",
+    "UPDATE_TIME": "25/08/2024 11:31",
+    "UPDATE_BY": "DanielBelgi"
+  },
+  {
+    "COMPETITION_ID": 2,
+    "DATA_SOURCE_ID": 291,
+    "PARTNER_ID": 4400,
+    "CREATE_TIME": "03/09/2024 16:10",
+    "UPDATE_TIME": "03/09/2024 16:10",
+    "UPDATE_BY": "DanielBelgi"
+  },
+  {
+    "COMPETITION_ID": 2,
+    "DATA_SOURCE_ID": 291,
+    "PARTNER_ID": 4401,
+    "CREATE_TIME": "03/09/2024 16:11",
+    "UPDATE_TIME": "10/11/2024 09:22",
+    "UPDATE_BY": "DanielBelgi"
+  },
+  {
+    "COMPETITION_ID": 2,
+    "DATA_SOURCE_ID": 292,
+    "PARTNER_ID": 9900,
+    "CREATE_TIME": "14/10/2024 13:45",
+    "UPDATE_TIME": "14/10/2024 13:45",
+    "UPDATE_BY": "DanielBelgi"
+  },
+  {
+    "COMPETITION_ID": 2,
+    "DATA_SOURCE_ID": 292,
+    "PARTNER_ID": 9901,
+    "CREATE_TIME": "14/10/2024 13:46",
+    "UPDATE_TIME": "14/10/2024 13:46",
+    "UPDATE_BY": "DanielBelgi"
+  },
+  {
+    "COMPETITION_ID": 2,
+    "DATA_SOURCE_ID": 290,
+    "PARTNER_ID": 6600,
+    "CREATE_TIME": "22/11/2024 10:05",
+    "UPDATE_TIME": "22/11/2024 10:05",
+    "UPDATE_BY": "DanielBelgi"
+  },
+  {
+    "COMPETITION_ID": 2,
+    "DATA_SOURCE_ID": 290,
+    "PARTNER_ID": 6601,
+    "CREATE_TIME": "22/11/2024 10:06",
+    "UPDATE_TIME": "02/01/2025 14:18",
+    "UPDATE_BY": "DanielBelgi"
+  },
+  {
+    "COMPETITION_ID": 2,
+    "DATA_SOURCE_ID": 169,
+    "PARTNER_ID": 8800,
+    "CREATE_TIME": "05/12/2024 08:30",
+    "UPDATE_TIME": "05/12/2024 08:30",
+    "UPDATE_BY": "DanielBelgi"
+  },
+  {
+    "COMPETITION_ID": 2,
+    "DATA_SOURCE_ID": 169,
+    "PARTNER_ID": 8801,
+    "CREATE_TIME": "05/12/2024 08:31",
+    "UPDATE_TIME": "05/12/2024 08:31",
+    "UPDATE_BY": "DanielBelgi"
+  },
+  {
+    "COMPETITION_ID": 2,
+    "DATA_SOURCE_ID": 256,
+    "PARTNER_ID": 1100,
+    "CREATE_TIME": "19/01/2025 15:20",
+    "UPDATE_TIME": "19/01/2025 15:20",
+    "UPDATE_BY": "DanielBelgi"
+  },
+  {
+    "COMPETITION_ID": 2,
+    "DATA_SOURCE_ID": 256,
+    "PARTNER_ID": 1101,
+    "CREATE_TIME": "19/01/2025 15:21",
+    "UPDATE_TIME": "28/02/2025 09:55",
+    "UPDATE_BY": "DanielBelgi"
+  },
+  {
+    "COMPETITION_ID": 2,
+    "DATA_SOURCE_ID": 109,
+    "PARTNER_ID": "ACB-300",
+    "CREATE_TIME": "10/02/2025 12:00",
+    "UPDATE_TIME": "10/02/2025 12:00",
+    "UPDATE_BY": "DanielBelgi"
+  },
+  {
+    "COMPETITION_ID": 2,
+    "DATA_SOURCE_ID": 109,
+    "PARTNER_ID": "ACB-301",
+    "CREATE_TIME": "10/02/2025 12:01",
+    "UPDATE_TIME": "10/02/2025 12:01",
+    "UPDATE_BY": "DanielBelgi"
+  },
+  {
+    "COMPETITION_ID": 2,
+    "DATA_SOURCE_ID": 291,
+    "PARTNER_ID": 7700,
+    "CREATE_TIME": "28/02/2025 16:40",
+    "UPDATE_TIME": "28/02/2025 16:40",
+    "UPDATE_BY": "DanielBelgi"
+  },
+  {
+    "COMPETITION_ID": 2,
+    "DATA_SOURCE_ID": 291,
+    "PARTNER_ID": 7701,
+    "CREATE_TIME": "28/02/2025 16:41",
+    "UPDATE_TIME": "15/03/2025 11:10",
+    "UPDATE_BY": "DanielBelgi"
+  },
+  {
+    "COMPETITION_ID": 2,
+    "DATA_SOURCE_ID": 292,
+    "PARTNER_ID": 3300,
+    "CREATE_TIME": "10/03/2025 09:15",
+    "UPDATE_TIME": "10/03/2025 09:15",
+    "UPDATE_BY": "DanielBelgi"
+  },
+  {
+    "COMPETITION_ID": 2,
+    "DATA_SOURCE_ID": 292,
+    "PARTNER_ID": 3301,
+    "CREATE_TIME": "10/03/2025 09:16",
+    "UPDATE_TIME": "10/03/2025 09:16",
+    "UPDATE_BY": "DanielBelgi"
+  },
+  {
+    "COMPETITION_ID": 2,
+    "DATA_SOURCE_ID": 290,
+    "PARTNER_ID": 5500,
+    "CREATE_TIME": "20/03/2025 14:00",
+    "UPDATE_TIME": "20/03/2025 14:00",
+    "UPDATE_BY": "DanielBelgi"
+  },
+  {
+    "COMPETITION_ID": 2,
+    "DATA_SOURCE_ID": 290,
+    "PARTNER_ID": 5501,
+    "CREATE_TIME": "20/03/2025 14:01",
+    "UPDATE_TIME": "25/03/2025 08:30",
+    "UPDATE_BY": "DanielBelgi"
+  },
+  {
+    "COMPETITION_ID": 2,
+    "DATA_SOURCE_ID": 169,
+    "PARTNER_ID": 4400,
+    "CREATE_TIME": "25/03/2025 10:00",
+    "UPDATE_TIME": "25/03/2025 10:00",
+    "UPDATE_BY": "DanielBelgi"
+  },
+  {
+    "COMPETITION_ID": 2,
+    "DATA_SOURCE_ID": 169,
+    "PARTNER_ID": 4401,
+    "CREATE_TIME": "25/03/2025 10:01",
+    "UPDATE_TIME": "30/03/2026 16:45",
+    "UPDATE_BY": "DanielBelgi"
+  },
+  {
+    "COMPETITION_ID": 2,
+    "DATA_SOURCE_ID": 256,
+    "PARTNER_ID": 6700,
+    "CREATE_TIME": "30/03/2026 12:00",
+    "UPDATE_TIME": "30/03/2026 12:00",
+    "UPDATE_BY": "DanielBelgi"
   }
 ]

@@ -359,8 +359,9 @@ router.put('/competitions/:id', async (req, res, next) => {
     }
     const existing = competitions[idx];
     const allowed = [
+      'COUNTRY_ID', 'SPORT_TYPE_ID',
       'GENDER', 'COMPETITION_TYPE', 'MAIN_COLOR', 'SECONDARY_COLOR',
-      'COMPETITION_IMAGE_URL', 'TROPHY_IMAGE_URL', 'IMG_VER',
+      'COMPETITION_IMAGE_URL', 'COMPETITION_DARK_IMAGE_URL', 'TROPHY_IMAGE_URL', 'IMG_VER',
       'TABLE_WINNER_POINTS', 'TABLE_DRAW_POINTS', 'TABLE_LOSER_POINTS',
       'TABLE_IS_EVEN_EXISTS', 'TABLE_COUNT_ET_SCORE', 'TABLE_COUNT_PEN_SCORE',
       'TABLE_WIN_AFTER_EX_POINTS', 'TABLE_LOS_AFTER_EX_POINTS', 'TABLE_WIN_AFTER_PEN_POINTS', 'TABLE_LOS_AFTER_PEN_POINTS',
@@ -398,7 +399,7 @@ router.put('/competitions/:id', async (req, res, next) => {
     for (const key of allowed) {
       if (Object.prototype.hasOwnProperty.call(body, key)) {
         let val = body[key];
-        if ((key === 'COMPETITION_IMAGE_URL' || key === 'TROPHY_IMAGE_URL') && (val === '' || val == null)) val = null;
+        if ((key === 'COMPETITION_IMAGE_URL' || key === 'COMPETITION_DARK_IMAGE_URL' || key === 'TROPHY_IMAGE_URL') && (val === '' || val == null)) val = null;
         existing[key] = val;
       }
     }
@@ -508,6 +509,43 @@ router.delete('/competitions/:id/partner-ids/:dataSourceId', async (req, res, ne
     }
     await dataLoader.saveData('partner_id_competitions.json', newList);
     res.json({ success: true });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.put('/competitions/:id/partner-ids/bulk', async (req, res, next) => {
+  try {
+    const competitionId = parseInt(req.params.id, 10);
+    if (isNaN(competitionId)) {
+      return res.status(400).json({ success: false, error: 'Invalid competition ID' });
+    }
+    const entries = req.body && Array.isArray(req.body.entries) ? req.body.entries : null;
+    if (!entries) {
+      return res.status(400).json({ success: false, error: 'entries array required' });
+    }
+    const allRows = await dataLoader.loadData('partner_id_competitions.json').catch(() => []);
+    const otherRows = (allRows || []).filter(r => Number(r.COMPETITION_ID) !== competitionId);
+    const newRows = entries.map(e => ({
+      COMPETITION_ID: competitionId,
+      DATA_SOURCE_ID: e.DATA_SOURCE_ID != null ? parseInt(e.DATA_SOURCE_ID, 10) : null,
+      PARTNER_ID: e.PARTNER_ID != null ? e.PARTNER_ID : null,
+      CREATE_TIME: e.CREATE_TIME || null,
+      UPDATE_TIME: e.UPDATE_TIME || null,
+      UPDATE_BY: e.UPDATE_BY || null,
+    }));
+    const merged = [...otherRows, ...newRows];
+    await dataLoader.saveData('partner_id_competitions.json', merged);
+    const dataSources = await dataLoader.loadData('data_sources.json').catch(() => []);
+    const enriched = newRows.map(r => {
+      const out = { ...r };
+      if (r.DATA_SOURCE_ID != null && dataSources && dataSources.length) {
+        const ds = dataSources.find(d => d.DATA_SOURCE_ID === r.DATA_SOURCE_ID);
+        out.dataSourceName = ds ? (ds.ALIAS_NAME || `DS ${r.DATA_SOURCE_ID}`) : null;
+      }
+      return out;
+    });
+    res.json({ success: true, data: enriched });
   } catch (error) {
     next(error);
   }

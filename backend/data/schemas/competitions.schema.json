@@ -43,6 +43,10 @@
     "type": "any",
     "default": null
   },
+  "COMPETITION_DARK_IMAGE_URL": {
+    "type": "any",
+    "default": null
+  },
   "MAIN_COLOR": {
     "type": "int",
     "default": 4417929
