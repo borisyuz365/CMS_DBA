@@ -271,7 +271,7 @@
     "STAGE_NUM": 1,
     "NAME_ID": 1033,
     "NUM_OF_GAMES": 38,
-    "STAGE_TYPE": 1,
+    "STAGE_TYPE": 4,
     "HAS_TABLE": true,
     "START_DATE": "2026-02-05T22:00:00.000Z",
     "END_DATE": "2026-02-27T22:00:00.000Z",

@@ -558,44 +558,50 @@ function CountriesList() {
     { field: 'IS_NOT_REAL', header: 'Not Real', width: 52 },
     {
       field: 'MAIN_COLOR',
-      header: 'Main Color',
-      width: 90,
+      header: 'Color',
+      width: 110,
       render: (value, row) => {
-        if (isEditMode) {
-          const mainHex = numberToHex(pendingChanges[row.COUNTRY_ID]?.MAIN_COLOR ?? row.MAIN_COLOR);
-          return (
-            <TextField
-              type="color"
-              size="small"
-              value={mainHex || '#000000'}
-              onChange={(e) => handleFieldChange(row.COUNTRY_ID, 'MAIN_COLOR', e.target.value)}
-              sx={{
-                width: '120px',
-                height: '32px',
-                '& .MuiOutlinedInput-root': { height: '32px', padding: '4px' },
-                '& .MuiOutlinedInput-input': { padding: '4px', height: '24px' },
-              }}
-              title="Main Color"
-            />
-          );
-        }
-        const hex = numberToHex(row.MAIN_COLOR);
-        if (!hex) return '-';
+        const mainHex = numberToHex(row.MAIN_COLOR);
+        const secHex = numberToHex(row.SECONDARY_COLOR);
+        const handleCopy = (hex, label) => {
+          if (!hex) return;
+          navigator.clipboard.writeText(hex).then(() => {
+            setSnackbar({ open: true, message: `${label} color ${hex} copied to clipboard`, severity: 'success' });
+          });
+        };
         return (
-          <Box
-            sx={{
-              width: 72,
-              height: 24,
-              backgroundColor: hex,
-              border: '1px solid #e0e0e0',
-              borderRadius: '4px',
-            }}
-            title={hex}
-          />
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+            {mainHex ? (
+              <Box
+                onClick={(e) => { e.stopPropagation(); handleCopy(mainHex, 'Main'); }}
+                sx={{
+                  width: 28, height: 28, borderRadius: 1, border: '1px solid #ddd',
+                  bgcolor: mainHex, flexShrink: 0, cursor: 'pointer',
+                  '&:hover': { outline: '2px solid #1976d2', outlineOffset: 1 },
+                }}
+                title={`Main: ${mainHex}`}
+              />
+            ) : (
+              <Box sx={{ width: 28, height: 28, borderRadius: 1, border: '1px dashed #ccc', flexShrink: 0 }} title="Main: none" />
+            )}
+            {secHex ? (
+              <Box
+                onClick={(e) => { e.stopPropagation(); handleCopy(secHex, 'Secondary'); }}
+                sx={{
+                  width: 28, height: 28, borderRadius: 1, border: '1px solid #ddd',
+                  bgcolor: secHex, flexShrink: 0, cursor: 'pointer',
+                  '&:hover': { outline: '2px solid #1976d2', outlineOffset: 1 },
+                }}
+                title={`Secondary: ${secHex}`}
+              />
+            ) : (
+              <Box sx={{ width: 28, height: 28, borderRadius: 1, border: '1px dashed #ccc', flexShrink: 0 }} title="Secondary: none" />
+            )}
+          </Box>
         );
       },
     },
-  ], [handleNameClick, isEditMode, pendingChanges, numberToHex, handleFieldChange]);
+  ], [handleNameClick, numberToHex, setSnackbar]);
 
   if (loading && countries.length === 0) {
     return (
@@ -825,19 +831,50 @@ function CountriesList() {
                         )}
                       </TableCell>
                       <TableCell sx={{ borderColor: '#EAECF0' }}>{row.COUNTRY_CODE || '-'}</TableCell>
-                      <TableCell sx={{ borderColor: '#EAECF0' }}>
-                        {(() => {
+                      <TableCell sx={{ borderColor: '#EAECF0' }} onClick={(e) => isEditMode && e.stopPropagation()}>
+                        {isEditMode ? (
+                          <FormControl size="small" fullWidth sx={{ minWidth: 160 }}>
+                            <Select
+                              value={pendingChanges[row.COUNTRY_ID]?.TIME_ZONE_ID ?? row.TIME_ZONE_ID ?? ''}
+                              onChange={(e) => handleFieldChange(row.COUNTRY_ID, 'TIME_ZONE_ID', e.target.value === '' ? null : Number(e.target.value))}
+                              sx={{ height: 32, fontSize: '0.8125rem' }}
+                            >
+                              <MenuItem value="">—</MenuItem>
+                              {timeZones.map((tz) => (
+                                <MenuItem key={tz.TIME_ZONE_ID} value={tz.TIME_ZONE_ID}>
+                                  {formatTimeZoneDisplay(tz)}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+                        ) : (() => {
                           const tz = timeZones.find((t) => t.TIME_ZONE_ID === row.TIME_ZONE_ID);
                           return tz ? formatTimeZoneDisplay(tz) : (row.TIME_ZONE_ID ?? '-');
                         })()}
                       </TableCell>
-                      <TableCell sx={{ borderColor: '#EAECF0' }}>{row.ALLOW_BETTING ? 'Yes' : 'No'}</TableCell>
+                      <TableCell sx={{ borderColor: '#EAECF0' }} onClick={(e) => isEditMode && e.stopPropagation()}>
+                        {isEditMode ? (
+                          <Checkbox
+                            size="small"
+                            checked={!!(pendingChanges[row.COUNTRY_ID]?.ALLOW_BETTING ?? row.ALLOW_BETTING)}
+                            onChange={(e) => handleFieldChange(row.COUNTRY_ID, 'ALLOW_BETTING', e.target.checked)}
+                          />
+                        ) : (row.ALLOW_BETTING ? 'Yes' : 'No')}
+                      </TableCell>
                       <TableCell sx={{ borderColor: '#EAECF0' }}>
                         {row.FATHER_COUNTRY_ID != null
                           ? (countries.find(c => c.COUNTRY_ID === row.FATHER_COUNTRY_ID)?.name ?? String(row.FATHER_COUNTRY_ID))
                           : '-'}
                       </TableCell>
-                      <TableCell sx={{ borderColor: '#EAECF0' }}>{row.IS_NOT_REAL ? 'Yes' : 'No'}</TableCell>
+                      <TableCell sx={{ borderColor: '#EAECF0' }} onClick={(e) => isEditMode && e.stopPropagation()}>
+                        {isEditMode ? (
+                          <Checkbox
+                            size="small"
+                            checked={!!(pendingChanges[row.COUNTRY_ID]?.IS_NOT_REAL ?? row.IS_NOT_REAL)}
+                            onChange={(e) => handleFieldChange(row.COUNTRY_ID, 'IS_NOT_REAL', e.target.checked)}
+                          />
+                        ) : (row.IS_NOT_REAL ? 'Yes' : 'No')}
+                      </TableCell>
                       <TableCell sx={{ borderColor: '#EAECF0' }}>
                         {(columns.find(c => c.field === 'MAIN_COLOR')?.render && columns.find(c => c.field === 'MAIN_COLOR').render(row.MAIN_COLOR, row)) ?? (row.MAIN_COLOR ?? '-')}
                       </TableCell>

@@ -21,3 +21,6 @@ Thumbs.db
 .vscode/
 *.swp
 *.swo
+
+# Documentation (local only)
+docs/
