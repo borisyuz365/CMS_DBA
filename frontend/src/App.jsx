@@ -9,6 +9,7 @@ import CompetitorsList from './pages/CompetitorsList';
 import CompetitorDetails from './pages/CompetitorDetails';
 import CompetitionsList from './pages/CompetitionsList';
 import CompetitionDetails from './pages/CompetitionDetails';
+import PartnerCompetitions from './pages/PartnerCompetitions';
 import VenuesList from './pages/VenuesList';
 import VenueDetails from './pages/VenueDetails';
 import TvNetworksList from './pages/TvNetworksList';
@@ -173,6 +174,7 @@ function App() {
             <Route path="athletes/:id" element={<AthleteDetails />} />
             <Route path="competitions" element={<CompetitionsList />} />
             <Route path="competitions/:id" element={<CompetitionDetails />} />
+            <Route path="competitions/:id/partner-ids" element={<PartnerCompetitions />} />
             <Route path="competitors" element={<CompetitorsList />} />
             <Route path="competitors/:id" element={<CompetitorDetails />} />
             <Route path="venues" element={<VenuesList />} />

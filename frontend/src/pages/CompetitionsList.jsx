@@ -46,7 +46,6 @@ import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
-import CloseIcon from '@mui/icons-material/Close';
 import LoadingSpinner from '../../reuse/LoadingSpinner';
 import Alert from '../../reuse/Alert';
 import TermEditModal from '../../reuse/TermEditModal';
@@ -98,22 +97,6 @@ function CompetitionsList() {
   const [screensDialogOpen, setScreensDialogOpen] = useState(false);
   const [screensDialogCompetition, setScreensDialogCompetition] = useState(null);
 
-  const [pidDialogOpen, setPidDialogOpen] = useState(false);
-  const [pidDialogCompetition, setPidDialogCompetition] = useState(null);
-  const [pidEntries, setPidEntries] = useState([]);
-  const [pidLoading, setPidLoading] = useState(false);
-  const [pidEditMode, setPidEditMode] = useState(false);
-  const [pidSelectedRows, setPidSelectedRows] = useState([]);
-  const [pidPendingChanges, setPidPendingChanges] = useState({});
-  const [pidNewDataSourceId, setPidNewDataSourceId] = useState('');
-  const [pidNewPartnerId, setPidNewPartnerId] = useState('');
-  const [pidPagination, setPidPagination] = useState({ page: 0, rowsPerPage: 25 });
-  const [dataSources, setDataSources] = useState([]);
-  const [pidDirty, setPidDirty] = useState(false);
-  const [pidColumnFilters, setPidColumnFilters] = useState({});
-  const [pidSortConfig, setPidSortConfig] = useState({ field: null, direction: 'asc' });
-  const [pidGroupByField, setPidGroupByField] = useState(null);
-  const [pidExpandedGroups, setPidExpandedGroups] = useState(new Set());
 
   const numberToHex = (num) => {
     if (num === null || num === undefined) return null;
@@ -300,7 +283,7 @@ function CompetitionsList() {
   }, [partnerIdList]);
 
   const filteredAndSorted = useMemo(() => {
-    let list = filteredCompetitions.map((r) => ({ ...r, pid: partnerCountByCompId[r.COMPETITION_ID] ?? 0 }));
+    let list = [...filteredCompetitions];
     Object.entries(columnFilters).forEach(([field, val]) => {
       if (field === '_' || !val || !String(val).trim()) return;
       const term = String(val).toLowerCase().trim();
@@ -323,7 +306,7 @@ function CompetitionsList() {
       });
     }
     return list;
-  }, [filteredCompetitions, columnFilters, sortConfig, partnerCountByCompId]);
+  }, [filteredCompetitions, columnFilters, sortConfig]);
 
   const groupedAndPaginated = useMemo(() => {
     if (!groupByField) {
@@ -407,11 +390,10 @@ function CompetitionsList() {
       setSnackbar({ open: true, message: 'No data to export', severity: 'warning' });
       return;
     }
-    const headers = ['COMPETITION_ID', 'name', 'countryName', 'sport', 'GENDER', 'MAIN_COLOR', 'PID', 'HIDE_ON_CATALOG', 'HIDE_ON_SEARCH', 'ENABLE_DASHBOARD_BUZZ'];
+    const headers = ['COMPETITION_ID', 'name', 'countryName', 'sport', 'GENDER', 'MAIN_COLOR', 'HIDE_ON_CATALOG', 'HIDE_ON_SEARCH', 'ENABLE_DASHBOARD_BUZZ'];
     const lines = [headers.join(',')];
     rows.forEach((r) => {
       const mainHex = numberToHex(r.MAIN_COLOR) || '';
-      const pid = partnerCountByCompId[r.COMPETITION_ID] ?? 0;
       lines.push(
         [
           r.COMPETITION_ID,
@@ -420,7 +402,6 @@ function CompetitionsList() {
           `"${(r.sport || '').replace(/"/g, '""')}"`,
           r.GENDER ?? '',
           mainHex,
-          pid,
           r.HIDE_ON_CATALOG === true ? 'Yes' : r.HIDE_ON_CATALOG === false ? 'No' : '',
           r.HIDE_ON_SEARCH === true ? 'Yes' : r.HIDE_ON_SEARCH === false ? 'No' : '',
           r.ENABLE_DASHBOARD_BUZZ === true ? 'Yes' : r.ENABLE_DASHBOARD_BUZZ === false ? 'No' : '',
@@ -447,236 +428,6 @@ function CompetitionsList() {
     handleSearch();
   };
 
-  const openPidDialog = async (e, row) => {
-    e.stopPropagation();
-    setPidDialogCompetition(row);
-    setPidDialogOpen(true);
-    setPidEditMode(false);
-    setPidSelectedRows([]);
-    setPidPendingChanges({});
-    setPidNewDataSourceId('');
-    setPidNewPartnerId('');
-    setPidPagination({ page: 0, rowsPerPage: 25 });
-    setPidDirty(false);
-    setPidColumnFilters({});
-    setPidSortConfig({ field: null, direction: 'asc' });
-    setPidGroupByField(null);
-    setPidExpandedGroups(new Set());
-    setPidLoading(true);
-    try {
-      const [entries, ds] = await Promise.all([
-        api.getPartnerIdCompetitions(row.COMPETITION_ID),
-        api.getDataSources(),
-      ]);
-      setPidEntries((entries || []).map((r, i) => ({ ...r, _idx: i })));
-      setDataSources(ds || []);
-    } catch (err) {
-      console.error('Failed to load partner IDs:', err);
-      setSnackbar({ open: true, message: 'Failed to load partner IDs', severity: 'error' });
-    } finally {
-      setPidLoading(false);
-    }
-  };
-
-  const closePidDialog = () => {
-    if (pidDirty && !window.confirm('You have unsaved changes. Close anyway?')) return;
-    setPidDialogOpen(false);
-    setPidDialogCompetition(null);
-    setPidEntries([]);
-    setPidEditMode(false);
-    setPidSelectedRows([]);
-    setPidPendingChanges({});
-    setPidDirty(false);
-  };
-
-  const handlePidFieldChange = (idx, field, value) => {
-    setPidPendingChanges((prev) => {
-      const next = { ...prev };
-      if (!next[idx]) next[idx] = {};
-      next[idx][field] = value;
-      return next;
-    });
-    setPidDirty(true);
-  };
-
-  const handlePidColumnFilterChange = (field, value) => {
-    setPidColumnFilters((prev) => ({ ...prev, [field]: value }));
-    setPidPagination((p) => ({ ...p, page: 0 }));
-  };
-
-  const handlePidSort = (field) => {
-    setPidSortConfig((prev) => ({ field, direction: prev.field === field && prev.direction === 'asc' ? 'desc' : 'asc' }));
-  };
-
-  const handlePidGroupBy = (field) => {
-    if (pidGroupByField === field) {
-      setPidGroupByField(null);
-      setPidExpandedGroups(new Set());
-    } else {
-      setPidGroupByField(field);
-      setPidExpandedGroups(new Set());
-    }
-  };
-
-  const handlePidToggleGroup = (k) => {
-    setPidExpandedGroups((prev) => {
-      const next = new Set(prev);
-      if (next.has(k)) next.delete(k);
-      else next.add(k);
-      return next;
-    });
-  };
-
-  const pidColumns = [
-    { field: 'dataSourceName', header: 'Data Source', width: 180 },
-    { field: 'PARTNER_ID', header: 'Partner ID', width: 140 },
-    { field: 'CREATE_TIME', header: 'Create Date', width: 150 },
-    { field: 'UPDATE_BY', header: 'Last Update By', width: 140 },
-    { field: 'UPDATE_TIME', header: 'Last Update Time', width: 150 },
-  ];
-
-  const handlePidToggleEditMode = () => {
-    if (pidEditMode) {
-      if (pidDirty && !window.confirm('You have unsaved changes. Cancel anyway?')) return;
-      setPidPendingChanges({});
-      setPidEditMode(false);
-    } else {
-      setPidEditMode(true);
-    }
-  };
-
-  const handlePidAddEntry = () => {
-    if (pidNewDataSourceId === '' || pidNewDataSourceId == null) return;
-    const ds = dataSources.find((d) => d.DATA_SOURCE_ID === Number(pidNewDataSourceId));
-    const now = new Date().toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(',', '');
-    const newEntry = {
-      COMPETITION_ID: pidDialogCompetition.COMPETITION_ID,
-      DATA_SOURCE_ID: Number(pidNewDataSourceId),
-      PARTNER_ID: pidNewPartnerId.trim() || null,
-      CREATE_TIME: now,
-      UPDATE_TIME: now,
-      UPDATE_BY: 'DanielBelgi',
-      dataSourceName: ds ? ds.ALIAS_NAME || `DS ${ds.DATA_SOURCE_ID}` : null,
-      _idx: pidEntries.length,
-    };
-    setPidEntries((prev) => [...prev, newEntry]);
-    setPidNewDataSourceId('');
-    setPidNewPartnerId('');
-    setPidDirty(true);
-  };
-
-  const handlePidBulkDelete = () => {
-    if (pidSelectedRows.length === 0) return;
-    if (!window.confirm(`Delete ${pidSelectedRows.length} selected mapping(s)?`)) return;
-    setPidEntries((prev) => prev.filter((_, i) => !pidSelectedRows.includes(i)).map((r, i) => ({ ...r, _idx: i })));
-    const newPending = {};
-    Object.entries(pidPendingChanges).forEach(([k, v]) => {
-      if (!pidSelectedRows.includes(Number(k))) newPending[k] = v;
-    });
-    setPidPendingChanges(newPending);
-    setPidSelectedRows([]);
-    setPidDirty(true);
-  };
-
-  const handlePidSave = async () => {
-    if (!pidDialogCompetition) return;
-    setPidLoading(true);
-    try {
-      const now = new Date().toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(',', '');
-      const finalEntries = pidEntries.map((entry, i) => {
-        const changes = pidPendingChanges[i] || {};
-        const wasEdited = Object.keys(changes).length > 0;
-        return {
-          DATA_SOURCE_ID: entry.DATA_SOURCE_ID,
-          PARTNER_ID: changes.PARTNER_ID ?? entry.PARTNER_ID,
-          CREATE_TIME: entry.CREATE_TIME,
-          UPDATE_TIME: wasEdited ? now : entry.UPDATE_TIME,
-          UPDATE_BY: wasEdited ? 'DanielBelgi' : entry.UPDATE_BY,
-        };
-      });
-      const saved = await api.savePartnerIdsBulk(pidDialogCompetition.COMPETITION_ID, finalEntries);
-      setPidEntries((saved || []).map((r, i) => ({ ...r, _idx: i })));
-      setPidPendingChanges({});
-      setPidEditMode(false);
-      setPidSelectedRows([]);
-      setPidDirty(false);
-      setSnackbar({ open: true, message: 'Partner IDs saved', severity: 'success' });
-      const pidData = await api.getPartnerIdCompetitions();
-      setPartnerIdList(Array.isArray(pidData) ? pidData : []);
-    } catch (err) {
-      console.error('Failed to save partner IDs:', err);
-      setSnackbar({ open: true, message: err.message || 'Failed to save partner IDs', severity: 'error' });
-    } finally {
-      setPidLoading(false);
-    }
-  };
-
-  const pidFilteredAndSorted = useMemo(() => {
-    let list = [...pidEntries];
-    Object.entries(pidColumnFilters).forEach(([field, val]) => {
-      if (!val || !String(val).trim()) return;
-      const term = String(val).toLowerCase().trim();
-      list = list.filter((row) => {
-        const v = row[field];
-        if (v === null || v === undefined) return false;
-        if (typeof v === 'number') return v === Number(term) || String(v).toLowerCase().includes(term);
-        return String(v).toLowerCase().includes(term);
-      });
-    });
-    if (pidSortConfig.field) {
-      list.sort((a, b) => {
-        const av = a[pidSortConfig.field];
-        const bv = b[pidSortConfig.field];
-        if (av == null) return 1;
-        if (bv == null) return -1;
-        const dir = pidSortConfig.direction === 'asc' ? 1 : -1;
-        if (typeof av === 'string') return dir * String(av).localeCompare(String(bv));
-        return dir * (Number(av) - Number(bv));
-      });
-    }
-    return list;
-  }, [pidEntries, pidColumnFilters, pidSortConfig]);
-
-  const pidGroupedAndPaginated = useMemo(() => {
-    if (!pidGroupByField) {
-      const start = pidPagination.page * pidPagination.rowsPerPage;
-      return pidFilteredAndSorted.slice(start, start + pidPagination.rowsPerPage).map((row) => ({ type: 'row', data: row }));
-    }
-    const groups = {};
-    pidFilteredAndSorted.forEach((row) => {
-      const k = String(row[pidGroupByField] ?? 'Unknown');
-      if (!groups[k]) groups[k] = [];
-      groups[k].push(row);
-    });
-    const keys = Object.keys(groups).sort((a, b) => {
-      const an = Number(a), bn = Number(b);
-      if (!isNaN(an) && !isNaN(bn)) return an - bn;
-      return String(a).localeCompare(String(b));
-    });
-    const out = [];
-    keys.forEach((k) => {
-      out.push({ type: 'group-header', groupKey: k, groupValue: groups[k][0][pidGroupByField], count: groups[k].length, isExpanded: pidExpandedGroups.has(k) });
-      if (pidExpandedGroups.has(k)) groups[k].forEach((r) => out.push({ type: 'row', data: r }));
-    });
-    const start = pidPagination.page * pidPagination.rowsPerPage;
-    return out.slice(start, start + pidPagination.rowsPerPage);
-  }, [pidFilteredAndSorted, pidGroupByField, pidPagination.page, pidPagination.rowsPerPage, pidExpandedGroups]);
-
-  const pidTotalForPagination = useMemo(() => {
-    if (!pidGroupByField) return pidFilteredAndSorted.length;
-    let count = 0;
-    const groups = {};
-    pidFilteredAndSorted.forEach((row) => {
-      const k = String(row[pidGroupByField] ?? 'Unknown');
-      if (!groups[k]) groups[k] = [];
-      groups[k].push(row);
-    });
-    Object.keys(groups).forEach((k) => {
-      count += 1;
-      if (pidExpandedGroups.has(k)) count += groups[k].length;
-    });
-    return count;
-  }, [pidFilteredAndSorted, pidGroupByField, pidExpandedGroups]);
 
   const handleBulkDelete = async () => {
     if (selectedRows.length === 0) return;
@@ -881,26 +632,6 @@ function CompetitionsList() {
         },
       },
       {
-        field: 'pid',
-        header: 'PID',
-        width: 60,
-        render: (value, row) => (
-          <Typography
-            component="span"
-            onClick={(e) => openPidDialog(e, row)}
-            sx={{
-              color: '#1976d2',
-              cursor: 'pointer',
-              fontWeight: 500,
-              fontSize: '0.875rem',
-              '&:hover': { textDecoration: 'underline' },
-            }}
-          >
-            {value ?? 0}
-          </Typography>
-        ),
-      },
-      {
         field: 'HIDE_ON_CATALOG',
         header: 'Hide Catalog',
         width: 90,
@@ -957,7 +688,7 @@ function CompetitionsList() {
         ),
       },
     ],
-    [isEditMode, pendingChanges, handleNameClick, handleFieldChange, openScreensDialog, openPidDialog, numberToHex, hexToNumber, competitionTypes, countries, sports]
+    [isEditMode, pendingChanges, handleNameClick, handleFieldChange, openScreensDialog, numberToHex, hexToNumber, competitionTypes, countries, sports]
   );
 
   const handleOpenCreateDialog = () => {
@@ -1312,7 +1043,7 @@ function CompetitionsList() {
                         />
                       </TableCell>
                       {columns.map((col) => (
-                        <TableCell key={col.field + (col.header || '')} sx={{ borderColor: '#EAECF0', width: col.width }} onClick={col.field === 'GENDER' || col.field === 'countryName' || col.field === 'sport' || col.field === 'COMPETITION_TYPE' || col.field === 'HIDE_ON_CATALOG' || col.field === 'HIDE_ON_SEARCH' || col.field === 'ENABLE_DASHBOARD_BUZZ' || col.field === '_' || col.field === 'pid' ? (e) => e.stopPropagation() : undefined}>
+                        <TableCell key={col.field + (col.header || '')} sx={{ borderColor: '#EAECF0', width: col.width }} onClick={col.field === 'GENDER' || col.field === 'countryName' || col.field === 'sport' || col.field === 'COMPETITION_TYPE' || col.field === 'HIDE_ON_CATALOG' || col.field === 'HIDE_ON_SEARCH' || col.field === 'ENABLE_DASHBOARD_BUZZ' || col.field === '_' ? (e) => e.stopPropagation() : undefined}>
                           {col.render ? col.render(row[col.field], row) : (row[col.field] ?? '-')}
                         </TableCell>
                       ))}
@@ -1424,6 +1155,7 @@ function CompetitionsList() {
               { label: 'Reports', path: screensDialogCompetition ? `/competitions/${screensDialogCompetition.COMPETITION_ID}/reports` : '' },
               { label: 'Priorities', path: screensDialogCompetition ? `/priorities?competition=${screensDialogCompetition.COMPETITION_ID}` : '' },
               { label: 'Bet Lines (0)', path: screensDialogCompetition ? `/competitions/${screensDialogCompetition.COMPETITION_ID}/bet-lines` : '' },
+              { label: `Partner ID's (${screensDialogCompetition ? (partnerCountByCompId[screensDialogCompetition.COMPETITION_ID] ?? 0) : 0})`, path: screensDialogCompetition ? `/competitions/${screensDialogCompetition.COMPETITION_ID}/partner-ids` : '' },
               { label: 'Team of The Week', path: screensDialogCompetition ? `/competitions/${screensDialogCompetition.COMPETITION_ID}/team-of-the-week` : '' },
               { label: 'Cards Order', path: screensDialogCompetition ? `/competitions/${screensDialogCompetition.COMPETITION_ID}/cards-order` : '' },
               { label: 'Featured Match', path: screensDialogCompetition ? `/competitions/${screensDialogCompetition.COMPETITION_ID}/featured-match` : '' },
@@ -1517,257 +1249,6 @@ function CompetitionsList() {
         <DialogActions sx={{ p: 2, borderTop: '1px solid #EAECF0' }}>
           <Button onClick={handleCloseCreateDialog} color="inherit" sx={{ textTransform: 'none' }}>Cancel</Button>
           <Button onClick={handleCreateCompetition} variant="contained" disabled={createSaving} sx={{ textTransform: 'none' }}>Create</Button>
-        </DialogActions>
-      </Dialog>
-
-      <Dialog open={pidDialogOpen} onClose={closePidDialog} maxWidth="lg" fullWidth>
-        <DialogTitle sx={{ borderBottom: '1px solid #EAECF0', pb: 1.5, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Typography variant="h6" sx={{ fontWeight: 600 }}>
-            Partner Competitions{pidDialogCompetition ? ` : ${pidDialogCompetition.name || 'Competition'} (${pidDialogCompetition.COMPETITION_ID})` : ''}
-          </Typography>
-          <IconButton size="small" onClick={closePidDialog} sx={{ color: '#666' }}>
-            <CloseIcon fontSize="small" />
-          </IconButton>
-        </DialogTitle>
-        <DialogContent sx={{ p: 0 }}>
-          <Box sx={{ p: 2, borderBottom: '1px solid #EAECF0', display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
-            <Autocomplete
-              size="small"
-              options={dataSources}
-              getOptionLabel={(o) => o.ALIAS_NAME || `DS ${o.DATA_SOURCE_ID}`}
-              value={dataSources.find((d) => d.DATA_SOURCE_ID === Number(pidNewDataSourceId)) || null}
-              onChange={(e, v) => setPidNewDataSourceId(v ? v.DATA_SOURCE_ID : '')}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Data Source"
-                  sx={{ '& .MuiInputBase-root': { height: 36, fontSize: '0.8125rem' } }}
-                />
-              )}
-              sx={{ minWidth: 220 }}
-              disableClearable={false}
-            />
-            <TextField
-              size="small"
-              label="Partner ID"
-              value={pidNewPartnerId}
-              onChange={(e) => setPidNewPartnerId(e.target.value)}
-              sx={{
-                minWidth: 160,
-                '& .MuiInputBase-root': { height: 36, fontSize: '0.8125rem' },
-              }}
-            />
-            <Button
-              variant="contained"
-              size="small"
-              startIcon={<AddIcon />}
-              onClick={handlePidAddEntry}
-              disabled={pidNewDataSourceId === '' || pidNewDataSourceId == null}
-              sx={{ backgroundColor: '#1976d2', textTransform: 'none', height: 36 }}
-            >
-              Add
-            </Button>
-          </Box>
-
-          {pidLoading ? (
-            <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
-              <LoadingSpinner />
-            </Box>
-          ) : (
-            <TableContainer sx={{ maxHeight: 420 }}>
-              <Table stickyHeader size="small" sx={{ minWidth: 'max-content', '& .MuiTableCell-root': { borderColor: '#EAECF0', fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif' } }}>
-                <TableHead>
-                  <TableRow sx={{ '& th': { bgcolor: '#fff', borderColor: '#EAECF0', position: 'sticky', top: 0, zIndex: 12, py: 1, px: 1.5, whiteSpace: 'nowrap' } }}>
-                    {pidEditMode && (
-                      <TableCell padding="checkbox" sx={{ borderColor: '#EAECF0' }}>
-                        <Checkbox
-                          size="small"
-                          indeterminate={pidSelectedRows.length > 0 && pidSelectedRows.length < pidGroupedAndPaginated.filter((i) => i.type === 'row').length}
-                          checked={pidGroupedAndPaginated.filter((i) => i.type === 'row').length > 0 && pidSelectedRows.length === pidGroupedAndPaginated.filter((i) => i.type === 'row').length}
-                          onChange={(e) => {
-                            if (e.target.checked) setPidSelectedRows(pidGroupedAndPaginated.filter((i) => i.type === 'row').map((i) => i.data._idx));
-                            else setPidSelectedRows([]);
-                          }}
-                        />
-                      </TableCell>
-                    )}
-                    {pidColumns.map((col) => (
-                      <TableCell key={col.field} sx={{ borderColor: '#EAECF0', width: col.width, minWidth: col.width, whiteSpace: 'nowrap' }}>
-                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                            <Typography sx={{ fontWeight: 600, fontSize: '0.875rem', whiteSpace: 'nowrap' }}>{col.header}</Typography>
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.25 }}>
-                              <IconButton size="small" sx={{ p: 0.25 }} onClick={() => handlePidGroupBy(col.field)} title={pidGroupByField === col.field ? 'Ungroup' : 'Group'}>
-                                <ViewListIcon sx={{ fontSize: 12, color: pidGroupByField === col.field ? '#1976d2' : '#ccc' }} />
-                              </IconButton>
-                              <IconButton size="small" sx={{ p: 0 }} onClick={() => handlePidSort(col.field)}>
-                                <ArrowUpwardIcon sx={{ fontSize: 10, color: pidSortConfig.field === col.field && pidSortConfig.direction === 'asc' ? '#1976d2' : '#ccc' }} />
-                              </IconButton>
-                              <IconButton size="small" sx={{ p: 0 }} onClick={() => handlePidSort(col.field)}>
-                                <ArrowDownwardIcon sx={{ fontSize: 10, color: pidSortConfig.field === col.field && pidSortConfig.direction === 'desc' ? '#1976d2' : '#ccc' }} />
-                              </IconButton>
-                            </Box>
-                          </Box>
-                          <TextField
-                            size="small"
-                            placeholder="Filter"
-                            value={pidColumnFilters[col.field] || ''}
-                            onChange={(e) => handlePidColumnFilterChange(col.field, e.target.value)}
-                            sx={{ '& .MuiInputBase-root': { height: 28, fontSize: '0.8125rem', bgcolor: '#F9FAFB' } }}
-                          />
-                        </Box>
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {pidGroupedAndPaginated.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={pidColumns.length + (pidEditMode ? 1 : 0)} align="center" sx={{ py: 4, borderColor: '#EAECF0' }}>
-                        <Typography color="text.secondary">No partner ID mappings for this competition.</Typography>
-                      </TableCell>
-                    </TableRow>
-                  ) : (
-                    pidGroupedAndPaginated.map((item, idx) => {
-                      if (item.type === 'group-header') {
-                        return (
-                          <TableRow
-                            key={`gh-${item.groupKey}-${idx}`}
-                            sx={{ bgcolor: '#F5F5F5', '& td': { borderColor: '#EAECF0', fontWeight: 600 } }}
-                            onClick={() => handlePidToggleGroup(item.groupKey)}
-                          >
-                            <TableCell colSpan={pidColumns.length + (pidEditMode ? 1 : 0)} sx={{ cursor: 'pointer', borderColor: '#EAECF0' }}>
-                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                {item.isExpanded ? <ExpandMoreIcon fontSize="small" /> : <ChevronRightIcon fontSize="small" />}
-                                <Typography sx={{ fontWeight: 600 }}>{pidColumns.find((c) => c.field === pidGroupByField)?.header || pidGroupByField}: {item.groupValue ?? 'Unknown'}</Typography>
-                                <Typography variant="caption" color="text.secondary">({item.count})</Typography>
-                              </Box>
-                            </TableCell>
-                          </TableRow>
-                        );
-                      }
-                      const entry = item.data;
-                      const globalIdx = entry._idx;
-                      const changes = pidPendingChanges[globalIdx] || {};
-                      return (
-                        <TableRow key={`r-${globalIdx}-${idx}`} hover sx={{ '& td': { borderColor: '#EAECF0' } }}>
-                          {pidEditMode && (
-                            <TableCell padding="checkbox" sx={{ borderColor: '#EAECF0' }}>
-                              <Checkbox
-                                size="small"
-                                checked={pidSelectedRows.includes(globalIdx)}
-                                onChange={(e) => {
-                                  if (e.target.checked) setPidSelectedRows((prev) => [...prev, globalIdx]);
-                                  else setPidSelectedRows((prev) => prev.filter((i) => i !== globalIdx));
-                                }}
-                              />
-                            </TableCell>
-                          )}
-                          <TableCell sx={{ fontSize: '0.8125rem' }}>
-                            {entry.dataSourceName || `DS ${entry.DATA_SOURCE_ID}`}
-                          </TableCell>
-                          <TableCell>
-                            {pidEditMode ? (
-                              <TextField
-                                size="small"
-                                value={changes.PARTNER_ID ?? entry.PARTNER_ID ?? ''}
-                                onChange={(e) => handlePidFieldChange(globalIdx, 'PARTNER_ID', e.target.value)}
-                                sx={{ '& .MuiInputBase-root': { height: 32, fontSize: '0.8125rem' }, minWidth: 120 }}
-                              />
-                            ) : (
-                              entry.PARTNER_ID ?? '—'
-                            )}
-                          </TableCell>
-                          <TableCell sx={{ fontSize: '0.8125rem' }}>{entry.CREATE_TIME || '—'}</TableCell>
-                          <TableCell sx={{ fontSize: '0.8125rem' }}>{entry.UPDATE_BY || '—'}</TableCell>
-                          <TableCell sx={{ fontSize: '0.8125rem' }}>{entry.UPDATE_TIME || '—'}</TableCell>
-                        </TableRow>
-                      );
-                    })
-                  )}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          )}
-        </DialogContent>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 2, borderTop: '1px solid #EAECF0', flexWrap: 'wrap', gap: 2 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
-            <Button
-              variant={pidEditMode ? 'contained' : 'outlined'}
-              size="small"
-              startIcon={pidEditMode ? <CancelIcon /> : <EditIcon />}
-              onClick={handlePidToggleEditMode}
-              sx={{
-                borderColor: pidEditMode ? 'transparent' : '#E0E0E0',
-                backgroundColor: pidEditMode ? '#1976d2' : '#ffffff',
-                color: pidEditMode ? '#fff' : '#000',
-                textTransform: 'none',
-              }}
-            >
-              {pidEditMode ? 'Cancel Edit' : 'Edit Mode'}
-            </Button>
-            {pidEditMode && pidSelectedRows.length > 0 && (
-              <>
-                <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                  {pidSelectedRows.length} selected
-                </Typography>
-                <Button
-                  size="small"
-                  variant="outlined"
-                  color="error"
-                  startIcon={<DeleteOutlineIcon />}
-                  onClick={handlePidBulkDelete}
-                  sx={{ textTransform: 'none' }}
-                >
-                  Delete selected ({pidSelectedRows.length})
-                </Button>
-              </>
-            )}
-          </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Typography variant="body2" sx={{ fontSize: '0.875rem' }}>
-              Items per page:
-            </Typography>
-            <FormControl size="small" sx={{ minWidth: 70 }}>
-              <Select
-                value={pidPagination.rowsPerPage}
-                onChange={(e) => setPidPagination((p) => ({ ...p, rowsPerPage: Number(e.target.value), page: 0 }))}
-                sx={{ height: 32, fontSize: '0.8125rem' }}
-              >
-                <MenuItem value={10}>10</MenuItem>
-                <MenuItem value={25}>25</MenuItem>
-                <MenuItem value={50}>50</MenuItem>
-              </Select>
-            </FormControl>
-            <Typography variant="body2" sx={{ fontSize: '0.875rem' }}>
-              {pidTotalForPagination === 0 ? '0' : `${pidPagination.page * pidPagination.rowsPerPage + 1}-${Math.min((pidPagination.page + 1) * pidPagination.rowsPerPage, pidTotalForPagination)}`} of {pidTotalForPagination}
-            </Typography>
-            <IconButton size="small" onClick={() => setPidPagination((p) => ({ ...p, page: p.page - 1 }))} disabled={pidPagination.page === 0}>
-              <ArrowBackIosNewIcon fontSize="small" />
-            </IconButton>
-            <IconButton
-              size="small"
-              onClick={() => setPidPagination((p) => ({ ...p, page: p.page + 1 }))}
-              disabled={(pidPagination.page + 1) * pidPagination.rowsPerPage >= pidTotalForPagination}
-            >
-              <ArrowForwardIosIcon fontSize="small" />
-            </IconButton>
-          </Box>
-        </Box>
-        <DialogActions sx={{ p: 2, borderTop: '1px solid #EAECF0' }}>
-          <Button onClick={closePidDialog} color="inherit" sx={{ textTransform: 'none' }}>Cancel</Button>
-          <Button
-            onClick={handlePidSave}
-            variant="contained"
-            disabled={!pidDirty || pidLoading}
-            sx={{
-              textTransform: 'none',
-              backgroundColor: '#15803d',
-              '&:hover': { backgroundColor: '#166534' },
-            }}
-          >
-            Save & Update In Service
-          </Button>
         </DialogActions>
       </Dialog>
 
