@@ -42444,5 +42444,2435 @@
     ],
     "valsCount": 1,
     "engValue": "Yossi Abuksis"
+  },
+  {
+    "id": 46318,
+    "categoryId": 65,
+    "aliasName": "GeneralUpdate",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "General Update",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 77643720,
+    "categoryId": 65,
+    "aliasName": "NewGame",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "New Game",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 77643721,
+    "categoryId": 65,
+    "aliasName": "GameStatus",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Game Status",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 77643722,
+    "categoryId": 65,
+    "aliasName": "GameStartTime",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Game Start Time",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 77643723,
+    "categoryId": 65,
+    "aliasName": "GameTime",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Game Time",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 77643724,
+    "categoryId": 65,
+    "aliasName": "GameScore",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Game Score",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 77643725,
+    "categoryId": 65,
+    "aliasName": "GameEvent",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Game Event",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 17845,
+    "categoryId": 65,
+    "aliasName": "GameDeleted",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Game Deleted",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 46319,
+    "categoryId": 65,
+    "aliasName": "GameBroadcast",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Game Broadcast",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 77643726,
+    "categoryId": 65,
+    "aliasName": "GameStatusChanged",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Game Status Changed",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 77643727,
+    "categoryId": 65,
+    "aliasName": "SoccerGoal",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Soccer Goal",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 77643728,
+    "categoryId": 65,
+    "aliasName": "SoccerYellowCard",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Soccer Yellow Card",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 77643729,
+    "categoryId": 65,
+    "aliasName": "SoccerRedCard",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Soccer Red Card",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 77643730,
+    "categoryId": 65,
+    "aliasName": "TennisBreak",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Tennis Break",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 17846,
+    "categoryId": 65,
+    "aliasName": "TennisGameServingPlayer",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Tennis Game Serving Player",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 22394,
+    "categoryId": 65,
+    "aliasName": "SoccerScoreFix",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Soccer Score Fix",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 22401,
+    "categoryId": 65,
+    "aliasName": "HockeyGoal",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Hockey Goal",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 22407,
+    "categoryId": 65,
+    "aliasName": "AmericanFootballTouchdown",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "American Football Touchdown",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 22413,
+    "categoryId": 65,
+    "aliasName": "AmericanFootballFieldGoal",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "American Football Field Goal",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 22419,
+    "categoryId": 65,
+    "aliasName": "BaseballRun",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Baseball Run",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 170109,
+    "categoryId": 65,
+    "aliasName": "BetLineUpdate",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Bet Line Update",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 170110,
+    "categoryId": 65,
+    "aliasName": "NewsItemUpdate",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "News Item Update",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 77643731,
+    "categoryId": 65,
+    "aliasName": "GameCovarageAdded",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Game Covarage Added",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 220453,
+    "categoryId": 65,
+    "aliasName": "GameVideo",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Game Video",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 271163,
+    "categoryId": 65,
+    "aliasName": "WorldRecord",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "World Record",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 271171,
+    "categoryId": 65,
+    "aliasName": "OlympicRecord",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Olympic Record",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 271179,
+    "categoryId": 65,
+    "aliasName": "GoldMedal",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Gold Medal",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 271188,
+    "categoryId": 65,
+    "aliasName": "SilverMedal",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Silver Medal",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 271197,
+    "categoryId": 65,
+    "aliasName": "BronzeMedal",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Bronze Medal",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 302846,
+    "categoryId": 65,
+    "aliasName": "GameStarted",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Game Started",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 302850,
+    "categoryId": 65,
+    "aliasName": "GameFinished",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Game Finished",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 343888,
+    "categoryId": 65,
+    "aliasName": "GameStatistics",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Game Statistics",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 343889,
+    "categoryId": 65,
+    "aliasName": "GameLineup",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Game Lineup",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 65899735,
+    "categoryId": 65,
+    "aliasName": "CompetitorPossession",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Competitor Possession",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 452345,
+    "categoryId": 65,
+    "aliasName": "CricketWicket",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Cricket Wicket",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 452352,
+    "categoryId": 65,
+    "aliasName": "CricketGameBreaks",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Cricket Game Breaks",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 452361,
+    "categoryId": 65,
+    "aliasName": "CricketBatsmenHalfCentury",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Cricket Batsmen Half Century",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 452370,
+    "categoryId": 65,
+    "aliasName": "CricketBatsmanCentury",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Cricket Batsman Century",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 514506,
+    "categoryId": 65,
+    "aliasName": "MatchReminder",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Match Reminder",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 514508,
+    "categoryId": 65,
+    "aliasName": "AthleteStatisticsUpdated",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Athlete Statistics Updated",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 613691,
+    "categoryId": 65,
+    "aliasName": "RugbyTry",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Rugby Try",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 613696,
+    "categoryId": 65,
+    "aliasName": "RugbyPenalty",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Rugby Penalty",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 613701,
+    "categoryId": 65,
+    "aliasName": "RugbyConversion",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Rugby Conversion",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 1325605,
+    "categoryId": 65,
+    "aliasName": "GameLiveTableUpdate",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Game Live Table Update",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 1325606,
+    "categoryId": 65,
+    "aliasName": "CompetitionTableUpdate",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Competition Table Update",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 2721811,
+    "categoryId": 65,
+    "aliasName": "LineupsAvailable",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Lineups Available",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 2810552,
+    "categoryId": 65,
+    "aliasName": "SoccerPenaltyMiss",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Soccer Penalty Miss",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 3099660,
+    "categoryId": 65,
+    "aliasName": "OlympicCountryGoldMedals",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Olympic Country Gold Medals",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 3099661,
+    "categoryId": 65,
+    "aliasName": "OlympicCountryMedals",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Olympic Country Medals",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 3166139,
+    "categoryId": 65,
+    "aliasName": "AthleteInjury",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Athlete Injury",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 3166140,
+    "categoryId": 65,
+    "aliasName": "AthleteSuspension",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Athlete Suspension",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 3166289,
+    "categoryId": 65,
+    "aliasName": "GameOfficials",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Game Officials",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 3166290,
+    "categoryId": 65,
+    "aliasName": "GameVenue",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Game Venue",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 3166291,
+    "categoryId": 65,
+    "aliasName": "GameAttendance",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Game Attendance",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 3166292,
+    "categoryId": 65,
+    "aliasName": "GameSocialStats",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Game Social Stats",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 3443783,
+    "categoryId": 65,
+    "aliasName": "InsightUpdate",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Insight Update",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 3520655,
+    "categoryId": 65,
+    "aliasName": "GameExtraScore",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Game Extra Score",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 3520656,
+    "categoryId": 65,
+    "aliasName": "StageTime",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Stage Time",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 3520662,
+    "categoryId": 65,
+    "aliasName": "GamePredictions",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Game Predictions",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 5384043,
+    "categoryId": 65,
+    "aliasName": "SoccerLineupSubstitution",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Soccer Lineup Substitution",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 7638568,
+    "categoryId": 65,
+    "aliasName": "GameCompetitorsOrder",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Game Competitors Order",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 8713474,
+    "categoryId": 65,
+    "aliasName": "TennisPlayerRetired",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Tennis Player Retired",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 20074103,
+    "categoryId": 65,
+    "aliasName": "MatchFacts",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Match Facts",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 20228534,
+    "categoryId": 65,
+    "aliasName": "GameVarEvent",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Game Var Event",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 23291095,
+    "categoryId": 65,
+    "aliasName": "SoccerVarGoal",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Soccer Var Goal",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 23291099,
+    "categoryId": 65,
+    "aliasName": "SoccerVarRedCard",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Soccer Var Red Card",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 23291103,
+    "categoryId": 65,
+    "aliasName": "SoccerVarPenalty",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Soccer Var Penalty",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 23291216,
+    "categoryId": 65,
+    "aliasName": "SoccerVarGoalReview",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Soccer Var Goal Review",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 23291224,
+    "categoryId": 65,
+    "aliasName": "SoccerVarGoalConfirm",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Soccer Var Goal Confirm",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 23291234,
+    "categoryId": 65,
+    "aliasName": "SoccerVarGoalCancelled",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Soccer Var Goal Cancelled",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 23291243,
+    "categoryId": 65,
+    "aliasName": "SoccerGoalByVar",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Soccer Goal By Var",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 23291250,
+    "categoryId": 65,
+    "aliasName": "SoccerScoreFixByVar",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Soccer Score Fix By Var",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 23291259,
+    "categoryId": 65,
+    "aliasName": "SoccerVarRedCardReview",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Soccer Var Red Card Review",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 23291265,
+    "categoryId": 65,
+    "aliasName": "SoccerVarRedCardConfirm",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Soccer Var Red Card Confirm",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 23291273,
+    "categoryId": 65,
+    "aliasName": "SoccerVarRedCardCancelled",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Soccer Var Red Card Cancelled",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 23291283,
+    "categoryId": 65,
+    "aliasName": "SoccerRedCardByVar",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Soccer Red Card By Var",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 23291292,
+    "categoryId": 65,
+    "aliasName": "SoccerRedCardCancalledByVar",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Soccer Red Card Cancalled By Var",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 23291303,
+    "categoryId": 65,
+    "aliasName": "SoccerVarPenaltyReview",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Soccer Var Penalty Review",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 23291310,
+    "categoryId": 65,
+    "aliasName": "SoccerVarPenaltyGiven",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Soccer Var Penalty Given",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 23291321,
+    "categoryId": 65,
+    "aliasName": "SoccerVarPenaltyCancelled",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Soccer Var Penalty Cancelled",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 38353575,
+    "categoryId": 65,
+    "aliasName": "SocialAccounts",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Social Accounts",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 40566143,
+    "categoryId": 65,
+    "aliasName": "AthleteGeneralUpdate",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Athlete General Update",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 40566233,
+    "categoryId": 65,
+    "aliasName": "AthleteCompetitionTrophy",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Athlete Competition Trophy",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 40566235,
+    "categoryId": 65,
+    "aliasName": "AthletePersonalTrophy",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Athlete Personal Trophy",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 49625156,
+    "categoryId": 65,
+    "aliasName": "SoccerPenalty",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Soccer Penalty",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 49625159,
+    "categoryId": 65,
+    "aliasName": "SoccerPenaltyAwarded",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Soccer Penalty Awarded",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 57986136,
+    "categoryId": 65,
+    "aliasName": "GameWinProbability",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Game Win Probability",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 57986144,
+    "categoryId": 65,
+    "aliasName": "GameShot",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Game Shot",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 58388755,
+    "categoryId": 65,
+    "aliasName": "PlayerEjected",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Player Ejected",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 58388760,
+    "categoryId": 65,
+    "aliasName": "PlayerFouledOut",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Player Fouled Out",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 64346434,
+    "categoryId": 65,
+    "aliasName": "Assist",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Assist",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 52137000,
+    "categoryId": 65,
+    "aliasName": "GameHighlights",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Game Highlights",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 64856677,
+    "categoryId": 65,
+    "aliasName": "AmericanFootballExtraPointMade",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "American Football Extra Point Made",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 64856683,
+    "categoryId": 65,
+    "aliasName": "AmericanFootballExtraPointMissed",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "American Football Extra Point Missed",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 64856689,
+    "categoryId": 65,
+    "aliasName": "AmericanFootballTwoPointConversionSuccess",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "American Football Two Point Conversion Success",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 64856695,
+    "categoryId": 65,
+    "aliasName": "AmericanFootballTwoPointConversionFailed",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "American Football Two Point Conversion Failed",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 64856701,
+    "categoryId": 65,
+    "aliasName": "AmericanFootballScoreFix",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "American Football Score Fix",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 64975312,
+    "categoryId": 65,
+    "aliasName": "AmericanFootballExtraPoint",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "American Football Extra Point",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 64975315,
+    "categoryId": 65,
+    "aliasName": "AmericanFootballTwoPointConversion",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "American Football Two Point Conversion",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 66339640,
+    "categoryId": 65,
+    "aliasName": "CompetitorGeneralUpdate",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Competitor General Update",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 64601029,
+    "categoryId": 65,
+    "aliasName": "AdditionalGameStatuses",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Additional Game Statuses",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 67392373,
+    "categoryId": 65,
+    "aliasName": "CompetitionBetLineUpdate",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Competition Bet Line Update",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 67392375,
+    "categoryId": 65,
+    "aliasName": "CompetitionUpdate",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Competition Update",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 67392376,
+    "categoryId": 65,
+    "aliasName": "CompetitionSeasonUpdate",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Competition Season Update",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 67868116,
+    "categoryId": 65,
+    "aliasName": "ChatCreated",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Chat Created",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 67868122,
+    "categoryId": 65,
+    "aliasName": "AddedTime",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Added Time",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 68071346,
+    "categoryId": 65,
+    "aliasName": "AmericanFootballInterception",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "American Football Interception",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 68071347,
+    "categoryId": 65,
+    "aliasName": "AmericanFootballFumble",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "American Football Fumble",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 68071348,
+    "categoryId": 65,
+    "aliasName": "AmericanFootballCloseGame",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "American Football Close Game",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 68071349,
+    "categoryId": 65,
+    "aliasName": "AmericanFootballSafety",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "American Football Safety",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 68071350,
+    "categoryId": 65,
+    "aliasName": "AmericanFootballFieldGoalMissed",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "American Football Field Goal Missed",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 70842347,
+    "categoryId": 65,
+    "aliasName": "GameSummary",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Game Summary",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 70842369,
+    "categoryId": 65,
+    "aliasName": "TransferApproved",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Transfer Approved",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 70988627,
+    "categoryId": 65,
+    "aliasName": "ShootoutPenaltyMiss",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Shootout Penalty Miss",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 71677790,
+    "categoryId": 65,
+    "aliasName": "MostBalancedKickOffBeenSet",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Most Balanced Kick Off Been Set",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 71677791,
+    "categoryId": 65,
+    "aliasName": "MostBalancedKickOffOutcomeCalculated",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Most Balanced Kick Off Outcome Calculated",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 71880300,
+    "categoryId": 65,
+    "aliasName": "Story",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Story",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 72098180,
+    "categoryId": 65,
+    "aliasName": "GameSummaryPopUpUpdated",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Game Summary Pop Up Updated",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 75229333,
+    "categoryId": 65,
+    "aliasName": "NewGameNotification",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "New Game Notification",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 75383502,
+    "categoryId": 65,
+    "aliasName": "VolleyballGameStatusChanged",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Volleyball Game Status Changed",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 75383503,
+    "categoryId": 65,
+    "aliasName": "VolleyballGameFinished",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Volleyball Game Finished",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 76891070,
+    "categoryId": 65,
+    "aliasName": "GameLineupStatistics",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Game Lineup Statistics",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 76958759,
+    "categoryId": 65,
+    "aliasName": "CompetitionDrawFinished",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Competition Draw Finished",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 76958760,
+    "categoryId": 65,
+    "aliasName": "CompetitorDraw",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Competitor Draw",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 77006193,
+    "categoryId": 65,
+    "aliasName": "GameLineupRatings",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Game Lineup Ratings",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 77138401,
+    "categoryId": 65,
+    "aliasName": "TeamOfTheWeek",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Team Of The Week",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 77138402,
+    "categoryId": 65,
+    "aliasName": "TeamOfTheSeason",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Team Of The Season",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 77138403,
+    "categoryId": 65,
+    "aliasName": "TeamOfTheLeg",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Team Of The Leg",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 77138404,
+    "categoryId": 65,
+    "aliasName": "TeamOfTheStage",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Team Of The Stage",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 77306808,
+    "categoryId": 65,
+    "aliasName": "GameBetLineIdsUpdate",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Game Bet Line Ids Update",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 77362952,
+    "categoryId": 65,
+    "aliasName": "CompetitionLiveDraw",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Competition Live Draw",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 77362953,
+    "categoryId": 65,
+    "aliasName": "CompetitorDrawnWithRivals",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Competitor Drawn With Rivals",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 77362956,
+    "categoryId": 65,
+    "aliasName": "CompetitionDrawingOpponentsFinished",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Competition Drawing Opponents Finished",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 77574892,
+    "categoryId": 65,
+    "aliasName": "ConfigurationUpdate",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Configuration Update",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 77757067,
+    "categoryId": 65,
+    "aliasName": "AssistSoccerScoreFix",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Actual Update Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Assist Soccer Score Fix",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
   }
 ]

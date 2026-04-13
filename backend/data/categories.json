@@ -513,5 +513,11 @@
     "fatherCategory": "All Categories",
     "description": "",
     "id": 64
+  },
+  {
+    "name": "Actual Update Types",
+    "fatherCategory": "Update Types",
+    "description": "",
+    "id": 65
   }
 ]

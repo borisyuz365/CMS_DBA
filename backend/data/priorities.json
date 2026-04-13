@@ -498,9 +498,9 @@
     "COMMENT": "test",
     "USER_NAME": "DanielBelgi",
     "CREATE_TIME": "2026-03-29T08:37:30.277Z",
-    "START_DATE": null,
-    "EXPIRATION_DATE": null,
-    "AFTER_EXPIRED_PRIORITY": null,
+    "START_DATE": "2026-04-09T00:00:00.000Z",
+    "EXPIRATION_DATE": "2026-04-11T00:00:00.000Z",
+    "AFTER_EXPIRED_PRIORITY": 1,
     "SCHEDULE_PRIORITY": null
   },
   {

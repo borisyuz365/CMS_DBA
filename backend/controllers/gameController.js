@@ -169,9 +169,49 @@ class GameController {
           }
         }
       });
+
+      // Build updateTypes from the 3-file join:
+      // game_updates.CREATED_SEQUENCE -> updates.UPDATE_SEQUENCE -> updates.UPDATE_TYPE -> update_types.ALIAS_NAME
+      const sequencesInGame = new Set(
+        updates
+          .map(u => u.CREATED_SEQUENCE)
+          .filter(v => v != null && Number(v) > 0)
+      );
+
+      let updateTypesList = [];
+      const sequenceToUpdateTypes = {};
+      if (sequencesInGame.size > 0) {
+        const allUpdates = await dataLoader.loadData('updates.json').catch(() => []);
+        const updatesArr = Array.isArray(allUpdates) ? allUpdates : [];
+        const updateTypeIds = new Set();
+        for (const rec of updatesArr) {
+          if (sequencesInGame.has(rec.UPDATE_SEQUENCE)) {
+            if (rec.UPDATE_TYPE != null) {
+              updateTypeIds.add(rec.UPDATE_TYPE);
+              if (!sequenceToUpdateTypes[rec.UPDATE_SEQUENCE]) {
+                sequenceToUpdateTypes[rec.UPDATE_SEQUENCE] = new Set();
+              }
+              sequenceToUpdateTypes[rec.UPDATE_SEQUENCE].add(rec.UPDATE_TYPE);
+            }
+          }
+        }
+
+        if (updateTypeIds.size > 0) {
+          const allUpdateTypes = await dataLoader.loadData('update_types.json').catch(() => []);
+          const utArr = Array.isArray(allUpdateTypes) ? allUpdateTypes : [];
+          const utMap = {};
+          for (const ut of utArr) {
+            utMap[ut.UPDATE_TYPE_ID] = ut.ALIAS_NAME || `Type ${ut.UPDATE_TYPE_ID}`;
+          }
+          updateTypesList = [...updateTypeIds]
+            .map(id => ({ id, name: utMap[id] || `Type ${id}` }))
+            .sort((a, b) => a.name.localeCompare(b.name));
+        }
+      }
+
       const filterOptions = {
         sources: uniqueSourceIds,
-        updateTypes: [...new Set(updates.map(u => (u.TAG || '').trim()).filter(Boolean))].sort(),
+        updateTypes: updateTypesList,
         sourceNames,
         dateFrom: minCreated ? minCreated.toISOString().slice(0, 10) : null,
         dateTo: maxCreated ? maxCreated.toISOString().slice(0, 10) : null
@@ -185,7 +225,17 @@ class GameController {
         updates = updates.filter(u => sourceIds.includes(String(u.DATA_SOURCE_ID || '')));
       }
       if (updateTypeValues.length > 0) {
-        updates = updates.filter(u => updateTypeValues.includes((u.TAG || '').trim()));
+        const selectedTypeIds = new Set(updateTypeValues.map(v => Number(v)));
+        updates = updates.filter(u => {
+          const seq = u.CREATED_SEQUENCE;
+          if (seq == null || Number(seq) <= 0) return false;
+          const types = sequenceToUpdateTypes[seq];
+          if (!types) return false;
+          for (const t of types) {
+            if (selectedTypeIds.has(t)) return true;
+          }
+          return false;
+        });
       }
       if (dateFrom && dateFrom.trim()) {
         const from = new Date(dateFrom);

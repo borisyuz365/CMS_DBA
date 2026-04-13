@@ -2368,9 +2368,9 @@ router.get('/priority-levels', async (req, res, next) => {
   }
 });
 
-router.get('/update-types', async (req, res, next) => {
+router.get('/priority-update-types', async (req, res, next) => {
   try {
-    const types = await dataLoader.loadData('update_types.json');
+    const types = await dataLoader.loadData('priority_update_types.json');
     res.json({ success: true, data: types || [] });
   } catch (error) {
     next(error);

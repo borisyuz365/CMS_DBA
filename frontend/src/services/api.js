@@ -525,8 +525,8 @@ class ApiService {
     return response.data || [];
   }
 
-  async getUpdateTypes() {
-    const response = await this.fetch('/data/update-types');
+  async getPriorityUpdateTypes() {
+    const response = await this.fetch('/data/priority-update-types');
     return response.data || [];
   }
 

@@ -1244,5 +1244,19 @@
     "SCHEDULE_PRIORITY": null,
     "USER_NAME": "DanielBelgi",
     "UPDATE_TIME": "2026-03-30T10:36:45.424Z"
+  },
+  {
+    "DATA_SOURCE": 256,
+    "UPDATE_TYPE": 2,
+    "PRIORITY_LEVEL": -1,
+    "CUT_TYPE": 2,
+    "CUT_VALUE": 2,
+    "COMMENT": "test",
+    "START_DATE": "2026-04-09T00:00:00.000Z",
+    "EXPIRATION_DATE": "2026-04-11T00:00:00.000Z",
+    "AFTER_EXPIRED_PRIORITY": 1,
+    "SCHEDULE_PRIORITY": null,
+    "USER_NAME": "DanielBelgi",
+    "UPDATE_TIME": "2026-04-09T13:41:20.787Z"
   }
 ]

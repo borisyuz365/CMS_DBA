@@ -109,7 +109,7 @@ function getStatusFromUpdateText(text) {
   const idx = text.indexOf('Status: ');
   if (idx === -1) return null;
   const after = text.slice(idx + 8);
-  const end = after.search(/[\r\n]/);
+  const end = after.search(/[\s]/);
   const value = (end === -1 ? after : after.slice(0, end)).trim();
   return value || null;
 }
@@ -214,8 +214,11 @@ export default function GameReport() {
     return () => { cancelled = true; };
   }, [game]);
 
+  const loadVersionRef = React.useRef(0);
+
   const loadUpdates = React.useCallback(async (appliedFilters) => {
     if (!id) return;
+    const version = ++loadVersionRef.current;
     setLoading(true);
     setError(null);
     try {
@@ -227,18 +230,22 @@ export default function GameReport() {
         dateFrom: f.dateFrom ? dayjs(f.dateFrom).format('YYYY-MM-DD') : undefined,
         dateTo: f.dateTo ? dayjs(f.dateTo).format('YYYY-MM-DD') : undefined,
       });
+      if (version !== loadVersionRef.current) return;
       setUpdates(Array.isArray(data) ? data : []);
       setFilterOptions(opts || { sources: [], updateTypes: [], sourceNames: {} });
     } catch (err) {
+      if (version !== loadVersionRef.current) return;
       setError(err?.message || 'Failed to load report');
       setUpdates([]);
     } finally {
-      setLoading(false);
+      if (version === loadVersionRef.current) setLoading(false);
     }
   }, [id]);
 
   useEffect(() => {
     if (!id) return;
+    let cancelled = false;
+    const version = ++loadVersionRef.current;
     (async () => {
       setLoading(true);
       setError(null);
@@ -247,6 +254,7 @@ export default function GameReport() {
           api.getGameById(id).catch(() => null),
           api.getGameUpdates(id),
         ]);
+        if (cancelled || version !== loadVersionRef.current) return;
         setGame(gameData);
         setUpdates(Array.isArray(data) ? data : []);
         const fo = opts || { sources: [], updateTypes: [], sourceNames: {} };
@@ -257,12 +265,14 @@ export default function GameReport() {
           dateTo: fo.dateTo ? dayjs(fo.dateTo) : null,
         }));
       } catch (err) {
+        if (cancelled || version !== loadVersionRef.current) return;
         setError(err?.message || 'Failed to load report');
         setUpdates([]);
       } finally {
-        setLoading(false);
+        if (!cancelled && version === loadVersionRef.current) setLoading(false);
       }
     })();
+    return () => { cancelled = true; };
   }, [id]);
 
   const handleSearch = () => {
@@ -521,14 +531,19 @@ export default function GameReport() {
             renderValue={(v) => {
               const arr = Array.isArray(v) ? v : [];
               if (arr.length === 0) return 'Update Type';
-              if (arr.length === 1) return (arr[0].length > 50 ? arr[0].slice(0, 50) + '...' : arr[0]);
+              const types = filterOptions.updateTypes || [];
+              if (arr.length === 1) {
+                const match = types.find((t) => t.id === arr[0]);
+                const label = match ? match.name : String(arr[0]);
+                return label.length > 50 ? label.slice(0, 50) + '...' : label;
+              }
               return `Update Type (${arr.length})`;
             }}
           >
             {(filterOptions.updateTypes || []).map((t) => (
-              <MenuItem key={t} value={t}>
-                <Checkbox checked={(filters.updateType || []).indexOf(t) > -1} size="small" sx={{ mr: 1 }} />
-                {t.length > 50 ? t.slice(0, 50) + '...' : t}
+              <MenuItem key={t.id} value={t.id}>
+                <Checkbox checked={(filters.updateType || []).indexOf(t.id) > -1} size="small" sx={{ mr: 1 }} />
+                {t.name.length > 50 ? t.name.slice(0, 50) + '...' : t.name}
               </MenuItem>
             ))}
           </Select>

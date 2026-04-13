@@ -156,7 +156,7 @@ const PrioritiesPage = () => {
       const [pData, dsData, utData, plData, spData, coData, cpData, gData] = await Promise.all([
         api.getPriorities(),
         api.getDataSourcesList(),
-        api.getUpdateTypes(),
+        api.getPriorityUpdateTypes(),
         api.getPriorityLevels(),
         api.getSports(),
         api.getCountries(),
