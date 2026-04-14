@@ -2612,4 +2612,67 @@ router.get('/tv-network-types', async (req, res, next) => {
   }
 });
 
+// Get all game statuses
+router.get('/game-statuses', async (req, res, next) => {
+  try {
+    const statuses = await dataLoader.loadData('game_statuses.json');
+    res.json({ success: true, data: statuses || [] });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Get sequence details: joins updates + update_param_values + update_types for a given sequence
+router.get('/sequence-details/:sequence', async (req, res, next) => {
+  try {
+    const seq = Number(req.params.sequence);
+    if (isNaN(seq)) return res.status(400).json({ success: false, error: { message: 'Invalid sequence' } });
+
+    const [allUpdates, allParamValues, allUpdateTypes, allTypesParams] = await Promise.all([
+      dataLoader.loadData('updates.json').catch(() => []),
+      dataLoader.loadData('update_param_values.json').catch(() => []),
+      dataLoader.loadData('update_types.json').catch(() => []),
+      dataLoader.loadData('update_types_params.json').catch(() => []),
+    ]);
+
+    const typeMap = {};
+    for (const ut of (Array.isArray(allUpdateTypes) ? allUpdateTypes : [])) {
+      typeMap[ut.UPDATE_TYPE_ID] = ut.ALIAS_NAME || `Type ${ut.UPDATE_TYPE_ID}`;
+    }
+
+    // Build param name lookup: "typeId-paramNum-sequence" -> ALIAS_NAME
+    const paramNameMap = {};
+    for (const tp of (Array.isArray(allTypesParams) ? allTypesParams : [])) {
+      paramNameMap[`${tp.UPDATE_TYPE_ID}-${tp.PARAM_NUM}-${tp.UPDATE_SEQUENCE}`] = tp.ALIAS_NAME;
+    }
+
+    const updates = (Array.isArray(allUpdates) ? allUpdates : [])
+      .filter(u => u.UPDATE_SEQUENCE === seq);
+
+    const paramValues = (Array.isArray(allParamValues) ? allParamValues : [])
+      .filter(p => p.UPDATE_SEQUENCE === seq);
+
+    const items = updates.map(u => ({
+      updateId: u.UPDATE_ID,
+      updateType: u.UPDATE_TYPE,
+      updateTypeName: typeMap[u.UPDATE_TYPE] || null,
+      createTime: u.CREATE_TIME || null,
+      updateAction: u.UPDATE_ACTION || null,
+      isReplacement: u.IS_REPLACEMENT,
+      params: paramValues
+        .filter(p => p.UPDATE_ID === u.UPDATE_ID)
+        .sort((a, b) => (a.PARAM_NUM || 0) - (b.PARAM_NUM || 0))
+        .map(p => ({
+          paramNum: p.PARAM_NUM,
+          paramName: paramNameMap[`${u.UPDATE_TYPE}-${p.PARAM_NUM}-${seq}`] || null,
+          value: p.VALUE,
+        })),
+    }));
+
+    res.json({ success: true, data: { sequence: seq, items } });
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;

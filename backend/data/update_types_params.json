@@ -1,0 +1,2594 @@
+[
+  {
+    "UPDATE_TYPE_ID": 5,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 250,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861317411
+  },
+  {
+    "UPDATE_TYPE_ID": 5,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 250,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861366743
+  },
+  {
+    "UPDATE_TYPE_ID": 5,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 250,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861371259
+  },
+  {
+    "UPDATE_TYPE_ID": 5,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 250,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861412183
+  },
+  {
+    "UPDATE_TYPE_ID": 5,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 250,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861426288
+  },
+  {
+    "UPDATE_TYPE_ID": 5,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 250,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1137",
+    "UPDATE_SEQUENCE": 1861366743
+  },
+  {
+    "UPDATE_TYPE_ID": 5,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 250,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861317411
+  },
+  {
+    "UPDATE_TYPE_ID": 5,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 250,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861366069
+  },
+  {
+    "UPDATE_TYPE_ID": 5,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 250,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861366743
+  },
+  {
+    "UPDATE_TYPE_ID": 5,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 250,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861371259
+  },
+  {
+    "UPDATE_TYPE_ID": 5,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 250,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861391871
+  },
+  {
+    "UPDATE_TYPE_ID": 5,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 250,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861426288
+  },
+  {
+    "UPDATE_TYPE_ID": 5,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 250,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "41",
+    "UPDATE_SEQUENCE": 1861366069
+  },
+  {
+    "UPDATE_TYPE_ID": 5,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 250,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "46",
+    "UPDATE_SEQUENCE": 1861391871
+  },
+  {
+    "UPDATE_TYPE_ID": 5,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 250,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "74",
+    "UPDATE_SEQUENCE": 1861412183
+  },
+  {
+    "UPDATE_TYPE_ID": 5,
+    "ALIAS_NAME": "STAGE_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 249,
+    "VARIABLE_TYPE": 1,
+    "VALUE": null,
+    "UPDATE_SEQUENCE": 1861366743
+  },
+  {
+    "UPDATE_TYPE_ID": 5,
+    "ALIAS_NAME": "STAGE_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 249,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861317411
+  },
+  {
+    "UPDATE_TYPE_ID": 5,
+    "ALIAS_NAME": "STAGE_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 249,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861366069
+  },
+  {
+    "UPDATE_TYPE_ID": 5,
+    "ALIAS_NAME": "STAGE_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 249,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861366743
+  },
+  {
+    "UPDATE_TYPE_ID": 5,
+    "ALIAS_NAME": "STAGE_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 249,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861391871
+  },
+  {
+    "UPDATE_TYPE_ID": 5,
+    "ALIAS_NAME": "STAGE_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 249,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861412183
+  },
+  {
+    "UPDATE_TYPE_ID": 5,
+    "ALIAS_NAME": "STAGE_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 249,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861366069
+  },
+  {
+    "UPDATE_TYPE_ID": 5,
+    "ALIAS_NAME": "STAGE_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 249,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861366743
+  },
+  {
+    "UPDATE_TYPE_ID": 5,
+    "ALIAS_NAME": "STAGE_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 249,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861391871
+  },
+  {
+    "UPDATE_TYPE_ID": 5,
+    "ALIAS_NAME": "STAGE_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 249,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "45",
+    "UPDATE_SEQUENCE": 1861371259
+  },
+  {
+    "UPDATE_TYPE_ID": 5,
+    "ALIAS_NAME": "STAGE_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 249,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "7",
+    "UPDATE_SEQUENCE": 1861371259
+  },
+  {
+    "UPDATE_TYPE_ID": 5,
+    "ALIAS_NAME": "STAGE_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 249,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "85",
+    "UPDATE_SEQUENCE": 1861426288
+  },
+  {
+    "UPDATE_TYPE_ID": 5,
+    "ALIAS_NAME": "STAGE_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 249,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "89",
+    "UPDATE_SEQUENCE": 1861371259
+  },
+  {
+    "UPDATE_TYPE_ID": 5,
+    "ALIAS_NAME": "STAGE_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 249,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "9",
+    "UPDATE_SEQUENCE": 1861426288
+  },
+  {
+    "UPDATE_TYPE_ID": 5,
+    "ALIAS_NAME": "STAGE_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 249,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "90",
+    "UPDATE_SEQUENCE": 1861426288
+  },
+  {
+    "UPDATE_TYPE_ID": 5,
+    "ALIAS_NAME": "STAGE_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 249,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "AT45+null",
+    "UPDATE_SEQUENCE": 1861371259
+  },
+  {
+    "UPDATE_TYPE_ID": 5,
+    "ALIAS_NAME": "STAGE_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 249,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "AT90+null",
+    "UPDATE_SEQUENCE": 1861426288
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 253,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861362350
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 253,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861366374
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 253,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861366743
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 253,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861391807
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 253,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861391889
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 253,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861392872
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 253,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861412203
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 253,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861412398
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 253,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861413322
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 253,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861414055
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 253,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1137",
+    "UPDATE_SEQUENCE": 1861366743
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 253,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861362350
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 253,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861362688
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 253,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861366743
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 253,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861391807
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 253,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861410460
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 253,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861411135
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 253,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861414544
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 253,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861415422
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 253,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861419130
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 253,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861419921
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 253,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861422719
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 253,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861423309
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 253,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "3",
+    "UPDATE_SEQUENCE": 1861412203
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 253,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "3",
+    "UPDATE_SEQUENCE": 1861414544
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 253,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "37'",
+    "UPDATE_SEQUENCE": 1861362350
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 253,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "4",
+    "UPDATE_SEQUENCE": 1861419130
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 253,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "41",
+    "UPDATE_SEQUENCE": 1861366374
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 253,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "45861",
+    "UPDATE_SEQUENCE": 1861413322
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 253,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "46",
+    "UPDATE_SEQUENCE": 1861391889
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 253,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "5",
+    "UPDATE_SEQUENCE": 1861422719
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 253,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "65785",
+    "UPDATE_SEQUENCE": 1861392872
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 253,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "70'",
+    "UPDATE_SEQUENCE": 1861410460
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 253,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "74",
+    "UPDATE_SEQUENCE": 1861412398
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 253,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "77'",
+    "UPDATE_SEQUENCE": 1861414544
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 253,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "82'",
+    "UPDATE_SEQUENCE": 1861419130
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 253,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "86'",
+    "UPDATE_SEQUENCE": 1861422719
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_TYPE_ID",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 252,
+    "VARIABLE_TYPE": 1,
+    "VALUE": null,
+    "UPDATE_SEQUENCE": 1861362350
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_TYPE_ID",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 252,
+    "VARIABLE_TYPE": 1,
+    "VALUE": null,
+    "UPDATE_SEQUENCE": 1861362688
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_TYPE_ID",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 252,
+    "VARIABLE_TYPE": 1,
+    "VALUE": null,
+    "UPDATE_SEQUENCE": 1861366374
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_TYPE_ID",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 252,
+    "VARIABLE_TYPE": 1,
+    "VALUE": null,
+    "UPDATE_SEQUENCE": 1861366743
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_TYPE_ID",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 252,
+    "VARIABLE_TYPE": 1,
+    "VALUE": null,
+    "UPDATE_SEQUENCE": 1861391807
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_TYPE_ID",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 252,
+    "VARIABLE_TYPE": 1,
+    "VALUE": null,
+    "UPDATE_SEQUENCE": 1861391889
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_TYPE_ID",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 252,
+    "VARIABLE_TYPE": 1,
+    "VALUE": null,
+    "UPDATE_SEQUENCE": 1861392872
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_TYPE_ID",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 252,
+    "VARIABLE_TYPE": 1,
+    "VALUE": null,
+    "UPDATE_SEQUENCE": 1861410460
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_TYPE_ID",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 252,
+    "VARIABLE_TYPE": 1,
+    "VALUE": null,
+    "UPDATE_SEQUENCE": 1861411135
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_TYPE_ID",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 252,
+    "VARIABLE_TYPE": 1,
+    "VALUE": null,
+    "UPDATE_SEQUENCE": 1861412203
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_TYPE_ID",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 252,
+    "VARIABLE_TYPE": 1,
+    "VALUE": null,
+    "UPDATE_SEQUENCE": 1861412398
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_TYPE_ID",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 252,
+    "VARIABLE_TYPE": 1,
+    "VALUE": null,
+    "UPDATE_SEQUENCE": 1861413322
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_TYPE_ID",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 252,
+    "VARIABLE_TYPE": 1,
+    "VALUE": null,
+    "UPDATE_SEQUENCE": 1861414055
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_TYPE_ID",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 252,
+    "VARIABLE_TYPE": 1,
+    "VALUE": null,
+    "UPDATE_SEQUENCE": 1861414544
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_TYPE_ID",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 252,
+    "VARIABLE_TYPE": 1,
+    "VALUE": null,
+    "UPDATE_SEQUENCE": 1861415422
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_TYPE_ID",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 252,
+    "VARIABLE_TYPE": 1,
+    "VALUE": null,
+    "UPDATE_SEQUENCE": 1861419130
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_TYPE_ID",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 252,
+    "VARIABLE_TYPE": 1,
+    "VALUE": null,
+    "UPDATE_SEQUENCE": 1861419921
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_TYPE_ID",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 252,
+    "VARIABLE_TYPE": 1,
+    "VALUE": null,
+    "UPDATE_SEQUENCE": 1861422719
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_TYPE_ID",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 252,
+    "VARIABLE_TYPE": 1,
+    "VALUE": null,
+    "UPDATE_SEQUENCE": 1861423309
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_TYPE_ID",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 252,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861362350
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_TYPE_ID",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 252,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861366374
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_TYPE_ID",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 252,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861366743
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_TYPE_ID",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 252,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861391807
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_TYPE_ID",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 252,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861412203
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_TYPE_ID",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 252,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861412398
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_TYPE_ID",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 252,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861413322
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_TYPE_ID",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 252,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861362350
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_TYPE_ID",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 252,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861366374
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_TYPE_ID",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 252,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861366743
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_TYPE_ID",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 252,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861391889
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_TYPE_ID",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 252,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861392872
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_TYPE_ID",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 252,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861410460
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_TYPE_ID",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 252,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861414544
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_TYPE_ID",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 252,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861419130
+  },
+  {
+    "UPDATE_TYPE_ID": 6,
+    "ALIAS_NAME": "EVENT_TYPE_ID",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 252,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861422719
+  },
+  {
+    "UPDATE_TYPE_ID": 9,
+    "ALIAS_NAME": "STATUS",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 260,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "45",
+    "UPDATE_SEQUENCE": 1861371259
+  },
+  {
+    "UPDATE_TYPE_ID": 9,
+    "ALIAS_NAME": "STATUS",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 260,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "46",
+    "UPDATE_SEQUENCE": 1861391244
+  },
+  {
+    "UPDATE_TYPE_ID": 9,
+    "ALIAS_NAME": "STATUS",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 260,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "7",
+    "UPDATE_SEQUENCE": 1861371259
+  },
+  {
+    "UPDATE_TYPE_ID": 9,
+    "ALIAS_NAME": "STATUS",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 260,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "89",
+    "UPDATE_SEQUENCE": 1861371259
+  },
+  {
+    "UPDATE_TYPE_ID": 9,
+    "ALIAS_NAME": "STATUS",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 260,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "90",
+    "UPDATE_SEQUENCE": 1861391244
+  },
+  {
+    "UPDATE_TYPE_ID": 9,
+    "ALIAS_NAME": "STATUS",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 260,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "AT45+null",
+    "UPDATE_SEQUENCE": 1861371259
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "ATHLETE_ID",
+    "PARAM_NUM": 7,
+    "PARAM_NAME": 2721804,
+    "VARIABLE_TYPE": 1,
+    "VALUE": null,
+    "UPDATE_SEQUENCE": 1861366069
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "ATHLETE_ID",
+    "PARAM_NUM": 7,
+    "PARAM_NAME": 2721804,
+    "VARIABLE_TYPE": 1,
+    "VALUE": null,
+    "UPDATE_SEQUENCE": 1861391871
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "ATHLETE_ID",
+    "PARAM_NUM": 7,
+    "PARAM_NAME": 2721804,
+    "VARIABLE_TYPE": 1,
+    "VALUE": null,
+    "UPDATE_SEQUENCE": 1861412183
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "ATHLETE_ID",
+    "PARAM_NUM": 7,
+    "PARAM_NAME": 2721804,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1669",
+    "UPDATE_SEQUENCE": 1861391889
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "ATHLETE_ID",
+    "PARAM_NUM": 7,
+    "PARAM_NAME": 2721804,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "39820",
+    "UPDATE_SEQUENCE": 1861412398
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "ATHLETE_ID",
+    "PARAM_NUM": 7,
+    "PARAM_NAME": 2721804,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "47123",
+    "UPDATE_SEQUENCE": 1861366374
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "AWAY_SCORE",
+    "PARAM_NUM": 5,
+    "PARAM_NAME": 267,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861366069
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "AWAY_SCORE",
+    "PARAM_NUM": 5,
+    "PARAM_NAME": 267,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861366374
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "AWAY_SCORE",
+    "PARAM_NUM": 5,
+    "PARAM_NAME": 267,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861391871
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "AWAY_SCORE",
+    "PARAM_NUM": 5,
+    "PARAM_NAME": 267,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861391889
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "AWAY_SCORE",
+    "PARAM_NUM": 5,
+    "PARAM_NAME": 267,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861412183
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "AWAY_SCORE",
+    "PARAM_NUM": 5,
+    "PARAM_NAME": 267,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861412398
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "BOOTS_ID",
+    "PARAM_NUM": 8,
+    "PARAM_NAME": 2721805,
+    "VARIABLE_TYPE": 1,
+    "VALUE": null,
+    "UPDATE_SEQUENCE": 1861366069
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "BOOTS_ID",
+    "PARAM_NUM": 8,
+    "PARAM_NAME": 2721805,
+    "VARIABLE_TYPE": 1,
+    "VALUE": null,
+    "UPDATE_SEQUENCE": 1861366374
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "BOOTS_ID",
+    "PARAM_NUM": 8,
+    "PARAM_NAME": 2721805,
+    "VARIABLE_TYPE": 1,
+    "VALUE": null,
+    "UPDATE_SEQUENCE": 1861391871
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "BOOTS_ID",
+    "PARAM_NUM": 8,
+    "PARAM_NAME": 2721805,
+    "VARIABLE_TYPE": 1,
+    "VALUE": null,
+    "UPDATE_SEQUENCE": 1861412183
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "BOOTS_ID",
+    "PARAM_NUM": 8,
+    "PARAM_NAME": 2721805,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "5",
+    "UPDATE_SEQUENCE": 1861391889
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "BOOTS_ID",
+    "PARAM_NUM": 8,
+    "PARAM_NAME": 2721805,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "6",
+    "UPDATE_SEQUENCE": 1861412398
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 263,
+    "VARIABLE_TYPE": 1,
+    "VALUE": null,
+    "UPDATE_SEQUENCE": 1861366374
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 263,
+    "VARIABLE_TYPE": 1,
+    "VALUE": null,
+    "UPDATE_SEQUENCE": 1861391889
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 263,
+    "VARIABLE_TYPE": 1,
+    "VALUE": null,
+    "UPDATE_SEQUENCE": 1861412398
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 263,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861366069
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 263,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861366374
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 263,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861391871
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 263,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861412183
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 263,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861412398
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 263,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861366069
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 263,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861366374
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 263,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861391871
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 263,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861391889
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "GAME_TIME",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 264,
+    "VARIABLE_TYPE": 5,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861366374
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "GAME_TIME",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 264,
+    "VARIABLE_TYPE": 5,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861391889
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "GAME_TIME",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 264,
+    "VARIABLE_TYPE": 5,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861412183
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "GAME_TIME",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 264,
+    "VARIABLE_TYPE": 5,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861412398
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "GAME_TIME",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 264,
+    "VARIABLE_TYPE": 5,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861366069
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "GAME_TIME",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 264,
+    "VARIABLE_TYPE": 5,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861391871
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "GAME_TIME",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 264,
+    "VARIABLE_TYPE": 5,
+    "VALUE": "41",
+    "UPDATE_SEQUENCE": 1861366069
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "GAME_TIME",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 264,
+    "VARIABLE_TYPE": 5,
+    "VALUE": "41",
+    "UPDATE_SEQUENCE": 1861366374
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "GAME_TIME",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 264,
+    "VARIABLE_TYPE": 5,
+    "VALUE": "46",
+    "UPDATE_SEQUENCE": 1861391871
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "GAME_TIME",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 264,
+    "VARIABLE_TYPE": 5,
+    "VALUE": "46",
+    "UPDATE_SEQUENCE": 1861391889
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "GAME_TIME",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 264,
+    "VARIABLE_TYPE": 5,
+    "VALUE": "74",
+    "UPDATE_SEQUENCE": 1861412183
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "GAME_TIME",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 264,
+    "VARIABLE_TYPE": 5,
+    "VALUE": "74",
+    "UPDATE_SEQUENCE": 1861412398
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "GOAL_TYPE",
+    "PARAM_NUM": 6,
+    "PARAM_NAME": 268,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "-1",
+    "UPDATE_SEQUENCE": 1861366069
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "GOAL_TYPE",
+    "PARAM_NUM": 6,
+    "PARAM_NAME": 268,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "-1",
+    "UPDATE_SEQUENCE": 1861366374
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "GOAL_TYPE",
+    "PARAM_NUM": 6,
+    "PARAM_NAME": 268,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "-1",
+    "UPDATE_SEQUENCE": 1861391871
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "GOAL_TYPE",
+    "PARAM_NUM": 6,
+    "PARAM_NAME": 268,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "-1",
+    "UPDATE_SEQUENCE": 1861391889
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "GOAL_TYPE",
+    "PARAM_NUM": 6,
+    "PARAM_NAME": 268,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "-1",
+    "UPDATE_SEQUENCE": 1861412183
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "GOAL_TYPE",
+    "PARAM_NUM": 6,
+    "PARAM_NAME": 268,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "-1",
+    "UPDATE_SEQUENCE": 1861412398
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "GOAL_TYPE_ID",
+    "PARAM_NUM": 9,
+    "PARAM_NAME": 64346537,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "0",
+    "UPDATE_SEQUENCE": 1861366069
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "GOAL_TYPE_ID",
+    "PARAM_NUM": 9,
+    "PARAM_NAME": 64346537,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "0",
+    "UPDATE_SEQUENCE": 1861366374
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "GOAL_TYPE_ID",
+    "PARAM_NUM": 9,
+    "PARAM_NAME": 64346537,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "0",
+    "UPDATE_SEQUENCE": 1861391871
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "GOAL_TYPE_ID",
+    "PARAM_NUM": 9,
+    "PARAM_NAME": 64346537,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "0",
+    "UPDATE_SEQUENCE": 1861391889
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "GOAL_TYPE_ID",
+    "PARAM_NUM": 9,
+    "PARAM_NAME": 64346537,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "0",
+    "UPDATE_SEQUENCE": 1861412183
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "GOAL_TYPE_ID",
+    "PARAM_NUM": 9,
+    "PARAM_NAME": 64346537,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "0",
+    "UPDATE_SEQUENCE": 1861412398
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "HOME_SCORE",
+    "PARAM_NUM": 4,
+    "PARAM_NAME": 266,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "0",
+    "UPDATE_SEQUENCE": 1861366069
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "HOME_SCORE",
+    "PARAM_NUM": 4,
+    "PARAM_NAME": 266,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "0",
+    "UPDATE_SEQUENCE": 1861366374
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "HOME_SCORE",
+    "PARAM_NUM": 4,
+    "PARAM_NAME": 266,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "0",
+    "UPDATE_SEQUENCE": 1861391871
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "HOME_SCORE",
+    "PARAM_NUM": 4,
+    "PARAM_NAME": 266,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "0",
+    "UPDATE_SEQUENCE": 1861391889
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "HOME_SCORE",
+    "PARAM_NUM": 4,
+    "PARAM_NAME": 266,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861412183
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "HOME_SCORE",
+    "PARAM_NUM": 4,
+    "PARAM_NAME": 266,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861412398
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "PLAYER_NAME",
+    "PARAM_NUM": 3,
+    "PARAM_NAME": 265,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861366374
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "PLAYER_NAME",
+    "PARAM_NUM": 3,
+    "PARAM_NAME": 265,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "-1",
+    "UPDATE_SEQUENCE": 1861366069
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "PLAYER_NAME",
+    "PARAM_NUM": 3,
+    "PARAM_NAME": 265,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "-1",
+    "UPDATE_SEQUENCE": 1861391871
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "PLAYER_NAME",
+    "PARAM_NUM": 3,
+    "PARAM_NAME": 265,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "-1",
+    "UPDATE_SEQUENCE": 1861412183
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "PLAYER_NAME",
+    "PARAM_NUM": 3,
+    "PARAM_NAME": 265,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "1589889",
+    "UPDATE_SEQUENCE": 1861412398
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "PLAYER_NAME",
+    "PARAM_NUM": 3,
+    "PARAM_NAME": 265,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861391889
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "PLAYER_NAME",
+    "PARAM_NUM": 3,
+    "PARAM_NAME": 265,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "227604",
+    "UPDATE_SEQUENCE": 1861391889
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "PLAYER_NAME",
+    "PARAM_NUM": 3,
+    "PARAM_NAME": 265,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "3",
+    "UPDATE_SEQUENCE": 1861412398
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "PLAYER_NAME",
+    "PARAM_NUM": 3,
+    "PARAM_NAME": 265,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "3219251",
+    "UPDATE_SEQUENCE": 1861366374
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "SEQUENCE",
+    "PARAM_NUM": 10,
+    "PARAM_NAME": 65921257,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "-1",
+    "UPDATE_SEQUENCE": 1861366374
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "SEQUENCE",
+    "PARAM_NUM": 10,
+    "PARAM_NAME": 65921257,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861366069
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "SEQUENCE",
+    "PARAM_NUM": 10,
+    "PARAM_NAME": 65921257,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "3",
+    "UPDATE_SEQUENCE": 1861391889
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "SEQUENCE",
+    "PARAM_NUM": 10,
+    "PARAM_NAME": 65921257,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "4",
+    "UPDATE_SEQUENCE": 1861391871
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "SEQUENCE",
+    "PARAM_NUM": 10,
+    "PARAM_NAME": 65921257,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "4",
+    "UPDATE_SEQUENCE": 1861412183
+  },
+  {
+    "UPDATE_TYPE_ID": 10,
+    "ALIAS_NAME": "SEQUENCE",
+    "PARAM_NUM": 10,
+    "PARAM_NAME": 65921257,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "4",
+    "UPDATE_SEQUENCE": 1861412398
+  },
+  {
+    "UPDATE_TYPE_ID": 11,
+    "ALIAS_NAME": "ATHLETE_ID",
+    "PARAM_NUM": 4,
+    "PARAM_NAME": 64346538,
+    "VARIABLE_TYPE": 4,
+    "VALUE": "47123",
+    "UPDATE_SEQUENCE": 1861414544
+  },
+  {
+    "UPDATE_TYPE_ID": 11,
+    "ALIAS_NAME": "ATHLETE_ID",
+    "PARAM_NUM": 4,
+    "PARAM_NAME": 64346538,
+    "VARIABLE_TYPE": 4,
+    "VALUE": "5567",
+    "UPDATE_SEQUENCE": 1861410460
+  },
+  {
+    "UPDATE_TYPE_ID": 11,
+    "ALIAS_NAME": "ATHLETE_ID",
+    "PARAM_NUM": 4,
+    "PARAM_NAME": 64346538,
+    "VARIABLE_TYPE": 4,
+    "VALUE": "56328",
+    "UPDATE_SEQUENCE": 1861362350
+  },
+  {
+    "UPDATE_TYPE_ID": 11,
+    "ALIAS_NAME": "ATHLETE_ID",
+    "PARAM_NUM": 4,
+    "PARAM_NAME": 64346538,
+    "VARIABLE_TYPE": 4,
+    "VALUE": "656",
+    "UPDATE_SEQUENCE": 1861419130
+  },
+  {
+    "UPDATE_TYPE_ID": 11,
+    "ALIAS_NAME": "ATHLETE_ID",
+    "PARAM_NUM": 4,
+    "PARAM_NAME": 64346538,
+    "VARIABLE_TYPE": 4,
+    "VALUE": "78061",
+    "UPDATE_SEQUENCE": 1861422719
+  },
+  {
+    "UPDATE_TYPE_ID": 11,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 271,
+    "VARIABLE_TYPE": 1,
+    "VALUE": null,
+    "UPDATE_SEQUENCE": 1861362350
+  },
+  {
+    "UPDATE_TYPE_ID": 11,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 271,
+    "VARIABLE_TYPE": 1,
+    "VALUE": null,
+    "UPDATE_SEQUENCE": 1861410460
+  },
+  {
+    "UPDATE_TYPE_ID": 11,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 271,
+    "VARIABLE_TYPE": 1,
+    "VALUE": null,
+    "UPDATE_SEQUENCE": 1861414544
+  },
+  {
+    "UPDATE_TYPE_ID": 11,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 271,
+    "VARIABLE_TYPE": 1,
+    "VALUE": null,
+    "UPDATE_SEQUENCE": 1861419130
+  },
+  {
+    "UPDATE_TYPE_ID": 11,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 271,
+    "VARIABLE_TYPE": 1,
+    "VALUE": null,
+    "UPDATE_SEQUENCE": 1861422719
+  },
+  {
+    "UPDATE_TYPE_ID": 11,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 271,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861362350
+  },
+  {
+    "UPDATE_TYPE_ID": 11,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 271,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861362350
+  },
+  {
+    "UPDATE_TYPE_ID": 11,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 271,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861410460
+  },
+  {
+    "UPDATE_TYPE_ID": 11,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 271,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861414544
+  },
+  {
+    "UPDATE_TYPE_ID": 11,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 271,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861419130
+  },
+  {
+    "UPDATE_TYPE_ID": 11,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 271,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861422719
+  },
+  {
+    "UPDATE_TYPE_ID": 11,
+    "ALIAS_NAME": "GAME_TIME",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 272,
+    "VARIABLE_TYPE": 5,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861362350
+  },
+  {
+    "UPDATE_TYPE_ID": 11,
+    "ALIAS_NAME": "GAME_TIME",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 272,
+    "VARIABLE_TYPE": 5,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861362350
+  },
+  {
+    "UPDATE_TYPE_ID": 11,
+    "ALIAS_NAME": "GAME_TIME",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 272,
+    "VARIABLE_TYPE": 5,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861410460
+  },
+  {
+    "UPDATE_TYPE_ID": 11,
+    "ALIAS_NAME": "GAME_TIME",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 272,
+    "VARIABLE_TYPE": 5,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861414544
+  },
+  {
+    "UPDATE_TYPE_ID": 11,
+    "ALIAS_NAME": "GAME_TIME",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 272,
+    "VARIABLE_TYPE": 5,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861419130
+  },
+  {
+    "UPDATE_TYPE_ID": 11,
+    "ALIAS_NAME": "GAME_TIME",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 272,
+    "VARIABLE_TYPE": 5,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861422719
+  },
+  {
+    "UPDATE_TYPE_ID": 11,
+    "ALIAS_NAME": "GAME_TIME",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 272,
+    "VARIABLE_TYPE": 5,
+    "VALUE": "3",
+    "UPDATE_SEQUENCE": 1861414544
+  },
+  {
+    "UPDATE_TYPE_ID": 11,
+    "ALIAS_NAME": "GAME_TIME",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 272,
+    "VARIABLE_TYPE": 5,
+    "VALUE": "37'",
+    "UPDATE_SEQUENCE": 1861362350
+  },
+  {
+    "UPDATE_TYPE_ID": 11,
+    "ALIAS_NAME": "GAME_TIME",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 272,
+    "VARIABLE_TYPE": 5,
+    "VALUE": "4",
+    "UPDATE_SEQUENCE": 1861419130
+  },
+  {
+    "UPDATE_TYPE_ID": 11,
+    "ALIAS_NAME": "GAME_TIME",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 272,
+    "VARIABLE_TYPE": 5,
+    "VALUE": "5",
+    "UPDATE_SEQUENCE": 1861422719
+  },
+  {
+    "UPDATE_TYPE_ID": 11,
+    "ALIAS_NAME": "GAME_TIME",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 272,
+    "VARIABLE_TYPE": 5,
+    "VALUE": "70'",
+    "UPDATE_SEQUENCE": 1861410460
+  },
+  {
+    "UPDATE_TYPE_ID": 11,
+    "ALIAS_NAME": "GAME_TIME",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 272,
+    "VARIABLE_TYPE": 5,
+    "VALUE": "77'",
+    "UPDATE_SEQUENCE": 1861414544
+  },
+  {
+    "UPDATE_TYPE_ID": 11,
+    "ALIAS_NAME": "GAME_TIME",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 272,
+    "VARIABLE_TYPE": 5,
+    "VALUE": "82'",
+    "UPDATE_SEQUENCE": 1861419130
+  },
+  {
+    "UPDATE_TYPE_ID": 11,
+    "ALIAS_NAME": "GAME_TIME",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 272,
+    "VARIABLE_TYPE": 5,
+    "VALUE": "86'",
+    "UPDATE_SEQUENCE": 1861422719
+  },
+  {
+    "UPDATE_TYPE_ID": 11,
+    "ALIAS_NAME": "PLAYER_NAME",
+    "PARAM_NUM": 3,
+    "PARAM_NAME": 273,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861362350
+  },
+  {
+    "UPDATE_TYPE_ID": 11,
+    "ALIAS_NAME": "PLAYER_NAME",
+    "PARAM_NUM": 3,
+    "PARAM_NAME": 273,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861410460
+  },
+  {
+    "UPDATE_TYPE_ID": 11,
+    "ALIAS_NAME": "PLAYER_NAME",
+    "PARAM_NUM": 3,
+    "PARAM_NAME": 273,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "3",
+    "UPDATE_SEQUENCE": 1861414544
+  },
+  {
+    "UPDATE_TYPE_ID": 11,
+    "ALIAS_NAME": "PLAYER_NAME",
+    "PARAM_NUM": 3,
+    "PARAM_NAME": 273,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "3219251",
+    "UPDATE_SEQUENCE": 1861414544
+  },
+  {
+    "UPDATE_TYPE_ID": 11,
+    "ALIAS_NAME": "PLAYER_NAME",
+    "PARAM_NUM": 3,
+    "PARAM_NAME": 273,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "4",
+    "UPDATE_SEQUENCE": 1861419130
+  },
+  {
+    "UPDATE_TYPE_ID": 11,
+    "ALIAS_NAME": "PLAYER_NAME",
+    "PARAM_NUM": 3,
+    "PARAM_NAME": 273,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "412127",
+    "UPDATE_SEQUENCE": 1861410460
+  },
+  {
+    "UPDATE_TYPE_ID": 11,
+    "ALIAS_NAME": "PLAYER_NAME",
+    "PARAM_NUM": 3,
+    "PARAM_NAME": 273,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "49551977",
+    "UPDATE_SEQUENCE": 1861422719
+  },
+  {
+    "UPDATE_TYPE_ID": 11,
+    "ALIAS_NAME": "PLAYER_NAME",
+    "PARAM_NUM": 3,
+    "PARAM_NAME": 273,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "5",
+    "UPDATE_SEQUENCE": 1861422719
+  },
+  {
+    "UPDATE_TYPE_ID": 11,
+    "ALIAS_NAME": "PLAYER_NAME",
+    "PARAM_NUM": 3,
+    "PARAM_NAME": 273,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "5052341",
+    "UPDATE_SEQUENCE": 1861362350
+  },
+  {
+    "UPDATE_TYPE_ID": 11,
+    "ALIAS_NAME": "PLAYER_NAME",
+    "PARAM_NUM": 3,
+    "PARAM_NAME": 273,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "80013",
+    "UPDATE_SEQUENCE": 1861419130
+  },
+  {
+    "UPDATE_TYPE_ID": 33,
+    "ALIAS_NAME": "STATUS",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 260,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "85",
+    "UPDATE_SEQUENCE": 1861426288
+  },
+  {
+    "UPDATE_TYPE_ID": 33,
+    "ALIAS_NAME": "STATUS",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 260,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "9",
+    "UPDATE_SEQUENCE": 1861426288
+  },
+  {
+    "UPDATE_TYPE_ID": 33,
+    "ALIAS_NAME": "STATUS",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 260,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "90",
+    "UPDATE_SEQUENCE": 1861426288
+  },
+  {
+    "UPDATE_TYPE_ID": 33,
+    "ALIAS_NAME": "STATUS",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 260,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "AT90+null",
+    "UPDATE_SEQUENCE": 1861426288
+  },
+  {
+    "UPDATE_TYPE_ID": 43,
+    "ALIAS_NAME": "TIME_TO_BEGIN",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 514507,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "45",
+    "UPDATE_SEQUENCE": 1861254555
+  },
+  {
+    "UPDATE_TYPE_ID": 43,
+    "ALIAS_NAME": "TV_CHANNEL",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 37825918,
+    "VARIABLE_TYPE": 5,
+    "VALUE": "(📺 ספורט 5)",
+    "UPDATE_SEQUENCE": 1861254555
+  },
+  {
+    "UPDATE_TYPE_ID": 46,
+    "ALIAS_NAME": "EntityType",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": -1,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "12",
+    "UPDATE_SEQUENCE": 1869075349
+  },
+  {
+    "UPDATE_TYPE_ID": 52,
+    "ALIAS_NAME": "AWAY_BENCH_ATHLETE_IDS",
+    "PARAM_NUM": 4,
+    "PARAM_NAME": 64346555,
+    "VARIABLE_TYPE": 7,
+    "VALUE": "2017,5459,43879,65932,66983,78061,82362,105438,110026,202138,235795,",
+    "UPDATE_SEQUENCE": 1861223134
+  },
+  {
+    "UPDATE_TYPE_ID": 52,
+    "ALIAS_NAME": "AWAY_START_ATHLETE_IDS",
+    "PARAM_NUM": 3,
+    "PARAM_NAME": 64346554,
+    "VARIABLE_TYPE": 7,
+    "VALUE": "656,8045,5567,45046,91060,131891,26735,47123,1137,65785,1669,",
+    "UPDATE_SEQUENCE": 1861223134
+  },
+  {
+    "UPDATE_TYPE_ID": 52,
+    "ALIAS_NAME": "CATEGORY",
+    "PARAM_NUM": 5,
+    "PARAM_NAME": 64391842,
+    "VARIABLE_TYPE": 5,
+    "VALUE": null,
+    "UPDATE_SEQUENCE": 1861223134
+  },
+  {
+    "UPDATE_TYPE_ID": 52,
+    "ALIAS_NAME": "HOME_BENCH_ATHLETE_IDS",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 64346553,
+    "VARIABLE_TYPE": 7,
+    "VALUE": "66764,1836,117,53800,48583,73000,80285,104648,132791,138469,146096,27099,",
+    "UPDATE_SEQUENCE": 1861223134
+  },
+  {
+    "UPDATE_TYPE_ID": 52,
+    "ALIAS_NAME": "HOME_START_ATHLETE_IDS",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 64346433,
+    "VARIABLE_TYPE": 7,
+    "VALUE": "48804,104643,124224,5542,45861,101365,56328,41053,48298,39820,219352,",
+    "UPDATE_SEQUENCE": 1861223134
+  },
+  {
+    "UPDATE_TYPE_ID": 66,
+    "ALIAS_NAME": "ATHLETE_IDS",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 64346431,
+    "VARIABLE_TYPE": 7,
+    "VALUE": "110026,47123",
+    "UPDATE_SEQUENCE": 1861425671
+  },
+  {
+    "UPDATE_TYPE_ID": 66,
+    "ALIAS_NAME": "ATHLETE_IDS",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 64346431,
+    "VARIABLE_TYPE": 7,
+    "VALUE": "43879,8045",
+    "UPDATE_SEQUENCE": 1861410021
+  },
+  {
+    "UPDATE_TYPE_ID": 66,
+    "ALIAS_NAME": "ATHLETE_IDS",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 64346431,
+    "VARIABLE_TYPE": 7,
+    "VALUE": "48583,124224",
+    "UPDATE_SEQUENCE": 1861403694
+  },
+  {
+    "UPDATE_TYPE_ID": 66,
+    "ALIAS_NAME": "ATHLETE_IDS",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 64346431,
+    "VARIABLE_TYPE": 7,
+    "VALUE": "53800,101365",
+    "UPDATE_SEQUENCE": 1861411089
+  },
+  {
+    "UPDATE_TYPE_ID": 66,
+    "ALIAS_NAME": "ATHLETE_IDS",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 64346431,
+    "VARIABLE_TYPE": 7,
+    "VALUE": "5459,131891",
+    "UPDATE_SEQUENCE": 1861425671
+  },
+  {
+    "UPDATE_TYPE_ID": 66,
+    "ALIAS_NAME": "ATHLETE_IDS",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 64346431,
+    "VARIABLE_TYPE": 7,
+    "VALUE": "73000,219352",
+    "UPDATE_SEQUENCE": 1861403694
+  },
+  {
+    "UPDATE_TYPE_ID": 66,
+    "ALIAS_NAME": "ATHLETE_IDS",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 64346431,
+    "VARIABLE_TYPE": 7,
+    "VALUE": "78061,1137",
+    "UPDATE_SEQUENCE": 1861410021
+  },
+  {
+    "UPDATE_TYPE_ID": 66,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 2810557,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861403694
+  },
+  {
+    "UPDATE_TYPE_ID": 66,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 2810557,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861411089
+  },
+  {
+    "UPDATE_TYPE_ID": 66,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 2810557,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861410021
+  },
+  {
+    "UPDATE_TYPE_ID": 66,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 2810557,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861425671
+  },
+  {
+    "UPDATE_TYPE_ID": 66,
+    "ALIAS_NAME": "GAME_TIME",
+    "PARAM_NUM": 3,
+    "PARAM_NAME": 2810558,
+    "VARIABLE_TYPE": 5,
+    "VALUE": "62",
+    "UPDATE_SEQUENCE": 1861403694
+  },
+  {
+    "UPDATE_TYPE_ID": 66,
+    "ALIAS_NAME": "GAME_TIME",
+    "PARAM_NUM": 3,
+    "PARAM_NAME": 2810558,
+    "VARIABLE_TYPE": 5,
+    "VALUE": "69",
+    "UPDATE_SEQUENCE": 1861410021
+  },
+  {
+    "UPDATE_TYPE_ID": 66,
+    "ALIAS_NAME": "GAME_TIME",
+    "PARAM_NUM": 3,
+    "PARAM_NAME": 2810558,
+    "VARIABLE_TYPE": 5,
+    "VALUE": "71",
+    "UPDATE_SEQUENCE": 1861411089
+  },
+  {
+    "UPDATE_TYPE_ID": 66,
+    "ALIAS_NAME": "GAME_TIME",
+    "PARAM_NUM": 3,
+    "PARAM_NAME": 2810558,
+    "VARIABLE_TYPE": 5,
+    "VALUE": "90+3",
+    "UPDATE_SEQUENCE": 1861425671
+  },
+  {
+    "UPDATE_TYPE_ID": 99,
+    "ALIAS_NAME": "ATHLETE_ID",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 64346431,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861366743
+  },
+  {
+    "UPDATE_TYPE_ID": 99,
+    "ALIAS_NAME": "ATHLETE_ID",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 64346431,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861392872
+  },
+  {
+    "UPDATE_TYPE_ID": 99,
+    "ALIAS_NAME": "ATHLETE_ID",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 64346431,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861413322
+  },
+  {
+    "UPDATE_TYPE_ID": 99,
+    "ALIAS_NAME": "ATHLETE_ID",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 64346431,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1137",
+    "UPDATE_SEQUENCE": 1861366743
+  },
+  {
+    "UPDATE_TYPE_ID": 99,
+    "ALIAS_NAME": "ATHLETE_ID",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 64346431,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861366743
+  },
+  {
+    "UPDATE_TYPE_ID": 99,
+    "ALIAS_NAME": "ATHLETE_ID",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 64346431,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "45861",
+    "UPDATE_SEQUENCE": 1861413322
+  },
+  {
+    "UPDATE_TYPE_ID": 99,
+    "ALIAS_NAME": "ATHLETE_ID",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 64346431,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "65785",
+    "UPDATE_SEQUENCE": 1861392872
+  },
+  {
+    "UPDATE_TYPE_ID": 99,
+    "ALIAS_NAME": "AWAY_SCORE",
+    "PARAM_NUM": 6,
+    "PARAM_NAME": 267,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861366743
+  },
+  {
+    "UPDATE_TYPE_ID": 99,
+    "ALIAS_NAME": "AWAY_SCORE",
+    "PARAM_NUM": 6,
+    "PARAM_NAME": 267,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861392872
+  },
+  {
+    "UPDATE_TYPE_ID": 99,
+    "ALIAS_NAME": "AWAY_SCORE",
+    "PARAM_NUM": 6,
+    "PARAM_NAME": 267,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861413322
+  },
+  {
+    "UPDATE_TYPE_ID": 99,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 2810557,
+    "VARIABLE_TYPE": 1,
+    "VALUE": null,
+    "UPDATE_SEQUENCE": 1861366743
+  },
+  {
+    "UPDATE_TYPE_ID": 99,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 2810557,
+    "VARIABLE_TYPE": 1,
+    "VALUE": null,
+    "UPDATE_SEQUENCE": 1861392872
+  },
+  {
+    "UPDATE_TYPE_ID": 99,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 2810557,
+    "VARIABLE_TYPE": 1,
+    "VALUE": null,
+    "UPDATE_SEQUENCE": 1861413322
+  },
+  {
+    "UPDATE_TYPE_ID": 99,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 2810557,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861366743
+  },
+  {
+    "UPDATE_TYPE_ID": 99,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 2810557,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861413322
+  },
+  {
+    "UPDATE_TYPE_ID": 99,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 2810557,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861366743
+  },
+  {
+    "UPDATE_TYPE_ID": 99,
+    "ALIAS_NAME": "COMPETITOR_NUM",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 2810557,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861392872
+  },
+  {
+    "UPDATE_TYPE_ID": 99,
+    "ALIAS_NAME": "GAME_TIME",
+    "PARAM_NUM": 4,
+    "PARAM_NAME": 2810558,
+    "VARIABLE_TYPE": 5,
+    "VALUE": "41",
+    "UPDATE_SEQUENCE": 1861366743
+  },
+  {
+    "UPDATE_TYPE_ID": 99,
+    "ALIAS_NAME": "GAME_TIME",
+    "PARAM_NUM": 4,
+    "PARAM_NAME": 2810558,
+    "VARIABLE_TYPE": 5,
+    "VALUE": "46",
+    "UPDATE_SEQUENCE": 1861392872
+  },
+  {
+    "UPDATE_TYPE_ID": 99,
+    "ALIAS_NAME": "GAME_TIME",
+    "PARAM_NUM": 4,
+    "PARAM_NAME": 2810558,
+    "VARIABLE_TYPE": 5,
+    "VALUE": "74",
+    "UPDATE_SEQUENCE": 1861413322
+  },
+  {
+    "UPDATE_TYPE_ID": 99,
+    "ALIAS_NAME": "HOME_SCORE",
+    "PARAM_NUM": 5,
+    "PARAM_NAME": 266,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "0",
+    "UPDATE_SEQUENCE": 1861366743
+  },
+  {
+    "UPDATE_TYPE_ID": 99,
+    "ALIAS_NAME": "HOME_SCORE",
+    "PARAM_NUM": 5,
+    "PARAM_NAME": 266,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "0",
+    "UPDATE_SEQUENCE": 1861392872
+  },
+  {
+    "UPDATE_TYPE_ID": 99,
+    "ALIAS_NAME": "HOME_SCORE",
+    "PARAM_NUM": 5,
+    "PARAM_NAME": 266,
+    "VARIABLE_TYPE": 1,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861413322
+  },
+  {
+    "UPDATE_TYPE_ID": 99,
+    "ALIAS_NAME": "PLAYER_NAME",
+    "PARAM_NUM": 3,
+    "PARAM_NAME": 58388766,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "1",
+    "UPDATE_SEQUENCE": 1861366743
+  },
+  {
+    "UPDATE_TYPE_ID": 99,
+    "ALIAS_NAME": "PLAYER_NAME",
+    "PARAM_NUM": 3,
+    "PARAM_NAME": 58388766,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "14755144",
+    "UPDATE_SEQUENCE": 1861392872
+  },
+  {
+    "UPDATE_TYPE_ID": 99,
+    "ALIAS_NAME": "PLAYER_NAME",
+    "PARAM_NUM": 3,
+    "PARAM_NAME": 58388766,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "2",
+    "UPDATE_SEQUENCE": 1861392872
+  },
+  {
+    "UPDATE_TYPE_ID": 99,
+    "ALIAS_NAME": "PLAYER_NAME",
+    "PARAM_NUM": 3,
+    "PARAM_NAME": 58388766,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "290",
+    "UPDATE_SEQUENCE": 1861366743
+  },
+  {
+    "UPDATE_TYPE_ID": 99,
+    "ALIAS_NAME": "PLAYER_NAME",
+    "PARAM_NUM": 3,
+    "PARAM_NAME": 58388766,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "3",
+    "UPDATE_SEQUENCE": 1861413322
+  },
+  {
+    "UPDATE_TYPE_ID": 99,
+    "ALIAS_NAME": "PLAYER_NAME",
+    "PARAM_NUM": 3,
+    "PARAM_NAME": 58388766,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "405496",
+    "UPDATE_SEQUENCE": 1861366743
+  },
+  {
+    "UPDATE_TYPE_ID": 99,
+    "ALIAS_NAME": "PLAYER_NAME",
+    "PARAM_NUM": 3,
+    "PARAM_NAME": 58388766,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "670092",
+    "UPDATE_SEQUENCE": 1861413322
+  },
+  {
+    "UPDATE_TYPE_ID": 100,
+    "ALIAS_NAME": "CAPTION",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 67600615,
+    "VARIABLE_TYPE": 5,
+    "VALUE": null,
+    "UPDATE_SEQUENCE": 1861438375
+  },
+  {
+    "UPDATE_TYPE_ID": 100,
+    "ALIAS_NAME": "VIDEO_ID",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 67600616,
+    "VARIABLE_TYPE": 4,
+    "VALUE": "17560153",
+    "UPDATE_SEQUENCE": 1861438375
+  },
+  {
+    "UPDATE_TYPE_ID": 120,
+    "ALIAS_NAME": "BODY",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 70842350,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "77866576",
+    "UPDATE_SEQUENCE": 1861374578
+  },
+  {
+    "UPDATE_TYPE_ID": 120,
+    "ALIAS_NAME": "BODY",
+    "PARAM_NUM": 2,
+    "PARAM_NAME": 70842350,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "77866642",
+    "UPDATE_SEQUENCE": 1861430602
+  },
+  {
+    "UPDATE_TYPE_ID": 120,
+    "ALIAS_NAME": "TITLE",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 70842349,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "77866575",
+    "UPDATE_SEQUENCE": 1861374578
+  },
+  {
+    "UPDATE_TYPE_ID": 120,
+    "ALIAS_NAME": "TITLE",
+    "PARAM_NUM": 1,
+    "PARAM_NAME": 70842349,
+    "VARIABLE_TYPE": 6,
+    "VALUE": "77866641",
+    "UPDATE_SEQUENCE": 1861430602
+  }
+]

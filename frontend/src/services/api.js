@@ -458,6 +458,16 @@ class ApiService {
     return response.data;
   }
 
+  async getGameStatuses() {
+    const response = await this.fetch('/data/game-statuses');
+    return response.data || [];
+  }
+
+  async getSequenceDetails(sequence) {
+    const response = await this.fetch(`/data/sequence-details/${sequence}`);
+    return response.data || {};
+  }
+
   /**
    * Get updates log for a game (investigation/debug).
    * filters: { freeText, source, updateType, dateFrom, dateTo } - server-side search when provided.
@@ -1849,6 +1859,30 @@ class ApiService {
   async deleteAthleteTrophy(athleteId, competitionId, seasonNum, competitorId) {
     const response = await this.fetch(`/athletes/${athleteId}/trophies/${competitionId}/${seasonNum}/${competitorId}`, {
       method: 'DELETE',
+    });
+    return response.data;
+  }
+  async getFiltersList(filters = {}) {
+    const params = new URLSearchParams();
+    if (filters.activeOnly === true || filters.activeOnly === 'true') params.append('activeOnly', 'true');
+    if (filters.filterId) params.append('filterId', filters.filterId);
+    const qs = params.toString();
+    const response = await this.fetch(`/filters${qs ? `?${qs}` : ''}`);
+    return response.data || [];
+  }
+
+  async createFilter(filterData) {
+    const response = await this.fetch('/filters', {
+      method: 'POST',
+      body: JSON.stringify(filterData),
+    });
+    return response.data;
+  }
+
+  async updateFiltersBulk(updates) {
+    const response = await this.fetch('/filters/bulk', {
+      method: 'PUT',
+      body: JSON.stringify({ updates }),
     });
     return response.data;
   }

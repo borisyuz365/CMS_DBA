@@ -19,36 +19,24 @@ import {
   Checkbox,
   TextField,
   Button,
+  Tooltip,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  CircularProgress,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import BugReportIcon from '@mui/icons-material/BugReport';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import WatchLaterIcon from '@mui/icons-material/WatchLater';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import api from '../services/api';
 
 dayjs.extend(utc);
 import LoadingSpinner from '../../reuse/LoadingSpinner';
-
-// Game status codes from data sources (Opta/Simulator); extend as new codes appear
-const GAME_STATUS_LABELS = {
-  1: 'Unknown',
-  2: 'Not Started',
-  3: 'Finished',
-  6: 'First Half',
-  7: 'Half Time',
-  8: 'Second Half',
-  12: '1st Half',
-  13: 'Extra Time 1st Half',
-  18: 'Scheduled',
-  19: 'Live',
-  23: 'Ended',
-  128: 'Postponed',
-  172: 'Extra Time 1st Half',
-  174: 'Extra Time 2nd Half',
-};
 
 // Including Data filter config: Name in filter -> { searchText, matchType }
 // matchType: 'hasValue' = Key: with non-empty content | 'notMinusOne' = Key with value ≠ -1 | 'contains' = substring exists
@@ -104,16 +92,6 @@ function matchIncludingDataFilter(text, config) {
 
 const DATE_FORMAT_IL_UTC = 'DD/MM/YYYY HH:mm:ss';
 
-function getStatusFromUpdateText(text) {
-  if (!text || typeof text !== 'string') return null;
-  const idx = text.indexOf('Status: ');
-  if (idx === -1) return null;
-  const after = text.slice(idx + 8);
-  const end = after.search(/[\s]/);
-  const value = (end === -1 ? after : after.slice(0, end)).trim();
-  return value || null;
-}
-
 function formatDateTime(val) {
   if (!val) return '-';
   try {
@@ -156,6 +134,7 @@ export default function GameReport() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [expandedId, setExpandedId] = useState(null);
+  const [seqDialog, setSeqDialog] = useState({ open: false, sequence: null, loading: false, data: null });
   const [pagination, setPagination] = useState({ page: 0, rowsPerPage: 15 });
   const [sort, setSort] = useState({ by: 'handled', dir: 'desc' });
   const [appliedFilters, setAppliedFilters] = useState(null);
@@ -164,10 +143,17 @@ export default function GameReport() {
     source: [],
     updateType: [],
     includingData: [],
+    status: [],
+    score: [],
+    handlingDelay: false,
+    hasSequence: false,
+    hasException: false,
+    hasTrace: false,
     dateFrom: null,
     dateTo: null,
   });
   const [filterOptions, setFilterOptions] = useState({ sources: [], updateTypes: [], sourceNames: {} });
+  const [gameStatusesMap, setGameStatusesMap] = useState({});
   const [gameEnrichment, setGameEnrichment] = useState({
     sportName: null,
     competitionName: null,
@@ -184,11 +170,19 @@ export default function GameReport() {
     let cancelled = false;
     (async () => {
       try {
-        const [sports, competition, competitors] = await Promise.all([
+        const [sports, competition, competitors, gameStatuses] = await Promise.all([
           api.getSports().catch(() => []),
           game.COMPETITION_ID ? api.getCompetitionById(game.COMPETITION_ID).catch(() => null) : Promise.resolve(null),
           api.getCompetitors().catch(() => []),
+          api.getGameStatuses().catch(() => []),
         ]);
+        if (!cancelled) {
+          const statusMap = {};
+          for (const s of gameStatuses) {
+            statusMap[`${s.STAGE_ID}-${s.SPORT_TYPE_ID}`] = s.ALIAS_NAME;
+          }
+          setGameStatusesMap(statusMap);
+        }
         if (cancelled) return;
         const sport = Array.isArray(sports) ? sports.find((s) => (s.SPORT_TYPE_ID ?? s.SPORTTYPE_ID) === (game.SPORTTYPE_ID ?? game.SPORT_TYPE_ID)) : null;
         const sportName = sport ? (sport.name || sport.ALIAS_NAME || null) : null;
@@ -298,17 +292,85 @@ export default function GameReport() {
       .sort((a, b) => a.localeCompare(b));
   }, [updates]);
 
+  const availableStatusOptions = useMemo(() => {
+    if (!updates.length) return [];
+    const sportId = game?.SPORTTYPE_ID ?? game?.SPORT_TYPE_ID;
+    const seen = new Map();
+    for (const u of updates) {
+      const s = u.GAME_STATUS;
+      if (s == null || s === -1 || s === 1 || seen.has(s)) continue;
+      const label = gameStatusesMap[`${s}-${sportId}`] ?? String(s);
+      seen.set(s, label);
+    }
+    return [...seen.entries()]
+      .map(([value, label]) => ({ value, label }))
+      .sort((a, b) => a.label.localeCompare(b.label));
+  }, [updates, gameStatusesMap, game]);
+
+  const availableScoreOptions = useMemo(() => {
+    if (!updates.length) return [];
+    const seen = new Set();
+    const results = [];
+    for (const u of updates) {
+      if (u.COMPETITOR_1_CURR_SCORE == null || u.COMPETITOR_2_CURR_SCORE == null) continue;
+      if (u.COMPETITOR_1_CURR_SCORE === -1 && u.COMPETITOR_2_CURR_SCORE === -1) continue;
+      const score = `${u.COMPETITOR_1_CURR_SCORE}-${u.COMPETITOR_2_CURR_SCORE}`;
+      if (seen.has(score)) continue;
+      seen.add(score);
+      results.push(score);
+    }
+    return results.sort((a, b) => a.localeCompare(b));
+  }, [updates]);
+
   const filteredUpdates = useMemo(() => {
-    const selected = appliedFilters ? (appliedFilters.includingData || []) : [];
-    if (selected.length === 0) return updates;
+    const selectedIncluding = appliedFilters ? (appliedFilters.includingData || []) : [];
+    const selectedStatus = appliedFilters ? (appliedFilters.status || []) : [];
+    const selectedScore = appliedFilters ? (appliedFilters.score || []) : [];
+    const hasIncluding = selectedIncluding.length > 0;
+    const hasStatus = selectedStatus.length > 0;
+    const hasScore = selectedScore.length > 0;
+    const hasDelay = filters.handlingDelay === true;
+    const filterSequence = filters.hasSequence === true;
+    const filterException = filters.hasException === true;
+    const filterTrace = filters.hasTrace === true;
+    if (!hasIncluding && !hasStatus && !hasScore && !hasDelay && !filterSequence && !filterException && !filterTrace) return updates;
     return updates.filter((u) => {
-      const text = u.UPDATE_TEXT || '';
-      return selected.some((name) => {
-        const config = INCLUDING_DATA_FILTERS.find((c) => c.filterName === name);
-        return config && matchIncludingDataFilter(text, config);
-      });
+      if (hasIncluding) {
+        const text = u.UPDATE_TEXT || '';
+        const match = selectedIncluding.some((name) => {
+          const config = INCLUDING_DATA_FILTERS.find((c) => c.filterName === name);
+          return config && matchIncludingDataFilter(text, config);
+        });
+        if (!match) return false;
+      }
+      if (hasStatus) {
+        if (!selectedStatus.includes(u.GAME_STATUS)) return false;
+      }
+      if (hasScore) {
+        if (u.COMPETITOR_1_CURR_SCORE == null || u.COMPETITOR_2_CURR_SCORE == null) return false;
+        const score = `${u.COMPETITOR_1_CURR_SCORE}-${u.COMPETITOR_2_CURR_SCORE}`;
+        if (!selectedScore.includes(score)) return false;
+      }
+      if (hasDelay) {
+        if (!u.HANDLED || !u.CREATED) return false;
+        const c = new Date(u.CREATED);
+        const h = new Date(u.HANDLED);
+        if (isNaN(c.getTime()) || isNaN(h.getTime())) return false;
+        if (Math.abs(h.getTime() - c.getTime()) <= 5000) return false;
+      }
+      if (filterSequence) {
+        const v = u.CREATED_SEQUENCE;
+        if (v == null || Number(v) <= 0) return false;
+      }
+      if (filterException) {
+        if (!u.EXCEPTION_TEXT || !String(u.EXCEPTION_TEXT).trim()) return false;
+      }
+      if (filterTrace) {
+        if (!u.TRACE || !String(u.TRACE).trim()) return false;
+      }
+      return true;
     });
-  }, [updates, appliedFilters]);
+  }, [updates, appliedFilters, filters.handlingDelay, filters.hasSequence, filters.hasException, filters.hasTrace]);
 
   const getSortValue = (u, by) => {
     switch (by) {
@@ -317,19 +379,18 @@ export default function GameReport() {
       case 'handled':
         return u.HANDLED ? new Date(u.HANDLED).getTime() : null;
       case 'status': {
-        const label = getStatusFromUpdateText(u.UPDATE_TEXT) ?? GAME_STATUS_LABELS[u.GAME_STATUS] ?? String(u.GAME_STATUS ?? '');
-        return label === '-1' ? '' : (label || '');
+        if (u.GAME_STATUS == null || u.GAME_STATUS === -1 || u.GAME_STATUS === 1) return null;
+        const sportId = game?.SPORTTYPE_ID ?? game?.SPORT_TYPE_ID;
+        return gameStatusesMap[`${u.GAME_STATUS}-${sportId}`] ?? String(u.GAME_STATUS);
       }
       case 'startTime':
         return u.GAME_STARTTIME ? new Date(u.GAME_STARTTIME).getTime() : null;
       case 'gameTime':
         return typeof u.GAME_TIME === 'number' ? u.GAME_TIME : (u.GAME_TIME != null ? Number(u.GAME_TIME) : null);
-      case 'score': {
-        const score = u.COMPETITOR_1_CURR_SCORE != null && u.COMPETITOR_2_CURR_SCORE != null
+      case 'score':
+        return u.COMPETITOR_1_CURR_SCORE != null && u.COMPETITOR_2_CURR_SCORE != null
           ? `${u.COMPETITOR_1_CURR_SCORE}-${u.COMPETITOR_2_CURR_SCORE}`
           : null;
-        return score === '-1--1' ? '' : (score ?? '');
-      }
       case 'source':
         return (filterOptions.sourceNames || {})[u.DATA_SOURCE_ID] ?? String(u.DATA_SOURCE_ID ?? '');
       case 'sequence':
@@ -359,7 +420,7 @@ export default function GameReport() {
         : String(va).localeCompare(String(vb));
       return dir * cmp;
     });
-  }, [filteredUpdates, sort.by, sort.dir, filterOptions]);
+  }, [filteredUpdates, sort.by, sort.dir, filterOptions, gameStatusesMap, game]);
 
   const paginatedUpdates = useMemo(() => {
     const start = pagination.page * pagination.rowsPerPage;
@@ -372,6 +433,16 @@ export default function GameReport() {
       dir: prev.by === by && prev.dir === 'asc' ? 'desc' : 'asc',
     }));
     setPagination((p) => ({ ...p, page: 0 }));
+  };
+
+  const openSequenceDialog = async (sequence) => {
+    setSeqDialog({ open: true, sequence, loading: true, data: null });
+    try {
+      const data = await api.getSequenceDetails(sequence);
+      setSeqDialog((prev) => ({ ...prev, loading: false, data }));
+    } catch {
+      setSeqDialog((prev) => ({ ...prev, loading: false, data: { sequence, items: [] } }));
+    }
   };
 
   if (loading && !game) {
@@ -459,7 +530,11 @@ export default function GameReport() {
             </Box>
             <Box sx={{ minWidth: 0 }}>
               <Typography variant="caption" color="text.secondary" display="block">Game status name</Typography>
-              <Typography variant="body2" sx={{ fontSize: '0.875rem' }}>{GAME_STATUS_LABELS[game.STATUS] ?? game.STATUS ?? '-'}</Typography>
+              <Typography variant="body2" sx={{ fontSize: '0.875rem' }}>
+                {game.STATUS != null && game.STATUS !== -1 && game.STATUS !== 1
+                  ? (gameStatusesMap[`${game.STATUS}-${game.SPORTTYPE_ID ?? game.SPORT_TYPE_ID}`] ?? game.STATUS)
+                  : '-'}
+              </Typography>
             </Box>
             <Box sx={{ minWidth: 0 }}>
               <Typography variant="caption" color="text.secondary" display="block">Competitor 1 Name</Typography>
@@ -568,6 +643,84 @@ export default function GameReport() {
               </MenuItem>
             ))}
           </Select>
+          <Select
+            size="small"
+            multiple
+            displayEmpty
+            value={filters.status}
+            onChange={(e) => setFilters((prev) => ({ ...prev, status: e.target.value }))}
+            sx={{ minWidth: 160, bgcolor: '#fff' }}
+            renderValue={(v) => {
+              const arr = Array.isArray(v) ? v : [];
+              if (arr.length === 0) return 'Status';
+              if (arr.length === 1) {
+                const opt = availableStatusOptions.find((o) => o.value === arr[0]);
+                return opt ? opt.label : arr[0];
+              }
+              return `Status (${arr.length})`;
+            }}
+          >
+            {availableStatusOptions.map((opt) => (
+              <MenuItem key={opt.value} value={opt.value}>
+                <Checkbox checked={(filters.status || []).indexOf(opt.value) > -1} size="small" sx={{ mr: 1 }} />
+                {opt.label}
+              </MenuItem>
+            ))}
+          </Select>
+          <Select
+            size="small"
+            multiple
+            displayEmpty
+            value={filters.score}
+            onChange={(e) => setFilters((prev) => ({ ...prev, score: e.target.value }))}
+            sx={{ minWidth: 140, bgcolor: '#fff' }}
+            renderValue={(v) => {
+              const arr = Array.isArray(v) ? v : [];
+              if (arr.length === 0) return 'Score';
+              if (arr.length === 1) return arr[0];
+              return `Score (${arr.length})`;
+            }}
+          >
+            {availableScoreOptions.map((s) => (
+              <MenuItem key={s} value={s}>
+                <Checkbox checked={(filters.score || []).indexOf(s) > -1} size="small" sx={{ mr: 1 }} />
+                {s}
+              </MenuItem>
+            ))}
+          </Select>
+          <Button
+            variant={filters.handlingDelay ? 'contained' : 'outlined'}
+            color={filters.handlingDelay ? 'error' : 'inherit'}
+            startIcon={<WatchLaterIcon />}
+            onClick={() => { setFilters((prev) => ({ ...prev, handlingDelay: !prev.handlingDelay })); setPagination((p) => ({ ...p, page: 0 })); }}
+            sx={{ minWidth: 160, textTransform: 'none' }}
+          >
+            Handling Delay
+          </Button>
+          <Button
+            variant={filters.hasSequence ? 'contained' : 'outlined'}
+            color={filters.hasSequence ? 'primary' : 'inherit'}
+            onClick={() => { setFilters((prev) => ({ ...prev, hasSequence: !prev.hasSequence })); setPagination((p) => ({ ...p, page: 0 })); }}
+            sx={{ textTransform: 'none' }}
+          >
+            Updates Only
+          </Button>
+          <Button
+            variant={filters.hasException ? 'contained' : 'outlined'}
+            color={filters.hasException ? 'warning' : 'inherit'}
+            onClick={() => { setFilters((prev) => ({ ...prev, hasException: !prev.hasException })); setPagination((p) => ({ ...p, page: 0 })); }}
+            sx={{ textTransform: 'none' }}
+          >
+            Has Exception
+          </Button>
+          <Button
+            variant={filters.hasTrace ? 'contained' : 'outlined'}
+            color={filters.hasTrace ? 'info' : 'inherit'}
+            onClick={() => { setFilters((prev) => ({ ...prev, hasTrace: !prev.hasTrace })); setPagination((p) => ({ ...p, page: 0 })); }}
+            sx={{ textTransform: 'none' }}
+          >
+            Has Trace
+          </Button>
           <DatePicker
             label="From"
             value={filters.dateFrom}
@@ -600,6 +753,12 @@ export default function GameReport() {
                 source: [],
                 updateType: [],
                 includingData: [],
+                status: [],
+                score: [],
+                handlingDelay: false,
+                hasSequence: false,
+                hasException: false,
+                hasTrace: false,
                 dateFrom: fo?.dateFrom ? dayjs(fo.dateFrom) : null,
                 dateTo: fo?.dateTo ? dayjs(fo.dateTo) : null,
               });
@@ -723,57 +882,53 @@ export default function GameReport() {
                           const c = new Date(u.CREATED);
                           const h = new Date(u.HANDLED);
                           const gapMs = isNaN(c.getTime()) || isNaN(h.getTime()) ? 0 : Math.abs(h.getTime() - c.getTime());
+                          if (gapMs === 0) return null;
                           const isOver5Sec = gapMs > 5000;
                           return (
-                            <Typography
-                              component="span"
-                              variant="caption"
-                              sx={{ ml: 0.5, color: isOver5Sec ? 'error.main' : 'text.secondary' }}
-                            >
-                              ({formatGap(u.CREATED, u.HANDLED)})
-                            </Typography>
+                            <Tooltip title={formatGap(u.CREATED, u.HANDLED)} arrow>
+                              <WatchLaterIcon
+                                sx={{
+                                  ml: 0.5,
+                                  fontSize: 16,
+                                  verticalAlign: 'middle',
+                                  color: isOver5Sec ? 'error.main' : 'text.secondary',
+                                }}
+                              />
+                            </Tooltip>
                           );
                         })()}
                       </TableCell>
                       <TableCell>
-                        {(() => {
-                          const label = getStatusFromUpdateText(u.UPDATE_TEXT) ?? GAME_STATUS_LABELS[u.GAME_STATUS] ?? (u.GAME_STATUS != null ? `Status ${u.GAME_STATUS}` : '-');
-                          if (label === '-1') return '';
-                          return (
-                            <Chip
-                              label={label}
-                              size="small"
-                              color={u.GAME_STATUS === 3 ? 'success' : 'default'}
-                            />
-                          );
-                        })()}
+                        {u.GAME_STATUS != null && u.GAME_STATUS !== -1 && u.GAME_STATUS !== 1
+                          ? (gameStatusesMap[`${u.GAME_STATUS}-${game?.SPORTTYPE_ID ?? game?.SPORT_TYPE_ID}`] ?? u.GAME_STATUS)
+                          : ''}
                       </TableCell>
                       <TableCell sx={{ whiteSpace: 'nowrap' }}>
                         {u.GAME_STARTTIME ? formatDateTime(u.GAME_STARTTIME) : '-'}
                       </TableCell>
-                      <TableCell sx={{ width: '1%', whiteSpace: 'nowrap' }}>
-                        {(() => {
-                          const v = u.GAME_TIME;
-                          if (v == null) return '-';
-                          const s = String(v);
-                          return s === '-1--1' || s === '-1' ? '' : v;
-                        })()}
-                      </TableCell>
+                      <TableCell sx={{ width: '1%', whiteSpace: 'nowrap' }}>{u.GAME_TIME != null && u.GAME_TIME !== -1 ? u.GAME_TIME : ''}</TableCell>
                       <TableCell>
-                        {(() => {
-                          const score = u.COMPETITOR_1_CURR_SCORE != null && u.COMPETITOR_2_CURR_SCORE != null
-                            ? `${u.COMPETITOR_1_CURR_SCORE}-${u.COMPETITOR_2_CURR_SCORE}`
-                            : null;
-                          return score === '-1--1' ? '' : (score ?? '-');
-                        })()}
+                        {u.COMPETITOR_1_CURR_SCORE != null && u.COMPETITOR_2_CURR_SCORE != null
+                          && u.COMPETITOR_1_CURR_SCORE !== -1 && u.COMPETITOR_2_CURR_SCORE !== -1
+                          ? `${u.COMPETITOR_1_CURR_SCORE}-${u.COMPETITOR_2_CURR_SCORE}`
+                          : ''}
                       </TableCell>
                       <TableCell>{(filterOptions.sourceNames || {})[u.DATA_SOURCE_ID] ?? u.DATA_SOURCE_ID ?? '-'}</TableCell>
                       <TableCell>
                           {(() => {
                             const v = u.CREATED_SEQUENCE;
                             if (v == null) return '-';
-                            const s = String(v);
-                            return s === '-1--1' || s === '-1' ? '' : v;
+                            if (Number(v) <= 0) return '';
+                            return (
+                              <Typography
+                                component="span"
+                                variant="body2"
+                                sx={{ color: 'primary.main', cursor: 'pointer', textDecoration: 'underline', '&:hover': { color: 'primary.dark' } }}
+                                onClick={(e) => { e.stopPropagation(); openSequenceDialog(v); }}
+                              >
+                                {v}
+                              </Typography>
+                            );
                           })()}
                         </TableCell>
                       <TableCell align="center">
@@ -922,6 +1077,60 @@ export default function GameReport() {
           </Box>
         )}
       </Paper>
+
+      <Dialog
+        open={seqDialog.open}
+        onClose={() => setSeqDialog({ open: false, sequence: null, loading: false, data: null })}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Typography variant="h6" component="span">Sequence #{seqDialog.sequence}</Typography>
+          <IconButton size="small" onClick={() => setSeqDialog({ open: false, sequence: null, loading: false, data: null })}>✕</IconButton>
+        </DialogTitle>
+        <DialogContent dividers>
+          {seqDialog.loading ? (
+            <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
+              <CircularProgress />
+            </Box>
+          ) : !seqDialog.data?.items?.length ? (
+            <Typography color="text.secondary">No details found for this sequence.</Typography>
+          ) : (
+            <Table size="small">
+              <TableHead>
+                <TableRow sx={{ '& th': { fontWeight: 600, bgcolor: '#fafafa' } }}>
+                  <TableCell>Update ID</TableCell>
+                  <TableCell>Update Type</TableCell>
+                  <TableCell>Time</TableCell>
+                  <TableCell>Parameters</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {seqDialog.data.items.map((item, idx) => (
+                  <TableRow key={idx}>
+                    <TableCell>{item.updateId}</TableCell>
+                    <TableCell>{item.updateTypeName || item.updateType}</TableCell>
+                    <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.createTime || '-'}</TableCell>
+                    <TableCell>
+                      {item.params.length === 0
+                        ? '-'
+                        : item.params.map((p, pi) => (
+                            <Chip
+                              key={pi}
+                              label={`${p.paramName || `P${p.paramNum}`}: ${p.value ?? ''}`}
+                              size="small"
+                              variant="outlined"
+                              sx={{ mr: 0.5, mb: 0.5 }}
+                            />
+                          ))}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 }

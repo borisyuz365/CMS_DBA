@@ -44874,5 +44874,450 @@
       }
     ],
     "valsCount": 1
+  },
+  {
+    "id": 77757068,
+    "categoryId": 4,
+    "aliasName": "",
+    "fatherTerm": "",
+    "createTime": "2026-04-14T07:36:08.343Z",
+    "description": null,
+    "category": "Competitions Names",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "UEFA Champions League",
+        "isDefault": true,
+        "status": "Approved",
+        "context": "",
+        "block": false,
+        "sequence": 1
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "UEFA Champions League",
+    "langValue": "UEFA Champions League"
+  },
+  {
+    "id": 77757069,
+    "categoryId": 2,
+    "aliasName": null,
+    "fatherTerm": null,
+    "createTime": "2026-04-14T07:36:37.393Z",
+    "description": null,
+    "category": "Countries names",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Europe",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "Europe"
+  },
+  {
+    "id": 77877698,
+    "categoryId": 66,
+    "aliasName": "",
+    "fatherTerm": "",
+    "createTime": "2026-04-13T17:27:00.000Z",
+    "description": null,
+    "category": "Filters Names",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Serie A: Como - Inter Milan",
+        "isDefault": true,
+        "status": "Approved",
+        "context": "",
+        "block": false,
+        "sequence": 1
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "Serie A: Como - Inter Milan",
+    "langValue": "Serie A: Como - Inter Milan"
+  },
+  {
+    "id": 77877544,
+    "categoryId": 66,
+    "aliasName": null,
+    "fatherTerm": null,
+    "createTime": "2026-04-13T14:53:00.000Z",
+    "description": null,
+    "category": "Filters Names",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Premier League: Arsenal - Chelsea",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "Premier League: Arsenal - Chelsea"
+  },
+  {
+    "id": 77877508,
+    "categoryId": 66,
+    "aliasName": null,
+    "fatherTerm": null,
+    "createTime": "2026-04-13T13:55:00.000Z",
+    "description": null,
+    "category": "Filters Names",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "La Liga: Barcelona - Real Madrid",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "La Liga: Barcelona - Real Madrid"
+  },
+  {
+    "id": 77877428,
+    "categoryId": 66,
+    "aliasName": null,
+    "fatherTerm": null,
+    "createTime": "2026-04-13T13:46:00.000Z",
+    "description": null,
+    "category": "Filters Names",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Bundesliga: Bayern Munich - Borussia Dortmund",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "Bundesliga: Bayern Munich - Borussia Dortmund"
+  },
+  {
+    "id": 77877422,
+    "categoryId": 66,
+    "aliasName": null,
+    "fatherTerm": null,
+    "createTime": "2026-04-13T13:44:00.000Z",
+    "description": null,
+    "category": "Filters Names",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Ligue 1: PSG - Marseille",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "Ligue 1: PSG - Marseille"
+  },
+  {
+    "id": 77877421,
+    "categoryId": 66,
+    "aliasName": null,
+    "fatherTerm": null,
+    "createTime": "2026-04-13T13:44:00.000Z",
+    "description": null,
+    "category": "Filters Names",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Serie A: Juventus - AC Milan",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "Serie A: Juventus - AC Milan"
+  },
+  {
+    "id": 77877420,
+    "categoryId": 66,
+    "aliasName": null,
+    "fatherTerm": null,
+    "createTime": "2026-04-13T13:43:00.000Z",
+    "description": null,
+    "category": "Filters Names",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Premier League: Liverpool - Manchester United",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "Premier League: Liverpool - Manchester United"
+  },
+  {
+    "id": 77877419,
+    "categoryId": 66,
+    "aliasName": null,
+    "fatherTerm": null,
+    "createTime": "2026-04-13T13:43:00.000Z",
+    "description": null,
+    "category": "Filters Names",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "La Liga: Atletico Madrid - Sevilla",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "La Liga: Atletico Madrid - Sevilla"
+  },
+  {
+    "id": 77877418,
+    "categoryId": 66,
+    "aliasName": null,
+    "fatherTerm": null,
+    "createTime": "2026-04-13T13:43:00.000Z",
+    "description": null,
+    "category": "Filters Names",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Bundesliga: Bayer Leverkusen - RB Leipzig",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "Bundesliga: Bayer Leverkusen - RB Leipzig"
+  },
+  {
+    "id": 77877377,
+    "categoryId": 66,
+    "aliasName": null,
+    "fatherTerm": null,
+    "createTime": "2026-04-13T13:06:00.000Z",
+    "description": null,
+    "category": "Filters Names",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Ligue 1: Lyon - Monaco",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "Ligue 1: Lyon - Monaco"
+  },
+  {
+    "id": 77877376,
+    "categoryId": 66,
+    "aliasName": null,
+    "fatherTerm": null,
+    "createTime": "2026-04-13T13:05:00.000Z",
+    "description": null,
+    "category": "Filters Names",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "NBA",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "NBA"
+  },
+  {
+    "id": 77877374,
+    "categoryId": 66,
+    "aliasName": null,
+    "fatherTerm": null,
+    "createTime": "2026-04-13T13:05:00.000Z",
+    "description": null,
+    "category": "Filters Names",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "NFL",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "NFL"
+  },
+  {
+    "id": 77877373,
+    "categoryId": 66,
+    "aliasName": null,
+    "fatherTerm": null,
+    "createTime": "2026-04-13T13:04:00.000Z",
+    "description": null,
+    "category": "Filters Names",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "NHL",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "NHL"
+  },
+  {
+    "id": 77877370,
+    "categoryId": 66,
+    "aliasName": null,
+    "fatherTerm": null,
+    "createTime": "2026-04-13T13:03:00.000Z",
+    "description": null,
+    "category": "Filters Names",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "ATP Tour",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "ATP Tour"
+  },
+  {
+    "id": 77877369,
+    "categoryId": 66,
+    "aliasName": null,
+    "fatherTerm": null,
+    "createTime": "2026-04-13T13:02:00.000Z",
+    "description": null,
+    "category": "Filters Names",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Formula 1",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "Formula 1"
+  },
+  {
+    "id": 77877368,
+    "categoryId": 66,
+    "aliasName": null,
+    "fatherTerm": null,
+    "createTime": "2026-04-13T13:02:00.000Z",
+    "description": null,
+    "category": "Filters Names",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Top USA",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "Top USA"
+  },
+  {
+    "id": 77877366,
+    "categoryId": 66,
+    "aliasName": null,
+    "fatherTerm": null,
+    "createTime": "2026-04-13T13:01:00.000Z",
+    "description": null,
+    "category": "Filters Names",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Top Brazil",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "Top Brazil"
+  },
+  {
+    "id": 77877365,
+    "categoryId": 66,
+    "aliasName": null,
+    "fatherTerm": null,
+    "createTime": "2026-04-13T13:00:00.000Z",
+    "description": null,
+    "category": "Filters Names",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Top Israel",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "Top Israel"
+  },
+  {
+    "id": 77877364,
+    "categoryId": 66,
+    "aliasName": null,
+    "fatherTerm": null,
+    "createTime": "2026-04-13T13:00:00.000Z",
+    "description": null,
+    "category": "Filters Names",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Top Egypt",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "Top Egypt"
+  },
+  {
+    "id": 77877360,
+    "categoryId": 66,
+    "aliasName": null,
+    "fatherTerm": null,
+    "createTime": "2026-04-13T12:59:00.000Z",
+    "description": null,
+    "category": "Filters Names",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Top Iraq",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "Top Iraq"
+  },
+  {
+    "id": 77877699,
+    "categoryId": 66,
+    "aliasName": null,
+    "fatherTerm": null,
+    "createTime": "2026-04-14T13:34:14.250Z",
+    "description": null,
+    "category": "Filters Names",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Test",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "Test"
   }
 ]

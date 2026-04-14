@@ -1,0 +1,9 @@
+{
+  "FILTER_ID": {"type": "int", "default": 0},
+  "ENTITY_ID": {"type": "int", "default": 0},
+  "ENTITY_TYPE": {"type": "int", "default": 0},
+  "CAPTION": {"type": "string", "default": ""},
+  "CREATE_TIME": {"type": "string", "default": ""},
+  "UPDATE_TIME": {"type": "string", "default": ""},
+  "FILTER_ORDER": {"type": "int", "default": null}
+}

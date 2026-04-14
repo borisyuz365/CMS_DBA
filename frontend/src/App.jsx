@@ -28,6 +28,7 @@ import DictionaryPage from './pages/DictionaryPage';
 import GamesList from './pages/GamesList';
 import GameReport from './pages/GameReport';
 import PrioritiesPage from './pages/PrioritiesPage';
+import FiltersList from './pages/FiltersList';
 import PersonIcon from '@mui/icons-material/Person';
 import GroupsIcon from '@mui/icons-material/Groups';
 import StadiumIcon from '@mui/icons-material/Stadium';
@@ -100,7 +101,13 @@ const menuItems = [
         ],
       },
       { label: 'News', icon: <ArticleIcon /> },
-      { label: 'Filters', icon: <FilterListIcon /> },
+      {
+        label: 'Promotions',
+        icon: <CampaignIcon />,
+        subItems: [
+          { label: 'Filters', path: '/filters', icon: <FilterListIcon /> },
+        ],
+      },
       {
         label: 'Tools',
         icon: <BuildIcon />,
@@ -114,7 +121,6 @@ const menuItems = [
   {
     section: '',
     items: [
-      { label: 'Promotions', icon: <CampaignIcon /> },
       { label: 'Images', icon: <ImageIcon /> },
       { label: 'Transfers', icon: <LocalShippingIcon /> },
       { label: 'Betting', icon: <CasinoIcon /> },
@@ -195,6 +201,7 @@ function App() {
             <Route path="games" element={<GamesList />} />
             <Route path="games/:id/report" element={<GameReport />} />
             <Route path="priorities" element={<PrioritiesPage />} />
+            <Route path="filters" element={<FiltersList />} />
           </Route>
         </Routes>
       </Box>

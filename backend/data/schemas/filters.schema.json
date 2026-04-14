@@ -1,0 +1,18 @@
+{
+  "FILTER_ID": {"type": "int", "default": 0},
+  "NAME_ID": {"type": "int", "default": 0},
+  "ACTIVE": {"type": "bool", "default": false},
+  "PROMOTED": {"type": "bool", "default": false},
+  "ORDER_LEVEL": {"type": "int", "default": 0},
+  "CREATE_TIME": {"type": "string", "default": ""},
+  "UPDATE_TIME": {"type": "string", "default": ""},
+  "ALLOW_SELECTION": {"type": "bool", "default": null},
+  "START_DATE": {"type": "string", "default": null},
+  "END_DATE": {"type": "string", "default": null},
+  "EDITORS_CHOICE": {"type": "bool", "default": null},
+  "EDITORS_PROMOTED_ODDS": {"type": "bool", "default": null},
+  "EDITORS_SHOW_SPORT_TYPE": {"type": "bool", "default": null},
+  "IMG_VER": {"type": "int", "default": 0},
+  "EDITORS_PROMOTED_ALL_SCORES": {"type": "bool", "default": null},
+  "FORCE_FINAL_ACTION_ENUM_VAL": {"type": "int", "default": null}
+}

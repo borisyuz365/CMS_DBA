@@ -519,5 +519,11 @@
     "fatherCategory": "Update Types",
     "description": "",
     "id": 65
+  },
+  {
+    "name": "Filters Names",
+    "fatherCategory": "All Categories",
+    "description": "Category for filter names",
+    "id": 66
   }
 ]

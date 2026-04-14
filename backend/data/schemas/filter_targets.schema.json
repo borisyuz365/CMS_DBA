@@ -1,0 +1,5 @@
+{
+  "FILTER_TARGET_ID": {"type": "int", "default": 0},
+  "FILTER_TARGET_TYPE": {"type": "int", "default": 0},
+  "FILTER_ID": {"type": "int", "default": 0}
+}
