@@ -141,15 +141,19 @@ function GamesList() {
       setLoading(true);
       setError(null);
       const filterParams = {};
-      if (filters.countryId) filterParams.countryId = filters.countryId;
-      if (filters.sportId) filterParams.sportId = filters.sportId;
-      if (filters.competitionId) filterParams.competitionId = filters.competitionId;
-      if (filters.teamId) filterParams.teamId = filters.teamId;
-      if (filters.gameId) filterParams.gameId = filters.gameId;
-      if (filters.searchPartnerId) filterParams.searchPartnerId = filters.searchPartnerId;
-      if (filters.dateFrom) filterParams.dateFrom = dayjs(filters.dateFrom).format('YYYY-MM-DD');
-      if (filters.dateTo) filterParams.dateTo = dayjs(filters.dateTo).format('YYYY-MM-DD');
-      if (filters.hideDeleted) filterParams.hideDeleted = true;
+
+      if (filters.gameId) {
+        filterParams.gameId = filters.gameId;
+      } else {
+        if (filters.countryId) filterParams.countryId = filters.countryId;
+        if (filters.sportId) filterParams.sportId = filters.sportId;
+        if (filters.competitionId) filterParams.competitionId = filters.competitionId;
+        if (filters.teamId) filterParams.teamId = filters.teamId;
+        if (filters.searchPartnerId) filterParams.searchPartnerId = filters.searchPartnerId;
+        if (filters.dateFrom) filterParams.dateFrom = dayjs(filters.dateFrom).format('YYYY-MM-DD');
+        if (filters.dateTo) filterParams.dateTo = dayjs(filters.dateTo).format('YYYY-MM-DD');
+        if (filters.hideDeleted) filterParams.hideDeleted = true;
+      }
 
       const data = await api.getGamesList(filterParams);
       setGames(Array.isArray(data) ? data : []);

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import {
   Box,
   Typography,
@@ -24,6 +24,8 @@ import {
   DialogTitle,
   DialogContent,
   CircularProgress,
+  Tabs,
+  Tab,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -127,10 +129,18 @@ function formatGap(created, handled) {
   }
 }
 
+const TAB_SLUGS = ['score-log', 'status-log', 'events-log', 'game-time-log', 'full-report', 'notifications-log', 'bets-log'];
+
 export default function GameReport() {
-  const { id } = useParams();
+  const { id, tab } = useParams();
+  const navigate = useNavigate();
+  const activeTab = Math.max(0, TAB_SLUGS.indexOf(tab || TAB_SLUGS[0]));
   const [game, setGame] = useState(null);
   const [updates, setUpdates] = useState([]);
+  const [scoreLog, setScoreLog] = useState([]);
+  const [statusLog, setStatusLog] = useState([]);
+  const [eventsLog, setEventsLog] = useState([]);
+  const [loadedTabs, setLoadedTabs] = useState(new Set());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [expandedId, setExpandedId] = useState(null);
@@ -236,6 +246,46 @@ export default function GameReport() {
     }
   }, [id]);
 
+  const loadTabData = React.useCallback(async (tabIndex) => {
+    if (!id) return;
+    try {
+      switch (tabIndex) {
+        case 0: {
+          const data = await api.getGameScoreLog(id);
+          setScoreLog(Array.isArray(data) ? data : []);
+          break;
+        }
+        case 1: {
+          const data = await api.getGameStatusLog(id);
+          setStatusLog(Array.isArray(data) ? data : []);
+          break;
+        }
+        case 2: {
+          const data = await api.getGameEventsLog(id);
+          setEventsLog(Array.isArray(data) ? data : []);
+          break;
+        }
+        case 4: {
+          const { data, filterOptions: opts } = await api.getGameUpdates(id);
+          setUpdates(Array.isArray(data) ? data : []);
+          const fo = opts || { sources: [], updateTypes: [], sourceNames: {} };
+          setFilterOptions(fo);
+          setFilters((prev) => ({
+            ...prev,
+            dateFrom: fo.dateFrom ? dayjs(fo.dateFrom) : null,
+            dateTo: fo.dateTo ? dayjs(fo.dateTo) : null,
+          }));
+          break;
+        }
+        default:
+          break;
+      }
+    } catch {
+      // tab data load failure is non-fatal
+    }
+    setLoadedTabs((prev) => new Set(prev).add(tabIndex));
+  }, [id]);
+
   useEffect(() => {
     if (!id) return;
     let cancelled = false;
@@ -244,30 +294,25 @@ export default function GameReport() {
       setLoading(true);
       setError(null);
       try {
-        const [gameData, { data, filterOptions: opts }] = await Promise.all([
-          api.getGameById(id).catch(() => null),
-          api.getGameUpdates(id),
-        ]);
+        const gameData = await api.getGameById(id).catch(() => null);
         if (cancelled || version !== loadVersionRef.current) return;
         setGame(gameData);
-        setUpdates(Array.isArray(data) ? data : []);
-        const fo = opts || { sources: [], updateTypes: [], sourceNames: {} };
-        setFilterOptions(fo);
-        setFilters((prev) => ({
-          ...prev,
-          dateFrom: fo.dateFrom ? dayjs(fo.dateFrom) : null,
-          dateTo: fo.dateTo ? dayjs(fo.dateTo) : null,
-        }));
+        await loadTabData(activeTab);
       } catch (err) {
         if (cancelled || version !== loadVersionRef.current) return;
         setError(err?.message || 'Failed to load report');
-        setUpdates([]);
       } finally {
         if (!cancelled && version === loadVersionRef.current) setLoading(false);
       }
     })();
     return () => { cancelled = true; };
   }, [id]);
+
+  useEffect(() => {
+    if (!id || !game) return;
+    if (loadedTabs.has(activeTab)) return;
+    loadTabData(activeTab);
+  }, [activeTab, id, game, loadedTabs, loadTabData]);
 
   const handleSearch = () => {
     const next = { ...filters };
@@ -566,6 +611,159 @@ export default function GameReport() {
         </Paper>
       )}
 
+      <Paper sx={{ mb: 2 }}>
+        <Tabs
+          value={activeTab}
+          onChange={(_, v) => navigate(`/games/${id}/report/${TAB_SLUGS[v]}`, { replace: true })}
+          variant="scrollable"
+          scrollButtons="auto"
+          sx={{
+            borderBottom: 1,
+            borderColor: 'divider',
+            '& .MuiTab-root': { textTransform: 'none', fontWeight: 600, minHeight: 48 },
+          }}
+        >
+          <Tab label="Score Log" />
+          <Tab label="Status Log" />
+          <Tab label="Events Log" />
+          <Tab label="Game Time Log" />
+          <Tab label="Full Report" />
+          <Tab label="Notifications Log" />
+          <Tab label="Bets Log" />
+        </Tabs>
+      </Paper>
+
+      {/* Tab 0: Score Log */}
+      {activeTab === 0 && (
+        <Paper>
+          {scoreLog.length === 0 ? (
+            <Box sx={{ p: 4, textAlign: 'center' }}>
+              <Typography color="text.secondary">No score log data found for this game.</Typography>
+            </Box>
+          ) : (
+            <TableContainer sx={{ maxHeight: 640, overflow: 'auto' }}>
+              <Table stickyHeader size="small">
+                <TableHead>
+                  <TableRow sx={{ '& th': { bgcolor: '#fafafa', fontWeight: 600 } }}>
+                    <TableCell>#</TableCell>
+                    <TableCell>Stage Num</TableCell>
+                    <TableCell>Score Seq</TableCell>
+                    <TableCell>Data Source</TableCell>
+                    <TableCell>Update Time</TableCell>
+                    <TableCell>Update Status</TableCell>
+                    <TableCell>Create Time</TableCell>
+                    <TableCell align="center">Created Score</TableCell>
+                    <TableCell align="center">Canceled Score</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {scoreLog.map((row, idx) => (
+                    <TableRow key={idx} hover>
+                      <TableCell>{idx + 1}</TableCell>
+                      <TableCell>{row.STAGE_NUM ?? '-'}</TableCell>
+                      <TableCell>{row.SCORE_SEQ ?? '-'}</TableCell>
+                      <TableCell>{(filterOptions.sourceNames || {})[row.DATA_SOURCE] ?? row.DATA_SOURCE ?? '-'}</TableCell>
+                      <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.UPDATE_TIME ?? '-'}</TableCell>
+                      <TableCell>{row.UPDATE_STATUS ?? '-'}</TableCell>
+                      <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.CREATE_TIME ?? '-'}</TableCell>
+                      <TableCell align="center"><Checkbox checked={!!row.CREATED_SCORE} disabled size="small" /></TableCell>
+                      <TableCell align="center"><Checkbox checked={!!row.CANCELED_SCORE} disabled size="small" /></TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
+        </Paper>
+      )}
+
+      {/* Tab 1: Status Log */}
+      {activeTab === 1 && (
+        <Paper>
+          {statusLog.length === 0 ? (
+            <Box sx={{ p: 4, textAlign: 'center' }}>
+              <Typography color="text.secondary">No status log data found for this game.</Typography>
+            </Box>
+          ) : (
+            <TableContainer sx={{ maxHeight: 640, overflow: 'auto' }}>
+              <Table stickyHeader size="small">
+                <TableHead>
+                  <TableRow sx={{ '& th': { bgcolor: '#fafafa', fontWeight: 600 } }}>
+                    <TableCell>#</TableCell>
+                    <TableCell>Status Seq</TableCell>
+                    <TableCell>Data Source</TableCell>
+                    <TableCell>Update Time</TableCell>
+                    <TableCell>Update Status</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {statusLog.map((row, idx) => (
+                    <TableRow key={idx} hover>
+                      <TableCell>{idx + 1}</TableCell>
+                      <TableCell>{row.STATUS_SEQ ?? '-'}</TableCell>
+                      <TableCell>{(filterOptions.sourceNames || {})[row.DATA_SOURCE] ?? row.DATA_SOURCE ?? '-'}</TableCell>
+                      <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.UPDATE_TIME ?? '-'}</TableCell>
+                      <TableCell>{row.UPDATE_STATUS ?? '-'}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
+        </Paper>
+      )}
+
+      {/* Tab 2: Events Log */}
+      {activeTab === 2 && (
+        <Paper>
+          {eventsLog.length === 0 ? (
+            <Box sx={{ p: 4, textAlign: 'center' }}>
+              <Typography color="text.secondary">No events log data found for this game.</Typography>
+            </Box>
+          ) : (
+            <TableContainer sx={{ maxHeight: 640, overflow: 'auto' }}>
+              <Table stickyHeader size="small">
+                <TableHead>
+                  <TableRow sx={{ '& th': { bgcolor: '#fafafa', fontWeight: 600 } }}>
+                    <TableCell>#</TableCell>
+                    <TableCell>Event Type</TableCell>
+                    <TableCell>Competitor Num</TableCell>
+                    <TableCell>Event Num</TableCell>
+                    <TableCell>Data Source</TableCell>
+                    <TableCell>Update Time</TableCell>
+                    <TableCell>Last Player Name</TableCell>
+                    <TableCell align="center">Was Applied</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {eventsLog.map((row, idx) => (
+                    <TableRow key={idx} hover>
+                      <TableCell>{idx + 1}</TableCell>
+                      <TableCell>{row.EVENT_TYPE ?? '-'}</TableCell>
+                      <TableCell>{row.EVENT_COMPETITOR_NUM ?? '-'}</TableCell>
+                      <TableCell>{row.EVENT_NUM ?? '-'}</TableCell>
+                      <TableCell>{(filterOptions.sourceNames || {})[row.DATA_SOURCE] ?? row.DATA_SOURCE ?? '-'}</TableCell>
+                      <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.UPDATE_TIME ?? '-'}</TableCell>
+                      <TableCell>{row.LAST_PLAYER_NAME || '-'}</TableCell>
+                      <TableCell align="center"><Checkbox checked={!!row.WAS_APPLIED} disabled size="small" /></TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
+        </Paper>
+      )}
+
+      {/* Tab 3: Game Time Log */}
+      {activeTab === 3 && (
+        <Paper sx={{ p: 4, textAlign: 'center' }}>
+          <Typography color="text.secondary">Game Time Log - Coming soon</Typography>
+        </Paper>
+      )}
+
+      {/* Tab 4: Full Report */}
+      {activeTab === 4 && (<>
       <Paper sx={{ p: 2, mb: 2 }}>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 2, justifyContent: 'flex-start' }}>
           <TextField
@@ -1077,6 +1275,21 @@ export default function GameReport() {
           </Box>
         )}
       </Paper>
+      </>)}
+
+      {/* Tab 5: Notifications Log */}
+      {activeTab === 5 && (
+        <Paper sx={{ p: 4, textAlign: 'center' }}>
+          <Typography color="text.secondary">Notifications Log - Coming soon</Typography>
+        </Paper>
+      )}
+
+      {/* Tab 6: Bets Log */}
+      {activeTab === 6 && (
+        <Paper sx={{ p: 4, textAlign: 'center' }}>
+          <Typography color="text.secondary">Bets Log - Coming soon</Typography>
+        </Paper>
+      )}
 
       <Dialog
         open={seqDialog.open}

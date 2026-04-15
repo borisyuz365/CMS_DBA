@@ -1,0 +1,338 @@
+[
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 1,
+    "DATA_SOURCE": 2,
+    "UPDATE_TIME": "18/03/26 21:54",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 1,
+    "DATA_SOURCE": 11,
+    "UPDATE_TIME": "07/04/26 01:00",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 1,
+    "DATA_SOURCE": 162,
+    "UPDATE_TIME": "07/04/26 17:21",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 1,
+    "DATA_SOURCE": 171,
+    "UPDATE_TIME": "18/03/26 22:53",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 1,
+    "DATA_SOURCE": 197,
+    "UPDATE_TIME": "07/04/26 00:04",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 1,
+    "DATA_SOURCE": 200,
+    "UPDATE_TIME": "18/03/26 22:11",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 1,
+    "DATA_SOURCE": 206,
+    "UPDATE_TIME": "19/03/26 01:44",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 1,
+    "DATA_SOURCE": 277,
+    "UPDATE_TIME": "25/03/26 00:26",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 1,
+    "DATA_SOURCE": 278,
+    "UPDATE_TIME": "05/04/26 12:40",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 1,
+    "DATA_SOURCE": 290,
+    "UPDATE_TIME": "07/04/26 00:49",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 2,
+    "DATA_SOURCE": 11,
+    "UPDATE_TIME": "07/04/26 19:00",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 2,
+    "DATA_SOURCE": 162,
+    "UPDATE_TIME": "07/04/26 19:02",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 2,
+    "DATA_SOURCE": 171,
+    "UPDATE_TIME": "07/04/26 19:01",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 2,
+    "DATA_SOURCE": 173,
+    "UPDATE_TIME": "07/04/26 19:00",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 2,
+    "DATA_SOURCE": 194,
+    "UPDATE_TIME": "07/04/26 19:00",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 2,
+    "DATA_SOURCE": 197,
+    "UPDATE_TIME": "07/04/26 19:00",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 2,
+    "DATA_SOURCE": 226,
+    "UPDATE_TIME": "07/04/26 19:00",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 2,
+    "DATA_SOURCE": 269,
+    "UPDATE_TIME": "07/04/26 19:00",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 2,
+    "DATA_SOURCE": 270,
+    "UPDATE_TIME": "07/04/26 19:40",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 2,
+    "DATA_SOURCE": 290,
+    "UPDATE_TIME": "07/04/26 19:01",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 3,
+    "DATA_SOURCE": 11,
+    "UPDATE_TIME": "07/04/26 19:47",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 3,
+    "DATA_SOURCE": 162,
+    "UPDATE_TIME": "07/04/26 19:49",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 3,
+    "DATA_SOURCE": 171,
+    "UPDATE_TIME": "07/04/26 19:47",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 3,
+    "DATA_SOURCE": 173,
+    "UPDATE_TIME": "07/04/26 19:46",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 3,
+    "DATA_SOURCE": 197,
+    "UPDATE_TIME": "07/04/26 19:47",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 3,
+    "DATA_SOURCE": 226,
+    "UPDATE_TIME": "07/04/26 19:46",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 3,
+    "DATA_SOURCE": 269,
+    "UPDATE_TIME": "07/04/26 19:47",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 3,
+    "DATA_SOURCE": 290,
+    "UPDATE_TIME": "07/04/26 19:47",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 4,
+    "DATA_SOURCE": 11,
+    "UPDATE_TIME": "07/04/26 20:04",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 4,
+    "DATA_SOURCE": 171,
+    "UPDATE_TIME": "07/04/26 20:04",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 4,
+    "DATA_SOURCE": 173,
+    "UPDATE_TIME": "07/04/26 20:04",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 4,
+    "DATA_SOURCE": 194,
+    "UPDATE_TIME": "07/04/26 20:04",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 4,
+    "DATA_SOURCE": 197,
+    "UPDATE_TIME": "07/04/26 20:03",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 4,
+    "DATA_SOURCE": 226,
+    "UPDATE_TIME": "07/04/26 20:03",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 4,
+    "DATA_SOURCE": 269,
+    "UPDATE_TIME": "07/04/26 20:04",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 4,
+    "DATA_SOURCE": 270,
+    "UPDATE_TIME": "07/04/26 20:04",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 4,
+    "DATA_SOURCE": 290,
+    "UPDATE_TIME": "07/04/26 20:04",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 5,
+    "DATA_SOURCE": 11,
+    "UPDATE_TIME": "07/04/26 20:53",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 5,
+    "DATA_SOURCE": 162,
+    "UPDATE_TIME": "07/04/26 20:55",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 5,
+    "DATA_SOURCE": 171,
+    "UPDATE_TIME": "07/04/26 20:54",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 5,
+    "DATA_SOURCE": 173,
+    "UPDATE_TIME": "07/04/26 20:53",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 5,
+    "DATA_SOURCE": 194,
+    "UPDATE_TIME": "07/04/26 20:53",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 5,
+    "DATA_SOURCE": 197,
+    "UPDATE_TIME": "07/04/26 20:53",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 5,
+    "DATA_SOURCE": 206,
+    "UPDATE_TIME": "08/04/26 09:58",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 5,
+    "DATA_SOURCE": 226,
+    "UPDATE_TIME": "07/04/26 20:53",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 5,
+    "DATA_SOURCE": 269,
+    "UPDATE_TIME": "07/04/26 20:53",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 5,
+    "DATA_SOURCE": 277,
+    "UPDATE_TIME": "07/04/26 23:15",
+    "UPDATE_STATUS": 1
+  },
+  {
+    "GAME_ID": 4689566,
+    "STATUS_SEQ": 5,
+    "DATA_SOURCE": 290,
+    "UPDATE_TIME": "07/04/26 20:53",
+    "UPDATE_STATUS": 1
+  }
+]

@@ -489,6 +489,21 @@ class ApiService {
     return { data: response.data || [], filterOptions: response.filterOptions || { sources: [], updateTypes: [] } };
   }
 
+  async getGameScoreLog(gameId) {
+    const response = await this.fetch(`/games/${gameId}/score-log`);
+    return response.data || [];
+  }
+
+  async getGameStatusLog(gameId) {
+    const response = await this.fetch(`/games/${gameId}/status-log`);
+    return response.data || [];
+  }
+
+  async getGameEventsLog(gameId) {
+    const response = await this.fetch(`/games/${gameId}/events-log`);
+    return response.data || [];
+  }
+
   /**
    * Create a new game
    */

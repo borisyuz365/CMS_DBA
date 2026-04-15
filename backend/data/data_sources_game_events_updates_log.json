@@ -1,0 +1,472 @@
+[
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 1,
+    "EVENT_COMPETITOR_NUM": 1,
+    "EVENT_NUM": 3,
+    "DATA_SOURCE": 11,
+    "UPDATE_TIME": "07/04/26 20:32",
+    "LAST_PLAYER_NAME": "",
+    "WAS_APPLIED": false
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 1,
+    "EVENT_COMPETITOR_NUM": 1,
+    "EVENT_NUM": 3,
+    "DATA_SOURCE": 162,
+    "UPDATE_TIME": "07/04/26 20:36",
+    "LAST_PLAYER_NAME": "",
+    "WAS_APPLIED": false
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 1,
+    "EVENT_COMPETITOR_NUM": 1,
+    "EVENT_NUM": 3,
+    "DATA_SOURCE": 171,
+    "UPDATE_TIME": "07/04/26 20:33",
+    "LAST_PLAYER_NAME": "K. MbappÃ©",
+    "WAS_APPLIED": true
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 1,
+    "EVENT_COMPETITOR_NUM": 1,
+    "EVENT_NUM": 3,
+    "DATA_SOURCE": 173,
+    "UPDATE_TIME": "07/04/26 20:32",
+    "LAST_PLAYER_NAME": "K. MbappÃ©",
+    "WAS_APPLIED": true
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 1,
+    "EVENT_COMPETITOR_NUM": 1,
+    "EVENT_NUM": 3,
+    "DATA_SOURCE": 194,
+    "UPDATE_TIME": "07/04/26 20:33",
+    "LAST_PLAYER_NAME": "",
+    "WAS_APPLIED": false
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 1,
+    "EVENT_COMPETITOR_NUM": 1,
+    "EVENT_NUM": 3,
+    "DATA_SOURCE": 269,
+    "UPDATE_TIME": "07/04/26 20:32",
+    "LAST_PLAYER_NAME": "",
+    "WAS_APPLIED": true
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 1,
+    "EVENT_COMPETITOR_NUM": 1,
+    "EVENT_NUM": 3,
+    "DATA_SOURCE": 290,
+    "UPDATE_TIME": "07/04/26 20:34",
+    "LAST_PLAYER_NAME": "Kylian MbappÃ©",
+    "WAS_APPLIED": true
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 1,
+    "EVENT_COMPETITOR_NUM": 2,
+    "EVENT_NUM": 1,
+    "DATA_SOURCE": 11,
+    "UPDATE_TIME": "07/04/26 19:43",
+    "LAST_PLAYER_NAME": "",
+    "WAS_APPLIED": false
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 1,
+    "EVENT_COMPETITOR_NUM": 2,
+    "EVENT_NUM": 1,
+    "DATA_SOURCE": 162,
+    "UPDATE_TIME": "07/04/26 19:44",
+    "LAST_PLAYER_NAME": "",
+    "WAS_APPLIED": false
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 1,
+    "EVENT_COMPETITOR_NUM": 2,
+    "EVENT_NUM": 1,
+    "DATA_SOURCE": 171,
+    "UPDATE_TIME": "07/04/26 19:41",
+    "LAST_PLAYER_NAME": "L. DÃ­az",
+    "WAS_APPLIED": false
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 1,
+    "EVENT_COMPETITOR_NUM": 2,
+    "EVENT_NUM": 1,
+    "DATA_SOURCE": 173,
+    "UPDATE_TIME": "07/04/26 19:42",
+    "LAST_PLAYER_NAME": "L. DÃ­az",
+    "WAS_APPLIED": false
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 1,
+    "EVENT_COMPETITOR_NUM": 2,
+    "EVENT_NUM": 1,
+    "DATA_SOURCE": 194,
+    "UPDATE_TIME": "07/04/26 19:41",
+    "LAST_PLAYER_NAME": "",
+    "WAS_APPLIED": true
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 1,
+    "EVENT_COMPETITOR_NUM": 2,
+    "EVENT_NUM": 1,
+    "DATA_SOURCE": 269,
+    "UPDATE_TIME": "07/04/26 19:41",
+    "LAST_PLAYER_NAME": "",
+    "WAS_APPLIED": false
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 1,
+    "EVENT_COMPETITOR_NUM": 2,
+    "EVENT_NUM": 1,
+    "DATA_SOURCE": 290,
+    "UPDATE_TIME": "07/04/26 19:41",
+    "LAST_PLAYER_NAME": "Luis DÃ­az",
+    "WAS_APPLIED": true
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 1,
+    "EVENT_COMPETITOR_NUM": 2,
+    "EVENT_NUM": 2,
+    "DATA_SOURCE": 11,
+    "UPDATE_TIME": "07/04/26 20:07",
+    "LAST_PLAYER_NAME": "",
+    "WAS_APPLIED": false
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 1,
+    "EVENT_COMPETITOR_NUM": 2,
+    "EVENT_NUM": 2,
+    "DATA_SOURCE": 162,
+    "UPDATE_TIME": "07/04/26 20:06",
+    "LAST_PLAYER_NAME": "",
+    "WAS_APPLIED": false
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 1,
+    "EVENT_COMPETITOR_NUM": 2,
+    "EVENT_NUM": 2,
+    "DATA_SOURCE": 171,
+    "UPDATE_TIME": "07/04/26 20:05",
+    "LAST_PLAYER_NAME": "H. Kane",
+    "WAS_APPLIED": false
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 1,
+    "EVENT_COMPETITOR_NUM": 2,
+    "EVENT_NUM": 2,
+    "DATA_SOURCE": 173,
+    "UPDATE_TIME": "07/04/26 20:04",
+    "LAST_PLAYER_NAME": "H. Kane",
+    "WAS_APPLIED": true
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 1,
+    "EVENT_COMPETITOR_NUM": 2,
+    "EVENT_NUM": 2,
+    "DATA_SOURCE": 194,
+    "UPDATE_TIME": "07/04/26 20:04",
+    "LAST_PLAYER_NAME": "",
+    "WAS_APPLIED": false
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 1,
+    "EVENT_COMPETITOR_NUM": 2,
+    "EVENT_NUM": 2,
+    "DATA_SOURCE": 269,
+    "UPDATE_TIME": "07/04/26 20:04",
+    "LAST_PLAYER_NAME": "",
+    "WAS_APPLIED": false
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 1,
+    "EVENT_COMPETITOR_NUM": 2,
+    "EVENT_NUM": 2,
+    "DATA_SOURCE": 290,
+    "UPDATE_TIME": "07/04/26 20:05",
+    "LAST_PLAYER_NAME": "Harry Kane",
+    "WAS_APPLIED": true
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 2,
+    "EVENT_COMPETITOR_NUM": 1,
+    "EVENT_NUM": 1,
+    "DATA_SOURCE": 162,
+    "UPDATE_TIME": "07/04/26 19:39",
+    "LAST_PLAYER_NAME": "",
+    "WAS_APPLIED": false
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 2,
+    "EVENT_COMPETITOR_NUM": 1,
+    "EVENT_NUM": 1,
+    "DATA_SOURCE": 171,
+    "UPDATE_TIME": "07/04/26 19:37",
+    "LAST_PLAYER_NAME": "A. TchouamÃ©ni",
+    "WAS_APPLIED": false
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 2,
+    "EVENT_COMPETITOR_NUM": 1,
+    "EVENT_NUM": 1,
+    "DATA_SOURCE": 194,
+    "UPDATE_TIME": "07/04/26 19:36",
+    "LAST_PLAYER_NAME": "",
+    "WAS_APPLIED": true
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 2,
+    "EVENT_COMPETITOR_NUM": 1,
+    "EVENT_NUM": 1,
+    "DATA_SOURCE": 290,
+    "UPDATE_TIME": "07/04/26 19:37",
+    "LAST_PLAYER_NAME": "AurÃ©lien Tchouameni",
+    "WAS_APPLIED": true
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 2,
+    "EVENT_COMPETITOR_NUM": 2,
+    "EVENT_NUM": 2,
+    "DATA_SOURCE": 162,
+    "UPDATE_TIME": "07/04/26 20:37",
+    "LAST_PLAYER_NAME": "",
+    "WAS_APPLIED": false
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 2,
+    "EVENT_COMPETITOR_NUM": 2,
+    "EVENT_NUM": 2,
+    "DATA_SOURCE": 171,
+    "UPDATE_TIME": "07/04/26 20:29",
+    "LAST_PLAYER_NAME": "J. Tah",
+    "WAS_APPLIED": false
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 2,
+    "EVENT_COMPETITOR_NUM": 2,
+    "EVENT_NUM": 2,
+    "DATA_SOURCE": 194,
+    "UPDATE_TIME": "07/04/26 20:29",
+    "LAST_PLAYER_NAME": "",
+    "WAS_APPLIED": true
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 2,
+    "EVENT_COMPETITOR_NUM": 2,
+    "EVENT_NUM": 2,
+    "DATA_SOURCE": 290,
+    "UPDATE_TIME": "07/04/26 20:30",
+    "LAST_PLAYER_NAME": "Jonathan Tah",
+    "WAS_APPLIED": true
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 2,
+    "EVENT_COMPETITOR_NUM": 2,
+    "EVENT_NUM": 3,
+    "DATA_SOURCE": 162,
+    "UPDATE_TIME": "07/04/26 20:37",
+    "LAST_PLAYER_NAME": "",
+    "WAS_APPLIED": false
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 2,
+    "EVENT_COMPETITOR_NUM": 2,
+    "EVENT_NUM": 3,
+    "DATA_SOURCE": 171,
+    "UPDATE_TIME": "07/04/26 20:35",
+    "LAST_PLAYER_NAME": "L. DÃ­az",
+    "WAS_APPLIED": false
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 2,
+    "EVENT_COMPETITOR_NUM": 2,
+    "EVENT_NUM": 3,
+    "DATA_SOURCE": 173,
+    "UPDATE_TIME": "07/04/26 20:35",
+    "LAST_PLAYER_NAME": "",
+    "WAS_APPLIED": false
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 2,
+    "EVENT_COMPETITOR_NUM": 2,
+    "EVENT_NUM": 3,
+    "DATA_SOURCE": 194,
+    "UPDATE_TIME": "07/04/26 20:35",
+    "LAST_PLAYER_NAME": "",
+    "WAS_APPLIED": true
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 2,
+    "EVENT_COMPETITOR_NUM": 2,
+    "EVENT_NUM": 3,
+    "DATA_SOURCE": 269,
+    "UPDATE_TIME": "07/04/26 20:35",
+    "LAST_PLAYER_NAME": "",
+    "WAS_APPLIED": false
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 2,
+    "EVENT_COMPETITOR_NUM": 2,
+    "EVENT_NUM": 3,
+    "DATA_SOURCE": 290,
+    "UPDATE_TIME": "07/04/26 20:36",
+    "LAST_PLAYER_NAME": "Luis DÃ­az",
+    "WAS_APPLIED": true
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 2,
+    "EVENT_COMPETITOR_NUM": 2,
+    "EVENT_NUM": 4,
+    "DATA_SOURCE": 162,
+    "UPDATE_TIME": "07/04/26 20:42",
+    "LAST_PLAYER_NAME": "",
+    "WAS_APPLIED": false
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 2,
+    "EVENT_COMPETITOR_NUM": 2,
+    "EVENT_NUM": 4,
+    "DATA_SOURCE": 171,
+    "UPDATE_TIME": "07/04/26 20:40",
+    "LAST_PLAYER_NAME": "M. Neuer",
+    "WAS_APPLIED": false
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 2,
+    "EVENT_COMPETITOR_NUM": 2,
+    "EVENT_NUM": 4,
+    "DATA_SOURCE": 173,
+    "UPDATE_TIME": "07/04/26 20:40",
+    "LAST_PLAYER_NAME": "",
+    "WAS_APPLIED": false
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 2,
+    "EVENT_COMPETITOR_NUM": 2,
+    "EVENT_NUM": 4,
+    "DATA_SOURCE": 194,
+    "UPDATE_TIME": "07/04/26 20:40",
+    "LAST_PLAYER_NAME": "",
+    "WAS_APPLIED": true
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 2,
+    "EVENT_COMPETITOR_NUM": 2,
+    "EVENT_NUM": 4,
+    "DATA_SOURCE": 269,
+    "UPDATE_TIME": "07/04/26 20:40",
+    "LAST_PLAYER_NAME": "",
+    "WAS_APPLIED": false
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 2,
+    "EVENT_COMPETITOR_NUM": 2,
+    "EVENT_NUM": 4,
+    "DATA_SOURCE": 290,
+    "UPDATE_TIME": "07/04/26 20:41",
+    "LAST_PLAYER_NAME": "Manuel Neuer",
+    "WAS_APPLIED": true
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 2,
+    "EVENT_COMPETITOR_NUM": 2,
+    "EVENT_NUM": 5,
+    "DATA_SOURCE": 162,
+    "UPDATE_TIME": "07/04/26 20:48",
+    "LAST_PLAYER_NAME": "",
+    "WAS_APPLIED": false
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 2,
+    "EVENT_COMPETITOR_NUM": 2,
+    "EVENT_NUM": 5,
+    "DATA_SOURCE": 171,
+    "UPDATE_TIME": "07/04/26 20:45",
+    "LAST_PLAYER_NAME": "Jamal Musiala",
+    "WAS_APPLIED": false
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 2,
+    "EVENT_COMPETITOR_NUM": 2,
+    "EVENT_NUM": 5,
+    "DATA_SOURCE": 173,
+    "UPDATE_TIME": "07/04/26 20:44",
+    "LAST_PLAYER_NAME": "",
+    "WAS_APPLIED": false
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 2,
+    "EVENT_COMPETITOR_NUM": 2,
+    "EVENT_NUM": 5,
+    "DATA_SOURCE": 194,
+    "UPDATE_TIME": "07/04/26 20:44",
+    "LAST_PLAYER_NAME": "",
+    "WAS_APPLIED": true
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 2,
+    "EVENT_COMPETITOR_NUM": 2,
+    "EVENT_NUM": 5,
+    "DATA_SOURCE": 269,
+    "UPDATE_TIME": "07/04/26 20:44",
+    "LAST_PLAYER_NAME": "",
+    "WAS_APPLIED": false
+  },
+  {
+    "GAME_ID": 4689566,
+    "EVENT_TYPE": 2,
+    "EVENT_COMPETITOR_NUM": 2,
+    "EVENT_NUM": 5,
+    "DATA_SOURCE": 290,
+    "UPDATE_TIME": "07/04/26 20:46",
+    "LAST_PLAYER_NAME": "Jamal Musiala",
+    "WAS_APPLIED": true
+  }
+]

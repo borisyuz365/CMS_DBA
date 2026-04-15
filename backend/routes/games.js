@@ -20,6 +20,10 @@ router.post('/', gameController.create.bind(gameController));
  */
 router.get('/:id/updates', gameController.getUpdates.bind(gameController));
 
+router.get('/:id/score-log', gameController.getScoreLog.bind(gameController));
+router.get('/:id/status-log', gameController.getStatusLog.bind(gameController));
+router.get('/:id/events-log', gameController.getEventsLog.bind(gameController));
+
 /**
  * GET /api/games/:id
  * Get game by ID

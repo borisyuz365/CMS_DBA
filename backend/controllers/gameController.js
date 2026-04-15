@@ -290,6 +290,39 @@ class GameController {
     }
   }
 
+  async getScoreLog(req, res, next) {
+    try {
+      const gameId = parseInt(req.params.id);
+      if (isNaN(gameId)) return res.status(400).json({ success: false, error: { message: 'Invalid game ID' } });
+      let rows = await dataLoader.loadData('data_sources_game_score_updates_log.json');
+      if (!Array.isArray(rows)) rows = [];
+      rows = rows.filter(r => r.GAME_ID === gameId);
+      res.json({ success: true, data: rows });
+    } catch (error) { next(error); }
+  }
+
+  async getStatusLog(req, res, next) {
+    try {
+      const gameId = parseInt(req.params.id);
+      if (isNaN(gameId)) return res.status(400).json({ success: false, error: { message: 'Invalid game ID' } });
+      let rows = await dataLoader.loadData('data_sources_game_status_updates_log.json');
+      if (!Array.isArray(rows)) rows = [];
+      rows = rows.filter(r => r.GAME_ID === gameId);
+      res.json({ success: true, data: rows });
+    } catch (error) { next(error); }
+  }
+
+  async getEventsLog(req, res, next) {
+    try {
+      const gameId = parseInt(req.params.id);
+      if (isNaN(gameId)) return res.status(400).json({ success: false, error: { message: 'Invalid game ID' } });
+      let rows = await dataLoader.loadData('data_sources_game_events_updates_log.json');
+      if (!Array.isArray(rows)) rows = [];
+      rows = rows.filter(r => r.GAME_ID === gameId);
+      res.json({ success: true, data: rows });
+    } catch (error) { next(error); }
+  }
+
   /**
    * Create a new game
    */

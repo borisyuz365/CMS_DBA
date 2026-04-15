@@ -199,7 +199,7 @@ function App() {
             <Route path="time-zones/:id" element={<TimeZoneDetails />} />
             <Route path="dictionary" element={<DictionaryPage />} />
             <Route path="games" element={<GamesList />} />
-            <Route path="games/:id/report" element={<GameReport />} />
+            <Route path="games/:id/report/:tab?" element={<GameReport />} />
             <Route path="priorities" element={<PrioritiesPage />} />
             <Route path="filters" element={<FiltersList />} />
           </Route>

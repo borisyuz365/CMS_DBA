@@ -525,5 +525,11 @@
     "fatherCategory": "All Categories",
     "description": "Category for filter names",
     "id": 66
+  },
+  {
+    "name": "Sport Type Event Types",
+    "fatherCategory": "Sport Type",
+    "description": "",
+    "id": 67
   }
 ]
