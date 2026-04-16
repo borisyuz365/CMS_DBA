@@ -2,7 +2,7 @@
   {
     "EVENT_TYPE_ID": 1,
     "SPORT_TYPE_ID": 1,
-    "NAME_ID": 96,
+    "NAME_ID": 77877700,
     "ALIAS_NAME": "Goal",
     "SUB_TYPES_ALIAS": "ESoccerGoalEventSubType",
     "IS_MAJOR": true,
@@ -22,7 +22,7 @@
   {
     "EVENT_TYPE_ID": 2,
     "SPORT_TYPE_ID": 1,
-    "NAME_ID": 100,
+    "NAME_ID": 77877701,
     "ALIAS_NAME": "YellowCard",
     "SUB_TYPES_ALIAS": null,
     "IS_MAJOR": null,
@@ -42,7 +42,7 @@
   {
     "EVENT_TYPE_ID": 3,
     "SPORT_TYPE_ID": 1,
-    "NAME_ID": 101,
+    "NAME_ID": 77877702,
     "ALIAS_NAME": "RedCard",
     "SUB_TYPES_ALIAS": "ESoccerRedCardEventSubType",
     "IS_MAJOR": true,
@@ -62,7 +62,7 @@
   {
     "EVENT_TYPE_ID": 4,
     "SPORT_TYPE_ID": 4,
-    "NAME_ID": 150,
+    "NAME_ID": 77877703,
     "ALIAS_NAME": "Goal",
     "SUB_TYPES_ALIAS": "EHockeyGoalEventSubType",
     "IS_MAJOR": true,
@@ -82,7 +82,7 @@
   {
     "EVENT_TYPE_ID": 5,
     "SPORT_TYPE_ID": 6,
-    "NAME_ID": 183,
+    "NAME_ID": 77877704,
     "ALIAS_NAME": "Goal",
     "SUB_TYPES_ALIAS": "EFootballGoalEventSubType",
     "IS_MAJOR": false,

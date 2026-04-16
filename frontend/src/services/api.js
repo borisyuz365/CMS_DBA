@@ -501,6 +501,17 @@ class ApiService {
 
   async getGameEventsLog(gameId) {
     const response = await this.fetch(`/games/${gameId}/events-log`);
+    return {
+      data: response.data || [],
+      eventTypeNames: response.eventTypeNames || {},
+      dataSourceNames: response.dataSourceNames || {},
+      gameEventsMap: response.gameEventsMap || {},
+      sequenceMap: response.sequenceMap || {},
+    };
+  }
+
+  async getGameNotificationsLog(gameId) {
+    const response = await this.fetch(`/games/${gameId}/notifications-log`);
     return response.data || [];
   }
 

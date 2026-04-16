@@ -45319,5 +45319,5417 @@
     ],
     "valsCount": 1,
     "engValue": "Test"
+  },
+  {
+    "id": 77877700,
+    "categoryId": 67,
+    "aliasName": "Goal",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Sport Type Event Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Goal",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 77877701,
+    "categoryId": 67,
+    "aliasName": "YellowCard",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Sport Type Event Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "YellowCard",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 77877702,
+    "categoryId": 67,
+    "aliasName": "RedCard",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Sport Type Event Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "RedCard",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 77877703,
+    "categoryId": 67,
+    "aliasName": "Goal",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Sport Type Event Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Goal",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 77877704,
+    "categoryId": 67,
+    "aliasName": "Goal",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Sport Type Event Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Goal",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 189731,
+    "categoryId": 67,
+    "aliasName": "MissedPenalty",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Sport Type Event Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "MissedPenalty",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 328506,
+    "categoryId": 67,
+    "aliasName": "Penalty",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Sport Type Event Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Penalty",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 941771,
+    "categoryId": 67,
+    "aliasName": "Score",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Sport Type Event Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Score",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 941777,
+    "categoryId": 67,
+    "aliasName": "YellowCard",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Sport Type Event Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "YellowCard",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 941778,
+    "categoryId": 67,
+    "aliasName": "RedCard",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Sport Type Event Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "RedCard",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 20226616,
+    "categoryId": 67,
+    "aliasName": "GoalDisallowed",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Sport Type Event Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "GoalDisallowed",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 44899622,
+    "categoryId": 67,
+    "aliasName": "Woodwork",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Sport Type Event Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Woodwork",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 49352017,
+    "categoryId": 67,
+    "aliasName": "Scoring",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Sport Type Event Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Scoring",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 49625155,
+    "categoryId": 67,
+    "aliasName": "PenaltyAwarded",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Sport Type Event Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "PenaltyAwarded",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 55652874,
+    "categoryId": 67,
+    "aliasName": "MissedPenaltyShot",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Sport Type Event Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "MissedPenaltyShot",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 60493944,
+    "categoryId": 67,
+    "aliasName": "TouchDown",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Sport Type Event Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "TouchDown",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 60493963,
+    "categoryId": 67,
+    "aliasName": "FieldGoal",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Sport Type Event Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FieldGoal",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 60493965,
+    "categoryId": 67,
+    "aliasName": "Safety",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Sport Type Event Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Safety",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 60493972,
+    "categoryId": 67,
+    "aliasName": "FieldGoalMissed",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Sport Type Event Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FieldGoalMissed",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 64601045,
+    "categoryId": 67,
+    "aliasName": "Run",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Sport Type Event Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Run",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 68071344,
+    "categoryId": 67,
+    "aliasName": "Interception",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Sport Type Event Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Interception",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 68071345,
+    "categoryId": 67,
+    "aliasName": "Fumble",
+    "fatherTerm": null,
+    "createTime": null,
+    "description": null,
+    "category": "Sport Type Event Types",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Fumble",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1
+  },
+  {
+    "id": 22348,
+    "categoryId": 54,
+    "aliasName": "Service",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Service",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "Service"
+  },
+  {
+    "id": 20970,
+    "categoryId": 54,
+    "aliasName": "SoccerStand",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "SoccerStand",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "SoccerStand"
+  },
+  {
+    "id": 28756,
+    "categoryId": 54,
+    "aliasName": "LiveSportOnTV",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "LiveSportOnTV",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "LiveSportOnTV"
+  },
+  {
+    "id": 42630,
+    "categoryId": 54,
+    "aliasName": "Futbol24",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Futbol24",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "Futbol24"
+  },
+  {
+    "id": 46324,
+    "categoryId": 54,
+    "aliasName": "TotoWinner",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "TotoWinner",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "TotoWinner"
+  },
+  {
+    "id": 53944,
+    "categoryId": 54,
+    "aliasName": "MatchHighlights",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "MatchHighlights",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "MatchHighlights"
+  },
+  {
+    "id": 102489,
+    "categoryId": 54,
+    "aliasName": "One",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "One",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "One"
+  },
+  {
+    "id": 127621,
+    "categoryId": 54,
+    "aliasName": "DoublePass",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "DoublePass",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "DoublePass"
+  },
+  {
+    "id": 136949,
+    "categoryId": 54,
+    "aliasName": "SoccerWay",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "SoccerWay",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "SoccerWay"
+  },
+  {
+    "id": 226219,
+    "categoryId": 54,
+    "aliasName": "TogoGoals",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "TogoGoals",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "TogoGoals"
+  },
+  {
+    "id": 306657,
+    "categoryId": 54,
+    "aliasName": "Youtube",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Youtube",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "Youtube"
+  },
+  {
+    "id": 314353,
+    "categoryId": 54,
+    "aliasName": "VideoValidator",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "VideoValidator",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "VideoValidator"
+  },
+  {
+    "id": 315096,
+    "categoryId": 54,
+    "aliasName": "Bet365",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Bet365",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "Bet365"
+  },
+  {
+    "id": 341291,
+    "categoryId": 54,
+    "aliasName": "ESPN",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "ESPN",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "ESPN"
+  },
+  {
+    "id": 354535,
+    "categoryId": 54,
+    "aliasName": "SPHERA_CHANNEL",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "SPHERA CHANNEL",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "SPHERA CHANNEL"
+  },
+  {
+    "id": 355969,
+    "categoryId": 54,
+    "aliasName": "HighlightsSoccer",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "HighlightsSoccer",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "HighlightsSoccer"
+  },
+  {
+    "id": 358786,
+    "categoryId": 54,
+    "aliasName": "OurMatch",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "OurMatch",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "OurMatch"
+  },
+  {
+    "id": 363841,
+    "categoryId": 54,
+    "aliasName": "BWIN",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "BWIN",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "BWIN"
+  },
+  {
+    "id": 363845,
+    "categoryId": 54,
+    "aliasName": "WILLIAM_HILL",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "WILLIAM HILL",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "WILLIAM HILL"
+  },
+  {
+    "id": 379622,
+    "categoryId": 54,
+    "aliasName": "LIVE_SOCCER_TV",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "LIVE SOCCER TV",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "LIVE SOCCER TV"
+  },
+  {
+    "id": 384110,
+    "categoryId": 54,
+    "aliasName": "TransfersMarket",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "TransfersMarket",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "TransfersMarket"
+  },
+  {
+    "id": 393020,
+    "categoryId": 54,
+    "aliasName": "FootyTube",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FootyTube",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FootyTube"
+  },
+  {
+    "id": 428220,
+    "categoryId": 54,
+    "aliasName": "MSPHighlights",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "MSPHighlights",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "MSPHighlights"
+  },
+  {
+    "id": 429688,
+    "categoryId": 54,
+    "aliasName": "SPORT_5",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "SPORT 5",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "SPORT 5"
+  },
+  {
+    "id": 430127,
+    "categoryId": 54,
+    "aliasName": "DAILY_MOTION",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "DAILY MOTION",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "DAILY MOTION"
+  },
+  {
+    "id": 445846,
+    "categoryId": 54,
+    "aliasName": "AL_JAZEERA",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "AL JAZEERA",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "AL JAZEERA"
+  },
+  {
+    "id": 448044,
+    "categoryId": 54,
+    "aliasName": "TV_DEPORTES_ES",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "TV DEPORTES ES",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "TV DEPORTES ES"
+  },
+  {
+    "id": 448710,
+    "categoryId": 54,
+    "aliasName": "ESPN_CRICINFO",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "ESPN CRICINFO",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "ESPN CRICINFO"
+  },
+  {
+    "id": 449718,
+    "categoryId": 54,
+    "aliasName": "LIVESPORT_CO_UK",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "LIVESPORT CO UK",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "LIVESPORT CO UK"
+  },
+  {
+    "id": 453449,
+    "categoryId": 54,
+    "aliasName": "DPF_BR",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "DPF BR",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "DPF BR"
+  },
+  {
+    "id": 454106,
+    "categoryId": 54,
+    "aliasName": "YALLA_KORA",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "YALLA KORA",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "YALLA KORA"
+  },
+  {
+    "id": 454350,
+    "categoryId": 54,
+    "aliasName": "FIRST_TOUCH",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FIRST TOUCH",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FIRST TOUCH"
+  },
+  {
+    "id": 454630,
+    "categoryId": 54,
+    "aliasName": "ESTADAO",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "ESTADAO",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "ESTADAO"
+  },
+  {
+    "id": 499716,
+    "categoryId": 54,
+    "aliasName": "BetVictor",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "BetVictor",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "BetVictor"
+  },
+  {
+    "id": 506005,
+    "categoryId": 54,
+    "aliasName": "TENNIS_LIVE",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "TENNIS LIVE",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "TENNIS LIVE"
+  },
+  {
+    "id": 515978,
+    "categoryId": 54,
+    "aliasName": "SoccerWayNew",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "SoccerWayNew",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "SoccerWayNew"
+  },
+  {
+    "id": 523812,
+    "categoryId": 54,
+    "aliasName": "WhoScored",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "WhoScored",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "WhoScored"
+  },
+  {
+    "id": 560848,
+    "categoryId": 54,
+    "aliasName": "TabelaDoBrasileirao",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "TabelaDoBrasileirao",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "TabelaDoBrasileirao"
+  },
+  {
+    "id": 562918,
+    "categoryId": 54,
+    "aliasName": "XSCORES_FIXTURES",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "XSCORES FIXTURES",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "XSCORES FIXTURES"
+  },
+  {
+    "id": 564239,
+    "categoryId": 54,
+    "aliasName": "FlashScore",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FlashScore",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FlashScore"
+  },
+  {
+    "id": 567351,
+    "categoryId": 54,
+    "aliasName": "FlashScoresDebug",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FlashScoresDebug",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FlashScoresDebug"
+  },
+  {
+    "id": 582813,
+    "categoryId": 54,
+    "aliasName": "FlashScoresDetails",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FlashScoresDetails",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FlashScoresDetails"
+  },
+  {
+    "id": 608148,
+    "categoryId": 54,
+    "aliasName": "FOOTAO_TV",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FOOTAO TV",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FOOTAO TV"
+  },
+  {
+    "id": 609058,
+    "categoryId": 54,
+    "aliasName": "FOX_SPORTS_NL",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FOX SPORTS NL",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FOX SPORTS NL"
+  },
+  {
+    "id": 609273,
+    "categoryId": 54,
+    "aliasName": "AGENDATV_FOOT",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "AGENDATV FOOT",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "AGENDATV FOOT"
+  },
+  {
+    "id": 611134,
+    "categoryId": 54,
+    "aliasName": "Forza",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Forza",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "Forza"
+  },
+  {
+    "id": 614894,
+    "categoryId": 54,
+    "aliasName": "365ScoresDoublePassStats",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "365ScoresDoublePassStats",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "365ScoresDoublePassStats"
+  },
+  {
+    "id": 617096,
+    "categoryId": 54,
+    "aliasName": "NEWS_TV_SPORT_DE",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "NEWS TV SPORT DE",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "NEWS TV SPORT DE"
+  },
+  {
+    "id": 617288,
+    "categoryId": 54,
+    "aliasName": "GET_YOUR_FIXTURES",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "GET YOUR FIXTURES",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "GET YOUR FIXTURES"
+  },
+  {
+    "id": 618012,
+    "categoryId": 54,
+    "aliasName": "FUTBOLRED",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FUTBOLRED",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FUTBOLRED"
+  },
+  {
+    "id": 621866,
+    "categoryId": 54,
+    "aliasName": "BEIN_SPORTS_AR",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "BEIN SPORTS AR",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "BEIN SPORTS AR"
+  },
+  {
+    "id": 621870,
+    "categoryId": 54,
+    "aliasName": "BEIN_SPORTS_EN",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "BEIN SPORTS EN",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "BEIN SPORTS EN"
+  },
+  {
+    "id": 621872,
+    "categoryId": 54,
+    "aliasName": "BEIN_SPORTS_FR",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "BEIN SPORTS FR",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "BEIN SPORTS FR"
+  },
+  {
+    "id": 621878,
+    "categoryId": 54,
+    "aliasName": "FUTBOL_PARATODOS",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FUTBOL PARATODOS",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FUTBOL PARATODOS"
+  },
+  {
+    "id": 638818,
+    "categoryId": 54,
+    "aliasName": "FUTBOL_EN_LA_TV",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FUTBOL EN LA TV",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FUTBOL EN LA TV"
+  },
+  {
+    "id": 638820,
+    "categoryId": 54,
+    "aliasName": "FUTBOL_EN_VIVO_ARGENTINA",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FUTBOL EN VIVO ARGENTINA",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FUTBOL EN VIVO ARGENTINA"
+  },
+  {
+    "id": 638821,
+    "categoryId": 54,
+    "aliasName": "FUTBOL_EN_VIVO_CHILE",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FUTBOL EN VIVO CHILE",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FUTBOL EN VIVO CHILE"
+  },
+  {
+    "id": 638822,
+    "categoryId": 54,
+    "aliasName": "FUTBOL_EN_VIVO_COLOMBIA",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FUTBOL EN VIVO COLOMBIA",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FUTBOL EN VIVO COLOMBIA"
+  },
+  {
+    "id": 638823,
+    "categoryId": 54,
+    "aliasName": "FUTBOL_EN_LA_VIVO_MEXICO",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FUTBOL EN LA VIVO MEXICO",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FUTBOL EN LA VIVO MEXICO"
+  },
+  {
+    "id": 638830,
+    "categoryId": 54,
+    "aliasName": "ZEROZERO",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "ZEROZERO",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "ZEROZERO"
+  },
+  {
+    "id": 642624,
+    "categoryId": 54,
+    "aliasName": "DEPORTES_TELEVISA",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "DEPORTES TELEVISA",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "DEPORTES TELEVISA"
+  },
+  {
+    "id": 646282,
+    "categoryId": 54,
+    "aliasName": "GUIA_ESPN_ARG",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "GUIA ESPN ARG",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "GUIA ESPN ARG"
+  },
+  {
+    "id": 646285,
+    "categoryId": 54,
+    "aliasName": "GUIA_ESPN_BOL",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "GUIA ESPN BOL",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "GUIA ESPN BOL"
+  },
+  {
+    "id": 646287,
+    "categoryId": 54,
+    "aliasName": "GUIA_ESPN_CHILE",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "GUIA ESPN CHILE",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "GUIA ESPN CHILE"
+  },
+  {
+    "id": 646289,
+    "categoryId": 54,
+    "aliasName": "GUIA_ESPN_COSTA_RICA",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "GUIA ESPN COSTA RICA",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "GUIA ESPN COSTA RICA"
+  },
+  {
+    "id": 646292,
+    "categoryId": 54,
+    "aliasName": "GUIA_ESPN_COLOMBIA",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "GUIA ESPN COLOMBIA",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "GUIA ESPN COLOMBIA"
+  },
+  {
+    "id": 646294,
+    "categoryId": 54,
+    "aliasName": "GUIA_ESPN_ECUADOR",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "GUIA ESPN ECUADOR",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "GUIA ESPN ECUADOR"
+  },
+  {
+    "id": 646296,
+    "categoryId": 54,
+    "aliasName": "GUIA_ESPN_MEX",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "GUIA ESPN MEX",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "GUIA ESPN MEX"
+  },
+  {
+    "id": 646298,
+    "categoryId": 54,
+    "aliasName": "GUIA_ESPN_PANAMA",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "GUIA ESPN PANAMA",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "GUIA ESPN PANAMA"
+  },
+  {
+    "id": 646300,
+    "categoryId": 54,
+    "aliasName": "GUIA_ESPN_PAR",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "GUIA ESPN PAR",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "GUIA ESPN PAR"
+  },
+  {
+    "id": 646302,
+    "categoryId": 54,
+    "aliasName": "GUIA_ESPN_PERU",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "GUIA ESPN PERU",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "GUIA ESPN PERU"
+  },
+  {
+    "id": 646304,
+    "categoryId": 54,
+    "aliasName": "GUIA_ESPN_URG",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "GUIA ESPN URG",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "GUIA ESPN URG"
+  },
+  {
+    "id": 646306,
+    "categoryId": 54,
+    "aliasName": "GUIA_ESPN_VEN",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "GUIA ESPN VEN",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "GUIA ESPN VEN"
+  },
+  {
+    "id": 646312,
+    "categoryId": 54,
+    "aliasName": "REDGOL",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "REDGOL",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "REDGOL"
+  },
+  {
+    "id": 650218,
+    "categoryId": 54,
+    "aliasName": "MIS_MARCADORES",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "MIS MARCADORES",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "MIS MARCADORES"
+  },
+  {
+    "id": 665175,
+    "categoryId": 54,
+    "aliasName": "FutbolMe",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FutbolMe",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FutbolMe"
+  },
+  {
+    "id": 673287,
+    "categoryId": 54,
+    "aliasName": "BetRadar",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "BetRadar",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "BetRadar"
+  },
+  {
+    "id": 673288,
+    "categoryId": 54,
+    "aliasName": "BetRadarSoccer",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "BetRadarSoccer",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "BetRadarSoccer"
+  },
+  {
+    "id": 673290,
+    "categoryId": 54,
+    "aliasName": "SportMatrix",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "SportMatrix",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "SportMatrix"
+  },
+  {
+    "id": 673316,
+    "categoryId": 54,
+    "aliasName": "SuperPlacar",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "SuperPlacar",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "SuperPlacar"
+  },
+  {
+    "id": 890601,
+    "categoryId": 54,
+    "aliasName": "BetRadarDelta",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "BetRadarDelta",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "BetRadarDelta"
+  },
+  {
+    "id": 890602,
+    "categoryId": 54,
+    "aliasName": "BetRadarSoccerDelta",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "BetRadarSoccerDelta",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "BetRadarSoccerDelta"
+  },
+  {
+    "id": 897140,
+    "categoryId": 54,
+    "aliasName": "FUTBOL_EN_LA_VIVO_URUGUAY",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FUTBOL EN LA VIVO URUGUAY",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FUTBOL EN LA VIVO URUGUAY"
+  },
+  {
+    "id": 910777,
+    "categoryId": 54,
+    "aliasName": "ZIAKAS",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "ZIAKAS",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "ZIAKAS"
+  },
+  {
+    "id": 910785,
+    "categoryId": 54,
+    "aliasName": "FOOTBALL_ON_TV",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FOOTBALL ON TV",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FOOTBALL ON TV"
+  },
+  {
+    "id": 910876,
+    "categoryId": 54,
+    "aliasName": "WHERES_THE_MATCH",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "WHERES THE MATCH",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "WHERES THE MATCH"
+  },
+  {
+    "id": 922260,
+    "categoryId": 54,
+    "aliasName": "BetRadarTennisDelta",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "BetRadarTennisDelta",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "BetRadarTennisDelta"
+  },
+  {
+    "id": 922262,
+    "categoryId": 54,
+    "aliasName": "BetRadarTennis",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "BetRadarTennis",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "BetRadarTennis"
+  },
+  {
+    "id": 936600,
+    "categoryId": 54,
+    "aliasName": "SofaScore",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "SofaScore",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "SofaScore"
+  },
+  {
+    "id": 973145,
+    "categoryId": 54,
+    "aliasName": "BetRadarMobileAPI",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "BetRadarMobileAPI",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "BetRadarMobileAPI"
+  },
+  {
+    "id": 1122377,
+    "categoryId": 54,
+    "aliasName": "Youtube - esporte interativo",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Youtube - esporte interativo",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "Youtube - esporte interativo"
+  },
+  {
+    "id": 1122378,
+    "categoryId": 54,
+    "aliasName": "SoccerWayTopScorers",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "SoccerWayTopScorers",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "SoccerWayTopScorers"
+  },
+  {
+    "id": 1337134,
+    "categoryId": 54,
+    "aliasName": "FOOTBALL_ASSOCIATION",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FOOTBALL ASSOCIATION",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FOOTBALL ASSOCIATION"
+  },
+  {
+    "id": 1604730,
+    "categoryId": 54,
+    "aliasName": "SPORT_ONE_BROADCASTS",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "SPORT ONE BROADCASTS",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "SPORT ONE BROADCASTS"
+  },
+  {
+    "id": 1903987,
+    "categoryId": 54,
+    "aliasName": "1XBET",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "1XBET",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "1XBET"
+  },
+  {
+    "id": 1903989,
+    "categoryId": 54,
+    "aliasName": "BETATHOME",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "BETATHOME",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "BETATHOME"
+  },
+  {
+    "id": 1903991,
+    "categoryId": 54,
+    "aliasName": "BETWAY",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "BETWAY",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "BETWAY"
+  },
+  {
+    "id": 1903993,
+    "categoryId": 54,
+    "aliasName": "BETFAIR",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "BETFAIR",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "BETFAIR"
+  },
+  {
+    "id": 2329730,
+    "categoryId": 54,
+    "aliasName": "ADIDAS",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "ADIDAS",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "ADIDAS"
+  },
+  {
+    "id": 2568098,
+    "categoryId": 54,
+    "aliasName": "FOOTBALL_UA",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FOOTBALL UA",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FOOTBALL UA"
+  },
+  {
+    "id": 2992974,
+    "categoryId": 54,
+    "aliasName": "888Sport",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "888Sport",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "888Sport"
+  },
+  {
+    "id": 3049173,
+    "categoryId": 54,
+    "aliasName": "CHAMPIONAT",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "CHAMPIONAT",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "CHAMPIONAT"
+  },
+  {
+    "id": 3051373,
+    "categoryId": 54,
+    "aliasName": "EspnBrasil",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "EspnBrasil",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "EspnBrasil"
+  },
+  {
+    "id": 3051375,
+    "categoryId": 54,
+    "aliasName": "SPORTV",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "SPORTV",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "SPORTV"
+  },
+  {
+    "id": 3051377,
+    "categoryId": 54,
+    "aliasName": "ESPORTE_INTERATIVO",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "ESPORTE INTERATIVO",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "ESPORTE INTERATIVO"
+  },
+  {
+    "id": 3062820,
+    "categoryId": 54,
+    "aliasName": "UkFootballOnTv",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "UkFootballOnTv",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "UkFootballOnTv"
+  },
+  {
+    "id": 3064976,
+    "categoryId": 54,
+    "aliasName": "IS_ER_VOETBAL_VANAVOND",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "IS ER VOETBAL VANAVOND",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "IS ER VOETBAL VANAVOND"
+  },
+  {
+    "id": 3076947,
+    "categoryId": 54,
+    "aliasName": "CBF_BR",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "CBF BR",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "CBF BR"
+  },
+  {
+    "id": 3078611,
+    "categoryId": 54,
+    "aliasName": "FutebolCom_BR",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FutebolCom BR",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FutebolCom BR"
+  },
+  {
+    "id": 3124728,
+    "categoryId": 54,
+    "aliasName": "BetRadarOlympics",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "BetRadarOlympics",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "BetRadarOlympics"
+  },
+  {
+    "id": 3144054,
+    "categoryId": 54,
+    "aliasName": "FUTBOL_EN_VIVO_BOLIVIA",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FUTBOL EN VIVO BOLIVIA",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FUTBOL EN VIVO BOLIVIA"
+  },
+  {
+    "id": 3144056,
+    "categoryId": 54,
+    "aliasName": "FUTBOL_EN_VIVO_ECUADOR",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FUTBOL EN VIVO ECUADOR",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FUTBOL EN VIVO ECUADOR"
+  },
+  {
+    "id": 3144058,
+    "categoryId": 54,
+    "aliasName": "FUTBOL_EN_VIVO_PARAGUAY",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FUTBOL EN VIVO PARAGUAY",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FUTBOL EN VIVO PARAGUAY"
+  },
+  {
+    "id": 3144060,
+    "categoryId": 54,
+    "aliasName": "FUTBOL_EN_VIVO_PERU",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FUTBOL EN VIVO PERU",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FUTBOL EN VIVO PERU"
+  },
+  {
+    "id": 3144062,
+    "categoryId": 54,
+    "aliasName": "FUTBOL_EN_VIVO_VENEZUELA",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FUTBOL EN VIVO VENEZUELA",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FUTBOL EN VIVO VENEZUELA"
+  },
+  {
+    "id": 3144065,
+    "categoryId": 54,
+    "aliasName": "FUTBOL_EN_VIVO_GERMANY",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FUTBOL EN VIVO GERMANY",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FUTBOL EN VIVO GERMANY"
+  },
+  {
+    "id": 3144067,
+    "categoryId": 54,
+    "aliasName": "FUTBOL_EN_VIVO_UK",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FUTBOL EN VIVO UK",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FUTBOL EN VIVO UK"
+  },
+  {
+    "id": 3165247,
+    "categoryId": 54,
+    "aliasName": "GloboEspote",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "GloboEspote",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "GloboEspote"
+  },
+  {
+    "id": 3167756,
+    "categoryId": 54,
+    "aliasName": "FUTBOL_EN_VIVO_USA",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FUTBOL EN VIVO USA",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FUTBOL EN VIVO USA"
+  },
+  {
+    "id": 3186107,
+    "categoryId": 54,
+    "aliasName": "SPOREKRANI",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "SPOREKRANI",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "SPOREKRANI"
+  },
+  {
+    "id": 3190539,
+    "categoryId": 54,
+    "aliasName": "YALLASHOOT",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "YALLASHOOT",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "YALLASHOOT"
+  },
+  {
+    "id": 3208029,
+    "categoryId": 54,
+    "aliasName": "DUFCFootballScores",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "DUFCFootballScores",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "DUFCFootballScores"
+  },
+  {
+    "id": 3208278,
+    "categoryId": 54,
+    "aliasName": "DUFCFootballNews",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "DUFCFootballNews",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "DUFCFootballNews"
+  },
+  {
+    "id": 3235092,
+    "categoryId": 54,
+    "aliasName": "FUTBOL_EN_VIVO_DOMINICANA",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FUTBOL EN VIVO DOMINICANA",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FUTBOL EN VIVO DOMINICANA"
+  },
+  {
+    "id": 3235094,
+    "categoryId": 54,
+    "aliasName": "FUTBOL_EN_VIVO_GUATEMALA",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FUTBOL EN VIVO GUATEMALA",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FUTBOL EN VIVO GUATEMALA"
+  },
+  {
+    "id": 3235096,
+    "categoryId": 54,
+    "aliasName": "FUTBOL_EN_VIVO_ESALVADOR",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FUTBOL EN VIVO ESALVADOR",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FUTBOL EN VIVO ESALVADOR"
+  },
+  {
+    "id": 3235098,
+    "categoryId": 54,
+    "aliasName": "FUTBOL_EN_VIVO_COSTARICA",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FUTBOL EN VIVO COSTARICA",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FUTBOL EN VIVO COSTARICA"
+  },
+  {
+    "id": 3235100,
+    "categoryId": 54,
+    "aliasName": "FUTBOL_EN_VIVO_HONDURAS",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FUTBOL EN VIVO HONDURAS",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FUTBOL EN VIVO HONDURAS"
+  },
+  {
+    "id": 3235102,
+    "categoryId": 54,
+    "aliasName": "FUTBOL_EN_VIVO_NICARAGUA",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FUTBOL EN VIVO NICARAGUA",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FUTBOL EN VIVO NICARAGUA"
+  },
+  {
+    "id": 3235109,
+    "categoryId": 54,
+    "aliasName": "FUTBOL_EN_VIVO_PANAMA",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FUTBOL EN VIVO PANAMA",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FUTBOL EN VIVO PANAMA"
+  },
+  {
+    "id": 3237221,
+    "categoryId": 54,
+    "aliasName": "CADENARADIO",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "CADENARADIO",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "CADENARADIO"
+  },
+  {
+    "id": 3268264,
+    "categoryId": 54,
+    "aliasName": "BetRadarPush",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "BetRadarPush",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "BetRadarPush"
+  },
+  {
+    "id": 3268265,
+    "categoryId": 54,
+    "aliasName": "BetRadarPushPossible",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "BetRadarPushPossible",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "BetRadarPushPossible"
+  },
+  {
+    "id": 3268313,
+    "categoryId": 54,
+    "aliasName": "ODDS_CHECKER",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "ODDS CHECKER",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "ODDS CHECKER"
+  },
+  {
+    "id": 75638342,
+    "categoryId": 54,
+    "aliasName": "PROMIEDOS",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "PROMIEDOS",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "PROMIEDOS"
+  },
+  {
+    "id": 3268945,
+    "categoryId": 54,
+    "aliasName": "FuteboLinterior",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FuteboLinterior",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FuteboLinterior"
+  },
+  {
+    "id": 3283716,
+    "categoryId": 54,
+    "aliasName": "EURO_LEAGUE",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "EURO LEAGUE",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "EURO LEAGUE"
+  },
+  {
+    "id": 3338517,
+    "categoryId": 54,
+    "aliasName": "GOALZZ",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "GOALZZ",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "GOALZZ"
+  },
+  {
+    "id": 3338553,
+    "categoryId": 54,
+    "aliasName": "KOOORA",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "KOOORA",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "KOOORA"
+  },
+  {
+    "id": 3347669,
+    "categoryId": 54,
+    "aliasName": "DataFactory",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "DataFactory",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "DataFactory"
+  },
+  {
+    "id": 3358660,
+    "categoryId": 54,
+    "aliasName": "BETTOR_LOGIC",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "BETTOR LOGIC",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "BETTOR LOGIC"
+  },
+  {
+    "id": 3361240,
+    "categoryId": 54,
+    "aliasName": "FlashScoreFixtures",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FlashScoreFixtures",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FlashScoreFixtures"
+  },
+  {
+    "id": 3421286,
+    "categoryId": 54,
+    "aliasName": "FOOTBALL_ASSOCIATION_FIXTURES",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FOOTBALL ASSOCIATION FIXTURES",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FOOTBALL ASSOCIATION FIXTURES"
+  },
+  {
+    "id": 3486085,
+    "categoryId": 54,
+    "aliasName": "FlashScoreAthletesSquads",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FlashScoreAthletesSquads",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FlashScoreAthletesSquads"
+  },
+  {
+    "id": 3524277,
+    "categoryId": 54,
+    "aliasName": "ATP",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "ATP",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "ATP"
+  },
+  {
+    "id": 3524279,
+    "categoryId": 54,
+    "aliasName": "WTA",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "WTA",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "WTA"
+  },
+  {
+    "id": 3846094,
+    "categoryId": 54,
+    "aliasName": "Sport5PlayByPlay",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Sport5PlayByPlay",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "Sport5PlayByPlay"
+  },
+  {
+    "id": 3884989,
+    "categoryId": 54,
+    "aliasName": "CMS",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "CMS",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "CMS"
+  },
+  {
+    "id": 3975921,
+    "categoryId": 54,
+    "aliasName": "tipico",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "tipico",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "tipico"
+  },
+  {
+    "id": 4130277,
+    "categoryId": 54,
+    "aliasName": "XscoresBroadcasts",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "XscoresBroadcasts",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "XscoresBroadcasts"
+  },
+  {
+    "id": 4251461,
+    "categoryId": 54,
+    "aliasName": "SPORTTUBE",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "SPORTTUBE",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "SPORTTUBE"
+  },
+  {
+    "id": 4870431,
+    "categoryId": 54,
+    "aliasName": "Ngolos",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Ngolos",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "Ngolos"
+  },
+  {
+    "id": 5735555,
+    "categoryId": 54,
+    "aliasName": "ESPN_DEBUG",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "ESPN DEBUG",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "ESPN DEBUG"
+  },
+  {
+    "id": 6015727,
+    "categoryId": 54,
+    "aliasName": "CBV",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "CBV",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "CBV"
+  },
+  {
+    "id": 6229558,
+    "categoryId": 54,
+    "aliasName": "OPTA_SDAPI",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "OPTA SDAPI",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "OPTA SDAPI"
+  },
+  {
+    "id": 6393013,
+    "categoryId": 54,
+    "aliasName": "OPTA_RB_POSSIBLE",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "OPTA RB POSSIBLE",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "OPTA RB POSSIBLE"
+  },
+  {
+    "id": 6393040,
+    "categoryId": 54,
+    "aliasName": "OPTA_RB",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "OPTA RB",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "OPTA RB"
+  },
+  {
+    "id": 6636893,
+    "categoryId": 54,
+    "aliasName": "OPTA_OMO",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "OPTA OMO",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "OPTA OMO"
+  },
+  {
+    "id": 7359399,
+    "categoryId": 54,
+    "aliasName": "FlashScoreStandings",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FlashScoreStandings",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FlashScoreStandings"
+  },
+  {
+    "id": 7388181,
+    "categoryId": 54,
+    "aliasName": "XMLSportsFeedLineups",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "XMLSportsFeedLineups",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "XMLSportsFeedLineups"
+  },
+  {
+    "id": 8103337,
+    "categoryId": 54,
+    "aliasName": "EURO_CUP",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "EURO CUP",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "EURO CUP"
+  },
+  {
+    "id": 9165881,
+    "categoryId": 54,
+    "aliasName": "FlashScoreVideos",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FlashScoreVideos",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FlashScoreVideos"
+  },
+  {
+    "id": 12258359,
+    "categoryId": 54,
+    "aliasName": "ISREALI_BASKETBALL_ASSOCIATION",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "ISREALI BASKETBALL ASSOCIATION",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "ISREALI BASKETBALL ASSOCIATION"
+  },
+  {
+    "id": 15940309,
+    "categoryId": 54,
+    "aliasName": "OPTA_LAW",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "OPTA LAW",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "OPTA LAW"
+  },
+  {
+    "id": 16470581,
+    "categoryId": 54,
+    "aliasName": "ACB_BASKETBALL_ASSOCIATION",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "ACB BASKETBALL ASSOCIATION",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "ACB BASKETBALL ASSOCIATION"
+  },
+  {
+    "id": 18521191,
+    "categoryId": 54,
+    "aliasName": "BetRadarHidden",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "BetRadarHidden",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "BetRadarHidden"
+  },
+  {
+    "id": 18521465,
+    "categoryId": 54,
+    "aliasName": "BetRadarTennisHidden",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "BetRadarTennisHidden",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "BetRadarTennisHidden"
+  },
+  {
+    "id": 20094337,
+    "categoryId": 54,
+    "aliasName": "OPTA_PLAY_BY_PLAY",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "OPTA PLAY BY PLAY",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "OPTA PLAY BY PLAY"
+  },
+  {
+    "id": 31706143,
+    "categoryId": 54,
+    "aliasName": "OPTA_SDAPI_STALE",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "OPTA SDAPI STALE",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "OPTA SDAPI STALE"
+  },
+  {
+    "id": 38134659,
+    "categoryId": 54,
+    "aliasName": "OPTA_SDAPI_FIX",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "OPTA SDAPI FIX",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "OPTA SDAPI FIX"
+  },
+  {
+    "id": 38193866,
+    "categoryId": 54,
+    "aliasName": "BET_RADAR_STALE",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "BET RADAR STALE",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "BET RADAR STALE"
+  },
+  {
+    "id": 38281180,
+    "categoryId": 54,
+    "aliasName": "FibaWorldCupScanner",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FibaWorldCupScanner",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FibaWorldCupScanner"
+  },
+  {
+    "id": 39089616,
+    "categoryId": 54,
+    "aliasName": "90MIN",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "90MIN",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "90MIN"
+  },
+  {
+    "id": 40225119,
+    "categoryId": 54,
+    "aliasName": "TwitterSocialAccountScanner",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "TwitterSocialAccountScanner",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "TwitterSocialAccountScanner"
+  },
+  {
+    "id": 40769606,
+    "categoryId": 54,
+    "aliasName": "FacebookAccountsScanner",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FacebookAccountsScanner",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FacebookAccountsScanner"
+  },
+  {
+    "id": 40771054,
+    "categoryId": 54,
+    "aliasName": "InstagramAccountsScanner",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "InstagramAccountsScanner",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "InstagramAccountsScanner"
+  },
+  {
+    "id": 42677198,
+    "categoryId": 54,
+    "aliasName": "OPTA_SDDP",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "OPTA SDDP",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "OPTA SDDP"
+  },
+  {
+    "id": 42765976,
+    "categoryId": 54,
+    "aliasName": "FibaChampionsLeagueScanner",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FibaChampionsLeagueScanner",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FibaChampionsLeagueScanner"
+  },
+  {
+    "id": 46274632,
+    "categoryId": 54,
+    "aliasName": "NBB_BASKETBALL",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "NBB BASKETBALL",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "NBB BASKETBALL"
+  },
+  {
+    "id": 48038665,
+    "categoryId": 54,
+    "aliasName": "LSportScanner.PullService",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "LSportScanner PullService",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "LSportScanner PullService"
+  },
+  {
+    "id": 48083516,
+    "categoryId": 54,
+    "aliasName": "OPTA_TM4",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "OPTA TM4",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "OPTA TM4"
+  },
+  {
+    "id": 48333033,
+    "categoryId": 54,
+    "aliasName": "LSportScanner.PushService",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "LSportScanner PushService",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "LSportScanner PushService"
+  },
+  {
+    "id": 49356904,
+    "categoryId": 54,
+    "aliasName": "LSportScanner.Fixtures",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "LSportScanner Fixtures",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "LSportScanner Fixtures"
+  },
+  {
+    "id": 50412820,
+    "categoryId": 54,
+    "aliasName": "AdiCup",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "AdiCup",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "AdiCup"
+  },
+  {
+    "id": 50604071,
+    "categoryId": 54,
+    "aliasName": "FifaRankingsScanner",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FifaRankingsScanner",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FifaRankingsScanner"
+  },
+  {
+    "id": 50752131,
+    "categoryId": 54,
+    "aliasName": "NHL_Stats_Perform_Scanner",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "NHL Stats Perform Scanner",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "NHL Stats Perform Scanner"
+  },
+  {
+    "id": 51256719,
+    "categoryId": 54,
+    "aliasName": "SportRadarLMT_V3",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "SportRadarLMT V3",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "SportRadarLMT V3"
+  },
+  {
+    "id": 51316966,
+    "categoryId": 54,
+    "aliasName": "SportRadarLMTScanner",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "SportRadarLMTScanner",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "SportRadarLMTScanner"
+  },
+  {
+    "id": 51501815,
+    "categoryId": 54,
+    "aliasName": "OPTA_FIXTURES",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "OPTA FIXTURES",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "OPTA FIXTURES"
+  },
+  {
+    "id": 52695978,
+    "categoryId": 54,
+    "aliasName": "SportRadarMomentum_V3",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "SportRadarMomentum V3",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "SportRadarMomentum V3"
+  },
+  {
+    "id": 55463279,
+    "categoryId": 54,
+    "aliasName": "Telesport",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Telesport",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "Telesport"
+  },
+  {
+    "id": 55669215,
+    "categoryId": 54,
+    "aliasName": "InjuriesAndSuspensionsScanner",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "InjuriesAndSuspensionsScanner",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "InjuriesAndSuspensionsScanner"
+  },
+  {
+    "id": 56195121,
+    "categoryId": 54,
+    "aliasName": "StatsPerform",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "StatsPerform",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "StatsPerform"
+  },
+  {
+    "id": 56803423,
+    "categoryId": 54,
+    "aliasName": "Roto_World_Scanner",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Roto World Scanner",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "Roto World Scanner"
+  },
+  {
+    "id": 58862394,
+    "categoryId": 54,
+    "aliasName": "DUMMY_DS",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "DUMMY DS",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "DUMMY DS"
+  },
+  {
+    "id": 58863023,
+    "categoryId": 54,
+    "aliasName": "ESPN_ROSTER",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "ESPN ROSTER",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "ESPN ROSTER"
+  },
+  {
+    "id": 60491997,
+    "categoryId": 54,
+    "aliasName": "FibaOlympicsScanner",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FibaOlympicsScanner",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FibaOlympicsScanner"
+  },
+  {
+    "id": 60491999,
+    "categoryId": 54,
+    "aliasName": "FibaOlympicsQualificationsScanner",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FibaOlympicsQualificationsScanner",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FibaOlympicsQualificationsScanner"
+  },
+  {
+    "id": 62120878,
+    "categoryId": 54,
+    "aliasName": "DonBest",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "DonBest",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "DonBest"
+  },
+  {
+    "id": 62120879,
+    "categoryId": 54,
+    "aliasName": "StatsPerformTransfersOnDemand",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "StatsPerformTransfersOnDemand",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "StatsPerformTransfersOnDemand"
+  },
+  {
+    "id": 62120881,
+    "categoryId": 54,
+    "aliasName": "FibaAfroBasketScanner",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FibaAfroBasketScanner",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FibaAfroBasketScanner"
+  },
+  {
+    "id": 64655931,
+    "categoryId": 54,
+    "aliasName": "FUTBOL_EN_VIVO_BRASIL",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FUTBOL EN VIVO BRASIL",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FUTBOL EN VIVO BRASIL"
+  },
+  {
+    "id": 65290905,
+    "categoryId": 54,
+    "aliasName": "LSportScanner.Fixtures.Debug",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "LSportScanner Fixtures Debug",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "LSportScanner Fixtures Debug"
+  },
+  {
+    "id": 65290906,
+    "categoryId": 54,
+    "aliasName": "LSportScanner.PushService.Debug",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "LSportScanner PushService Debug",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "LSportScanner PushService Debug"
+  },
+  {
+    "id": 65581655,
+    "categoryId": 54,
+    "aliasName": "LSportScanner.PushService.Games",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "LSportScanner PushService Games",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "LSportScanner PushService Games"
+  },
+  {
+    "id": 65982296,
+    "categoryId": 54,
+    "aliasName": "LSportScanner.PushService.Games.STALE",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "LSportScanner PushService Games STALE",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "LSportScanner PushService Games STALE"
+  },
+  {
+    "id": 65982297,
+    "categoryId": 54,
+    "aliasName": "LSportScanner.PushService.STALE",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "LSportScanner PushService STALE",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "LSportScanner PushService STALE"
+  },
+  {
+    "id": 66192582,
+    "categoryId": 54,
+    "aliasName": "STATSPERFORM_TV",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "STATSPERFORM TV",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "STATSPERFORM TV"
+  },
+  {
+    "id": 66660436,
+    "categoryId": 54,
+    "aliasName": "FibaEuroBasketScanner",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FibaEuroBasketScanner",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FibaEuroBasketScanner"
+  },
+  {
+    "id": 66700601,
+    "categoryId": 54,
+    "aliasName": "TNNSLive",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "TNNSLive",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "TNNSLive"
+  },
+  {
+    "id": 67208252,
+    "categoryId": 54,
+    "aliasName": "DailyFaceOff",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "DailyFaceOff",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "DailyFaceOff"
+  },
+  {
+    "id": 67601920,
+    "categoryId": 54,
+    "aliasName": "LSports",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "LSports",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "LSports"
+  },
+  {
+    "id": 67668438,
+    "categoryId": 54,
+    "aliasName": "Bet365Scrapper",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Bet365Scrapper",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "Bet365Scrapper"
+  },
+  {
+    "id": 67687076,
+    "categoryId": 54,
+    "aliasName": "BetanoScrapper",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "BetanoScrapper",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "BetanoScrapper"
+  },
+  {
+    "id": 67793918,
+    "categoryId": 54,
+    "aliasName": "FutbolEnVivoCanada",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FutbolEnVivoCanada",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FutbolEnVivoCanada"
+  },
+  {
+    "id": 67793919,
+    "categoryId": 54,
+    "aliasName": "FutbolEnVivoDenmark",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FutbolEnVivoDenmark",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FutbolEnVivoDenmark"
+  },
+  {
+    "id": 67793920,
+    "categoryId": 54,
+    "aliasName": "FutbolEnVivoFinland",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FutbolEnVivoFinland",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FutbolEnVivoFinland"
+  },
+  {
+    "id": 67793921,
+    "categoryId": 54,
+    "aliasName": "FutbolEnVivoFrance",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FutbolEnVivoFrance",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FutbolEnVivoFrance"
+  },
+  {
+    "id": 67793922,
+    "categoryId": 54,
+    "aliasName": "FutbolEnVivoIndia",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FutbolEnVivoIndia",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FutbolEnVivoIndia"
+  },
+  {
+    "id": 67793923,
+    "categoryId": 54,
+    "aliasName": "FutbolEnVivoItaly",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FutbolEnVivoItaly",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FutbolEnVivoItaly"
+  },
+  {
+    "id": 67793924,
+    "categoryId": 54,
+    "aliasName": "FutbolEnVivoNorway",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FutbolEnVivoNorway",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FutbolEnVivoNorway"
+  },
+  {
+    "id": 67793925,
+    "categoryId": 54,
+    "aliasName": "FutbolEnVivoAustria",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FutbolEnVivoAustria",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FutbolEnVivoAustria"
+  },
+  {
+    "id": 67793926,
+    "categoryId": 54,
+    "aliasName": "FutbolEnVivoPortugal",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FutbolEnVivoPortugal",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FutbolEnVivoPortugal"
+  },
+  {
+    "id": 67793928,
+    "categoryId": 54,
+    "aliasName": "FutbolEnVivoSweden",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "FutbolEnVivoSweden",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "FutbolEnVivoSweden"
+  },
+  {
+    "id": 67887848,
+    "categoryId": 54,
+    "aliasName": "GloboScanner.Standings",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "GloboScanner Standings",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "GloboScanner Standings"
+  },
+  {
+    "id": 67930297,
+    "categoryId": 54,
+    "aliasName": "SportingBet",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "SportingBet",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "SportingBet"
+  },
+  {
+    "id": 67996101,
+    "categoryId": 54,
+    "aliasName": "SportingBet_PT",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "SportingBet PT",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "SportingBet PT"
+  },
+  {
+    "id": 67996097,
+    "categoryId": 54,
+    "aliasName": "Bet365Scrapper_es",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Bet365Scrapper es",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "Bet365Scrapper es"
+  },
+  {
+    "id": 67996098,
+    "categoryId": 54,
+    "aliasName": "BetanoScrapper_es",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "BetanoScrapper es",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "BetanoScrapper es"
+  },
+  {
+    "id": 68074750,
+    "categoryId": 54,
+    "aliasName": "SportRadar_Squads",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "SportRadar Squads",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "SportRadar Squads"
+  },
+  {
+    "id": 68074751,
+    "categoryId": 54,
+    "aliasName": "SportRadar_CompetitorStats",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "SportRadar CompetitorStats",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "SportRadar CompetitorStats"
+  },
+  {
+    "id": 68074753,
+    "categoryId": 54,
+    "aliasName": "SportRadar_Fixtures",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "SportRadar Fixtures",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "SportRadar Fixtures"
+  },
+  {
+    "id": 70864720,
+    "categoryId": 54,
+    "aliasName": "MarjoSports",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "MarjoSports",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "MarjoSports"
+  },
+  {
+    "id": 70883093,
+    "categoryId": 54,
+    "aliasName": "SportRadar_Games.Tennis",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "SportRadar Games Tennis",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "SportRadar Games Tennis"
+  },
+  {
+    "id": 70936409,
+    "categoryId": 54,
+    "aliasName": "betsson_en",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "betsson en",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "betsson en"
+  },
+  {
+    "id": 70936411,
+    "categoryId": 54,
+    "aliasName": "betsson_es",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "betsson es",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "betsson es"
+  },
+  {
+    "id": 70988431,
+    "categoryId": 54,
+    "aliasName": "Betano",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Betano",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "Betano"
+  },
+  {
+    "id": 71133867,
+    "categoryId": 54,
+    "aliasName": "SportingBet_DEBUG",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "SportingBet DEBUG",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "SportingBet DEBUG"
+  },
+  {
+    "id": 71161263,
+    "categoryId": 54,
+    "aliasName": "DSG_Basketball_Fixtures",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "DSG Basketball Fixtures",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "DSG Basketball Fixtures"
+  },
+  {
+    "id": 71161264,
+    "categoryId": 54,
+    "aliasName": "DSG_Basketball_Games",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "DSG Basketball Games",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "DSG Basketball Games"
+  },
+  {
+    "id": 71677812,
+    "categoryId": 54,
+    "aliasName": "DSG_Basketball_Squads",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "DSG Basketball Squads",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "DSG Basketball Squads"
+  },
+  {
+    "id": 71880302,
+    "categoryId": 54,
+    "aliasName": "wsc_stories",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "wsc stories",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "wsc stories"
+  },
+  {
+    "id": 71906818,
+    "categoryId": 54,
+    "aliasName": "SportRadar_Push",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "SportRadar Push",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "SportRadar Push"
+  },
+  {
+    "id": 71906819,
+    "categoryId": 54,
+    "aliasName": "SportRadar_Push_Possible",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "SportRadar Push Possible",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "SportRadar Push Possible"
+  },
+  {
+    "id": 72860907,
+    "categoryId": 54,
+    "aliasName": "ATPDetails",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "ATPDetails",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "ATPDetails"
+  },
+  {
+    "id": 72860908,
+    "categoryId": 54,
+    "aliasName": "WTADetails",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "WTADetails",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "WTADetails"
+  },
+  {
+    "id": 72877273,
+    "categoryId": 54,
+    "aliasName": "DSG_Volleyball_Games",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "DSG Volleyball Games",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "DSG Volleyball Games"
+  },
+  {
+    "id": 74750577,
+    "categoryId": 54,
+    "aliasName": "DSG_Volleyball_Fixtures",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "DSG Volleyball Fixtures",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "DSG Volleyball Fixtures"
+  },
+  {
+    "id": 75436350,
+    "categoryId": 54,
+    "aliasName": "SR_Soccer_Games",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "SR Soccer Games",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "SR Soccer Games"
+  },
+  {
+    "id": 75436352,
+    "categoryId": 54,
+    "aliasName": "SR_Soccer_Fixtures",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "SR Soccer Fixtures",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "SR Soccer Fixtures"
+  },
+  {
+    "id": 75437758,
+    "categoryId": 54,
+    "aliasName": "SR_Soccer_DailySummaries",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "SR Soccer DailySummaries",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "SR Soccer DailySummaries"
+  },
+  {
+    "id": 76625336,
+    "categoryId": 54,
+    "aliasName": "BWIN_PT",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "BWIN PT",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "BWIN PT"
+  },
+  {
+    "id": 76830378,
+    "categoryId": 54,
+    "aliasName": "SuperbetScrapper",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "SuperbetScrapper",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "SuperbetScrapper"
+  },
+  {
+    "id": 76830382,
+    "categoryId": 54,
+    "aliasName": "SuperbetScrapper_pt",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "SuperbetScrapper pt",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "SuperbetScrapper pt"
+  },
+  {
+    "id": 76883247,
+    "categoryId": 54,
+    "aliasName": "NovibetScrapper",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "NovibetScrapper",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "NovibetScrapper"
+  },
+  {
+    "id": 76883249,
+    "categoryId": 54,
+    "aliasName": "NovibetScrapper_pt",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "NovibetScrapper pt",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "NovibetScrapper pt"
+  },
+  {
+    "id": 77073781,
+    "categoryId": 54,
+    "aliasName": "Rotowire",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Rotowire",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "Rotowire"
+  },
+  {
+    "id": 77145548,
+    "categoryId": 54,
+    "aliasName": "SR_Soccer_CompetitorColors",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "SR Soccer CompetitorColors",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "SR Soccer CompetitorColors"
+  },
+  {
+    "id": 77147490,
+    "categoryId": 54,
+    "aliasName": "EsportesNaTV",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "EsportesNaTV",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "EsportesNaTV"
+  },
+  {
+    "id": 77181259,
+    "categoryId": 54,
+    "aliasName": "XMLSportsFeed_ConfirmedLineups",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "XMLSportsFeed ConfirmedLineups",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "XMLSportsFeed ConfirmedLineups"
+  },
+  {
+    "id": 77618417,
+    "categoryId": 54,
+    "aliasName": "SR_NBA_STANDINGS",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "SR NBA STANDINGS",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "SR NBA STANDINGS"
+  },
+  {
+    "id": 77728988,
+    "categoryId": 54,
+    "aliasName": "SSTrader",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "SSTrader",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "SSTrader"
+  },
+  {
+    "id": 77761157,
+    "categoryId": 54,
+    "aliasName": "SportRadarLMT_V4",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "SportRadarLMT V4",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "SportRadarLMT V4"
+  },
+  {
+    "id": 77868802,
+    "categoryId": 54,
+    "aliasName": "BettingOpportunityService",
+    "fatherTerm": null,
+    "createTime": "2026-04-16T09:02:49.929Z",
+    "description": null,
+    "category": "Data Sources",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "BettingOpportunityService",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "BettingOpportunityService"
   }
 ]

@@ -316,9 +316,91 @@ class GameController {
     try {
       const gameId = parseInt(req.params.id);
       if (isNaN(gameId)) return res.status(400).json({ success: false, error: { message: 'Invalid game ID' } });
-      let rows = await dataLoader.loadData('data_sources_game_events_updates_log.json');
-      if (!Array.isArray(rows)) rows = [];
+      const [allRows, eventTypes, dataSources, gameEvents, gameUpdates] = await Promise.all([
+        dataLoader.loadData('data_sources_game_events_updates_log.json'),
+        dataLoader.loadData('sport_type_event_types.json').catch(() => []),
+        dataLoader.loadData('data_sources.json').catch(() => []),
+        dataLoader.loadData('game_events.json').catch(() => []),
+        dataLoader.loadData('game_updates.json').catch(() => []),
+      ]);
+      let rows = Array.isArray(allRows) ? allRows : [];
       rows = rows.filter(r => r.GAME_ID === gameId);
+      const eventTypeNames = {};
+      for (const et of (Array.isArray(eventTypes) ? eventTypes : [])) {
+        const id = et.EVENT_TYPE_ID;
+        if (id != null && et.ALIAS_NAME && !eventTypeNames[id]) eventTypeNames[id] = et.ALIAS_NAME;
+      }
+      const dataSourceNames = {};
+      for (const ds of (Array.isArray(dataSources) ? dataSources : [])) {
+        const id = ds.DATA_SOURCE_ID;
+        if (id != null && ds.ALIAS_NAME) dataSourceNames[id] = ds.ALIAS_NAME;
+      }
+      const gameEventsMap = {};
+      for (const ge of (Array.isArray(gameEvents) ? gameEvents : []).filter(g => g.GAME_ID === gameId)) {
+        const key = `${ge.EVENT_TYPE}-${ge.COMPETITOR_NUM}-${ge.EVENT_NUM}`;
+        gameEventsMap[key] = { GAME_TIME: ge.GAME_TIME, EVENT_SUB_TYPE: ge.EVENT_SUB_TYPE };
+      }
+      const sequenceMap = {};
+      for (const u of (Array.isArray(gameUpdates) ? gameUpdates : []).filter(g => g.GAME_ID === gameId)) {
+        const seq = u.CREATED_SEQUENCE;
+        if (seq == null || Number(seq) <= 0) continue;
+        const key = `${u.DATA_SOURCE_ID}-${u.HANDLED}`;
+        sequenceMap[key] = seq;
+      }
+      res.json({ success: true, data: rows, eventTypeNames, dataSourceNames, gameEventsMap, sequenceMap });
+    } catch (error) { next(error); }
+  }
+
+  async getNotificationsLog(req, res, next) {
+    try {
+      const gameId = parseInt(req.params.id);
+      if (isNaN(gameId)) return res.status(400).json({ success: false, error: { message: 'Invalid game ID' } });
+
+      let gameUpdates = await dataLoader.loadData('game_updates.json');
+      if (!Array.isArray(gameUpdates)) gameUpdates = [];
+      gameUpdates = gameUpdates.filter(u => (u.GAME_ID ?? u.gameId) === gameId);
+
+      const sequencesInGame = new Set(
+        gameUpdates.map(u => u.CREATED_SEQUENCE).filter(v => v != null && Number(v) > 0)
+      );
+      if (sequencesInGame.size === 0) {
+        return res.json({ success: true, data: [] });
+      }
+
+      const [allUpdates, allUpdateTypes] = await Promise.all([
+        dataLoader.loadData('updates.json').catch(() => []),
+        dataLoader.loadData('update_types.json').catch(() => []),
+      ]);
+
+      const utArr = Array.isArray(allUpdateTypes) ? allUpdateTypes : [];
+      const notifiedTypeIds = new Set();
+      const utNameMap = {};
+      for (const ut of utArr) {
+        utNameMap[ut.UPDATE_TYPE_ID] = ut.ALIAS_NAME || `Type ${ut.UPDATE_TYPE_ID}`;
+        if (ut.IS_NOTIFIED === true) notifiedTypeIds.add(ut.UPDATE_TYPE_ID);
+      }
+
+      const updatesArr = Array.isArray(allUpdates) ? allUpdates : [];
+      const rows = [];
+      for (const rec of updatesArr) {
+        if (!sequencesInGame.has(rec.UPDATE_SEQUENCE)) continue;
+        if (!notifiedTypeIds.has(rec.UPDATE_TYPE)) continue;
+        rows.push({
+          CREATE_TIME: rec.CREATE_TIME || null,
+          UPDATE_NAME: utNameMap[rec.UPDATE_TYPE] || `Type ${rec.UPDATE_TYPE}`,
+          IS_REPLACEMENT: rec.IS_REPLACEMENT ?? false,
+          NOTIFICATION_ID: `${rec.UPDATE_SEQUENCE}.${rec.UPDATE_ID}`,
+          UPDATE_SEQUENCE: rec.UPDATE_SEQUENCE,
+          UPDATE_ID: rec.UPDATE_ID,
+        });
+      }
+
+      rows.sort((a, b) => {
+        const ta = a.CREATE_TIME ? new Date(a.CREATE_TIME).getTime() : 0;
+        const tb = b.CREATE_TIME ? new Date(b.CREATE_TIME).getTime() : 0;
+        return ta - tb;
+      });
+
       res.json({ success: true, data: rows });
     } catch (error) { next(error); }
   }

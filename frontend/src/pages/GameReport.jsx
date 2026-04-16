@@ -140,6 +140,8 @@ export default function GameReport() {
   const [scoreLog, setScoreLog] = useState([]);
   const [statusLog, setStatusLog] = useState([]);
   const [eventsLog, setEventsLog] = useState([]);
+  const [eventsLogMaps, setEventsLogMaps] = useState({ eventTypeNames: {}, dataSourceNames: {}, gameEventsMap: {}, sequenceMap: {} });
+  const [notificationsLog, setNotificationsLog] = useState([]);
   const [loadedTabs, setLoadedTabs] = useState(new Set());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -261,8 +263,9 @@ export default function GameReport() {
           break;
         }
         case 2: {
-          const data = await api.getGameEventsLog(id);
+          const { data, eventTypeNames, dataSourceNames, gameEventsMap, sequenceMap } = await api.getGameEventsLog(id);
           setEventsLog(Array.isArray(data) ? data : []);
+          setEventsLogMaps({ eventTypeNames: eventTypeNames || {}, dataSourceNames: dataSourceNames || {}, gameEventsMap: gameEventsMap || {}, sequenceMap: sequenceMap || {} });
           break;
         }
         case 4: {
@@ -275,6 +278,11 @@ export default function GameReport() {
             dateFrom: fo.dateFrom ? dayjs(fo.dateFrom) : null,
             dateTo: fo.dateTo ? dayjs(fo.dateTo) : null,
           }));
+          break;
+        }
+        case 5: {
+          const data = await api.getGameNotificationsLog(id);
+          setNotificationsLog(Array.isArray(data) ? data : []);
           break;
         }
         default:
@@ -471,6 +479,70 @@ export default function GameReport() {
     const start = pagination.page * pagination.rowsPerPage;
     return sortedUpdates.slice(start, start + pagination.rowsPerPage);
   }, [sortedUpdates, pagination.page, pagination.rowsPerPage]);
+
+  const { pivotedEvents, uniqueDataSources } = useMemo(() => {
+    if (!eventsLog.length) return { pivotedEvents: [], uniqueDataSources: [] };
+    const { eventTypeNames, dataSourceNames, gameEventsMap, sequenceMap } = eventsLogMaps;
+    const dsSet = new Set();
+    const groups = {};
+    for (const row of eventsLog) {
+      const key = `${row.EVENT_TYPE}-${row.EVENT_COMPETITOR_NUM}-${row.EVENT_NUM}`;
+      dsSet.add(row.DATA_SOURCE);
+      if (!groups[key]) {
+        const ge = gameEventsMap[key] || {};
+        const playerName = eventsLog
+          .filter(r => `${r.EVENT_TYPE}-${r.EVENT_COMPETITOR_NUM}-${r.EVENT_NUM}` === key && r.LAST_PLAYER_NAME)
+          .sort((a, b) => (b.LAST_PLAYER_NAME?.length || 0) - (a.LAST_PLAYER_NAME?.length || 0))[0]?.LAST_PLAYER_NAME || '';
+        groups[key] = {
+          key,
+          eventType: row.EVENT_TYPE,
+          competitorNum: row.EVENT_COMPETITOR_NUM,
+          eventNum: row.EVENT_NUM,
+          gameTime: ge.GAME_TIME,
+          eventTypeName: eventTypeNames[row.EVENT_TYPE] ?? String(row.EVENT_TYPE),
+          playerName,
+          sources: {},
+        };
+      }
+      const seqKey = `${row.DATA_SOURCE}-${row.UPDATE_TIME}`;
+      groups[key].sources[row.DATA_SOURCE] = {
+        updateTime: row.UPDATE_TIME,
+        wasApplied: row.WAS_APPLIED,
+        playerName: row.LAST_PLAYER_NAME,
+        sequence: sequenceMap[seqKey] ?? null,
+      };
+    }
+    const events = Object.values(groups).sort((a, b) => (a.gameTime ?? 999) - (b.gameTime ?? 999));
+    for (const evt of events) {
+      const times = Object.values(evt.sources)
+        .map(s => s.updateTime ? new Date(s.updateTime.replace(/(\d{2})\/(\d{2})\/(\d{2})/, '20$3-$2-$1')).getTime() : Infinity)
+        .filter(t => isFinite(t));
+      const earliest = times.length ? Math.min(...times) : null;
+      let rank = 1;
+      const ranked = Object.entries(evt.sources)
+        .map(([dsId, s]) => {
+          const t = s.updateTime ? new Date(s.updateTime.replace(/(\d{2})\/(\d{2})\/(\d{2})/, '20$3-$2-$1')).getTime() : Infinity;
+          return { dsId, t, ...s };
+        })
+        .sort((a, b) => a.t - b.t);
+      for (const item of ranked) {
+        const gapMs = earliest && isFinite(item.t) ? item.t - earliest : 0;
+        const gapSec = Math.floor(gapMs / 1000);
+        const mm = String(Math.floor(gapSec / 3600)).padStart(2, '0');
+        const ss = String(Math.floor((gapSec % 3600) / 60)).padStart(2, '0');
+        const sss = String(gapSec % 60).padStart(2, '0');
+        evt.sources[item.dsId].gap = gapMs > 0 ? `(${mm}:${ss}:${sss})` : '';
+        evt.sources[item.dsId].rank = isFinite(item.t) ? rank++ : null;
+        evt.sources[item.dsId].parsedTime = isFinite(item.t) ? item.t : null;
+      }
+    }
+    const dsArr = [...dsSet].sort((a, b) => {
+      const na = dataSourceNames[a] ?? String(a);
+      const nb = dataSourceNames[b] ?? String(b);
+      return na.localeCompare(nb);
+    });
+    return { pivotedEvents: events, uniqueDataSources: dsArr };
+  }, [eventsLog, eventsLogMaps]);
 
   const handleSort = (by) => {
     setSort((prev) => ({
@@ -716,7 +788,7 @@ export default function GameReport() {
       {/* Tab 2: Events Log */}
       {activeTab === 2 && (
         <Paper>
-          {eventsLog.length === 0 ? (
+          {pivotedEvents.length === 0 ? (
             <Box sx={{ p: 4, textAlign: 'center' }}>
               <Typography color="text.secondary">No events log data found for this game.</Typography>
             </Box>
@@ -725,29 +797,73 @@ export default function GameReport() {
               <Table stickyHeader size="small">
                 <TableHead>
                   <TableRow sx={{ '& th': { bgcolor: '#fafafa', fontWeight: 600 } }}>
-                    <TableCell>#</TableCell>
-                    <TableCell>Event Type</TableCell>
-                    <TableCell>Competitor Num</TableCell>
-                    <TableCell>Event Num</TableCell>
-                    <TableCell>Data Source</TableCell>
-                    <TableCell>Update Time</TableCell>
-                    <TableCell>Last Player Name</TableCell>
-                    <TableCell align="center">Was Applied</TableCell>
+                    <TableCell sx={{ minWidth: 220, position: 'sticky', left: 0, zIndex: 3, bgcolor: '#fafafa' }}>Event</TableCell>
+                    {uniqueDataSources.map((dsId) => (
+                      <TableCell key={dsId} align="center" sx={{ whiteSpace: 'nowrap', minWidth: 160 }}>
+                        {eventsLogMaps.dataSourceNames[dsId] ?? dsId}
+                      </TableCell>
+                    ))}
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {eventsLog.map((row, idx) => (
-                    <TableRow key={idx} hover>
-                      <TableCell>{idx + 1}</TableCell>
-                      <TableCell>{row.EVENT_TYPE ?? '-'}</TableCell>
-                      <TableCell>{row.EVENT_COMPETITOR_NUM ?? '-'}</TableCell>
-                      <TableCell>{row.EVENT_NUM ?? '-'}</TableCell>
-                      <TableCell>{(filterOptions.sourceNames || {})[row.DATA_SOURCE] ?? row.DATA_SOURCE ?? '-'}</TableCell>
-                      <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.UPDATE_TIME ?? '-'}</TableCell>
-                      <TableCell>{row.LAST_PLAYER_NAME || '-'}</TableCell>
-                      <TableCell align="center"><Checkbox checked={!!row.WAS_APPLIED} disabled size="small" /></TableCell>
-                    </TableRow>
-                  ))}
+                  {pivotedEvents.map((evt) => {
+                    const competitorName = evt.competitorNum === 1
+                      ? (gameEnrichment.competitor1Name ?? `Competitor ${evt.competitorNum}`)
+                      : evt.competitorNum === 2
+                        ? (gameEnrichment.competitor2Name ?? `Competitor ${evt.competitorNum}`)
+                        : `Competitor ${evt.competitorNum ?? '?'}`;
+                    return (
+                      <TableRow key={evt.key} hover>
+                        <TableCell sx={{ position: 'sticky', left: 0, bgcolor: 'white', zIndex: 1, borderRight: '1px solid #e0e0e0' }}>
+                          {evt.playerName && (
+                            <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                              Player: <span style={{ color: '#1976d2' }}>{evt.playerName}</span>
+                            </Typography>
+                          )}
+                          <Typography variant="body2" sx={{ fontSize: '0.8rem' }}>
+                            Team: <span style={{ color: '#1976d2' }}>{competitorName}</span>
+                          </Typography>
+                          <Typography variant="body2" sx={{ fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            Type: {evt.eventTypeName}
+                            {evt.gameTime != null && evt.gameTime !== -1 && (
+                              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px', marginLeft: 4, color: '#666' }}>
+                                {evt.gameTime}' <WatchLaterIcon sx={{ fontSize: 14 }} />
+                              </span>
+                            )}
+                          </Typography>
+                        </TableCell>
+                        {uniqueDataSources.map((dsId) => {
+                          const src = evt.sources[dsId];
+                          if (!src) return <TableCell key={dsId} />;
+                          return (
+                            <TableCell key={dsId} align="center" sx={{ verticalAlign: 'top', whiteSpace: 'nowrap' }}>
+                              <Typography variant="body2" sx={{ fontSize: '0.8rem' }}>
+                                {src.updateTime ?? '-'}
+                              </Typography>
+                              {src.gap && (
+                                <Typography variant="caption" color="text.secondary" display="block">
+                                  {src.gap}
+                                </Typography>
+                              )}
+                              {src.rank != null && (
+                                <Chip
+                                  label={src.rank}
+                                  size="small"
+                                  color={src.wasApplied ? 'primary' : 'default'}
+                                  clickable={!!(src.wasApplied && src.sequence)}
+                                  onClick={src.wasApplied && src.sequence ? (e) => { e.stopPropagation(); openSequenceDialog(src.sequence); } : undefined}
+                                  sx={{
+                                    mt: 0.5, minWidth: 24, height: 22, fontWeight: 700, fontSize: '0.75rem',
+                                    ...(src.wasApplied && src.sequence ? { cursor: 'pointer', textDecoration: 'underline' } : {}),
+                                  }}
+                                />
+                              )}
+                            </TableCell>
+                          );
+                        })}
+                      </TableRow>
+                    );
+                  })}
                 </TableBody>
               </Table>
             </TableContainer>
@@ -1279,8 +1395,37 @@ export default function GameReport() {
 
       {/* Tab 5: Notifications Log */}
       {activeTab === 5 && (
-        <Paper sx={{ p: 4, textAlign: 'center' }}>
-          <Typography color="text.secondary">Notifications Log - Coming soon</Typography>
+        <Paper>
+          {notificationsLog.length === 0 ? (
+            <Box sx={{ p: 4, textAlign: 'center' }}>
+              <Typography color="text.secondary">No notifications found for this game.</Typography>
+            </Box>
+          ) : (
+            <TableContainer sx={{ maxHeight: 640, overflow: 'auto' }}>
+              <Table stickyHeader size="small">
+                <TableHead>
+                  <TableRow sx={{ '& th': { bgcolor: '#fafafa', fontWeight: 600 } }}>
+                    <TableCell>#</TableCell>
+                    <TableCell>Create Time</TableCell>
+                    <TableCell>Notification Update Name</TableCell>
+                    <TableCell>Is Replacement</TableCell>
+                    <TableCell>Notification ID</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {notificationsLog.map((row, idx) => (
+                    <TableRow key={idx} hover>
+                      <TableCell>{idx + 1}</TableCell>
+                      <TableCell sx={{ whiteSpace: 'nowrap' }}>{formatDateTime(row.CREATE_TIME)}</TableCell>
+                      <TableCell>{row.UPDATE_NAME ?? '-'}</TableCell>
+                      <TableCell>{row.IS_REPLACEMENT === true ? 'true' : row.IS_REPLACEMENT === false ? 'false' : String(row.IS_REPLACEMENT ?? '-')}</TableCell>
+                      <TableCell>{row.NOTIFICATION_ID ?? '-'}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
         </Paper>
       )}
 

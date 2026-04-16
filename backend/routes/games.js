@@ -23,6 +23,7 @@ router.get('/:id/updates', gameController.getUpdates.bind(gameController));
 router.get('/:id/score-log', gameController.getScoreLog.bind(gameController));
 router.get('/:id/status-log', gameController.getStatusLog.bind(gameController));
 router.get('/:id/events-log', gameController.getEventsLog.bind(gameController));
+router.get('/:id/notifications-log', gameController.getNotificationsLog.bind(gameController));
 
 /**
  * GET /api/games/:id
