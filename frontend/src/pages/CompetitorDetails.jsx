@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import useUrlFilters from '../hooks/useUrlFilters';
 import {
   Box,
   Typography,
@@ -51,7 +52,10 @@ function CompetitorDetails() {
   const [venues, setVenues] = useState([]);
   const [lightImageError, setLightImageError] = useState(false);
   const [darkImageError, setDarkImageError] = useState(false);
-  const [activeTab, setActiveTab] = useState(0);
+  const [urlState, setUrlState] = useUrlFilters({
+    tab: { type: 'number', default: 0 },
+  });
+  const activeTab = urlState.tab;
   
   // Image edit dialog state
   const [imageDialogOpen, setImageDialogOpen] = useState(false);
@@ -1184,7 +1188,7 @@ function CompetitorDetails() {
       <Paper sx={{ boxShadow: 1 }}>
         <Tabs
           value={activeTab}
-          onChange={(e, newValue) => setActiveTab(newValue)}
+          onChange={(e, newValue) => setUrlState({ tab: newValue })}
           sx={{
             borderBottom: 1,
             borderColor: 'divider',

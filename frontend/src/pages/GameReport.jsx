@@ -36,6 +36,7 @@ import WatchLaterIcon from '@mui/icons-material/WatchLater';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import api from '../services/api';
+import useUrlFilters from '../hooks/useUrlFilters';
 
 dayjs.extend(utc);
 import LoadingSpinner from '../../reuse/LoadingSpinner';
@@ -147,23 +148,41 @@ export default function GameReport() {
   const [error, setError] = useState(null);
   const [expandedId, setExpandedId] = useState(null);
   const [seqDialog, setSeqDialog] = useState({ open: false, sequence: null, loading: false, data: null });
-  const [pagination, setPagination] = useState({ page: 0, rowsPerPage: 15 });
-  const [sort, setSort] = useState({ by: 'handled', dir: 'desc' });
-  const [appliedFilters, setAppliedFilters] = useState(null);
-  const [filters, setFilters] = useState({
-    freeText: '',
-    source: [],
-    updateType: [],
-    includingData: [],
-    status: [],
-    score: [],
-    handlingDelay: false,
-    hasSequence: false,
-    hasException: false,
-    hasTrace: false,
-    dateFrom: null,
-    dateTo: null,
+  const [urlState, setUrlState] = useUrlFilters({
+    freeText: { type: 'string', default: '' },
+    source: { type: 'json', default: [] },
+    updateType: { type: 'json', default: [] },
+    includingData: { type: 'array', default: [] },
+    status: { type: 'json', default: [] },
+    score: { type: 'array', default: [] },
+    handlingDelay: { type: 'boolean', default: false },
+    hasSequence: { type: 'boolean', default: false },
+    hasException: { type: 'boolean', default: false },
+    hasTrace: { type: 'boolean', default: false },
+    dateFrom: { type: 'string', default: '' },
+    dateTo: { type: 'string', default: '' },
+    page: { type: 'number', default: 0 },
+    rowsPerPage: { type: 'number', default: 15 },
+    sortBy: { type: 'string', default: 'handled' },
+    sortDir: { type: 'string', default: 'desc' },
   });
+  const filters = {
+    freeText: urlState.freeText,
+    source: urlState.source,
+    updateType: urlState.updateType,
+    includingData: urlState.includingData,
+    status: urlState.status,
+    score: urlState.score,
+    handlingDelay: urlState.handlingDelay,
+    hasSequence: urlState.hasSequence,
+    hasException: urlState.hasException,
+    hasTrace: urlState.hasTrace,
+    dateFrom: urlState.dateFrom ? dayjs(urlState.dateFrom) : null,
+    dateTo: urlState.dateTo ? dayjs(urlState.dateTo) : null,
+  };
+  const pagination = { page: urlState.page, rowsPerPage: urlState.rowsPerPage };
+  const sort = { by: urlState.sortBy, dir: urlState.sortDir };
+  const [appliedFilters, setAppliedFilters] = useState(null);
   const [filterOptions, setFilterOptions] = useState({ sources: [], updateTypes: [], sourceNames: {} });
   const [gameStatusesMap, setGameStatusesMap] = useState({});
   const [gameEnrichment, setGameEnrichment] = useState({
@@ -273,11 +292,10 @@ export default function GameReport() {
           setUpdates(Array.isArray(data) ? data : []);
           const fo = opts || { sources: [], updateTypes: [], sourceNames: {} };
           setFilterOptions(fo);
-          setFilters((prev) => ({
-            ...prev,
-            dateFrom: fo.dateFrom ? dayjs(fo.dateFrom) : null,
-            dateTo: fo.dateTo ? dayjs(fo.dateTo) : null,
-          }));
+          setUrlState({
+            dateFrom: fo.dateFrom ? dayjs(fo.dateFrom).format('YYYY-MM-DD') : '',
+            dateTo: fo.dateTo ? dayjs(fo.dateTo).format('YYYY-MM-DD') : '',
+          });
           break;
         }
         case 5: {
@@ -325,7 +343,7 @@ export default function GameReport() {
   const handleSearch = () => {
     const next = { ...filters };
     setAppliedFilters(next);
-    setPagination((p) => ({ ...p, page: 0 }));
+    setUrlState({ page: 0 });
     loadUpdates(next);
   };
 
@@ -545,11 +563,11 @@ export default function GameReport() {
   }, [eventsLog, eventsLogMaps]);
 
   const handleSort = (by) => {
-    setSort((prev) => ({
-      by,
-      dir: prev.by === by && prev.dir === 'asc' ? 'desc' : 'asc',
+    setUrlState((prev) => ({
+      sortBy: by,
+      sortDir: prev.sortBy === by && prev.sortDir === 'asc' ? 'desc' : 'asc',
+      page: 0,
     }));
-    setPagination((p) => ({ ...p, page: 0 }));
   };
 
   const openSequenceDialog = async (sequence) => {
@@ -886,7 +904,7 @@ export default function GameReport() {
             size="small"
             placeholder="Free Text Search (min 3 chars)"
             value={filters.freeText}
-            onChange={(e) => setFilters((prev) => ({ ...prev, freeText: e.target.value }))}
+            onChange={(e) => setUrlState({ freeText: e.target.value })}
             sx={{ minWidth: 245, '& .MuiOutlinedInput-root': { bgcolor: '#fff' } }}
           />
           <Select
@@ -894,7 +912,7 @@ export default function GameReport() {
             multiple
             displayEmpty
             value={filters.source}
-            onChange={(e) => setFilters((prev) => ({ ...prev, source: e.target.value }))}
+            onChange={(e) => setUrlState({ source: e.target.value })}
             sx={{ minWidth: 140, bgcolor: '#fff' }}
             renderValue={(v) => {
               const arr = Array.isArray(v) ? v : [];
@@ -915,7 +933,7 @@ export default function GameReport() {
             multiple
             displayEmpty
             value={filters.updateType}
-            onChange={(e) => setFilters((prev) => ({ ...prev, updateType: e.target.value }))}
+            onChange={(e) => setUrlState({ updateType: e.target.value })}
             sx={{ minWidth: 220, bgcolor: '#fff' }}
             renderValue={(v) => {
               const arr = Array.isArray(v) ? v : [];
@@ -941,7 +959,7 @@ export default function GameReport() {
             multiple
             displayEmpty
             value={filters.includingData}
-            onChange={(e) => setFilters((prev) => ({ ...prev, includingData: e.target.value }))}
+            onChange={(e) => setUrlState({ includingData: e.target.value })}
             sx={{ minWidth: 180, bgcolor: '#fff' }}
             renderValue={(v) => {
               const arr = Array.isArray(v) ? v : [];
@@ -962,7 +980,7 @@ export default function GameReport() {
             multiple
             displayEmpty
             value={filters.status}
-            onChange={(e) => setFilters((prev) => ({ ...prev, status: e.target.value }))}
+            onChange={(e) => setUrlState({ status: e.target.value })}
             sx={{ minWidth: 160, bgcolor: '#fff' }}
             renderValue={(v) => {
               const arr = Array.isArray(v) ? v : [];
@@ -986,7 +1004,7 @@ export default function GameReport() {
             multiple
             displayEmpty
             value={filters.score}
-            onChange={(e) => setFilters((prev) => ({ ...prev, score: e.target.value }))}
+            onChange={(e) => setUrlState({ score: e.target.value })}
             sx={{ minWidth: 140, bgcolor: '#fff' }}
             renderValue={(v) => {
               const arr = Array.isArray(v) ? v : [];
@@ -1006,7 +1024,7 @@ export default function GameReport() {
             variant={filters.handlingDelay ? 'contained' : 'outlined'}
             color={filters.handlingDelay ? 'error' : 'inherit'}
             startIcon={<WatchLaterIcon />}
-            onClick={() => { setFilters((prev) => ({ ...prev, handlingDelay: !prev.handlingDelay })); setPagination((p) => ({ ...p, page: 0 })); }}
+            onClick={() => setUrlState(prev => ({ handlingDelay: !prev.handlingDelay, page: 0 }))}
             sx={{ minWidth: 160, textTransform: 'none' }}
           >
             Handling Delay
@@ -1014,7 +1032,7 @@ export default function GameReport() {
           <Button
             variant={filters.hasSequence ? 'contained' : 'outlined'}
             color={filters.hasSequence ? 'primary' : 'inherit'}
-            onClick={() => { setFilters((prev) => ({ ...prev, hasSequence: !prev.hasSequence })); setPagination((p) => ({ ...p, page: 0 })); }}
+            onClick={() => setUrlState(prev => ({ hasSequence: !prev.hasSequence, page: 0 }))}
             sx={{ textTransform: 'none' }}
           >
             Updates Only
@@ -1022,7 +1040,7 @@ export default function GameReport() {
           <Button
             variant={filters.hasException ? 'contained' : 'outlined'}
             color={filters.hasException ? 'warning' : 'inherit'}
-            onClick={() => { setFilters((prev) => ({ ...prev, hasException: !prev.hasException })); setPagination((p) => ({ ...p, page: 0 })); }}
+            onClick={() => setUrlState(prev => ({ hasException: !prev.hasException, page: 0 }))}
             sx={{ textTransform: 'none' }}
           >
             Has Exception
@@ -1030,7 +1048,7 @@ export default function GameReport() {
           <Button
             variant={filters.hasTrace ? 'contained' : 'outlined'}
             color={filters.hasTrace ? 'info' : 'inherit'}
-            onClick={() => { setFilters((prev) => ({ ...prev, hasTrace: !prev.hasTrace })); setPagination((p) => ({ ...p, page: 0 })); }}
+            onClick={() => setUrlState(prev => ({ hasTrace: !prev.hasTrace, page: 0 }))}
             sx={{ textTransform: 'none' }}
           >
             Has Trace
@@ -1038,14 +1056,14 @@ export default function GameReport() {
           <DatePicker
             label="From"
             value={filters.dateFrom}
-            onChange={(v) => setFilters((prev) => ({ ...prev, dateFrom: v }))}
+            onChange={(v) => setUrlState({ dateFrom: v ? v.format('YYYY-MM-DD') : '' })}
             format="DD/MM/YYYY"
             slotProps={{ textField: { size: 'small', sx: { minWidth: 140, '& .MuiOutlinedInput-root': { bgcolor: '#fff' } } } }}
           />
           <DatePicker
             label="To"
             value={filters.dateTo}
-            onChange={(v) => setFilters((prev) => ({ ...prev, dateTo: v }))}
+            onChange={(v) => setUrlState({ dateTo: v ? v.format('YYYY-MM-DD') : '' })}
             format="DD/MM/YYYY"
             slotProps={{ textField: { size: 'small', sx: { minWidth: 140, '& .MuiOutlinedInput-root': { bgcolor: '#fff' } } } }}
           />
@@ -1062,7 +1080,7 @@ export default function GameReport() {
             variant="outlined"
             onClick={() => {
               const fo = filterOptions;
-              setFilters({
+              setUrlState({
                 freeText: '',
                 source: [],
                 updateType: [],
@@ -1073,10 +1091,10 @@ export default function GameReport() {
                 hasSequence: false,
                 hasException: false,
                 hasTrace: false,
-                dateFrom: fo?.dateFrom ? dayjs(fo.dateFrom) : null,
-                dateTo: fo?.dateTo ? dayjs(fo.dateTo) : null,
+                dateFrom: fo?.dateFrom ? dayjs(fo.dateFrom).format('YYYY-MM-DD') : '',
+                dateTo: fo?.dateTo ? dayjs(fo.dateTo).format('YYYY-MM-DD') : '',
+                page: 0,
               });
-              setPagination((p) => ({ ...p, page: 0 }));
             }}
           >
             Clear Filters
@@ -1349,13 +1367,7 @@ export default function GameReport() {
               <Select
                 size="small"
                 value={pagination.rowsPerPage}
-                onChange={(e) =>
-                  setPagination((prev) => ({
-                    ...prev,
-                    rowsPerPage: Number(e.target.value),
-                    page: 0,
-                  }))
-                }
+                onChange={(e) => setUrlState({ rowsPerPage: Number(e.target.value), page: 0 })}
                 sx={{ minWidth: 70, height: 32 }}
               >
                 <MenuItem value={15}>15</MenuItem>
@@ -1366,9 +1378,7 @@ export default function GameReport() {
                 <IconButton
                   size="small"
                   disabled={pagination.page === 0}
-                  onClick={() =>
-                    setPagination((prev) => ({ ...prev, page: Math.max(0, prev.page - 1) }))
-                  }
+                  onClick={() => setUrlState(prev => ({ page: Math.max(0, prev.page - 1) }))}
                 >
                   ←
                 </IconButton>
@@ -1380,9 +1390,7 @@ export default function GameReport() {
                   disabled={
                     (pagination.page + 1) * pagination.rowsPerPage >= sortedUpdates.length
                   }
-                  onClick={() =>
-                    setPagination((prev) => ({ ...prev, page: prev.page + 1 }))
-                  }
+                  onClick={() => setUrlState(prev => ({ page: prev.page + 1 }))}
                 >
                   →
                 </IconButton>

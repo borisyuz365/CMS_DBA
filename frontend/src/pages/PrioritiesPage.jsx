@@ -1,5 +1,5 @@
-import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import useUrlFilters from '../hooks/useUrlFilters';
 import {
   Box,
   FormControl,
@@ -53,8 +53,32 @@ const CUT_TYPE_OPTIONS = [
 ];
 
 const PrioritiesPage = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const initializedRef = useRef(false);
+  const [urlState, setUrlState] = useUrlFilters({
+    country: { type: 'number', default: 0 },
+    sport: { type: 'number', default: 0 },
+    competition: { type: 'number', default: 0 },
+    gameInput: { type: 'string', default: '' },
+    game: { type: 'number', default: 0 },
+    page: { type: 'number', default: 0 },
+    rowsPerPage: { type: 'number', default: 15 },
+    cutType: { type: 'string', default: '' },
+    priority: { type: 'string', default: '' },
+    sortField: { type: 'string', default: '' },
+    sortDir: { type: 'string', default: 'asc' },
+    groupBy: { type: 'string', default: '' },
+  });
+
+  const selectedSportID = urlState.sport || null;
+  const selectedCountryID = urlState.country || null;
+  const selectedCompetitionID = urlState.competition || null;
+  const gameIDInput = urlState.gameInput;
+  const loadedGameID = urlState.game || null;
+  const page = urlState.page;
+  const rowsPerPage = urlState.rowsPerPage;
+  const cutTypeFilter = urlState.cutType === '' ? '' : Number(urlState.cutType);
+  const priorityFilter = urlState.priority === '' ? '' : Number(urlState.priority);
+  const sortConfig = useMemo(() => ({ field: urlState.sortField || null, direction: urlState.sortDir }), [urlState.sortField, urlState.sortDir]);
+  const groupByField = urlState.groupBy || null;
 
   const [priorities, setPriorities] = useState([]);
   const [dataSourcesList, setDataSourcesList] = useState([]);
@@ -66,34 +90,22 @@ const PrioritiesPage = () => {
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Context selection
-  const [selectedSportID, setSelectedSportID] = useState(null);
-  const [selectedCountryID, setSelectedCountryID] = useState(null);
-  const [selectedCompetitionID, setSelectedCompetitionID] = useState(null);
-  const [gameIDInput, setGameIDInput] = useState('');
-  const [loadedGameID, setLoadedGameID] = useState(null);
-
-  // Table state
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(15);
   const [dataSourceFilter, setDataSourceFilter] = useState([]);
   const [updateTypeFilter, setUpdateTypeFilter] = useState([]);
-  const [cutTypeFilter, setCutTypeFilter] = useState('');
-  const [priorityFilter, setPriorityFilter] = useState('');
 
   // Dialog state
   const [addPrioritiesDialogOpen, setAddPrioritiesDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editingPriority, setEditingPriority] = useState(null);
-  const [editMode, setEditMode] = useState(false);
+  const [editMode, setEditMode] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    return !params.get('country') && !params.get('competition') && !params.get('game');
+  });
   const [auditLogDialogOpen, setAuditLogDialogOpen] = useState(false);
   const [auditPriorityRow, setAuditPriorityRow] = useState(null);
   const [selectedRows, setSelectedRows] = useState([]);
   const [bulkDeleteDialogOpen, setBulkDeleteDialogOpen] = useState(false);
 
-  // Sort & Group state
-  const [sortConfig, setSortConfig] = useState({ field: null, direction: 'asc' });
-  const [groupByField, setGroupByField] = useState(null);
   const [expandedGroups, setExpandedGroups] = useState(new Set());
 
   const hasContext = selectedCountryID != null || selectedCompetitionID != null || loadedGameID != null;
@@ -180,59 +192,38 @@ const PrioritiesPage = () => {
 
   useEffect(() => { loadAll(); }, [loadAll]);
 
-  // Resolve URL params into context after data loads
+  // Resolve cascading context from URL after data loads
   useEffect(() => {
-    if (loading || initializedRef.current) return;
-    initializedRef.current = true;
+    if (loading) return;
 
-    const urlCountry = searchParams.get('country');
-    const urlCompetition = searchParams.get('competition');
-    const urlGame = searchParams.get('game');
-
-    if (!urlCountry && !urlCompetition && !urlGame) {
-      setEditMode(true);
-    }
-
-    if (urlGame) {
-      const gameId = Number(urlGame);
-      const game = games.find((g) => g.GAME_ID === gameId);
+    if (urlState.game) {
+      const game = games.find((g) => g.GAME_ID === urlState.game);
       if (game) {
         const comp = competitions.find((c) => c.COMPETITION_ID === game.COMPETITION_ID);
-        if (comp) {
-          setSelectedSportID(comp.SPORT_TYPE_ID);
-          setSelectedCountryID(comp.COUNTRY_ID);
-          setSelectedCompetitionID(comp.COMPETITION_ID);
+        if (comp && !urlState.competition) {
+          setUrlState({
+            sport: comp.SPORT_TYPE_ID,
+            country: comp.COUNTRY_ID,
+            competition: comp.COMPETITION_ID,
+            gameInput: String(urlState.game),
+          });
         }
-        setGameIDInput(String(gameId));
-        setLoadedGameID(gameId);
       }
-    } else if (urlCompetition) {
-      const compId = Number(urlCompetition);
-      const comp = competitions.find((c) => c.COMPETITION_ID === compId);
+    } else if (urlState.competition && !urlState.sport) {
+      const comp = competitions.find((c) => c.COMPETITION_ID === urlState.competition);
       if (comp) {
-        setSelectedSportID(comp.SPORT_TYPE_ID);
-        setSelectedCountryID(comp.COUNTRY_ID);
-        setSelectedCompetitionID(comp.COMPETITION_ID);
+        setUrlState({
+          sport: comp.SPORT_TYPE_ID,
+          country: comp.COUNTRY_ID,
+        });
       }
-    } else if (urlCountry) {
-      const countryId = Number(urlCountry);
-      setSelectedCountryID(countryId);
-      const compsForCountry = competitions.filter((c) => c.COUNTRY_ID === countryId);
+    } else if (urlState.country && !urlState.sport) {
+      const compsForCountry = competitions.filter((c) => c.COUNTRY_ID === urlState.country);
       if (compsForCountry.length > 0) {
-        setSelectedSportID(compsForCountry[0].SPORT_TYPE_ID);
+        setUrlState({ sport: compsForCountry[0].SPORT_TYPE_ID });
       }
     }
-  }, [loading, searchParams, games, competitions]);
-
-  // Sync context → URL
-  useEffect(() => {
-    if (!initializedRef.current) return;
-    const params = new URLSearchParams();
-    if (selectedCountryID != null) params.set('country', String(selectedCountryID));
-    if (selectedCompetitionID != null) params.set('competition', String(selectedCompetitionID));
-    if (loadedGameID != null) params.set('game', String(loadedGameID));
-    setSearchParams(params, { replace: true });
-  }, [selectedCountryID, selectedCompetitionID, loadedGameID, setSearchParams]);
+  }, [loading]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { setSelectedRows([]); }, [editMode, page]);
 
@@ -314,23 +305,15 @@ const PrioritiesPage = () => {
 
   // Context handlers
   const handleSportChange = (sportId) => {
-    setSelectedSportID(sportId);
-    setSelectedCompetitionID(null);
-    setGameIDInput('');
-    setLoadedGameID(null);
+    setUrlState({ sport: sportId || 0, competition: 0, gameInput: '', game: 0 });
   };
 
   const handleCountryChange = (countryId) => {
-    setSelectedCountryID(countryId);
-    setSelectedCompetitionID(null);
-    setGameIDInput('');
-    setLoadedGameID(null);
+    setUrlState({ country: countryId || 0, competition: 0, gameInput: '', game: 0 });
   };
 
   const handleCompetitionChange = (compId) => {
-    setSelectedCompetitionID(compId);
-    setGameIDInput('');
-    setLoadedGameID(null);
+    setUrlState({ competition: compId || 0, gameInput: '', game: 0 });
   };
 
   const handleLoadGame = () => {
@@ -340,25 +323,31 @@ const PrioritiesPage = () => {
     if (game) {
       const comp = competitions.find((c) => c.COMPETITION_ID === game.COMPETITION_ID);
       if (comp) {
-        setSelectedSportID(comp.SPORT_TYPE_ID);
-        setSelectedCountryID(comp.COUNTRY_ID);
-        setSelectedCompetitionID(comp.COMPETITION_ID);
+        setUrlState({
+          sport: comp.SPORT_TYPE_ID,
+          country: comp.COUNTRY_ID,
+          competition: comp.COMPETITION_ID,
+          game: id,
+        });
+      } else {
+        setUrlState({ game: id });
       }
-      setLoadedGameID(id);
     }
   };
 
   const handleSort = (field) => {
-    setSortConfig((prev) => ({
-      field,
-      direction: prev.field === field && prev.direction === 'asc' ? 'desc' : 'asc',
+    setUrlState((prev) => ({
+      sortField: field,
+      sortDir: prev.sortField === field && prev.sortDir === 'asc' ? 'desc' : 'asc',
     }));
   };
 
   const handleGroupBy = (field) => {
-    setGroupByField((prev) => prev === field ? null : field);
+    setUrlState((prev) => ({
+      groupBy: prev.groupBy === field ? '' : field,
+      page: 0,
+    }));
     setExpandedGroups(new Set());
-    setPage(0);
   };
 
   const handleToggleGroup = (groupKey) => {
@@ -637,7 +626,7 @@ const PrioritiesPage = () => {
             <TextField
               size="small" label="Game ID" type="number"
               value={gameIDInput}
-              onChange={(e) => setGameIDInput(e.target.value)}
+              onChange={(e) => setUrlState({ gameInput: e.target.value })}
               sx={{ minWidth: 150, maxWidth: 200 }}
               inputProps={{ min: 1 }}
             />
@@ -698,7 +687,7 @@ const PrioritiesPage = () => {
 
           <FormControl size="small" sx={{ minWidth: 180 }}>
             <InputLabel>Priority Level</InputLabel>
-            <Select value={cutTypeFilter} label="Priority Level" onChange={(e) => setCutTypeFilter(e.target.value)}>
+            <Select value={cutTypeFilter} label="Priority Level" onChange={(e) => setUrlState({ cutType: e.target.value === '' ? '' : String(e.target.value) })}>
               <MenuItem value="">All</MenuItem>
               {CUT_TYPE_OPTIONS.map((opt) => <MenuItem key={opt.value} value={opt.value}>{opt.label}</MenuItem>)}
             </Select>
@@ -706,7 +695,7 @@ const PrioritiesPage = () => {
 
           <FormControl size="small" sx={{ minWidth: 150 }}>
             <InputLabel>Priority Value</InputLabel>
-            <Select value={priorityFilter} label="Priority Value" onChange={(e) => setPriorityFilter(e.target.value)}>
+            <Select value={priorityFilter} label="Priority Value" onChange={(e) => setUrlState({ priority: e.target.value === '' ? '' : String(e.target.value) })}>
               <MenuItem value="">All</MenuItem>
               {availablePriorityValues.map((v) => {
                 const pl = priorityLevelsList.find((p) => p.VALUE === v);
@@ -738,8 +727,8 @@ const PrioritiesPage = () => {
             getRowId={(row) => row._index}
             searchable={false}
             pagination={{ page, rowsPerPage, totalRows: displayData.length }}
-            onPageChange={setPage}
-            onRowsPerPageChange={(v) => { setRowsPerPage(v); setPage(0); }}
+            onPageChange={(p) => setUrlState({ page: p })}
+            onRowsPerPageChange={(v) => setUrlState({ rowsPerPage: v, page: 0 })}
             sortConfig={sortConfig}
             onSortChange={handleSort}
             groupByField={groupByField}

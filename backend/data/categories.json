@@ -531,5 +531,11 @@
     "fatherCategory": "Sport Type",
     "description": "",
     "id": 67
+  },
+  {
+    "name": "Bookmakers",
+    "fatherCategory": "All Categories",
+    "description": "",
+    "id": 68
   }
 ]

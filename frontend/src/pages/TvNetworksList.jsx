@@ -50,29 +50,45 @@ import LoadingSpinner from '../../reuse/LoadingSpinner';
 import Alert from '../../reuse/Alert';
 import TermEditModal from '../../reuse/TermEditModal';
 import api from '../services/api';
+import useUrlFilters from '../hooks/useUrlFilters';
 
 function TvNetworksList() {
   const navigate = useNavigate();
   const [networks, setNetworks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [pagination, setPagination] = useState({ page: 0, rowsPerPage: 25, totalRows: 0 });
+  const [totalRows, setTotalRows] = useState(0);
   const [selectedRows, setSelectedRows] = useState([]);
 
-  const [filters, setFilters] = useState({
-    country: [],
-    tvNetworkId: '',
-    language: '',
-    channelName: '',
+  const [urlState, setUrlState] = useUrlFilters({
+    country: { type: 'array', default: [] },
+    tvNetworkId: { type: 'string', default: '' },
+    language: { type: 'string', default: '' },
+    channelName: { type: 'string', default: '' },
+    showDeleted: { type: 'boolean', default: false },
+    page: { type: 'number', default: 0 },
+    rowsPerPage: { type: 'number', default: 25 },
+    sortField: { type: 'string', default: '' },
+    sortDir: { type: 'string', default: 'asc' },
+    groupBy: { type: 'string', default: '' },
   });
+
+  const filters = {
+    country: urlState.country,
+    tvNetworkId: urlState.tvNetworkId,
+    language: urlState.language,
+    channelName: urlState.channelName,
+  };
+  const pagination = { page: urlState.page, rowsPerPage: urlState.rowsPerPage, totalRows };
+  const sortConfig = { field: urlState.sortField || null, direction: urlState.sortDir };
+  const groupByField = urlState.groupBy || null;
+  const showDeleted = urlState.showDeleted;
 
   const [countries, setCountries] = useState([]);
   const [languages, setLanguages] = useState([]);
   const [tvNetworkTypes, setTvNetworkTypes] = useState([]);
   const [countriesDialogOpen, setCountriesDialogOpen] = useState(false);
   const [countriesDialogData, setCountriesDialogData] = useState([]);
-  const [sortConfig, setSortConfig] = useState({ field: null, direction: 'asc' });
-  const [groupByField, setGroupByField] = useState(null);
   const [expandedGroups, setExpandedGroups] = useState(new Set());
   const [columnFilters, setColumnFilters] = useState({});
 
@@ -88,7 +104,6 @@ function TvNetworksList() {
   });
   const [createFormErrors, setCreateFormErrors] = useState({});
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
-  const [showDeleted, setShowDeleted] = useState(false);
   const [confirmDialog, setConfirmDialog] = useState({
     open: false,
     title: '',
@@ -104,8 +119,9 @@ function TvNetworksList() {
   const [allCategories, setAllCategories] = useState([]);
 
   useEffect(() => {
-    loadDropdownData();
-    loadTermsAndCategories();
+    Promise.all([loadDropdownData(), loadTermsAndCategories()]).then(() => {
+      if (window.location.search) searchTvNetworks();
+    });
   }, []);
 
   const loadTermsAndCategories = async () => {
@@ -157,7 +173,8 @@ function TvNetworksList() {
       });
       const data = await api.getTvNetworksList(searchFilters);
       setNetworks(data);
-      setPagination((prev) => ({ ...prev, totalRows: data.length, page: 0 }));
+      setTotalRows(data.length);
+      setUrlState({ page: 0 });
     } catch (err) {
       console.error('Failed to search TV networks:', err);
       setError(err.message || 'Failed to search TV networks');
@@ -238,7 +255,8 @@ function TvNetworksList() {
   }, [filteredAndSorted, groupByField, pagination.page, pagination.rowsPerPage, expandedGroups]);
 
   useEffect(() => {
-    setPagination((prev) => ({ ...prev, totalRows: filteredAndSorted.length, page: 0 }));
+    setTotalRows(filteredAndSorted.length);
+    setUrlState({ page: 0 });
   }, [filteredAndSorted.length]);
 
   const paginatedData = useMemo(() => {
@@ -248,27 +266,27 @@ function TvNetworksList() {
   }, [filteredAndSorted, pagination.page, pagination.rowsPerPage]);
 
   const handleFilterChange = (field, value) => {
-    setFilters((prev) => ({ ...prev, [field]: value }));
+    setUrlState({ [field]: value });
   };
 
   const handleClearFilters = () => {
-    setFilters({ country: [], tvNetworkId: '', language: '', channelName: '' });
+    setUrlState({ country: [], tvNetworkId: '', language: '', channelName: '' });
     setColumnFilters({});
   };
 
   const handleSort = (field) => {
-    setSortConfig((prev) => ({
-      field,
-      direction: prev.field === field && prev.direction === 'asc' ? 'desc' : 'asc',
+    setUrlState((prev) => ({
+      sortField: field,
+      sortDir: prev.sortField === field && prev.sortDir === 'asc' ? 'desc' : 'asc',
     }));
   };
 
   const handleGroupBy = (field) => {
     if (groupByField === field) {
-      setGroupByField(null);
+      setUrlState({ groupBy: '' });
       setExpandedGroups(new Set());
     } else {
-      setGroupByField(field);
+      setUrlState({ groupBy: field });
       setExpandedGroups(new Set());
     }
   };
@@ -283,11 +301,11 @@ function TvNetworksList() {
   };
 
   const handlePageChange = (newPage) => {
-    setPagination((prev) => ({ ...prev, page: newPage }));
+    setUrlState({ page: newPage });
   };
 
   const handleRowsPerPageChange = (v) => {
-    setPagination((prev) => ({ ...prev, rowsPerPage: v, page: 0 }));
+    setUrlState({ rowsPerPage: v, page: 0 });
   };
 
   const handleOpenCreateDialog = () => {
@@ -930,7 +948,7 @@ function TvNetworksList() {
               control={
                 <Switch
                   checked={showDeleted}
-                  onChange={(e) => setShowDeleted(e.target.checked)}
+                  onChange={(e) => setUrlState({ showDeleted: e.target.checked })}
                   size="small"
                 />
               }

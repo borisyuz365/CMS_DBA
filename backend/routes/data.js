@@ -223,7 +223,7 @@ router.get('/competitions', async (req, res, next) => {
       list = list.filter(c => !c.IS_DELETED);
     }
 
-    const enrichedCompetitions = list.map(competition => {
+    let enrichedCompetitions = list.map(competition => {
       const enriched = { ...competition };
       
       // Resolve name from terms
@@ -248,6 +248,13 @@ router.get('/competitions', async (req, res, next) => {
       
       return enriched;
     });
+
+    const competitionName = req.query.competitionName ? String(req.query.competitionName).trim().toLowerCase() : '';
+    if (competitionName) {
+      enrichedCompetitions = enrichedCompetitions.filter(c =>
+        c.name && String(c.name).toLowerCase().includes(competitionName)
+      );
+    }
 
     res.json({ success: true, data: enrichedCompetitions });
   } catch (error) {

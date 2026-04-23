@@ -7,7 +7,7 @@ export function getBreadcrumbsForPath(pathname) {
   // List pages
   if (trimmed === '/') return [{ label: 'Admin Console', path: '/' }, { label: 'Users', path: null }];
   if (trimmed === '/athletes') return [{ label: 'Admin Console', path: '/' }, { label: 'Entities', path: '/' }, { label: 'Athletes', path: '/athletes' }];
-  if (trimmed === '/sports') return [{ label: 'Admin Console', path: '/' }, { label: 'Entities', path: '/' }, { label: 'Sports', path: '/sports' }];
+  if (trimmed === '/sports') return [{ label: 'Admin Console', path: '/' }, { label: 'Entities', path: '/' }, { label: 'Sport Types', path: '/sports' }];
   if (trimmed === '/countries') return [{ label: 'Admin Console', path: '/' }, { label: 'Entities', path: '/' }, { label: 'Countries', path: '/countries' }];
   if (trimmed === '/competitions') return [{ label: 'Admin Console', path: '/' }, { label: 'Entities', path: '/' }, { label: 'Competitions', path: '/competitions' }];
   if (trimmed === '/competitors') return [{ label: 'Admin Console', path: '/' }, { label: 'Entities', path: '/' }, { label: 'Competitors', path: '/competitors' }];
@@ -17,10 +17,10 @@ export function getBreadcrumbsForPath(pathname) {
   if (trimmed === '/languages') return [{ label: 'Admin Console', path: '/' }, { label: 'Entities', path: '/' }, { label: 'Languages', path: '/languages' }];
   if (trimmed === '/time-zones') return [{ label: 'Admin Console', path: '/' }, { label: 'Entities', path: '/' }, { label: 'Time Zones', path: '/time-zones' }];
   if (trimmed === '/dictionary') return [{ label: 'Admin Console', path: '/' }, { label: 'Terms Catalog', path: '/dictionary' }];
-  if (trimmed === '/games') return [{ label: 'Admin Console', path: '/' }, { label: 'Games', path: '/games' }, { label: 'Games List', path: '/games' }];
+  if (trimmed === '/games') return [{ label: 'Admin Console', path: '/' }, { label: 'Entities', path: '/' }, { label: 'Games', path: '/games' }];
   if (trimmed === '/priorities') return [{ label: 'Admin Console', path: '/' }, { label: 'Tools', path: null }, { label: 'Priorities', path: '/priorities' }];
   // Detail pages (with :id)
-  if (/^\/sports\/[^/]+$/.test(trimmed)) return [{ label: 'Admin Console', path: '/' }, { label: 'Entities', path: '/' }, { label: 'Sports', path: '/sports' }, { label: 'Edit', path: null }];
+  if (/^\/sports\/[^/]+$/.test(trimmed)) return [{ label: 'Admin Console', path: '/' }, { label: 'Entities', path: '/' }, { label: 'Sport Types', path: '/sports' }, { label: 'Edit', path: null }];
   if (/^\/countries\/[^/]+$/.test(trimmed)) return [{ label: 'Admin Console', path: '/' }, { label: 'Entities', path: '/' }, { label: 'Countries', path: '/countries' }, { label: 'Edit', path: null }];
   if (/^\/competitions\/[^/]+$/.test(trimmed)) return [{ label: 'Admin Console', path: '/' }, { label: 'Entities', path: '/' }, { label: 'Competitions', path: '/competitions' }, { label: 'Edit', path: null }];
   if (/^\/competitors\/[^/]+$/.test(trimmed)) return [{ label: 'Admin Console', path: '/' }, { label: 'Entities', path: '/' }, { label: 'Competitors', path: '/competitors' }, { label: 'Edit', path: null }];

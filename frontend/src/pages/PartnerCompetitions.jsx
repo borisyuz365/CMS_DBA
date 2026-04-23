@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import useUrlFilters from '../hooks/useUrlFilters';
 import {
   Box,
   Typography,
@@ -66,10 +67,17 @@ function PartnerCompetitions() {
   const [dirty, setDirty] = useState(false);
 
   const [columnFilters, setColumnFilters] = useState({});
-  const [sortConfig, setSortConfig] = useState({ field: null, direction: 'asc' });
-  const [groupByField, setGroupByField] = useState(null);
+  const [urlState, setUrlState] = useUrlFilters({
+    page: { type: 'number', default: 0 },
+    rowsPerPage: { type: 'number', default: 25 },
+    sortField: { type: 'string', default: '' },
+    sortDir: { type: 'string', default: 'asc' },
+    groupBy: { type: 'string', default: '' },
+  });
+  const sortConfig = { field: urlState.sortField || null, direction: urlState.sortDir };
+  const groupByField = urlState.groupBy || null;
+  const pagination = { page: urlState.page, rowsPerPage: urlState.rowsPerPage };
   const [expandedGroups, setExpandedGroups] = useState(new Set());
-  const [pagination, setPagination] = useState({ page: 0, rowsPerPage: 25 });
 
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
@@ -110,19 +118,22 @@ function PartnerCompetitions() {
 
   const handleColumnFilterChange = (field, value) => {
     setColumnFilters((prev) => ({ ...prev, [field]: value }));
-    setPagination((p) => ({ ...p, page: 0 }));
+    setUrlState({ page: 0 });
   };
 
   const handleSort = (field) => {
-    setSortConfig((prev) => ({ field, direction: prev.field === field && prev.direction === 'asc' ? 'desc' : 'asc' }));
+    setUrlState((prev) => ({
+      sortField: field,
+      sortDir: prev.sortField === field && prev.sortDir === 'asc' ? 'desc' : 'asc',
+    }));
   };
 
   const handleGroupBy = (field) => {
     if (groupByField === field) {
-      setGroupByField(null);
+      setUrlState({ groupBy: '' });
       setExpandedGroups(new Set());
     } else {
-      setGroupByField(field);
+      setUrlState({ groupBy: field });
       setExpandedGroups(new Set());
     }
   };
@@ -526,7 +537,7 @@ function PartnerCompetitions() {
             <FormControl size="small" sx={{ minWidth: 70 }}>
               <Select
                 value={pagination.rowsPerPage}
-                onChange={(e) => setPagination((p) => ({ ...p, rowsPerPage: Number(e.target.value), page: 0 }))}
+                onChange={(e) => setUrlState({ rowsPerPage: Number(e.target.value), page: 0 })}
                 sx={{ height: 32, fontSize: '0.8125rem' }}
               >
                 <MenuItem value={10}>10</MenuItem>
@@ -538,12 +549,12 @@ function PartnerCompetitions() {
             <Typography variant="body2" sx={{ fontSize: '0.875rem' }}>
               {totalForPagination === 0 ? '0' : `${pagination.page * pagination.rowsPerPage + 1}-${Math.min((pagination.page + 1) * pagination.rowsPerPage, totalForPagination)}`} of {totalForPagination}
             </Typography>
-            <IconButton size="small" onClick={() => setPagination((p) => ({ ...p, page: p.page - 1 }))} disabled={pagination.page === 0}>
+            <IconButton size="small" onClick={() => setUrlState((prev) => ({ page: prev.page - 1 }))} disabled={pagination.page === 0}>
               <ArrowBackIosNewIcon fontSize="small" />
             </IconButton>
             <IconButton
               size="small"
-              onClick={() => setPagination((p) => ({ ...p, page: p.page + 1 }))}
+              onClick={() => setUrlState((prev) => ({ page: prev.page + 1 }))}
               disabled={(pagination.page + 1) * pagination.rowsPerPage >= totalForPagination}
             >
               <ArrowForwardIosIcon fontSize="small" />

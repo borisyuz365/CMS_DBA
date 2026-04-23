@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import useUrlFilters from '../hooks/useUrlFilters';
 import {
   Box,
   Typography,
@@ -79,13 +80,27 @@ function CountriesList() {
   const [countries, setCountries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [pagination, setPagination] = useState({ page: 0, rowsPerPage: 25, totalRows: 0 });
+  const [totalRows, setTotalRows] = useState(0);
   const [selectedRows, setSelectedRows] = useState([]);
-  const [filters, setFilters] = useState({ countryId: '', name: '' });
   const [columnFilters, setColumnFilters] = useState({});
-  const [sortConfig, setSortConfig] = useState({ field: null, direction: 'asc' });
-  const [groupByField, setGroupByField] = useState(null);
   const [expandedGroups, setExpandedGroups] = useState(new Set());
+
+  const [urlState, setUrlState] = useUrlFilters({
+    countryId: { type: 'string', default: '' },
+    name: { type: 'string', default: '' },
+    showDeleted: { type: 'boolean', default: false },
+    page: { type: 'number', default: 0 },
+    rowsPerPage: { type: 'number', default: 25 },
+    sortField: { type: 'string', default: '' },
+    sortDir: { type: 'string', default: 'asc' },
+    groupBy: { type: 'string', default: '' },
+  });
+
+  const filters = { countryId: urlState.countryId, name: urlState.name };
+  const showDeleted = urlState.showDeleted;
+  const pagination = { page: urlState.page, rowsPerPage: urlState.rowsPerPage, totalRows };
+  const sortConfig = { field: urlState.sortField || null, direction: urlState.sortDir };
+  const groupByField = urlState.groupBy || null;
   const [isEditMode, setIsEditMode] = useState(false);
   const [pendingChanges, setPendingChanges] = useState({});
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
@@ -93,7 +108,6 @@ function CountriesList() {
   const [createFormData, setCreateFormData] = useState(DEFAULT_CREATE_FORM);
   const [createFormErrors, setCreateFormErrors] = useState({});
 
-  const [showDeleted, setShowDeleted] = useState(false);
   const [confirmDialog, setConfirmDialog] = useState({
     open: false,
     title: '',
@@ -138,7 +152,8 @@ function CountriesList() {
       setError(null);
       const data = await api.getCountries();
       setCountries(Array.isArray(data) ? data : []);
-      setPagination(prev => ({ ...prev, totalRows: (Array.isArray(data) ? data : []).length, page: 0 }));
+      setTotalRows((Array.isArray(data) ? data : []).length);
+      setUrlState({ page: 0 });
     } catch (err) {
       console.error('Failed to load countries:', err);
       setError(err.message || 'Failed to load countries');
@@ -215,7 +230,7 @@ function CountriesList() {
   }, [filteredAndSorted, groupByField, pagination.page, pagination.rowsPerPage, expandedGroups]);
 
   useEffect(() => {
-    setPagination(prev => ({ ...prev, totalRows: filteredAndSorted.length }));
+    setTotalRows(filteredAndSorted.length);
   }, [filteredAndSorted.length]);
 
   const paginatedData = useMemo(() => {
@@ -224,14 +239,14 @@ function CountriesList() {
   }, [filteredAndSorted, pagination.page, pagination.rowsPerPage]);
 
   const handleSort = (field) => {
-    setSortConfig(prev => ({ field, direction: prev.field === field && prev.direction === 'asc' ? 'desc' : 'asc' }));
+    setUrlState(prev => ({ sortField: field, sortDir: prev.sortField === field && prev.sortDir === 'asc' ? 'desc' : 'asc' }));
   };
   const handleGroupBy = (field) => {
     if (groupByField === field) {
-      setGroupByField(null);
+      setUrlState({ groupBy: '' });
       setExpandedGroups(new Set());
     } else {
-      setGroupByField(field);
+      setUrlState({ groupBy: field });
       setExpandedGroups(new Set());
     }
   };
@@ -265,9 +280,8 @@ function CountriesList() {
   };
 
   const handleClearFilters = () => {
-    setFilters({ countryId: '', name: '' });
+    setUrlState({ countryId: '', name: '', page: 0 });
     setColumnFilters({});
-    setPagination(prev => ({ ...prev, page: 0 }));
   };
 
   const handleNameClick = async (e, row) => {
@@ -638,7 +652,7 @@ function CountriesList() {
               size="small"
               label="Country ID"
               value={filters.countryId}
-              onChange={(e) => setFilters(f => ({ ...f, countryId: e.target.value }))}
+              onChange={(e) => setUrlState({ countryId: e.target.value })}
               sx={{
                 '& .MuiOutlinedInput-root': {
                   backgroundColor: '#ffffff',
@@ -655,7 +669,7 @@ function CountriesList() {
               size="small"
               label="Name"
               value={filters.name}
-              onChange={(e) => setFilters(f => ({ ...f, name: e.target.value }))}
+              onChange={(e) => setUrlState({ name: e.target.value })}
               sx={{
                 '& .MuiOutlinedInput-root': {
                   backgroundColor: '#ffffff',
@@ -671,7 +685,7 @@ function CountriesList() {
               variant="contained"
               fullWidth
               startIcon={<SearchIcon />}
-              onClick={() => setPagination(p => ({ ...p, page: 0 }))}
+              onClick={() => setUrlState({ page: 0 })}
               sx={{
                 backgroundColor: '#1976d2',
                 textTransform: 'none',
@@ -708,7 +722,7 @@ function CountriesList() {
               control={
                 <Switch
                   checked={showDeleted}
-                  onChange={(e) => setShowDeleted(e.target.checked)}
+                  onChange={(e) => setUrlState({ showDeleted: e.target.checked })}
                   size="small"
                 />
               }
@@ -929,7 +943,7 @@ function CountriesList() {
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <Typography variant="body2" sx={{ fontSize: '0.875rem' }}>Items per page:</Typography>
             <FormControl size="small" sx={{ minWidth: 80 }}>
-              <Select value={pagination.rowsPerPage} onChange={(e) => setPagination(p => ({ ...p, rowsPerPage: Number(e.target.value), page: 0 }))}>
+              <Select value={pagination.rowsPerPage} onChange={(e) => setUrlState({ rowsPerPage: Number(e.target.value), page: 0 })}>
                 <MenuItem value={10}>10</MenuItem>
                 <MenuItem value={25}>25</MenuItem>
                 <MenuItem value={50}>50</MenuItem>
@@ -939,10 +953,10 @@ function CountriesList() {
             <Typography variant="body2">
               {pagination.page * pagination.rowsPerPage + 1}-{Math.min((pagination.page + 1) * pagination.rowsPerPage, pagination.totalRows)} of {pagination.totalRows}
             </Typography>
-            <IconButton size="small" onClick={() => setPagination(p => ({ ...p, page: p.page - 1 }))} disabled={pagination.page === 0}>
+            <IconButton size="small" onClick={() => setUrlState(p => ({ page: p.page - 1 }))} disabled={pagination.page === 0}>
               <ArrowBackIosNewIcon fontSize="small" />
             </IconButton>
-            <IconButton size="small" onClick={() => setPagination(p => ({ ...p, page: p.page + 1 }))} disabled={(pagination.page + 1) * pagination.rowsPerPage >= pagination.totalRows}>
+            <IconButton size="small" onClick={() => setUrlState(p => ({ page: p.page + 1 }))} disabled={(pagination.page + 1) * pagination.rowsPerPage >= pagination.totalRows}>
               <ArrowForwardIosIcon fontSize="small" />
             </IconButton>
           </Box>

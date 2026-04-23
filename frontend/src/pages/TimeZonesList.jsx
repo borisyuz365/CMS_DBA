@@ -50,6 +50,7 @@ import Alert from '../../reuse/Alert';
 import TermEditModal from '../../reuse/TermEditModal';
 import { formatTimeZoneDisplay } from '../utils/formatTimeZone';
 import api from '../services/api';
+import useUrlFilters from '../hooks/useUrlFilters';
 
 function TimeZonesList() {
   const navigate = useNavigate();
@@ -57,16 +58,25 @@ function TimeZonesList() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [hasSearched, setHasSearched] = useState(false);
-  const [pagination, setPagination] = useState({ page: 0, rowsPerPage: 25, totalRows: 0 });
+  const [totalRows, setTotalRows] = useState(0);
   const [selectedRows, setSelectedRows] = useState([]);
 
-  const [filters, setFilters] = useState({
-    timeZoneId: '',
-    timeZoneName: '',
+  const [urlState, setUrlState] = useUrlFilters({
+    timeZoneId: { type: 'string', default: '' },
+    timeZoneName: { type: 'string', default: '' },
+    showDeleted: { type: 'boolean', default: false },
+    page: { type: 'number', default: 0 },
+    rowsPerPage: { type: 'number', default: 25 },
+    sortField: { type: 'string', default: '' },
+    sortDir: { type: 'string', default: 'asc' },
+    groupBy: { type: 'string', default: '' },
   });
 
-  const [sortConfig, setSortConfig] = useState({ field: null, direction: 'asc' });
-  const [groupByField, setGroupByField] = useState(null);
+  const filters = { timeZoneId: urlState.timeZoneId, timeZoneName: urlState.timeZoneName };
+  const showDeleted = urlState.showDeleted;
+  const pagination = { page: urlState.page, rowsPerPage: urlState.rowsPerPage, totalRows };
+  const sortConfig = { field: urlState.sortField || null, direction: urlState.sortDir };
+  const groupByField = urlState.groupBy || null;
   const [expandedGroups, setExpandedGroups] = useState(new Set());
   const [columnFilters, setColumnFilters] = useState({});
   const [isEditMode, setIsEditMode] = useState(false);
@@ -85,7 +95,6 @@ function TimeZonesList() {
   });
   const [createFormErrors, setCreateFormErrors] = useState({});
 
-  const [showDeleted, setShowDeleted] = useState(false);
   const [confirmDialog, setConfirmDialog] = useState({
     open: false,
     title: '',
@@ -99,7 +108,9 @@ function TimeZonesList() {
   const [allCategories, setAllCategories] = useState([]);
 
   useEffect(() => {
-    loadTermsAndCategories();
+    loadTermsAndCategories().then(() => {
+      if (window.location.search) handleSearch();
+    });
   }, []);
 
   const loadTermsAndCategories = async () => {
@@ -118,7 +129,8 @@ function TimeZonesList() {
       setError(null);
       const data = await api.getTimeZonesList();
       setTimeZones(Array.isArray(data) ? data : []);
-      setPagination((prev) => ({ ...prev, totalRows: (data || []).length, page: 0 }));
+      setTotalRows((data || []).length);
+      setUrlState({ page: 0 });
     } catch (err) {
       console.error('Failed to load time zones:', err);
       setError(err.message || 'Failed to load time zones');
@@ -215,7 +227,8 @@ function TimeZonesList() {
   }, [dataForTable, groupByField, pagination.page, pagination.rowsPerPage, expandedGroups]);
 
   useEffect(() => {
-    setPagination((prev) => ({ ...prev, totalRows: dataForTable.length, page: 0 }));
+    setTotalRows(dataForTable.length);
+    setUrlState({ page: 0 });
   }, [dataForTable.length]);
 
   const paginatedData = useMemo(() => {
@@ -225,7 +238,7 @@ function TimeZonesList() {
   }, [dataForTable, pagination.page, pagination.rowsPerPage]);
 
   const handleFilterChange = (field, value) => {
-    setFilters((prev) => ({ ...prev, [field]: value }));
+    setUrlState({ [field]: value });
   };
 
   const handleSearch = () => {
@@ -234,27 +247,27 @@ function TimeZonesList() {
   };
 
   const handleClearFilters = () => {
-    setFilters({ timeZoneId: '', timeZoneName: '' });
+    setUrlState({ timeZoneId: '', timeZoneName: '', page: 0 });
     setColumnFilters({});
     setHasSearched(false);
     setTimeZones([]);
-    setPagination((prev) => ({ ...prev, totalRows: 0, page: 0 }));
+    setTotalRows(0);
     setSelectedRows([]);
   };
 
   const handleSort = (field) => {
-    setSortConfig((prev) => ({
-      field,
-      direction: prev.field === field && prev.direction === 'asc' ? 'desc' : 'asc',
+    setUrlState((prev) => ({
+      sortField: field,
+      sortDir: prev.sortField === field && prev.sortDir === 'asc' ? 'desc' : 'asc',
     }));
   };
 
   const handleGroupBy = (field) => {
     if (groupByField === field) {
-      setGroupByField(null);
+      setUrlState({ groupBy: '' });
       setExpandedGroups(new Set());
     } else {
-      setGroupByField(field);
+      setUrlState({ groupBy: field });
       setExpandedGroups(new Set());
     }
   };
@@ -269,11 +282,11 @@ function TimeZonesList() {
   };
 
   const handlePageChange = (newPage) => {
-    setPagination((prev) => ({ ...prev, page: newPage }));
+    setUrlState({ page: newPage });
   };
 
   const handleRowsPerPageChange = (newRowsPerPage) => {
-    setPagination((prev) => ({ ...prev, rowsPerPage: newRowsPerPage, page: 0 }));
+    setUrlState({ rowsPerPage: newRowsPerPage, page: 0 });
   };
 
   const handleFieldChange = (timeZoneId, field, value) => {
@@ -721,7 +734,7 @@ function TimeZonesList() {
               control={
                 <Switch
                   checked={showDeleted}
-                  onChange={(e) => setShowDeleted(e.target.checked)}
+                  onChange={(e) => setUrlState({ showDeleted: e.target.checked })}
                   size="small"
                 />
               }

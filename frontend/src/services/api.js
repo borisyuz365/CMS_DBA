@@ -329,8 +329,11 @@ class ApiService {
    * Get all competitions (leagues). Pass showDeleted=true to include soft-deleted.
    */
   async getCompetitions(opts = {}) {
-    const showDeleted = opts.showDeleted === true;
-    const url = showDeleted ? '/data/competitions?showDeleted=true' : '/data/competitions';
+    const params = new URLSearchParams();
+    if (opts.showDeleted === true) params.append('showDeleted', 'true');
+    if (opts.competitionName) params.append('competitionName', opts.competitionName);
+    const qs = params.toString();
+    const url = qs ? `/data/competitions?${qs}` : '/data/competitions';
     const response = await this.fetch(url);
     return response.data || [];
   }

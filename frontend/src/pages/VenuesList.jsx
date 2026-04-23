@@ -51,23 +51,41 @@ import LoadingSpinner from '../../reuse/LoadingSpinner';
 import Alert from '../../reuse/Alert';
 import TermEditModal from '../../reuse/TermEditModal';
 import api from '../services/api';
+import useUrlFilters from '../hooks/useUrlFilters';
 
 function VenuesList() {
   const navigate = useNavigate();
   const [venues, setVenues] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [pagination, setPagination] = useState({ page: 0, rowsPerPage: 25, totalRows: 0 });
+  const [totalRows, setTotalRows] = useState(0);
   const [selectedRows, setSelectedRows] = useState([]);
-  
-  // Filter states
-  const [filters, setFilters] = useState({
-    country: [],
-    city: [],
-    venueId: '',
-    language: '',
-    venueName: '',
+
+  const [urlState, setUrlState] = useUrlFilters({
+    country: { type: 'array', default: [] },
+    city: { type: 'array', default: [] },
+    venueId: { type: 'string', default: '' },
+    language: { type: 'string', default: '' },
+    venueName: { type: 'string', default: '' },
+    showDeleted: { type: 'boolean', default: false },
+    page: { type: 'number', default: 0 },
+    rowsPerPage: { type: 'number', default: 25 },
+    sortField: { type: 'string', default: '' },
+    sortDir: { type: 'string', default: 'asc' },
+    groupBy: { type: 'string', default: '' },
   });
+
+  const filters = {
+    country: urlState.country,
+    city: urlState.city,
+    venueId: urlState.venueId,
+    language: urlState.language,
+    venueName: urlState.venueName,
+  };
+  const pagination = { page: urlState.page, rowsPerPage: urlState.rowsPerPage, totalRows };
+  const sortConfig = { field: urlState.sortField || null, direction: urlState.sortDir };
+  const groupByField = urlState.groupBy || null;
+  const showDeleted = urlState.showDeleted;
 
   // Data for dropdowns
   const [countries, setCountries] = useState([]);
@@ -80,12 +98,6 @@ function VenuesList() {
   const [allTerms, setAllTerms] = useState([]);
   const [allCategories, setAllCategories] = useState([]);
 
-  // Sort state
-  const [sortConfig, setSortConfig] = useState({ field: null, direction: 'asc' });
-
-  // Group state (always active, but can be set to null to disable)
-  const [groupByField, setGroupByField] = useState(null);
-  // Expanded groups state (Set of group keys that are expanded)
   const [expandedGroups, setExpandedGroups] = useState(new Set());
 
   // Column-level filter state (for stacked header filters)
@@ -101,9 +113,6 @@ function VenuesList() {
     message: '',
     severity: 'success', // 'success' | 'error' | 'warning' | 'info'
   });
-
-  // Show deleted venues toggle
-  const [showDeleted, setShowDeleted] = useState(false);
 
   // Create Venue Dialog state
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
@@ -133,9 +142,10 @@ function VenuesList() {
     onConfirm: null,
   });
 
-  // Load data on mount (only dropdown data, not athletes)
   useEffect(() => {
-    loadDropdownData();
+    loadDropdownData().then(() => {
+      if (window.location.search) searchVenues();
+    });
   }, []);
 
   const loadDropdownData = async () => {
@@ -218,7 +228,8 @@ function VenuesList() {
       // Load venues with filters
       const venuesData = await api.getVenuesList(searchFilters);
       setVenues(venuesData);
-      setPagination(prev => ({ ...prev, totalRows: venuesData.length, page: 0 }));
+      setTotalRows(venuesData.length);
+      setUrlState({ page: 0 });
     } catch (err) {
       console.error('Failed to search venues:', err);
       setError(err.message || 'Failed to search venues');
@@ -356,9 +367,9 @@ function VenuesList() {
     return result.slice(start, end);
   }, [filteredAndSortedVenues, groupByField, pagination.page, pagination.rowsPerPage, expandedGroups]);
 
-  // Update pagination when filtered data changes
   useEffect(() => {
-    setPagination(prev => ({ ...prev, totalRows: filteredAndSortedVenues.length, page: 0 }));
+    setTotalRows(filteredAndSortedVenues.length);
+    setUrlState({ page: 0 });
   }, [filteredAndSortedVenues.length]);
 
   // Paginated data (for checkbox selection - use non-grouped data)
@@ -659,19 +670,12 @@ function VenuesList() {
     },
   ], [navigate, handleShortNameClick, isEditMode, pendingChanges, countries, cities, handleFieldChange, resolveTermName]);
 
-  // Handle filter changes
   const handleFilterChange = (field, value) => {
-    setFilters(prev => {
-      const newFilters = { ...prev, [field]: value };
-      
-      // Reset dependent filters
-      if (field === 'country') {
-        // When country changes, clear city filter
-        newFilters.city = [];
-      }
-      
-      return newFilters;
-    });
+    if (field === 'country') {
+      setUrlState({ [field]: value, city: [] });
+    } else {
+      setUrlState({ [field]: value });
+    }
   };
 
   // Handle search - load venues from DB with filters
@@ -679,15 +683,8 @@ function VenuesList() {
     searchVenues();
   };
 
-  // Clear all filters
   const handleClearFilters = () => {
-    setFilters({
-      country: [],
-      city: [],
-      venueId: '',
-      language: '',
-      venueName: '',
-    });
+    setUrlState({ country: [], city: [], venueId: '', language: '', venueName: '' });
     setColumnFilters({});
   };
 
@@ -701,22 +698,20 @@ function VenuesList() {
     return cities;
   }, [cities, filters.country]);
 
-  // Handle sort
   const handleSort = (field) => {
-    setSortConfig(prev => ({
-      field,
-      direction: prev.field === field && prev.direction === 'asc' ? 'desc' : 'asc'
+    setUrlState((prev) => ({
+      sortField: field,
+      sortDir: prev.sortField === field && prev.sortDir === 'asc' ? 'desc' : 'asc',
     }));
   };
 
-  // Handle group by field
   const handleGroupBy = (field) => {
     if (groupByField === field) {
-      setGroupByField(null);
-      setExpandedGroups(new Set()); // Reset expanded groups when disabling grouping
+      setUrlState({ groupBy: '' });
+      setExpandedGroups(new Set());
     } else {
-      setGroupByField(field);
-      setExpandedGroups(new Set()); // Reset expanded groups when changing grouping field
+      setUrlState({ groupBy: field });
+      setExpandedGroups(new Set());
     }
   };
 
@@ -733,13 +728,12 @@ function VenuesList() {
     });
   };
 
-  // Handle pagination
   const handlePageChange = (newPage) => {
-    setPagination(prev => ({ ...prev, page: newPage }));
+    setUrlState({ page: newPage });
   };
 
   const handleRowsPerPageChange = (newRowsPerPage) => {
-    setPagination(prev => ({ ...prev, rowsPerPage: newRowsPerPage, page: 0 }));
+    setUrlState({ rowsPerPage: newRowsPerPage, page: 0 });
   };
 
   const hasDeletedSelected = useMemo(() => {
@@ -1400,7 +1394,7 @@ function VenuesList() {
               control={
                 <Switch
                   checked={showDeleted}
-                  onChange={(e) => setShowDeleted(e.target.checked)}
+                  onChange={(e) => setUrlState({ showDeleted: e.target.checked })}
                   size="small"
                 />
               }

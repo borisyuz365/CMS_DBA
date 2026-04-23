@@ -44,6 +44,7 @@ import { Link } from 'react-router-dom';
 import LoadingSpinner from '../../reuse/LoadingSpinner';
 import Alert from '../../reuse/Alert';
 import api from '../services/api';
+import useUrlFilters from '../hooks/useUrlFilters';
 
 // Simple status labels (extend as needed from game_statuses)
 const STATUS_LABELS = {
@@ -78,24 +79,44 @@ const DEFAULT_CREATE_FORM = {
 };
 
 function GamesList() {
+  const [urlState, setUrlState] = useUrlFilters({
+    countryId: { type: 'string', default: '' },
+    sportId: { type: 'string', default: '' },
+    competitionId: { type: 'string', default: '' },
+    teamId: { type: 'string', default: '' },
+    gameId: { type: 'string', default: '' },
+    searchPartnerId: { type: 'string', default: '' },
+    dateFrom: { type: 'string', default: '' },
+    dateTo: { type: 'string', default: '' },
+    hideDeleted: { type: 'boolean', default: true },
+    page: { type: 'number', default: 0 },
+    rowsPerPage: { type: 'number', default: 25 },
+    sortField: { type: 'string', default: '' },
+    sortDir: { type: 'string', default: 'asc' },
+    groupBy: { type: 'string', default: '' },
+  });
+
+  const [totalRows, setTotalRows] = useState(0);
+
+  const filters = {
+    countryId: urlState.countryId,
+    sportId: urlState.sportId,
+    competitionId: urlState.competitionId,
+    teamId: urlState.teamId,
+    gameId: urlState.gameId,
+    searchPartnerId: urlState.searchPartnerId,
+    dateFrom: urlState.dateFrom ? dayjs(urlState.dateFrom) : dayjs(),
+    dateTo: urlState.dateTo ? dayjs(urlState.dateTo) : dayjs(),
+    hideDeleted: urlState.hideDeleted,
+  };
+  const pagination = { page: urlState.page, rowsPerPage: urlState.rowsPerPage, totalRows };
+  const sortConfig = { field: urlState.sortField || null, direction: urlState.sortDir };
+  const groupByField = urlState.groupBy || null;
+
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [pagination, setPagination] = useState({ page: 0, rowsPerPage: 25, totalRows: 0 });
   const [selectedRows, setSelectedRows] = useState([]);
-  const [filters, setFilters] = useState({
-    countryId: '',
-    sportId: '',
-    competitionId: '',
-    teamId: '',
-    gameId: '',
-    searchPartnerId: '',
-    dateFrom: dayjs(),
-    dateTo: dayjs(),
-    hideDeleted: true,
-  });
-  const [sortConfig, setSortConfig] = useState({ field: null, direction: 'asc' });
-  const [groupByField, setGroupByField] = useState(null);
   const [columnFilters, setColumnFilters] = useState({});
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
@@ -112,7 +133,9 @@ function GamesList() {
   const [terms, setTerms] = useState([]);
 
   useEffect(() => {
-    loadLookupData();
+    loadLookupData().then(() => {
+      if (window.location.search) handleSearch();
+    });
   }, []);
 
   const loadLookupData = async () => {
@@ -157,7 +180,8 @@ function GamesList() {
 
       const data = await api.getGamesList(filterParams);
       setGames(Array.isArray(data) ? data : []);
-      setPagination(prev => ({ ...prev, totalRows: (data || []).length, page: 0 }));
+      setTotalRows((data || []).length);
+      setUrlState({ page: 0 });
     } catch (err) {
       console.error('Failed to load games:', err);
       setError(err.message || 'Failed to load games');
@@ -246,15 +270,15 @@ function GamesList() {
   }, [filteredAndSorted, pagination.page, pagination.rowsPerPage]);
 
   useEffect(() => {
-    setPagination(prev => ({ ...prev, totalRows: filteredAndSorted.length }));
+    setTotalRows(filteredAndSorted.length);
   }, [filteredAndSorted.length]);
 
   const handleSort = (field) => {
-    setSortConfig(prev => ({ field, direction: prev.field === field && prev.direction === 'asc' ? 'desc' : 'asc' }));
+    setUrlState(prev => ({ sortField: field, sortDir: prev.sortField === field && prev.sortDir === 'asc' ? 'desc' : 'asc' }));
   };
 
   const handleGroupBy = (field) => {
-    setGroupByField(prev => prev === field ? null : field);
+    setUrlState(prev => ({ groupBy: prev.groupBy === field ? '' : field }));
   };
 
   const handleColumnFilterChange = (field, value) => {
@@ -262,19 +286,19 @@ function GamesList() {
   };
 
   const handleClearFilters = () => {
-    setFilters({
+    setUrlState({
       countryId: '',
       sportId: '',
       competitionId: '',
       teamId: '',
       gameId: '',
       searchPartnerId: '',
-      dateFrom: dayjs(),
-      dateTo: dayjs(),
+      dateFrom: '',
+      dateTo: '',
       hideDeleted: true,
+      page: 0,
     });
     setColumnFilters({});
-    setPagination(prev => ({ ...prev, page: 0 }));
   };
 
   const handleOpenCreateDialog = () => {
@@ -415,7 +439,7 @@ function GamesList() {
               <InputLabel>Countries</InputLabel>
               <Select
                 value={filters.countryId}
-                onChange={(e) => setFilters(f => ({ ...f, countryId: e.target.value }))}
+                onChange={(e) => setUrlState({ countryId: e.target.value })}
                 label="Countries"
                 sx={{ '& .MuiOutlinedInput-root': { bgcolor: '#fff' } }}
               >
@@ -433,7 +457,7 @@ function GamesList() {
               <InputLabel>Sport</InputLabel>
               <Select
                 value={filters.sportId}
-                onChange={(e) => setFilters(f => ({ ...f, sportId: e.target.value }))}
+                onChange={(e) => setUrlState({ sportId: e.target.value })}
                 label="Sport"
                 sx={{ '& .MuiOutlinedInput-root': { bgcolor: '#fff' } }}
               >
@@ -451,7 +475,7 @@ function GamesList() {
               <InputLabel>Leagues</InputLabel>
               <Select
                 value={filters.competitionId}
-                onChange={(e) => setFilters(f => ({ ...f, competitionId: e.target.value }))}
+                onChange={(e) => setUrlState({ competitionId: e.target.value })}
                 label="Leagues"
                 sx={{ '& .MuiOutlinedInput-root': { bgcolor: '#fff' } }}
               >
@@ -469,7 +493,7 @@ function GamesList() {
               <InputLabel>Teams</InputLabel>
               <Select
                 value={filters.teamId}
-                onChange={(e) => setFilters(f => ({ ...f, teamId: e.target.value }))}
+                onChange={(e) => setUrlState({ teamId: e.target.value })}
                 label="Teams"
                 sx={{ '& .MuiOutlinedInput-root': { bgcolor: '#fff' } }}
               >
@@ -488,7 +512,7 @@ function GamesList() {
               size="small"
               label="Game ID"
               value={filters.gameId}
-              onChange={(e) => setFilters(f => ({ ...f, gameId: e.target.value }))}
+              onChange={(e) => setUrlState({ gameId: e.target.value })}
               sx={{ '& .MuiOutlinedInput-root': { bgcolor: '#fff' } }}
             />
           </Grid>
@@ -498,10 +522,10 @@ function GamesList() {
               size="small"
               label="SEARCH_PARTNER_ID"
               value={filters.searchPartnerId}
-              onChange={(e) => setFilters(f => ({ ...f, searchPartnerId: e.target.value }))}
+              onChange={(e) => setUrlState({ searchPartnerId: e.target.value })}
               InputProps={{
                 endAdornment: filters.searchPartnerId ? (
-                  <IconButton size="small" onClick={() => setFilters(f => ({ ...f, searchPartnerId: '' }))}>
+                  <IconButton size="small" onClick={() => setUrlState({ searchPartnerId: '' })}>
                     <ClearIcon fontSize="small" />
                   </IconButton>
                 ) : null,
@@ -513,7 +537,7 @@ function GamesList() {
             <DatePicker
               label="Between"
               value={filters.dateFrom}
-              onChange={(v) => setFilters(f => ({ ...f, dateFrom: v }))}
+              onChange={(v) => setUrlState({ dateFrom: v ? v.toISOString() : '' })}
               slotProps={{ textField: { size: 'small', fullWidth: true } }}
             />
           </Grid>
@@ -521,7 +545,7 @@ function GamesList() {
             <DatePicker
               label="AND"
               value={filters.dateTo}
-              onChange={(v) => setFilters(f => ({ ...f, dateTo: v }))}
+              onChange={(v) => setUrlState({ dateTo: v ? v.toISOString() : '' })}
               slotProps={{ textField: { size: 'small', fullWidth: true } }}
             />
           </Grid>
@@ -530,7 +554,7 @@ function GamesList() {
               control={
                 <Switch
                   checked={!filters.hideDeleted}
-                  onChange={(e) => setFilters(f => ({ ...f, hideDeleted: !e.target.checked }))}
+                  onChange={(e) => setUrlState({ hideDeleted: !e.target.checked })}
                   size="small"
                 />
               }
@@ -653,7 +677,7 @@ function GamesList() {
             <Select
               size="small"
               value={pagination.rowsPerPage}
-              onChange={(e) => setPagination(prev => ({ ...prev, rowsPerPage: Number(e.target.value), page: 0 }))}
+              onChange={(e) => setUrlState({ rowsPerPage: Number(e.target.value), page: 0 })}
               sx={{ minWidth: 60, height: 32 }}
             >
               <MenuItem value={10}>10</MenuItem>
@@ -668,14 +692,14 @@ function GamesList() {
             <IconButton
               size="small"
               disabled={pagination.page === 0}
-              onClick={() => setPagination(prev => ({ ...prev, page: Math.max(0, prev.page - 1) }))}
+              onClick={() => setUrlState(prev => ({ page: Math.max(0, prev.page - 1) }))}
             >
               ←
             </IconButton>
             <IconButton
               size="small"
               disabled={(pagination.page + 1) * pagination.rowsPerPage >= pagination.totalRows}
-              onClick={() => setPagination(prev => ({ ...prev, page: prev.page + 1 }))}
+              onClick={() => setUrlState(prev => ({ page: prev.page + 1 }))}
             >
               →
             </IconButton>

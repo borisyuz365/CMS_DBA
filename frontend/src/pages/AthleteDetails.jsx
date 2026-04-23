@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import useUrlFilters from '../hooks/useUrlFilters';
 import {
   Box,
   Typography,
@@ -56,7 +57,10 @@ function AthleteDetails() {
   const [surfaces, setSurfaces] = useState([]);
   const [tennisBackhandTypes, setTennisBackhandTypes] = useState([]);
   const [currencies, setCurrencies] = useState([]);
-  const [activeTab, setActiveTab] = useState(0);
+  const [urlState, setUrlState] = useUrlFilters({
+    tab: { type: 'number', default: 0 },
+  });
+  const activeTab = urlState.tab;
   const [clubImageError, setClubImageError] = useState(false);
   const [nationalImageError, setNationalImageError] = useState(false);
   
@@ -1815,7 +1819,7 @@ function AthleteDetails() {
       <Paper sx={{ boxShadow: 1 }}>
         <Tabs
           value={activeTab}
-          onChange={(e, newValue) => setActiveTab(newValue)}
+          onChange={(e, newValue) => setUrlState({ tab: newValue })}
           sx={{
             borderBottom: 1,
             borderColor: 'divider',

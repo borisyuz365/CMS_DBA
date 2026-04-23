@@ -55,18 +55,45 @@ import ScheduleIcon from '@mui/icons-material/Schedule';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import CasinoIcon from '@mui/icons-material/Casino';
 import QuizIcon from '@mui/icons-material/Quiz';
+import MonitorHeartIcon from '@mui/icons-material/MonitorHeart';
+import BugReportIcon from '@mui/icons-material/BugReport';
+import ListAltIcon from '@mui/icons-material/ListAlt';
+import SettingsIcon from '@mui/icons-material/Settings';
 
-// Full menu structure from reference – only Entities (and its sub-items) navigate; rest are placeholders
 const menuItems = [
   {
-    section: 'MENU',
+    section: '',
     items: [
-      { label: 'Dashboard', icon: <DashboardIcon /> },
-    ],
-  },
-  {
-    section: 'CONTENT',
-    items: [
+      { label: 'Admin', icon: <AdminPanelSettingsIcon /> },
+      {
+        label: 'Entities',
+        icon: <FolderIcon />,
+        subItems: [
+          { label: 'Sport Types', path: '/sports', icon: <SportsSoccerIcon /> },
+          { label: 'Countries', path: '/countries', icon: <PublicIcon /> },
+          { label: 'Competitions', path: '/competitions', icon: <EmojiEventsIcon /> },
+          { label: 'Competitors', path: '/competitors', icon: <GroupsIcon /> },
+          { label: 'Games', path: '/games', icon: <SportsEsportsIcon /> },
+          { label: 'Athletes', path: '/athletes', icon: <PersonIcon /> },
+          { label: 'Transfers', icon: <LocalShippingIcon /> },
+          { label: 'Venues', path: '/venues', icon: <StadiumIcon /> },
+          { label: 'Filters', path: '/filters', icon: <FilterListIcon /> },
+          { label: 'Data Sources', path: '/data-sources', icon: <StorageIcon /> },
+          { label: 'Languages', path: '/languages', icon: <TranslateIcon /> },
+          { label: 'TV Channels', path: '/tv-channels', icon: <LiveTvIcon /> },
+          { label: 'Time Zones', path: '/time-zones', icon: <ScheduleIcon /> },
+        ],
+      },
+      {
+        label: 'Monitor',
+        icon: <MonitorHeartIcon />,
+        subItems: [
+          { label: 'Dashboard', path: '/monitor/dashboard', icon: <DashboardIcon /> },
+          { label: 'Issues', icon: <BugReportIcon /> },
+          { label: 'List', icon: <ListAltIcon /> },
+          { label: 'Settings', icon: <SettingsIcon /> },
+        ],
+      },
       {
         label: 'Dictionary',
         icon: <MenuBookIcon />,
@@ -77,37 +104,7 @@ const menuItems = [
           { label: 'Outrightfix', icon: <MenuBookIcon /> },
         ],
       },
-      {
-        label: 'Entities',
-        icon: <FolderIcon />,
-        subItems: [
-          { label: 'Sports', path: '/sports', icon: <SportsSoccerIcon /> },
-          { label: 'Countries', path: '/countries', icon: <PublicIcon /> },
-          { label: 'Competitions', path: '/competitions', icon: <EmojiEventsIcon /> },
-          { label: 'Competitors', path: '/competitors', icon: <GroupsIcon /> },
-          { label: 'Athletes', path: '/athletes', icon: <PersonIcon /> },
-          { label: 'Venues', path: '/venues', icon: <StadiumIcon /> },
-          { label: 'TV Channels', path: '/tv-channels', icon: <LiveTvIcon /> },
-          { label: 'Data Sources', path: '/data-sources', icon: <StorageIcon /> },
-          { label: 'Languages', path: '/languages', icon: <TranslateIcon /> },
-          { label: 'Time Zones', path: '/time-zones', icon: <ScheduleIcon /> },
-        ],
-      },
-      {
-        label: 'Games',
-        icon: <SportsEsportsIcon />,
-        subItems: [
-          { label: 'Games List', path: '/games', icon: <SportsEsportsIcon /> },
-        ],
-      },
-      { label: 'News', icon: <ArticleIcon /> },
-      {
-        label: 'Promotions',
-        icon: <CampaignIcon />,
-        subItems: [
-          { label: 'Filters', path: '/filters', icon: <FilterListIcon /> },
-        ],
-      },
+      { label: 'App Dashboards', icon: <PhoneAndroidIcon /> },
       {
         label: 'Tools',
         icon: <BuildIcon />,
@@ -115,34 +112,12 @@ const menuItems = [
           { label: 'Priorities', path: '/priorities', icon: <BuildIcon /> },
         ],
       },
-      { label: 'App Dashboard', icon: <PhoneAndroidIcon /> },
-    ],
-  },
-  {
-    section: '',
-    items: [
+      { label: 'News', icon: <ArticleIcon /> },
+      { label: 'Notifications', icon: <NotificationsIcon /> },
       { label: 'Images', icon: <ImageIcon /> },
-      { label: 'Transfers', icon: <LocalShippingIcon /> },
       { label: 'Betting', icon: <CasinoIcon /> },
       { label: 'Quiz', icon: <QuizIcon /> },
-    ],
-  },
-  {
-    section: 'NOTIFICATIONS',
-    items: [
-      { label: 'Notifications', icon: <NotificationsIcon /> },
-    ],
-  },
-  {
-    section: 'SIMULATORS',
-    items: [
       { label: 'Simulators', icon: <BusinessIcon /> },
-    ],
-  },
-  {
-    section: 'ADMIN',
-    items: [
-      { label: 'Admin', icon: <AdminPanelSettingsIcon /> },
     ],
   },
 ];

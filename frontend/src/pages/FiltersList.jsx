@@ -46,22 +46,31 @@ import LoadingSpinner from '../../reuse/LoadingSpinner';
 import Alert from '../../reuse/Alert';
 import TermEditModal from '../../reuse/TermEditModal';
 import api from '../services/api';
+import useUrlFilters from '../hooks/useUrlFilters';
 
 function FiltersList() {
+  const [urlState, setUrlState] = useUrlFilters({
+    filterId: { type: 'string', default: '' },
+    activeOnly: { type: 'boolean', default: true },
+    page: { type: 'number', default: 0 },
+    rowsPerPage: { type: 'number', default: 25 },
+    sortField: { type: 'string', default: '' },
+    sortDir: { type: 'string', default: 'asc' },
+    groupBy: { type: 'string', default: '' },
+  });
+
+  const [totalRows, setTotalRows] = useState(0);
+
+  const searchFilters = { filterId: urlState.filterId, activeOnly: urlState.activeOnly };
+  const pagination = { page: urlState.page, rowsPerPage: urlState.rowsPerPage, totalRows };
+  const sortConfig = { field: urlState.sortField || null, direction: urlState.sortDir };
+  const groupByField = urlState.groupBy || null;
+
   const [filters, setFilters] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [hasSearched, setHasSearched] = useState(true);
-  const [pagination, setPagination] = useState({ page: 0, rowsPerPage: 25, totalRows: 0 });
   const [selectedRows, setSelectedRows] = useState([]);
-
-  const [searchFilters, setSearchFilters] = useState({
-    filterId: '',
-    activeOnly: true,
-  });
-
-  const [sortConfig, setSortConfig] = useState({ field: null, direction: 'asc' });
-  const [groupByField, setGroupByField] = useState(null);
   const [expandedGroups, setExpandedGroups] = useState(new Set());
   const [columnFilters, setColumnFilters] = useState({});
   const [isEditMode, setIsEditMode] = useState(false);
@@ -123,7 +132,8 @@ function FiltersList() {
         filterId: searchFilters.filterId || undefined,
       });
       setFilters(Array.isArray(data) ? data : []);
-      setPagination((prev) => ({ ...prev, totalRows: (data || []).length, page: 0 }));
+      setTotalRows((data || []).length);
+      setUrlState({ page: 0 });
     } catch (err) {
       console.error('Failed to load filters:', err);
       setError(err.message || 'Failed to load filters');
@@ -211,7 +221,8 @@ function FiltersList() {
   }, [dataForTable, groupByField, pagination.page, pagination.rowsPerPage, expandedGroups]);
 
   useEffect(() => {
-    setPagination((prev) => ({ ...prev, totalRows: dataForTable.length, page: 0 }));
+    setTotalRows(dataForTable.length);
+    setUrlState({ page: 0 });
   }, [dataForTable.length]);
 
   const paginatedData = useMemo(() => {
@@ -221,10 +232,7 @@ function FiltersList() {
   }, [dataForTable, pagination.page, pagination.rowsPerPage]);
 
   const handleSearchFilterChange = (field, value) => {
-    setSearchFilters((prev) => {
-      const next = { ...prev, [field]: value };
-      return next;
-    });
+    setUrlState({ [field]: value });
   };
 
   const handleSearch = () => {
@@ -233,24 +241,24 @@ function FiltersList() {
   };
 
   const handleClearFilters = () => {
-    setSearchFilters({ filterId: '', activeOnly: true });
+    setUrlState({ filterId: '', activeOnly: true });
     setColumnFilters({});
     setSelectedRows([]);
   };
 
   const handleSort = (field) => {
-    setSortConfig((prev) => ({
-      field,
-      direction: prev.field === field && prev.direction === 'asc' ? 'desc' : 'asc',
+    setUrlState((prev) => ({
+      sortField: field,
+      sortDir: prev.sortField === field && prev.sortDir === 'asc' ? 'desc' : 'asc',
     }));
   };
 
   const handleGroupBy = (field) => {
     if (groupByField === field) {
-      setGroupByField(null);
+      setUrlState({ groupBy: '' });
       setExpandedGroups(new Set());
     } else {
-      setGroupByField(field);
+      setUrlState({ groupBy: field });
       setExpandedGroups(new Set());
     }
   };
@@ -265,11 +273,11 @@ function FiltersList() {
   };
 
   const handlePageChange = (newPage) => {
-    setPagination((prev) => ({ ...prev, page: newPage }));
+    setUrlState({ page: newPage });
   };
 
   const handleRowsPerPageChange = (newRowsPerPage) => {
-    setPagination((prev) => ({ ...prev, rowsPerPage: newRowsPerPage, page: 0 }));
+    setUrlState({ rowsPerPage: newRowsPerPage, page: 0 });
   };
 
   const handleExportCsv = () => {

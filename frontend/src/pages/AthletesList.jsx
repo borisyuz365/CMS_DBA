@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import useUrlFilters from '../hooks/useUrlFilters';
 import {
   Box, 
   Typography, 
@@ -57,19 +58,39 @@ function AthletesList() {
   const [athletes, setAthletes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [pagination, setPagination] = useState({ page: 0, rowsPerPage: 25, totalRows: 0 });
+  const [totalRows, setTotalRows] = useState(0);
   const [selectedRows, setSelectedRows] = useState([]);
   
-  // Filter states
-  const [filters, setFilters] = useState({
-    country: [],
-    sportType: [],
-    league: [],
-    team: [],
-    athleteId: '',
-    language: '',
-    athleteName: '',
+  // URL-synced filter / table state
+  const [urlState, setUrlState] = useUrlFilters({
+    country: { type: 'array', default: [] },
+    sportType: { type: 'array', default: [] },
+    league: { type: 'array', default: [] },
+    team: { type: 'array', default: [] },
+    athleteId: { type: 'string', default: '' },
+    language: { type: 'string', default: '' },
+    athleteName: { type: 'string', default: '' },
+    showDeleted: { type: 'boolean', default: false },
+    page: { type: 'number', default: 0 },
+    rowsPerPage: { type: 'number', default: 25 },
+    sortField: { type: 'string', default: '' },
+    sortDir: { type: 'string', default: 'asc' },
+    groupBy: { type: 'string', default: '' },
   });
+
+  const filters = {
+    country: urlState.country,
+    sportType: urlState.sportType,
+    league: urlState.league,
+    team: urlState.team,
+    athleteId: urlState.athleteId,
+    language: urlState.language,
+    athleteName: urlState.athleteName,
+  };
+  const showDeleted = urlState.showDeleted;
+  const pagination = { page: urlState.page, rowsPerPage: urlState.rowsPerPage, totalRows };
+  const sortConfig = { field: urlState.sortField || null, direction: urlState.sortDir };
+  const groupByField = urlState.groupBy || null;
 
   // Data for dropdowns
   const [countries, setCountries] = useState([]);
@@ -84,20 +105,15 @@ function AthletesList() {
   const [allTerms, setAllTerms] = useState([]);
   const [allCategories, setAllCategories] = useState([]);
 
-  // Sort state
-  const [sortConfig, setSortConfig] = useState({ field: null, direction: 'asc' });
-
-  // Group state (always active, but can be set to null to disable)
-  const [groupByField, setGroupByField] = useState(null);
-  // Expanded groups state (Set of group keys that are expanded)
+  // Expanded groups state (ephemeral, not URL-synced)
   const [expandedGroups, setExpandedGroups] = useState(new Set());
 
-  // Column-level filter state (for stacked header filters)
+  // Column-level filter state (ephemeral, not URL-synced)
   const [columnFilters, setColumnFilters] = useState({});
 
   // Edit mode state
   const [isEditMode, setIsEditMode] = useState(false);
-  const [pendingChanges, setPendingChanges] = useState({}); // { [athleteId]: { field: value, ... } }
+  const [pendingChanges, setPendingChanges] = useState({});
   
   // Athletes positions data
   const [athletesPositions, setAthletesPositions] = useState([]);
@@ -106,11 +122,8 @@ function AthletesList() {
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: '',
-    severity: 'success', // 'success' | 'error' | 'warning' | 'info'
+    severity: 'success',
   });
-
-  // Show deleted athletes toggle
-  const [showDeleted, setShowDeleted] = useState(false);
 
   // Create Athlete Dialog state
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
@@ -135,9 +148,10 @@ function AthletesList() {
     onConfirm: null,
   });
 
-  // Load data on mount (only dropdown data, not athletes)
   useEffect(() => {
-    loadDropdownData();
+    loadDropdownData().then(() => {
+      if (window.location.search) searchAthletes();
+    });
   }, []);
 
   const loadDropdownData = async () => {
@@ -253,11 +267,11 @@ function AthletesList() {
       // Load athletes with filters
       const athletesData = await api.getAthletes(searchFilters);
       setAthletes(athletesData);
-      // Count only non-deleted athletes for pagination (unless showDeleted is true)
       const visibleAthletes = currentShowDeleted 
         ? athletesData 
         : athletesData.filter(a => !a.IS_DELETED);
-      setPagination(prev => ({ ...prev, totalRows: visibleAthletes.length, page: 0 }));
+      setTotalRows(visibleAthletes.length);
+      setUrlState({ page: 0 });
     } catch (err) {
       console.error('Failed to search athletes:', err);
       setError(err.message || 'Failed to search athletes');
@@ -403,9 +417,9 @@ function AthletesList() {
     return result.slice(start, end);
   }, [filteredAndSortedAthletes, groupByField, pagination.page, pagination.rowsPerPage, expandedGroups]);
 
-  // Update pagination when filtered data changes
   useEffect(() => {
-    setPagination(prev => ({ ...prev, totalRows: filteredAndSortedAthletes.length, page: 0 }));
+    setTotalRows(filteredAndSortedAthletes.length);
+    setUrlState({ page: 0 });
   }, [filteredAndSortedAthletes.length]);
 
   // Paginated data (for checkbox selection - use non-grouped data)
@@ -879,48 +893,42 @@ function AthletesList() {
 
   // Handle filter changes
   const handleFilterChange = (field, value) => {
-    setFilters(prev => {
-      const newFilters = { ...prev, [field]: value };
+    setUrlState(prev => {
+      const updates = { [field]: value };
       
       // Reset dependent filters
       if (field === 'sportType') {
-        newFilters.league = [];
-        newFilters.team = [];
+        updates.league = [];
+        updates.team = [];
       } else if (field === 'league') {
-        newFilters.team = [];
+        updates.team = [];
       } else if (field === 'country') {
-        // When country changes, filter out leagues/teams that don't match selected countries
         if (Array.isArray(value) && value.length > 0) {
           const selectedCountryIds = value.map(countryName => {
             const country = countries.find(c => c.name === countryName);
             return country ? country.COUNTRY_ID : null;
           }).filter(id => id !== null);
           
-          // Filter out leagues that don't match selected countries
           if (Array.isArray(prev.league) && prev.league.length > 0) {
-            const validLeagues = prev.league.filter(leagueId => {
+            updates.league = prev.league.filter(leagueId => {
               const league = competitions.find(c => c.COMPETITION_ID === parseInt(leagueId));
               return league && selectedCountryIds.includes(league.COUNTRY_ID);
             });
-            newFilters.league = validLeagues;
           }
           
-          // Filter out teams that don't match selected countries
           if (Array.isArray(prev.team) && prev.team.length > 0) {
-            const validTeams = prev.team.filter(teamId => {
+            updates.team = prev.team.filter(teamId => {
               const team = competitors.find(c => c.COMPETITOR_ID === parseInt(teamId));
               return team && selectedCountryIds.includes(team.COUNTRY_ID);
             });
-            newFilters.team = validTeams;
           }
         } else {
-          // If no countries selected, clear leagues and teams
-          newFilters.league = [];
-          newFilters.team = [];
+          updates.league = [];
+          updates.team = [];
         }
       }
       
-      return newFilters;
+      return updates;
     });
   };
 
@@ -931,7 +939,7 @@ function AthletesList() {
 
   // Clear all filters
   const handleClearFilters = () => {
-    setFilters({
+    setUrlState({
       country: [],
       sportType: [],
       league: [],
@@ -939,10 +947,9 @@ function AthletesList() {
       athleteId: '',
       language: '',
       athleteName: '',
+      page: 0,
     });
     setColumnFilters({});
-    // Optionally trigger search after clearing
-    // searchAthletes();
   };
 
   // Filter competitions by sport type and country
@@ -1017,21 +1024,16 @@ function AthletesList() {
 
   // Handle sort
   const handleSort = (field) => {
-    setSortConfig(prev => ({
-      field,
-      direction: prev.field === field && prev.direction === 'asc' ? 'desc' : 'asc'
+    setUrlState(prev => ({
+      sortField: field,
+      sortDir: prev.sortField === field && prev.sortDir === 'asc' ? 'desc' : 'asc',
     }));
   };
 
   // Handle group by field
   const handleGroupBy = (field) => {
-    if (groupByField === field) {
-      setGroupByField(null);
-      setExpandedGroups(new Set()); // Reset expanded groups when disabling grouping
-    } else {
-      setGroupByField(field);
-      setExpandedGroups(new Set()); // Reset expanded groups when changing grouping field
-    }
+    setUrlState({ groupBy: groupByField === field ? '' : field });
+    setExpandedGroups(new Set());
   };
 
   // Toggle group expand/collapse
@@ -1049,11 +1051,11 @@ function AthletesList() {
 
   // Handle pagination
   const handlePageChange = (newPage) => {
-    setPagination(prev => ({ ...prev, page: newPage }));
+    setUrlState({ page: newPage });
   };
 
   const handleRowsPerPageChange = (newRowsPerPage) => {
-    setPagination(prev => ({ ...prev, rowsPerPage: newRowsPerPage, page: 0 }));
+    setUrlState({ rowsPerPage: newRowsPerPage, page: 0 });
   };
 
   // Check if any selected athletes are deleted
@@ -1839,8 +1841,7 @@ function AthletesList() {
                   checked={showDeleted}
                   onChange={(e) => {
                     const newValue = e.target.checked;
-                    setShowDeleted(newValue);
-                    // Trigger search immediately with the new value
+                    setUrlState({ showDeleted: newValue });
                     searchAthletes(newValue);
                   }}
                   size="small"

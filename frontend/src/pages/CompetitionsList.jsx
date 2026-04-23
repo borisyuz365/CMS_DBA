@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import useUrlFilters from '../hooks/useUrlFilters';
 import {
   Box,
   Typography,
@@ -56,19 +57,37 @@ function CompetitionsList() {
   const [competitions, setCompetitions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [pagination, setPagination] = useState({ page: 0, rowsPerPage: 25, totalRows: 0 });
-  const [selectedRows, setSelectedRows] = useState([]);
-
-  const [filters, setFilters] = useState({
-    country: [],
-    sportType: [],
-    competitionId: '',
-    gender: '',
-    competitionType: '',
+  const [urlState, setUrlState] = useUrlFilters({
+    country: { type: 'array', default: [] },
+    sportType: { type: 'array', default: [] },
+    competitionId: { type: 'string', default: '' },
+    competitionName: { type: 'string', default: '' },
+    gender: { type: 'string', default: '' },
+    competitionType: { type: 'string', default: '' },
+    showDeleted: { type: 'boolean', default: false },
+    page: { type: 'number', default: 0 },
+    rowsPerPage: { type: 'number', default: 25 },
+    sortField: { type: 'string', default: '' },
+    sortDir: { type: 'string', default: 'asc' },
+    groupBy: { type: 'string', default: '' },
   });
+
+  const filters = {
+    country: urlState.country,
+    sportType: urlState.sportType,
+    competitionId: urlState.competitionId,
+    competitionName: urlState.competitionName,
+    gender: urlState.gender,
+    competitionType: urlState.competitionType,
+  };
+  const showDeleted = urlState.showDeleted;
+  const [totalRows, setTotalRows] = useState(0);
+  const pagination = { page: urlState.page, rowsPerPage: urlState.rowsPerPage, totalRows };
+  const sortConfig = { field: urlState.sortField || null, direction: urlState.sortDir };
+  const groupByField = urlState.groupBy || null;
+
+  const [selectedRows, setSelectedRows] = useState([]);
   const [columnFilters, setColumnFilters] = useState({});
-  const [sortConfig, setSortConfig] = useState({ field: null, direction: 'asc' });
-  const [groupByField, setGroupByField] = useState(null);
   const [expandedGroups, setExpandedGroups] = useState(new Set());
 
   const [countries, setCountries] = useState([]);
@@ -79,7 +98,6 @@ function CompetitionsList() {
   const [allTerms, setAllTerms] = useState([]);
   const [allCategories, setAllCategories] = useState([]);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
-  const [showDeleted, setShowDeleted] = useState(false);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [createFormData, setCreateFormData] = useState({
     name: '',
@@ -154,10 +172,10 @@ function CompetitionsList() {
   };
 
   useEffect(() => {
-    loadDropdownData();
+    loadDropdownData().then(() => {
+      if (window.location.search) handleSearch();
+    });
   }, []);
-
-  // No default search: table stays empty until user clicks Search
 
   const loadDropdownData = async () => {
     try {
@@ -189,17 +207,22 @@ function CompetitionsList() {
   };
 
   const handleFilterChange = (field, value) => {
-    setFilters((prev) => ({ ...prev, [field]: value }));
+    setUrlState({ [field]: value });
   };
 
   const handleSearch = () => {
     setLoading(true);
     setError(null);
-    Promise.all([api.getCompetitions({ showDeleted }), api.getPartnerIdCompetitions()])
+    const searchOpts = { showDeleted };
+    if (filters.competitionName && filters.competitionName.trim()) {
+      searchOpts.competitionName = filters.competitionName.trim();
+    }
+    Promise.all([api.getCompetitions(searchOpts), api.getPartnerIdCompetitions()])
       .then(([compData, pidData]) => {
         setCompetitions(compData || []);
         setPartnerIdList(Array.isArray(pidData) ? pidData : []);
-        setPagination((p) => ({ ...p, totalRows: (compData || []).length, page: 0 }));
+        setTotalRows((compData || []).length);
+        setUrlState({ page: 0 });
       })
       .catch((err) => {
         setError(err.message || 'Failed to load competitions');
@@ -210,9 +233,8 @@ function CompetitionsList() {
   };
 
   const handleClearFilters = () => {
-    setFilters({ country: [], sportType: [], competitionId: '', gender: '', competitionType: '' });
+    setUrlState({ country: [], sportType: [], competitionId: '', competitionName: '', gender: '', competitionType: '', page: 0 });
     setColumnFilters({});
-    setPagination((p) => ({ ...p, page: 0 }));
   };
 
   const handleColumnFilterChange = (field, value) => {
@@ -220,17 +242,17 @@ function CompetitionsList() {
   };
 
   const handleSort = (field) => {
-    setSortConfig((prev) => ({ field, direction: prev.field === field && prev.direction === 'asc' ? 'desc' : 'asc' }));
+    const direction = sortConfig.field === field && sortConfig.direction === 'asc' ? 'desc' : 'asc';
+    setUrlState({ sortField: field, sortDir: direction });
   };
 
   const handleGroupBy = (field) => {
     if (groupByField === field) {
-      setGroupByField(null);
-      setExpandedGroups(new Set());
+      setUrlState({ groupBy: '' });
     } else {
-      setGroupByField(field);
-      setExpandedGroups(new Set());
+      setUrlState({ groupBy: field });
     }
+    setExpandedGroups(new Set());
   };
 
   const handleToggleGroup = (k) => {
@@ -346,12 +368,13 @@ function CompetitionsList() {
   }, [filteredAndSorted, pagination.page, pagination.rowsPerPage]);
 
   useEffect(() => {
-    setPagination((p) => {
-      const total = filteredAndSorted.length;
-      const maxPage = total === 0 ? 0 : Math.max(0, Math.ceil(total / p.rowsPerPage) - 1);
-      return { ...p, totalRows: total, page: Math.min(p.page, maxPage) };
-    });
-  }, [filteredAndSorted.length]);
+    const total = filteredAndSorted.length;
+    setTotalRows(total);
+    const maxPage = total === 0 ? 0 : Math.max(0, Math.ceil(total / pagination.rowsPerPage) - 1);
+    if (pagination.page > maxPage) {
+      setUrlState({ page: maxPage });
+    }
+  }, [filteredAndSorted.length]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const openScreensDialog = (e, row) => {
     e.stopPropagation();
@@ -438,7 +461,8 @@ function CompetitionsList() {
       setSelectedRows([]);
       const data = await api.getCompetitions({ showDeleted });
       setCompetitions(data || []);
-      setPagination((p) => ({ ...p, totalRows: (data || []).length, page: 0 }));
+      setTotalRows((data || []).length);
+      setUrlState({ page: 0 });
       setSnackbar({ open: true, message: `Deleted ${selectedRows.length} competition(s)`, severity: 'success' });
     } catch (err) {
       setSnackbar({ open: true, message: err.message || 'Delete failed', severity: 'error' });
@@ -456,7 +480,8 @@ function CompetitionsList() {
       setSelectedRows([]);
       const data = await api.getCompetitions({ showDeleted });
       setCompetitions(data || []);
-      setPagination((p) => ({ ...p, totalRows: (data || []).length, page: 0 }));
+      setTotalRows((data || []).length);
+      setUrlState({ page: 0 });
       setSnackbar({ open: true, message: `Restored ${selectedRows.length} competition(s)`, severity: 'success' });
     } catch (err) {
       setSnackbar({ open: true, message: err.message || 'Restore failed', severity: 'error' });
@@ -732,7 +757,8 @@ function CompetitionsList() {
       setCreateDialogOpen(false);
       const data = await api.getCompetitions({ showDeleted });
       setCompetitions(data || []);
-      setPagination((p) => ({ ...p, totalRows: (data || []).length, page: 0 }));
+      setTotalRows((data || []).length);
+      setUrlState({ page: 0 });
       setSnackbar({ open: true, message: 'Competition created', severity: 'success' });
       if (created && created.COMPETITION_ID) navigate(`/competitions/${created.COMPETITION_ID}`);
     } catch (err) {
@@ -845,6 +871,23 @@ function CompetitionsList() {
             />
           </Grid>
           <Grid item xs={12} sm={6} md={2.4}>
+            <TextField
+              fullWidth
+              size="small"
+              label="Competition Name"
+              value={filters.competitionName || ''}
+              onChange={(e) => handleFilterChange('competitionName', e.target.value)}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  backgroundColor: '#ffffff',
+                  '& fieldset': { borderColor: '#E0E0E0' },
+                  '&:hover fieldset': { borderColor: '#BDBDBD' },
+                  '&.Mui-focused fieldset': { borderColor: '#1976d2' },
+                },
+              }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={2.4}>
             <FormControl fullWidth size="small">
               <InputLabel sx={{ fontSize: '0.875rem' }}>Gender</InputLabel>
               <Select
@@ -926,7 +969,7 @@ function CompetitionsList() {
           </Grid>
           <Grid item xs={12} sm={6} md={1.2}>
             <FormControlLabel
-              control={<Switch size="small" checked={showDeleted} onChange={(e) => setShowDeleted(e.target.checked)} />}
+              control={<Switch size="small" checked={showDeleted} onChange={(e) => setUrlState({ showDeleted: e.target.checked })} />}
               label="Show Deleted"
               sx={{
                 height: '40px',
@@ -1114,7 +1157,7 @@ function CompetitionsList() {
             <FormControl size="small" sx={{ minWidth: 80 }}>
               <Select
                 value={pagination.rowsPerPage}
-                onChange={(e) => setPagination((p) => ({ ...p, rowsPerPage: Number(e.target.value), page: 0 }))}
+                onChange={(e) => setUrlState({ rowsPerPage: Number(e.target.value), page: 0 })}
               >
                 <MenuItem value={10}>10</MenuItem>
                 <MenuItem value={25}>25</MenuItem>
@@ -1125,12 +1168,12 @@ function CompetitionsList() {
             <Typography variant="body2" sx={{ fontSize: '0.875rem' }}>
               {pagination.page * pagination.rowsPerPage + 1}-{Math.min((pagination.page + 1) * pagination.rowsPerPage, pagination.totalRows)} of {pagination.totalRows}
             </Typography>
-            <IconButton size="small" onClick={() => setPagination((p) => ({ ...p, page: p.page - 1 }))} disabled={pagination.page === 0}>
+            <IconButton size="small" onClick={() => setUrlState({ page: pagination.page - 1 })} disabled={pagination.page === 0}>
               <ArrowBackIosNewIcon fontSize="small" />
             </IconButton>
             <IconButton
               size="small"
-              onClick={() => setPagination((p) => ({ ...p, page: p.page + 1 }))}
+              onClick={() => setUrlState({ page: pagination.page + 1 })}
               disabled={(pagination.page + 1) * pagination.rowsPerPage >= pagination.totalRows}
             >
               <ArrowForwardIosIcon fontSize="small" />

@@ -50731,5 +50731,25 @@
     ],
     "valsCount": 1,
     "engValue": "BettingOpportunityService"
+  },
+  {
+    "aliasName": "Toto",
+    "category": "Bookmakers",
+    "fatherTerm": "",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Toto",
+        "isDefault": true,
+        "status": "Approved",
+        "context": "",
+        "block": false,
+        "sequence": 1
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "Toto",
+    "langValue": "Toto",
+    "id": 77877705
   }
 ]

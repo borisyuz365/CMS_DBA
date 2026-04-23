@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import useUrlFilters from '../hooks/useUrlFilters';
 import {
   Box,
   Typography,
@@ -57,18 +58,27 @@ function DataSourcesList() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [hasSearched, setHasSearched] = useState(false);
-  const [pagination, setPagination] = useState({ page: 0, rowsPerPage: 25, totalRows: 0 });
+  const [totalRows, setTotalRows] = useState(0);
   const [selectedRows, setSelectedRows] = useState([]);
-
-  const [filters, setFilters] = useState({
-    dataSourceId: '',
-    aliasName: '',
-  });
-
-  const [sortConfig, setSortConfig] = useState({ field: null, direction: 'asc' });
-  const [groupByField, setGroupByField] = useState(null);
   const [expandedGroups, setExpandedGroups] = useState(new Set());
   const [columnFilters, setColumnFilters] = useState({});
+
+  const [urlState, setUrlState] = useUrlFilters({
+    dataSourceId: { type: 'string', default: '' },
+    aliasName: { type: 'string', default: '' },
+    showDeleted: { type: 'boolean', default: false },
+    page: { type: 'number', default: 0 },
+    rowsPerPage: { type: 'number', default: 25 },
+    sortField: { type: 'string', default: '' },
+    sortDir: { type: 'string', default: 'asc' },
+    groupBy: { type: 'string', default: '' },
+  });
+
+  const filters = { dataSourceId: urlState.dataSourceId, aliasName: urlState.aliasName };
+  const showDeleted = urlState.showDeleted;
+  const pagination = { page: urlState.page, rowsPerPage: urlState.rowsPerPage, totalRows };
+  const sortConfig = { field: urlState.sortField || null, direction: urlState.sortDir };
+  const groupByField = urlState.groupBy || null;
   const [isEditMode, setIsEditMode] = useState(false);
   const [pendingChanges, setPendingChanges] = useState({});
 
@@ -93,7 +103,6 @@ function DataSourcesList() {
   const [timeZones, setTimeZones] = useState([]);
   const [createFormErrors, setCreateFormErrors] = useState({});
 
-  const [showDeleted, setShowDeleted] = useState(false);
   const [confirmDialog, setConfirmDialog] = useState({
     open: false,
     title: '',
@@ -107,8 +116,9 @@ function DataSourcesList() {
   const [allCategories, setAllCategories] = useState([]);
 
   useEffect(() => {
-    loadTermsAndCategories();
-    loadTimeZones();
+    Promise.all([loadTermsAndCategories(), loadTimeZones()]).then(() => {
+      if (window.location.search) handleSearch();
+    });
   }, []);
 
   const loadTimeZones = async () => {
@@ -136,7 +146,8 @@ function DataSourcesList() {
       setError(null);
       const data = await api.getDataSourcesList();
       setSources(Array.isArray(data) ? data : []);
-      setPagination((prev) => ({ ...prev, totalRows: (data || []).length, page: 0 }));
+      setTotalRows((data || []).length);
+      setUrlState({ page: 0 });
     } catch (err) {
       console.error('Failed to load data sources:', err);
       setError(err.message || 'Failed to load data sources');
@@ -229,7 +240,8 @@ function DataSourcesList() {
   }, [dataForTable, groupByField, pagination.page, pagination.rowsPerPage, expandedGroups]);
 
   useEffect(() => {
-    setPagination((prev) => ({ ...prev, totalRows: dataForTable.length, page: 0 }));
+    setTotalRows(dataForTable.length);
+    setUrlState({ page: 0 });
   }, [dataForTable.length]);
 
   const paginatedData = useMemo(() => {
@@ -239,7 +251,7 @@ function DataSourcesList() {
   }, [dataForTable, pagination.page, pagination.rowsPerPage]);
 
   const handleFilterChange = (field, value) => {
-    setFilters((prev) => ({ ...prev, [field]: value }));
+    setUrlState({ [field]: value });
   };
 
   const handleSearch = () => {
@@ -248,27 +260,27 @@ function DataSourcesList() {
   };
 
   const handleClearFilters = () => {
-    setFilters({ dataSourceId: '', aliasName: '' });
+    setUrlState({ dataSourceId: '', aliasName: '', page: 0 });
     setColumnFilters({});
     setHasSearched(false);
     setSources([]);
-    setPagination((prev) => ({ ...prev, totalRows: 0, page: 0 }));
+    setTotalRows(0);
     setSelectedRows([]);
   };
 
   const handleSort = (field) => {
-    setSortConfig((prev) => ({
-      field,
-      direction: prev.field === field && prev.direction === 'asc' ? 'desc' : 'asc',
+    setUrlState((prev) => ({
+      sortField: field,
+      sortDir: prev.sortField === field && prev.sortDir === 'asc' ? 'desc' : 'asc',
     }));
   };
 
   const handleGroupBy = (field) => {
     if (groupByField === field) {
-      setGroupByField(null);
+      setUrlState({ groupBy: '' });
       setExpandedGroups(new Set());
     } else {
-      setGroupByField(field);
+      setUrlState({ groupBy: field });
       setExpandedGroups(new Set());
     }
   };
@@ -283,11 +295,11 @@ function DataSourcesList() {
   };
 
   const handlePageChange = (newPage) => {
-    setPagination((prev) => ({ ...prev, page: newPage }));
+    setUrlState({ page: newPage });
   };
 
   const handleRowsPerPageChange = (newRowsPerPage) => {
-    setPagination((prev) => ({ ...prev, rowsPerPage: newRowsPerPage, page: 0 }));
+    setUrlState({ rowsPerPage: newRowsPerPage, page: 0 });
   };
 
   const handleFieldChange = (dataSourceId, field, value) => {
@@ -820,7 +832,7 @@ function DataSourcesList() {
               control={
                 <Switch
                   checked={showDeleted}
-                  onChange={(e) => setShowDeleted(e.target.checked)}
+                  onChange={(e) => setUrlState({ showDeleted: e.target.checked })}
                   size="small"
                 />
               }

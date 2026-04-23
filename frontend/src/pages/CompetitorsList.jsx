@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import useUrlFilters from '../hooks/useUrlFilters';
 import {
   Box, 
   Typography, 
@@ -58,18 +59,35 @@ function CompetitorsList() {
   const [competitors, setCompetitors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [pagination, setPagination] = useState({ page: 0, rowsPerPage: 25, totalRows: 0 });
-  const [selectedRows, setSelectedRows] = useState([]);
-  
-  // Filter states
-  const [filters, setFilters] = useState({
-    country: [],
-    sportType: [],
-    competition: [],
-    competitorId: '',
-    language: '',
-    competitorName: '',
+  const [urlState, setUrlState] = useUrlFilters({
+    country: { type: 'array', default: [] },
+    sportType: { type: 'array', default: [] },
+    competition: { type: 'array', default: [] },
+    competitorId: { type: 'string', default: '' },
+    language: { type: 'string', default: '' },
+    competitorName: { type: 'string', default: '' },
+    showDeleted: { type: 'boolean', default: false },
+    page: { type: 'number', default: 0 },
+    rowsPerPage: { type: 'number', default: 25 },
+    sortField: { type: 'string', default: '' },
+    sortDir: { type: 'string', default: 'asc' },
+    groupBy: { type: 'string', default: '' },
   });
+  const [totalRows, setTotalRows] = useState(0);
+  const [selectedRows, setSelectedRows] = useState([]);
+
+  const filters = {
+    country: urlState.country,
+    sportType: urlState.sportType,
+    competition: urlState.competition,
+    competitorId: urlState.competitorId,
+    language: urlState.language,
+    competitorName: urlState.competitorName,
+  };
+  const showDeleted = urlState.showDeleted;
+  const pagination = { page: urlState.page, rowsPerPage: urlState.rowsPerPage, totalRows };
+  const sortConfig = { field: urlState.sortField || null, direction: urlState.sortDir };
+  const groupByField = urlState.groupBy || null;
 
   // Data for dropdowns
   const [countries, setCountries] = useState([]);
@@ -84,11 +102,6 @@ function CompetitorsList() {
   const [allTerms, setAllTerms] = useState([]);
   const [allCategories, setAllCategories] = useState([]);
 
-  // Sort state
-  const [sortConfig, setSortConfig] = useState({ field: null, direction: 'asc' });
-
-  // Group state (always active, but can be set to null to disable)
-  const [groupByField, setGroupByField] = useState(null);
   // Expanded groups state (Set of group keys that are expanded)
   const [expandedGroups, setExpandedGroups] = useState(new Set());
 
@@ -105,9 +118,6 @@ function CompetitorsList() {
     message: '',
     severity: 'success', // 'success' | 'error' | 'warning' | 'info'
   });
-
-  // Show deleted athletes toggle
-  const [showDeleted, setShowDeleted] = useState(false);
 
   // Create Competitor Dialog state
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
@@ -130,9 +140,10 @@ function CompetitorsList() {
     onConfirm: null,
   });
 
-  // Load data on mount (only dropdown data, not athletes)
   useEffect(() => {
-    loadDropdownData();
+    loadDropdownData().then(() => {
+      if (window.location.search) searchCompetitors();
+    });
   }, []);
 
   const loadDropdownData = async () => {
@@ -237,7 +248,8 @@ function CompetitorsList() {
       const visibleCompetitors = currentShowDeleted 
         ? competitorsData 
         : competitorsData.filter(c => !c.IS_DELETED);
-      setPagination(prev => ({ ...prev, totalRows: visibleCompetitors.length, page: 0 }));
+      setTotalRows(visibleCompetitors.length);
+      setUrlState({ page: 0 });
     } catch (err) {
       console.error('Failed to search competitors:', err);
       setError(err.message || 'Failed to search competitors');
@@ -385,7 +397,8 @@ function CompetitorsList() {
 
   // Update pagination when filtered data changes
   useEffect(() => {
-    setPagination(prev => ({ ...prev, totalRows: filteredAndSortedCompetitors.length, page: 0 }));
+    setTotalRows(filteredAndSortedCompetitors.length);
+    setUrlState({ page: 0 });
   }, [filteredAndSortedCompetitors.length]);
 
   // Paginated data (for checkbox selection - use non-grouped data)
@@ -854,35 +867,32 @@ function CompetitorsList() {
 
   // Handle filter changes
   const handleFilterChange = (field, value) => {
-    setFilters(prev => {
-      const newFilters = { ...prev, [field]: value };
+    setUrlState(prev => {
+      const updates = { [field]: value };
       
       // Reset dependent filters
       if (field === 'sportType') {
-        newFilters.competition = [];
+        updates.competition = [];
       } else if (field === 'country') {
-        // When country changes, filter out competitions that don't match selected countries
         if (Array.isArray(value) && value.length > 0) {
           const selectedCountryIds = value.map(countryName => {
             const country = countries.find(c => c.name === countryName);
             return country ? country.COUNTRY_ID : null;
           }).filter(id => id !== null);
           
-          // Filter out competitions that don't match selected countries
           if (Array.isArray(prev.competition) && prev.competition.length > 0) {
             const validCompetitions = prev.competition.filter(compId => {
               const comp = competitions.find(c => c.COMPETITION_ID === parseInt(compId));
               return comp && selectedCountryIds.includes(comp.COUNTRY_ID);
             });
-            newFilters.competition = validCompetitions;
+            updates.competition = validCompetitions;
           }
         } else {
-          // If no countries selected, clear competitions
-          newFilters.competition = [];
+          updates.competition = [];
         }
       }
       
-      return newFilters;
+      return updates;
     });
   };
 
@@ -893,7 +903,7 @@ function CompetitorsList() {
 
   // Clear all filters
   const handleClearFilters = () => {
-    setFilters({
+    setUrlState({
       country: [],
       sportType: [],
       competition: [],
@@ -941,20 +951,20 @@ function CompetitorsList() {
 
   // Handle sort
   const handleSort = (field) => {
-    setSortConfig(prev => ({
-      field,
-      direction: prev.field === field && prev.direction === 'asc' ? 'desc' : 'asc'
+    setUrlState(prev => ({
+      sortField: field,
+      sortDir: prev.sortField === field && prev.sortDir === 'asc' ? 'desc' : 'asc',
     }));
   };
 
   // Handle group by field
   const handleGroupBy = (field) => {
     if (groupByField === field) {
-      setGroupByField(null);
-      setExpandedGroups(new Set()); // Reset expanded groups when disabling grouping
+      setUrlState({ groupBy: '' });
+      setExpandedGroups(new Set());
     } else {
-      setGroupByField(field);
-      setExpandedGroups(new Set()); // Reset expanded groups when changing grouping field
+      setUrlState({ groupBy: field });
+      setExpandedGroups(new Set());
     }
   };
 
@@ -973,11 +983,11 @@ function CompetitorsList() {
 
   // Handle pagination
   const handlePageChange = (newPage) => {
-    setPagination(prev => ({ ...prev, page: newPage }));
+    setUrlState({ page: newPage });
   };
 
   const handleRowsPerPageChange = (newRowsPerPage) => {
-    setPagination(prev => ({ ...prev, rowsPerPage: newRowsPerPage, page: 0 }));
+    setUrlState({ rowsPerPage: newRowsPerPage, page: 0 });
   };
 
   // Check if any selected competitors are deleted
@@ -1727,8 +1737,7 @@ function CompetitorsList() {
                   checked={showDeleted}
                   onChange={(e) => {
                     const newValue = e.target.checked;
-                    setShowDeleted(newValue);
-                    // Trigger search immediately with the new value
+                    setUrlState({ showDeleted: newValue });
                     searchCompetitors(newValue);
                   }}
                   size="small"

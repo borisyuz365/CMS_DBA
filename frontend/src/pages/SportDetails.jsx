@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import useUrlFilters from '../hooks/useUrlFilters';
 import {
   Box,
   Typography,
@@ -160,7 +161,10 @@ function SportDetails() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [formData, setFormData] = useState({});
-  const [activeTab, setActiveTab] = useState(0);
+  const [urlState, setUrlState] = useUrlFilters({
+    tab: { type: 'number', default: 0 },
+  });
+  const activeTab = urlState.tab;
   const [termModalOpen, setTermModalOpen] = useState(false);
   const [tableOrderByNewField, setTableOrderByNewField] = useState('');
   const [tableOrderByNewDirection, setTableOrderByNewDirection] = useState('desc');
@@ -694,7 +698,7 @@ function SportDetails() {
         </Box>
         <Tabs
           value={activeTab}
-          onChange={(e, newValue) => setActiveTab(newValue)}
+          onChange={(e, newValue) => setUrlState({ tab: newValue })}
           sx={{
             borderBottom: 1,
             borderColor: 'divider',

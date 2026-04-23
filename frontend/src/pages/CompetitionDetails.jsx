@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import useUrlFilters from '../hooks/useUrlFilters';
 import {
   Box,
   Typography,
@@ -146,7 +147,10 @@ function CompetitionDetails() {
   const [allCompetitions, setAllCompetitions] = useState([]); // for resolving FATHER_COMPETITION name
   const [generalDetailsSeasons, setGeneralDetailsSeasons] = useState([]);
   const [generalDetailsStages, setGeneralDetailsStages] = useState([]);
-  const [activeTab, setActiveTab] = useState(0); // 0=Structure (default), 1=Configurations, 2=Tools & Screens, 3=Winners, 4=Table Settings
+  const [urlState, setUrlState] = useUrlFilters({
+    tab: { type: 'number', default: 0 },
+  });
+  const activeTab = urlState.tab; // 0=Structure (default), 1=Configurations, 2=Tools & Screens, 3=Winners, 4=Table Settings
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
   // Winners tab
   const [winnersData, setWinnersData] = useState([]);
@@ -3533,7 +3537,7 @@ function CompetitionDetails() {
         </Box>
         <Tabs
           value={activeTab}
-          onChange={(e, v) => setActiveTab(v)}
+          onChange={(e, v) => setUrlState({ tab: v })}
           sx={{
             borderBottom: 1,
             borderColor: 'divider',

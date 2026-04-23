@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import useUrlFilters from '../hooks/useUrlFilters';
 import {
   Box,
   Grid,
@@ -57,33 +58,48 @@ import { exportToCSV } from '../utils/csvStorage';
 import { LoadingSpinner, Alert } from '../components/Feedback';
 
 const Dictionary = () => {
+  const [urlState, setUrlState] = useUrlFilters({
+    searchTerm: { type: 'string', default: '' },
+    alias: { type: 'boolean', default: true },
+    termId: { type: 'boolean', default: false },
+    values: { type: 'boolean', default: true },
+    uiLang: { type: 'boolean', default: true },
+    visible: { type: 'boolean', default: true },
+    category: { type: 'string', default: '' },
+    page: { type: 'number', default: 0 },
+    rowsPerPage: { type: 'number', default: 20 },
+    categoryPage: { type: 'number', default: 0 },
+    categoryRowsPerPage: { type: 'number', default: 10 },
+  });
+
+  const searchTerm = urlState.searchTerm;
+  const searchOptions = useMemo(() => ({
+    alias: urlState.alias,
+    termId: urlState.termId,
+    values: urlState.values,
+    uiLang: urlState.uiLang,
+    visible: urlState.visible,
+  }), [urlState.alias, urlState.termId, urlState.values, urlState.uiLang, urlState.visible]);
+  const selectedCategory = urlState.category || null;
+  const page = urlState.page;
+  const rowsPerPage = urlState.rowsPerPage;
+  const categoryPage = urlState.categoryPage;
+  const categoryRowsPerPage = urlState.categoryRowsPerPage;
+
   const [terms, setTerms] = useState([]);
   const [selectedTerms, setSelectedTerms] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [searchOptions, setSearchOptions] = useState({
-    alias: true,
-    termId: false,
-    values: true,
-    uiLang: true,
-    visible: true,
-  });
-  const [selectedCategory, setSelectedCategory] = useState(null);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editingTerm, setEditingTerm] = useState(null);
   const [categoryModalOpen, setCategoryModalOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
-  const [categorySearch, setCategorySearch] = useState(''); // Input field value
-  const [activeCategorySearch, setActiveCategorySearch] = useState(''); // Active search term for filtering
+  const [categorySearch, setCategorySearch] = useState('');
+  const [activeCategorySearch, setActiveCategorySearch] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [rowsPerPage, setRowsPerPage] = useState(20);
-  const [page, setPage] = useState(0);
   const [hasSearched, setHasSearched] = useState(false);
-  const [categoryPage, setCategoryPage] = useState(0);
-  const [categoryRowsPerPage, setCategoryRowsPerPage] = useState(10);
-  const [allTermsForCategories, setAllTermsForCategories] = useState([]); // For total count only
-  const [categoriesData, setCategoriesData] = useState([]); // Categories from the categories table
-  const [updateNotification, setUpdateNotification] = useState(null); // Notification state for update in services
+  const [allTermsForCategories, setAllTermsForCategories] = useState([]);
+  const [categoriesData, setCategoriesData] = useState([]);
+  const [updateNotification, setUpdateNotification] = useState(null);
   const [sonsTermsModalOpen, setSonsTermsModalOpen] = useState(false);
   const [sonsTerms, setSonsTerms] = useState([]);
   const [parentTerm, setParentTerm] = useState(null);
@@ -126,7 +142,7 @@ const Dictionary = () => {
       );
       setTerms(searchedTerms);
       setHasSearched(true);
-      setPage(0);
+      setUrlState({ page: 0 });
     } catch (err) {
       setError('Failed to search terms. Make sure the backend server is running.');
       console.error('Error searching terms:', err);
@@ -140,9 +156,9 @@ const Dictionary = () => {
     if (selectedCategory !== null) {
       setTerms([]);
       setHasSearched(false);
-      setPage(0);
+      setUrlState({ page: 0 });
     }
-  }, [selectedCategory]);
+  }, [selectedCategory]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Build hierarchical category structure from categories table
   const categories = useMemo(() => {
@@ -712,16 +728,14 @@ const Dictionary = () => {
                 terms={terms}
                 selectedCategory={selectedCategory}
                 onCategorySelect={(category) => {
-                  setSelectedCategory(category);
-                  setPage(0);
-                  // Don't search automatically - user needs to click search button
+                  setUrlState({ category: category || '', page: 0 });
                 }}
                 searchTerm={activeCategorySearch}
                 totalTermsCount={allTermsForCategories.length}
                 categoryPage={categoryPage}
                 categoryRowsPerPage={categoryRowsPerPage}
-                onCategoryPageChange={setCategoryPage}
-                onCategoryRowsPerPageChange={setCategoryRowsPerPage}
+                onCategoryPageChange={(p) => setUrlState({ categoryPage: p })}
+                onCategoryRowsPerPageChange={(rpp) => setUrlState({ categoryRowsPerPage: rpp })}
                 showPagination={false}
                 onCategoryEdit={handleEditCategory}
                 categoriesData={categoriesData}
@@ -766,7 +780,7 @@ const Dictionary = () => {
                 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <IconButton
-                      onClick={() => setCategoryPage(categoryPage - 1)}
+                      onClick={() => setUrlState({ categoryPage: categoryPage - 1 })}
                       disabled={categoryPage === 0}
                       size="small"
                     >
@@ -776,7 +790,7 @@ const Dictionary = () => {
                       Page {categoryPage + 1} of {Math.ceil(filteredCategories.length / categoryRowsPerPage) || 1}
                     </Typography>
                     <IconButton
-                      onClick={() => setCategoryPage(categoryPage + 1)}
+                      onClick={() => setUrlState({ categoryPage: categoryPage + 1 })}
                       disabled={categoryPage >= Math.ceil(filteredCategories.length / categoryRowsPerPage) - 1}
                       size="small"
                     >
@@ -788,8 +802,7 @@ const Dictionary = () => {
                     <Select
                       value={categoryRowsPerPage}
                       onChange={(e) => {
-                        setCategoryRowsPerPage(Number(e.target.value));
-                        setCategoryPage(0);
+                        setUrlState({ categoryRowsPerPage: Number(e.target.value), categoryPage: 0 });
                       }}
                     >
                       {[10, 25, 50].map((option) => (
@@ -832,7 +845,7 @@ const Dictionary = () => {
                   label="Search Terms"
                   value={searchTerm}
                   onChange={(e) => {
-                    setSearchTerm(e.target.value);
+                    setUrlState({ searchTerm: e.target.value });
                   }}
                   onKeyPress={(e) => {
                     if (e.key === 'Enter') {
@@ -848,7 +861,7 @@ const Dictionary = () => {
                     endAdornment: searchTerm && (
                       <InputAdornment position="end">
                         <IconButton size="small" onClick={() => {
-                          setSearchTerm('');
+                          setUrlState({ searchTerm: '' });
                         }}>
                           <ClearIcon />
                         </IconButton>
@@ -873,10 +886,9 @@ const Dictionary = () => {
                         checked={searchOptions.alias}
                         onChange={(e) => {
                           const checked = e.target.checked;
-                          setSearchOptions(prev => ({
-                            ...prev,
+                          setUrlState(prev => ({
                             alias: checked,
-                            termId: checked ? false : prev.termId, // Uncheck termId if alias is checked
+                            termId: checked ? false : prev.termId,
                           }));
                         }}
                         size="small"
@@ -891,10 +903,8 @@ const Dictionary = () => {
                         checked={searchOptions.termId}
                         onChange={(e) => {
                           const checked = e.target.checked;
-                          setSearchOptions(prev => ({
-                            ...prev,
+                          setUrlState(prev => ({
                             termId: checked,
-                            // If termId is checked, uncheck all others
                             alias: checked ? false : prev.alias,
                             values: checked ? false : prev.values,
                             uiLang: checked ? false : prev.uiLang,
@@ -913,10 +923,9 @@ const Dictionary = () => {
                         checked={searchOptions.values}
                         onChange={(e) => {
                           const checked = e.target.checked;
-                          setSearchOptions(prev => ({
-                            ...prev,
+                          setUrlState(prev => ({
                             values: checked,
-                            termId: checked ? false : prev.termId, // Uncheck termId if values is checked
+                            termId: checked ? false : prev.termId,
                           }));
                         }}
                         size="small"
@@ -931,10 +940,9 @@ const Dictionary = () => {
                         checked={searchOptions.uiLang}
                         onChange={(e) => {
                           const checked = e.target.checked;
-                          setSearchOptions(prev => ({
-                            ...prev,
+                          setUrlState(prev => ({
                             uiLang: checked,
-                            termId: checked ? false : prev.termId, // Uncheck termId if uiLang is checked
+                            termId: checked ? false : prev.termId,
                           }));
                         }}
                         size="small"
@@ -949,10 +957,9 @@ const Dictionary = () => {
                         checked={searchOptions.visible}
                         onChange={(e) => {
                           const checked = e.target.checked;
-                          setSearchOptions(prev => ({
-                            ...prev,
+                          setUrlState(prev => ({
                             visible: checked,
-                            termId: checked ? false : prev.termId, // Uncheck termId if visible is checked
+                            termId: checked ? false : prev.termId,
                           }));
                         }}
                         size="small"
@@ -1056,10 +1063,9 @@ const Dictionary = () => {
                       rowsPerPage: rowsPerPage,
                       totalRows: filteredTerms.length,
                     }}
-                    onPageChange={setPage}
+                    onPageChange={(p) => setUrlState({ page: p })}
                     onRowsPerPageChange={(newRowsPerPage) => {
-                      setRowsPerPage(newRowsPerPage);
-                      setPage(0);
+                      setUrlState({ rowsPerPage: newRowsPerPage, page: 0 });
                     }}
                     showPagination={false}
                   />
@@ -1081,7 +1087,7 @@ const Dictionary = () => {
               }}>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <IconButton
-                    onClick={() => setPage(page - 1)}
+                    onClick={() => setUrlState({ page: page - 1 })}
                     disabled={page === 0 || rowsPerPage >= filteredTerms.length}
                     size="small"
                   >
@@ -1095,7 +1101,7 @@ const Dictionary = () => {
                     )}
                   </Typography>
                   <IconButton
-                    onClick={() => setPage(page + 1)}
+                    onClick={() => setUrlState({ page: page + 1 })}
                     disabled={page >= Math.ceil(filteredTerms.length / rowsPerPage) - 1 || rowsPerPage >= filteredTerms.length}
                     size="small"
                   >
@@ -1107,8 +1113,7 @@ const Dictionary = () => {
                   <Select
                     value={rowsPerPage}
                     onChange={(e) => {
-                      setRowsPerPage(Number(e.target.value));
-                      setPage(0);
+                      setUrlState({ rowsPerPage: Number(e.target.value), page: 0 });
                     }}
                   >
                     {[20, 50, 100].map((option) => (

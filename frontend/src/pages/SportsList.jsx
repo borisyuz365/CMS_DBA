@@ -49,22 +49,32 @@ import LoadingSpinner from '../../reuse/LoadingSpinner';
 import Alert from '../../reuse/Alert';
 import TermEditModal from '../../reuse/TermEditModal';
 import api from '../services/api';
+import useUrlFilters from '../hooks/useUrlFilters';
 
 function SportsList() {
   const navigate = useNavigate();
   const [sports, setSports] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [pagination, setPagination] = useState({ page: 0, rowsPerPage: 25, totalRows: 0 });
+  const [totalRows, setTotalRows] = useState(0);
   const [selectedRows, setSelectedRows] = useState([]);
 
-  const [filters, setFilters] = useState({
-    sportTypeId: '',
-    aliasName: '',
+  const [urlState, setUrlState] = useUrlFilters({
+    sportTypeId: { type: 'string', default: '' },
+    aliasName: { type: 'string', default: '' },
+    showDeleted: { type: 'boolean', default: false },
+    page: { type: 'number', default: 0 },
+    rowsPerPage: { type: 'number', default: 25 },
+    sortField: { type: 'string', default: '' },
+    sortDir: { type: 'string', default: 'asc' },
+    groupBy: { type: 'string', default: '' },
   });
 
-  const [sortConfig, setSortConfig] = useState({ field: null, direction: 'asc' });
-  const [groupByField, setGroupByField] = useState(null);
+  const filters = { sportTypeId: urlState.sportTypeId, aliasName: urlState.aliasName };
+  const showDeleted = urlState.showDeleted;
+  const pagination = { page: urlState.page, rowsPerPage: urlState.rowsPerPage, totalRows };
+  const sortConfig = { field: urlState.sortField || null, direction: urlState.sortDir };
+  const groupByField = urlState.groupBy || null;
   const [expandedGroups, setExpandedGroups] = useState(new Set());
   const [columnFilters, setColumnFilters] = useState({});
   const [isEditMode, setIsEditMode] = useState(false);
@@ -88,7 +98,6 @@ function SportsList() {
   });
   const [createFormErrors, setCreateFormErrors] = useState({});
 
-  const [showDeleted, setShowDeleted] = useState(false);
   const [confirmDialog, setConfirmDialog] = useState({
     open: false,
     title: '',
@@ -122,7 +131,8 @@ function SportsList() {
       setError(null);
       const data = await api.getSportsList();
       setSports(Array.isArray(data) ? data : []);
-      setPagination((prev) => ({ ...prev, totalRows: (data || []).length, page: 0 }));
+      setTotalRows((data || []).length);
+      setUrlState({ page: 0 });
     } catch (err) {
       console.error('Failed to load sports:', err);
       setError(err.message || 'Failed to load sports');
@@ -213,7 +223,8 @@ function SportsList() {
   }, [filteredAndSortedSports, groupByField, pagination.page, pagination.rowsPerPage, expandedGroups]);
 
   useEffect(() => {
-    setPagination((prev) => ({ ...prev, totalRows: filteredAndSortedSports.length, page: 0 }));
+    setTotalRows(filteredAndSortedSports.length);
+    setUrlState({ page: 0 });
   }, [filteredAndSortedSports.length]);
 
   const paginatedData = useMemo(() => {
@@ -223,7 +234,7 @@ function SportsList() {
   }, [filteredAndSortedSports, pagination.page, pagination.rowsPerPage]);
 
   const handleFilterChange = (field, value) => {
-    setFilters((prev) => ({ ...prev, [field]: value }));
+    setUrlState({ [field]: value });
   };
 
   const handleSearch = () => {
@@ -231,23 +242,23 @@ function SportsList() {
   };
 
   const handleClearFilters = () => {
-    setFilters({ sportTypeId: '', aliasName: '' });
+    setUrlState({ sportTypeId: '', aliasName: '' });
     setColumnFilters({});
   };
 
   const handleSort = (field) => {
-    setSortConfig((prev) => ({
-      field,
-      direction: prev.field === field && prev.direction === 'asc' ? 'desc' : 'asc',
+    setUrlState((prev) => ({
+      sortField: field,
+      sortDir: prev.sortField === field && prev.sortDir === 'asc' ? 'desc' : 'asc',
     }));
   };
 
   const handleGroupBy = (field) => {
     if (groupByField === field) {
-      setGroupByField(null);
+      setUrlState({ groupBy: '' });
       setExpandedGroups(new Set());
     } else {
-      setGroupByField(field);
+      setUrlState({ groupBy: field });
       setExpandedGroups(new Set());
     }
   };
@@ -262,11 +273,11 @@ function SportsList() {
   };
 
   const handlePageChange = (newPage) => {
-    setPagination((prev) => ({ ...prev, page: newPage }));
+    setUrlState({ page: newPage });
   };
 
   const handleRowsPerPageChange = (newRowsPerPage) => {
-    setPagination((prev) => ({ ...prev, rowsPerPage: newRowsPerPage, page: 0 }));
+    setUrlState({ rowsPerPage: newRowsPerPage, page: 0 });
   };
 
   const handleFieldChange = (sportTypeId, field, value) => {
@@ -777,7 +788,7 @@ function SportsList() {
               control={
                 <Switch
                   checked={showDeleted}
-                  onChange={(e) => setShowDeleted(e.target.checked)}
+                  onChange={(e) => setUrlState({ showDeleted: e.target.checked })}
                   size="small"
                 />
               }
