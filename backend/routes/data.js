@@ -163,11 +163,24 @@ function resolveTermName(term) {
   return null;
 }
 
-// Get all countries
+// Get all countries (supports optional ?search= server-side filter)
 router.get('/countries', async (req, res, next) => {
   try {
-    const countries = await dataLoader.loadData('countries.json');
-    res.json({ success: true, data: countries });
+    let countries = await dataLoader.loadData('countries.json');
+
+    countries = countries.filter(c => !c.IS_DELETED);
+
+    const search = (req.query.search || '').trim().toLowerCase();
+    if (search) {
+      countries = countries.filter(c => {
+        const name = String(c.name || '').toLowerCase();
+        const code = String(c.COUNTRY_CODE || '').toLowerCase();
+        const id = String(c.COUNTRY_ID || '');
+        return name.includes(search) || code.includes(search) || id.includes(search);
+      });
+    }
+
+    res.json({ success: true, data: countries, total: countries.length });
   } catch (error) {
     next(error);
   }
@@ -176,33 +189,54 @@ router.get('/countries', async (req, res, next) => {
 // Get all competitors (teams/clubs) with enrichment
 router.get('/competitors', async (req, res, next) => {
   try {
+    const searchTerm = (req.query.search || '').trim().toLowerCase();
     const [competitors, terms, countries] = await Promise.all([
       dataLoader.loadData('competitors.json'),
       dataLoader.loadData('terms.json'),
       dataLoader.loadData('countries.json')
     ]);
 
-    const enrichedCompetitors = competitors.map(competitor => {
+    let list = (competitors || []).filter(c => !c.IS_DELETED);
+
+    const enrichedCompetitors = list.map(competitor => {
       const enriched = { ...competitor };
-      
-      // Resolve name from terms
+
       if (competitor.NAME_ID) {
         const nameTerm = terms.find(t => t.id === competitor.NAME_ID);
         enriched.name = resolveTermName(nameTerm) || `Competitor ${competitor.COMPETITOR_ID}`;
       } else {
         enriched.name = `Competitor ${competitor.COMPETITOR_ID}`;
       }
-      
-      // Resolve country
+
       if (competitor.COUNTRY_ID) {
         const country = countries.find(c => c.COUNTRY_ID === competitor.COUNTRY_ID);
         enriched.countryName = country ? country.name : null;
       }
-      
+
       return enriched;
     });
 
-    res.json({ success: true, data: enrichedCompetitors });
+    let result = enrichedCompetitors;
+    if (searchTerm) {
+      result = result.filter(c =>
+        (c.name && c.name.toLowerCase().includes(searchTerm)) ||
+        String(c.COMPETITOR_ID).includes(searchTerm)
+      );
+    }
+
+    const sportTypeIds = [].concat(req.query.sportTypeId || []).map(Number).filter(Number.isFinite);
+    if (sportTypeIds.length > 0) {
+      const set = new Set(sportTypeIds);
+      result = result.filter(c => c.SPORT_TYPE_ID != null && set.has(Number(c.SPORT_TYPE_ID)));
+    }
+
+    const mainCompetitions = [].concat(req.query.mainCompetition || []).map(Number).filter(Number.isFinite);
+    if (mainCompetitions.length > 0) {
+      const set = new Set(mainCompetitions);
+      result = result.filter(c => c.MAIN_COMPETITION != null && set.has(Number(c.MAIN_COMPETITION)));
+    }
+
+    res.json({ success: true, data: result });
   } catch (error) {
     next(error);
   }
@@ -249,14 +283,17 @@ router.get('/competitions', async (req, res, next) => {
       return enriched;
     });
 
-    const competitionName = req.query.competitionName ? String(req.query.competitionName).trim().toLowerCase() : '';
-    if (competitionName) {
-      enrichedCompetitions = enrichedCompetitions.filter(c =>
-        c.name && String(c.name).toLowerCase().includes(competitionName)
-      );
+    const search = (req.query.search || req.query.competitionName || '').trim().toLowerCase();
+    if (search) {
+      enrichedCompetitions = enrichedCompetitions.filter(c => {
+        const name = String(c.name || '').toLowerCase();
+        const id = String(c.COMPETITION_ID || '');
+        const country = String(c.countryName || '').toLowerCase();
+        return name.includes(search) || id.includes(search) || country.includes(search);
+      });
     }
 
-    res.json({ success: true, data: enrichedCompetitions });
+    res.json({ success: true, data: enrichedCompetitions, total: enrichedCompetitions.length });
   } catch (error) {
     next(error);
   }

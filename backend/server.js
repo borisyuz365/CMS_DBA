@@ -19,6 +19,7 @@ const dictionaryRoutes = require('./routes/dictionary');
 const gamesRoutes = require('./routes/games');
 const prioritiesRoutes = require('./routes/priorities');
 const filtersRoutes = require('./routes/filters');
+const tempRoutes = require('./routes/temp');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -53,6 +54,7 @@ app.use('/api/dictionary', dictionaryRoutes);
 app.use('/api/games', gamesRoutes);
 app.use('/api/priorities', prioritiesRoutes);
 app.use('/api/filters', filtersRoutes);
+app.use('/api/temp', tempRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

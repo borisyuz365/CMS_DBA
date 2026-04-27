@@ -31032,9 +31032,15 @@
         "context": "",
         "block": false,
         "sequence": 1
+      },
+      {
+        "languageId": 261,
+        "value": "Jeremy McLaughlin",
+        "isDefault": false,
+        "status": "Approved"
       }
     ],
-    "valsCount": 1,
+    "valsCount": 2,
     "engValue": "LeBron James",
     "langValue": "LeBron James"
   },
@@ -37909,9 +37915,15 @@
         "value": "Europe",
         "isDefault": true,
         "status": "Approved"
+      },
+      {
+        "languageId": 28,
+        "value": "טור אלפים באופניים",
+        "isDefault": false,
+        "status": "Approved"
       }
     ],
-    "valsCount": 1
+    "valsCount": 2
   },
   {
     "id": 77566385,
@@ -41528,9 +41540,15 @@
         "value": "LA Lakers",
         "isDefault": true,
         "status": "Approved"
+      },
+      {
+        "languageId": 45,
+        "value": "Phoenix Suns | Playoffs | Round 1 Game 2",
+        "isDefault": false,
+        "status": "Approved"
       }
     ],
-    "valsCount": 1,
+    "valsCount": 2,
     "engValue": "LA Lakers"
   },
   {
@@ -50751,5 +50769,74 @@
     "engValue": "Toto",
     "langValue": "Toto",
     "id": 77877705
+  },
+  {
+    "id": 77877706,
+    "categoryId": 2,
+    "aliasName": null,
+    "fatherTerm": null,
+    "createTime": "2026-04-23T10:04:57.601Z",
+    "description": null,
+    "category": "Countries names",
+    "values": [
+      {
+        "languageId": 220,
+        "value": "ITF Xalapa | Men | Singles",
+        "isDefault": true,
+        "status": "Approved"
+      },
+      {
+        "languageId": 220,
+        "value": "ITF Charlottesville | Women | Singles",
+        "isDefault": false,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 2,
+    "engValue": "ITF Xalapa | Men | Singles"
+  },
+  {
+    "id": 77877707,
+    "categoryId": 2,
+    "aliasName": null,
+    "fatherTerm": null,
+    "createTime": "2026-04-23T10:08:36.636Z",
+    "description": null,
+    "category": "Countries names",
+    "values": [
+      {
+        "languageId": 242,
+        "value": "ascenderá",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "ascenderá"
+  },
+  {
+    "id": 77877708,
+    "categoryId": 2,
+    "aliasName": null,
+    "fatherTerm": null,
+    "createTime": "2026-04-23T10:32:43.052Z",
+    "description": null,
+    "category": "Countries names",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "to be promoted",
+        "isDefault": true,
+        "status": "Approved"
+      },
+      {
+        "languageId": 242,
+        "value": "to be promoted",
+        "isDefault": false,
+        "status": "NotApproved"
+      }
+    ],
+    "valsCount": 2,
+    "engValue": "to be promoted"
   }
 ]

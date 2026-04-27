@@ -146,10 +146,15 @@ class ApiService {
   }
 
   /**
-   * Get all countries
+   * Get all countries. When `params.search` is provided the server filters
+   * by name / code / ID and returns only matching rows.
    */
-  async getCountries() {
-    const response = await this.fetch('/data/countries');
+  async getCountries(params = {}) {
+    const qp = new URLSearchParams();
+    if (params.search) qp.append('search', params.search);
+    const qs = qp.toString();
+    const url = qs ? `/data/countries?${qs}` : '/data/countries';
+    const response = await this.fetch(url);
     return response.data || [];
   }
 
@@ -230,8 +235,21 @@ class ApiService {
   /**
    * Get all competitors (teams/clubs) - from data endpoint (basic)
    */
-  async getCompetitors() {
-    const response = await this.fetch('/data/competitors');
+  async getCompetitors(params = {}) {
+    const qs = new URLSearchParams();
+    if (params.search) qs.set('search', params.search);
+    if (Array.isArray(params.sportTypeId)) {
+      params.sportTypeId.forEach((id) => qs.append('sportTypeId', id));
+    } else if (params.sportTypeId) {
+      qs.set('sportTypeId', params.sportTypeId);
+    }
+    if (Array.isArray(params.mainCompetition)) {
+      params.mainCompetition.forEach((id) => qs.append('mainCompetition', id));
+    } else if (params.mainCompetition) {
+      qs.set('mainCompetition', params.mainCompetition);
+    }
+    const queryString = qs.toString();
+    const response = await this.fetch(`/data/competitors${queryString ? `?${queryString}` : ''}`);
     return response.data || [];
   }
 
@@ -327,11 +345,13 @@ class ApiService {
 
   /**
    * Get all competitions (leagues). Pass showDeleted=true to include soft-deleted.
+   * When `opts.search` is provided the server filters by name / ID / country.
    */
   async getCompetitions(opts = {}) {
     const params = new URLSearchParams();
     if (opts.showDeleted === true) params.append('showDeleted', 'true');
-    if (opts.competitionName) params.append('competitionName', opts.competitionName);
+    if (opts.search) params.append('search', opts.search);
+    else if (opts.competitionName) params.append('competitionName', opts.competitionName);
     const qs = params.toString();
     const url = qs ? `/data/competitions?${qs}` : '/data/competitions';
     const response = await this.fetch(url);
@@ -1914,6 +1934,153 @@ class ApiService {
       body: JSON.stringify({ updates }),
     });
     return response.data;
+  }
+
+  /**
+   * Get temporary (unidentified) records for an entity (countries, competitions, ...).
+   * Server-side filtering + pagination; the response also contains facet lists
+   * describing which sport-types / data-sources actually exist in the temp
+   * table (so the UI dropdowns only offer relevant values).
+   *
+   * @param {string} entity
+   * @param {object} [params]
+   * @param {string} [params.search]           Substring match on NAME.
+   * @param {number[]} [params.sportTypeIds]   Restrict SPORT_TYPE_ID values.
+   * @param {number[]} [params.dataSourceIds]  Restrict DATA_SOURCE_ID values.
+   * @param {boolean} [params.showHidden]      Include ACTIVE=0 rows.
+   * @param {number} [params.page]             0-based page index.
+   * @param {number} [params.pageSize]         Page size.
+   * @returns {Promise<{rows: Array, total: number, page: number, pageSize: number,
+   *                    facets: { sportTypes: Array<{id:number,label:string,count:number}>,
+   *                              dataSources: Array<{id:number,label:string,count:number}> }}>}
+   */
+  async getTempEntities(entity, params = {}) {
+    const qp = new URLSearchParams();
+    if (params.search) qp.append('search', params.search);
+    if (Array.isArray(params.sportTypeIds)) {
+      params.sportTypeIds.forEach((id) => qp.append('sportTypeIds', String(id)));
+    }
+    if (Array.isArray(params.dataSourceIds)) {
+      params.dataSourceIds.forEach((id) => qp.append('dataSourceIds', String(id)));
+    }
+    if (Array.isArray(params.countryIds)) {
+      params.countryIds.forEach((id) => qp.append('countryIds', String(id)));
+    }
+    if (Array.isArray(params.competitionIds)) {
+      params.competitionIds.forEach((id) => qp.append('competitionIds', String(id)));
+    }
+    if (Array.isArray(params.competitorIds)) {
+      params.competitorIds.forEach((id) => qp.append('competitorIds', String(id)));
+    }
+    if (params.showHidden !== undefined) {
+      qp.append('showHidden', params.showHidden ? 'true' : 'false');
+    }
+    if (params.page !== undefined) qp.append('page', String(params.page));
+    if (params.pageSize !== undefined) qp.append('pageSize', String(params.pageSize));
+
+    const qs = qp.toString();
+    const url = `/temp/${encodeURIComponent(entity)}${qs ? `?${qs}` : ''}`;
+    const response = await this.fetch(url);
+    const data = response.data || {};
+    return {
+      rows: Array.isArray(data.rows) ? data.rows : [],
+      total: Number(data.total) || 0,
+      page: Number(data.page) || 0,
+      pageSize: Number(data.pageSize) || 0,
+      facets: data.facets || { sportTypes: [], dataSources: [] },
+    };
+  }
+
+  /**
+   * Update fields on a single temporary record (e.g. toggle ACTIVE).
+   * id must match the entity's id field (e.g. COUNTRY_ID for countries).
+   */
+  async updateTempEntity(entity, id, changes) {
+    const response = await this.fetch(
+      `/temp/${encodeURIComponent(entity)}/${encodeURIComponent(id)}`,
+      { method: 'PUT', body: JSON.stringify(changes || {}) }
+    );
+    return response.data;
+  }
+
+  /**
+   * Delete one temporary record.
+   */
+  async deleteTempEntity(entity, id) {
+    const response = await this.fetch(
+      `/temp/${encodeURIComponent(entity)}/${encodeURIComponent(id)}`,
+      { method: 'DELETE' }
+    );
+    return response.data;
+  }
+
+  /**
+   * Bulk delete temporary records.
+   */
+  async deleteTempEntitiesBulk(entity, ids) {
+    const response = await this.fetch(
+      `/temp/${encodeURIComponent(entity)}/bulk-delete`,
+      { method: 'POST', body: JSON.stringify({ ids }) }
+    );
+    return response.data;
+  }
+
+  /**
+   * Connect one or more temporary records of `entity` to an existing entity
+   * by adding their NAME (under their LANG_ID) as values to the target's term.
+   * After the connect the temp rows are removed.
+   *
+   * tempIds: number[], targetId: id of the existing entity to connect to.
+   */
+  async connectTempEntities(entity, tempIds, targetId) {
+    const response = await this.fetch(
+      `/temp/${encodeURIComponent(entity)}/connect`,
+      { method: 'POST', body: JSON.stringify({ tempIds, targetId }) }
+    );
+    return response.data;
+  }
+
+  /**
+   * Ask the server which existing entities best match the NAME of the
+   * supplied temp rows. Server returns an ordered list of suggestions.
+   *
+   * The backend gates this (no suggestions when > 3 temp rows, names must
+   * be longer than 3 characters) and returns an empty array in those cases.
+   *
+   * @param {string} entity e.g. 'countries'.
+   * @param {Array<{NAME: string, LANG_ID?: number}>} tempRows
+   *        Up to 3 rows (typically the rows currently selected in the UI).
+   *        Passing full rows (rather than just ids) matters because temp
+   *        files can contain multiple records sharing the same id.
+   * @param {object} [opts]
+   * @param {number} [opts.limit=3]
+   * @returns {Promise<{ suggestions: Array<{ countryId: number, score: number,
+   *                      reason: { tempIndex: number, matchedText: string,
+   *                                matchedLang: number|null, kind: string,
+   *                                perRowScore: number } }> }>}
+   */
+  async suggestTempMatches(entity, tempRows, opts = {}) {
+    const rows = (tempRows || []).map((r) => ({
+      NAME: r?.NAME ?? r?.name ?? '',
+      LANG_ID: r?.LANG_ID ?? r?.languageId ?? null,
+      COUNTRY_ID: r?.COUNTRY_ID ?? null,
+    }));
+    const body = { rows };
+    if (opts.limit != null) body.limit = Number(opts.limit);
+    if (Array.isArray(opts.countryIds) && opts.countryIds.length > 0) {
+      body.countryIds = opts.countryIds;
+    }
+    if (Array.isArray(opts.competitionIds) && opts.competitionIds.length > 0) {
+      body.competitionIds = opts.competitionIds;
+    }
+    if (Array.isArray(opts.competitorIds) && opts.competitorIds.length > 0) {
+      body.competitorIds = opts.competitorIds;
+    }
+    const response = await this.fetch(
+      `/temp/${encodeURIComponent(entity)}/suggest`,
+      { method: 'POST', body: JSON.stringify(body) }
+    );
+    return response.data || { suggestions: [] };
   }
 }
 

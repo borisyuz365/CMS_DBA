@@ -25,6 +25,7 @@ import LanguageDetails from './pages/LanguageDetails';
 import TimeZonesList from './pages/TimeZonesList';
 import TimeZoneDetails from './pages/TimeZoneDetails';
 import DictionaryPage from './pages/DictionaryPage';
+import TermsFixPage from './pages/TermsFixPage';
 import GamesList from './pages/GamesList';
 import GameReport from './pages/GameReport';
 import PrioritiesPage from './pages/PrioritiesPage';
@@ -100,7 +101,7 @@ const menuItems = [
         subItems: [
           { label: 'Terms Catalog', path: '/dictionary', icon: <MenuBookIcon /> },
           { label: 'Terms', icon: <MenuBookIcon /> },
-          { label: 'Termsfix', icon: <MenuBookIcon /> },
+          { label: 'Termsfix', path: '/dictionary/terms-fix', icon: <MenuBookIcon /> },
           { label: 'Outrightfix', icon: <MenuBookIcon /> },
         ],
       },
@@ -173,6 +174,7 @@ function App() {
             <Route path="time-zones" element={<TimeZonesList />} />
             <Route path="time-zones/:id" element={<TimeZoneDetails />} />
             <Route path="dictionary" element={<DictionaryPage />} />
+            <Route path="dictionary/terms-fix" element={<TermsFixPage />} />
             <Route path="games" element={<GamesList />} />
             <Route path="games/:id/report/:tab?" element={<GameReport />} />
             <Route path="priorities" element={<PrioritiesPage />} />
