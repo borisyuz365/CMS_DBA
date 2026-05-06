@@ -31,6 +31,9 @@ import GameReport from './pages/GameReport';
 import PrioritiesPage from './pages/PrioritiesPage';
 import FiltersList from './pages/FiltersList';
 import CitiesList from './pages/CitiesList';
+import ScannersPage from './pages/ScannersPage';
+import ScannersListV2 from './pages/ScannersListV2';
+import ScannerDetailsV2 from './pages/ScannerDetailsV2';
 import PersonIcon from '@mui/icons-material/Person';
 import GroupsIcon from '@mui/icons-material/Groups';
 import StadiumIcon from '@mui/icons-material/Stadium';
@@ -52,6 +55,7 @@ import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import CampaignIcon from '@mui/icons-material/Campaign';
 import ImageIcon from '@mui/icons-material/Image';
 import StorageIcon from '@mui/icons-material/Storage';
+import RadarIcon from '@mui/icons-material/Radar';
 import TranslateIcon from '@mui/icons-material/Translate';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
@@ -115,6 +119,8 @@ const menuItems = [
         icon: <BuildIcon />,
         subItems: [
           { label: 'Priorities', path: '/priorities', icon: <BuildIcon /> },
+          { label: 'Scanners (v1)', path: '/scanners', icon: <RadarIcon /> },
+          { label: 'Scanners', path: '/scanners-v2', icon: <RadarIcon /> },
         ],
       },
       { label: 'News', icon: <ArticleIcon /> },
@@ -184,6 +190,9 @@ function App() {
             <Route path="games/:id/report/:tab?" element={<GameReport />} />
             <Route path="priorities" element={<PrioritiesPage />} />
             <Route path="filters" element={<FiltersList />} />
+            <Route path="scanners" element={<ScannersPage />} />
+            <Route path="scanners-v2" element={<ScannersListV2 />} />
+            <Route path="scanners-v2/:id" element={<ScannerDetailsV2 />} />
           </Route>
         </Routes>
       </Box>

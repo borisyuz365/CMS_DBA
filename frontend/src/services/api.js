@@ -2169,6 +2169,63 @@ class ApiService {
     );
     return response.data || { suggestions: [] };
   }
+
+  async getScanners() {
+    const response = await this.fetch('/scanners');
+    return response.data || [];
+  }
+
+  async getScannersList() {
+    const response = await this.fetch('/scanners');
+    return response.data || [];
+  }
+
+  async getScannerById(id) {
+    const response = await this.fetch(`/scanners/${id}`);
+    return response.data || null;
+  }
+
+  async createScanner(payload) {
+    const response = await this.fetch('/scanners', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+    return response.data;
+  }
+
+  async updateScannersBulk(updates) {
+    const response = await this.fetch('/scanners/bulk', {
+      method: 'PUT',
+      body: JSON.stringify({ updates }),
+    });
+    return response.data;
+  }
+
+  async deleteScanners(scannerIds) {
+    const updates = scannerIds.map((id) => ({ scannerId: id, changes: { IS_DELETED: true } }));
+    const response = await this.fetch('/scanners/bulk', {
+      method: 'PUT',
+      body: JSON.stringify({ updates }),
+    });
+    return response.data;
+  }
+
+  async restoreScanners(scannerIds) {
+    const updates = scannerIds.map((id) => ({ scannerId: id, changes: { IS_DELETED: false } }));
+    const response = await this.fetch('/scanners/bulk', {
+      method: 'PUT',
+      body: JSON.stringify({ updates }),
+    });
+    return response.data;
+  }
+
+  async performScannerAction(id, action, params = {}) {
+    const response = await this.fetch(`/scanners/${id}/action`, {
+      method: 'POST',
+      body: JSON.stringify({ action, params }),
+    });
+    return response.data;
+  }
 }
 
 export default new ApiService();
