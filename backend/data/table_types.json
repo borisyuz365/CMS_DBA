@@ -1,0 +1,37 @@
+[
+  {
+    "TABLE_TYPE_ID": 1,
+    "NAME_ID": 3614437,
+    "ALIAS_NAME": "Full"
+  },
+  {
+    "TABLE_TYPE_ID": 2,
+    "NAME_ID": 3614438,
+    "ALIAS_NAME": "Home"
+  },
+  {
+    "TABLE_TYPE_ID": 3,
+    "NAME_ID": 3614439,
+    "ALIAS_NAME": "Away"
+  },
+  {
+    "TABLE_TYPE_ID": 4,
+    "NAME_ID": 12126195,
+    "ALIAS_NAME": "Relegation"
+  },
+  {
+    "TABLE_TYPE_ID": 5,
+    "NAME_ID": 12337531,
+    "ALIAS_NAME": "Classification"
+  },
+  {
+    "TABLE_TYPE_ID": 6,
+    "NAME_ID": 59452774,
+    "ALIAS_NAME": "Position"
+  },
+  {
+    "TABLE_TYPE_ID": 7,
+    "NAME_ID": 76171968,
+    "ALIAS_NAME": "Aggregated"
+  }
+]

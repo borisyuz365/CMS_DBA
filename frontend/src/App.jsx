@@ -30,6 +30,7 @@ import GamesList from './pages/GamesList';
 import GameReport from './pages/GameReport';
 import PrioritiesPage from './pages/PrioritiesPage';
 import FiltersList from './pages/FiltersList';
+import CitiesList from './pages/CitiesList';
 import ScannersPage from './pages/ScannersPage';
 import ScannersListV2 from './pages/ScannersListV2';
 import ScannerDetailsV2 from './pages/ScannerDetailsV2';
@@ -58,6 +59,8 @@ import RadarIcon from '@mui/icons-material/Radar';
 import TranslateIcon from '@mui/icons-material/Translate';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import TransferWithinAStationIcon from '@mui/icons-material/TransferWithinAStation';
+import LocationCityIcon from '@mui/icons-material/LocationCity';
 import CasinoIcon from '@mui/icons-material/Casino';
 import QuizIcon from '@mui/icons-material/Quiz';
 import MonitorHeartIcon from '@mui/icons-material/MonitorHeart';
@@ -80,8 +83,9 @@ const menuItems = [
           { label: 'Competitors', path: '/competitors', icon: <GroupsIcon /> },
           { label: 'Games', path: '/games', icon: <SportsEsportsIcon /> },
           { label: 'Athletes', path: '/athletes', icon: <PersonIcon /> },
-          { label: 'Transfers', icon: <LocalShippingIcon /> },
+          { label: 'Transfers', icon: <TransferWithinAStationIcon /> },
           { label: 'Venues', path: '/venues', icon: <StadiumIcon /> },
+          { label: 'Cities', path: '/cities', icon: <LocationCityIcon /> },
           { label: 'Filters', path: '/filters', icon: <FilterListIcon /> },
           { label: 'Data Sources', path: '/data-sources', icon: <StorageIcon /> },
           { label: 'Languages', path: '/languages', icon: <TranslateIcon /> },
@@ -167,6 +171,7 @@ function App() {
             <Route path="competitors/:id" element={<CompetitorDetails />} />
             <Route path="venues" element={<VenuesList />} />
             <Route path="venues/:id" element={<VenueDetails />} />
+            <Route path="cities" element={<CitiesList />} />
             <Route path="tv-channels" element={<TvNetworksList />} />
             <Route path="tv-channels/:id" element={<TvNetworkDetails />} />
             <Route path="countries" element={<CountriesList />} />

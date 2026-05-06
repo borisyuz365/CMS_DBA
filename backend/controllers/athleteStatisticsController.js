@@ -144,7 +144,14 @@ class AthleteStatisticsController {
    */
   async getStatisticsTypes(req, res, next) {
     try {
-      const statisticsTypes = await dataLoader.loadData('athlete_statistics_types.json').catch(() => []);
+      const allEnums = await dataLoader.loadData('enums.json').catch(() => []);
+      const statisticsTypes = (allEnums || [])
+        .filter(e => e.ALIAS_NAME === 'ESoccerPlayerStatistics')
+        .map(e => ({
+          STATISTICS_TYPE_ID: e.ITEM_ID,
+          STATISTICS_TYPE: e.ALIAS_NAME1,
+          NAME_ID: null
+        }));
       res.json({
         success: true,
         data: statisticsTypes

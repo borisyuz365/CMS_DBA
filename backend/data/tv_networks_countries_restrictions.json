@@ -1,0 +1,442 @@
+[
+  {
+    "TV_NETWORK_ID": 613,
+    "COUNTRY_ID": 380
+  },
+  {
+    "TV_NETWORK_ID": 604,
+    "COUNTRY_ID": 380
+  },
+  {
+    "TV_NETWORK_ID": 511,
+    "COUNTRY_ID": 380
+  },
+  {
+    "TV_NETWORK_ID": 557,
+    "COUNTRY_ID": 380
+  },
+  {
+    "TV_NETWORK_ID": 539,
+    "COUNTRY_ID": 380
+  },
+  {
+    "TV_NETWORK_ID": 528,
+    "COUNTRY_ID": 380
+  },
+  {
+    "TV_NETWORK_ID": 505,
+    "COUNTRY_ID": 380
+  },
+  {
+    "TV_NETWORK_ID": 525,
+    "COUNTRY_ID": 380
+  },
+  {
+    "TV_NETWORK_ID": 519,
+    "COUNTRY_ID": 380
+  },
+  {
+    "TV_NETWORK_ID": 539,
+    "COUNTRY_ID": 1
+  },
+  {
+    "TV_NETWORK_ID": 612,
+    "COUNTRY_ID": 8
+  },
+  {
+    "TV_NETWORK_ID": 518,
+    "COUNTRY_ID": 99
+  },
+  {
+    "TV_NETWORK_ID": 514,
+    "COUNTRY_ID": 100
+  },
+  {
+    "TV_NETWORK_ID": 589,
+    "COUNTRY_ID": 1
+  },
+  {
+    "TV_NETWORK_ID": 591,
+    "COUNTRY_ID": 8
+  },
+  {
+    "TV_NETWORK_ID": 517,
+    "COUNTRY_ID": 99
+  },
+  {
+    "TV_NETWORK_ID": 549,
+    "COUNTRY_ID": 100
+  },
+  {
+    "TV_NETWORK_ID": 529,
+    "COUNTRY_ID": 1
+  },
+  {
+    "TV_NETWORK_ID": 532,
+    "COUNTRY_ID": 8
+  },
+  {
+    "TV_NETWORK_ID": 591,
+    "COUNTRY_ID": 99
+  },
+  {
+    "TV_NETWORK_ID": 607,
+    "COUNTRY_ID": 100
+  },
+  {
+    "TV_NETWORK_ID": 504,
+    "COUNTRY_ID": 1
+  },
+  {
+    "TV_NETWORK_ID": 71,
+    "COUNTRY_ID": 8
+  },
+  {
+    "TV_NETWORK_ID": 527,
+    "COUNTRY_ID": 99
+  },
+  {
+    "TV_NETWORK_ID": 560,
+    "COUNTRY_ID": 100
+  },
+  {
+    "TV_NETWORK_ID": 609,
+    "COUNTRY_ID": 1
+  },
+  {
+    "TV_NETWORK_ID": 597,
+    "COUNTRY_ID": 8
+  },
+  {
+    "TV_NETWORK_ID": 537,
+    "COUNTRY_ID": 99
+  },
+  {
+    "TV_NETWORK_ID": 518,
+    "COUNTRY_ID": 100
+  },
+  {
+    "TV_NETWORK_ID": 566,
+    "COUNTRY_ID": 1
+  },
+  {
+    "TV_NETWORK_ID": 538,
+    "COUNTRY_ID": 8
+  },
+  {
+    "TV_NETWORK_ID": 574,
+    "COUNTRY_ID": 99
+  },
+  {
+    "TV_NETWORK_ID": 553,
+    "COUNTRY_ID": 100
+  },
+  {
+    "TV_NETWORK_ID": 569,
+    "COUNTRY_ID": 1
+  },
+  {
+    "TV_NETWORK_ID": 514,
+    "COUNTRY_ID": 8
+  },
+  {
+    "TV_NETWORK_ID": 516,
+    "COUNTRY_ID": 99
+  },
+  {
+    "TV_NETWORK_ID": 536,
+    "COUNTRY_ID": 100
+  },
+  {
+    "TV_NETWORK_ID": 586,
+    "COUNTRY_ID": 1
+  },
+  {
+    "TV_NETWORK_ID": 598,
+    "COUNTRY_ID": 8
+  },
+  {
+    "TV_NETWORK_ID": 507,
+    "COUNTRY_ID": 99
+  },
+  {
+    "TV_NETWORK_ID": 549,
+    "COUNTRY_ID": 100
+  },
+  {
+    "TV_NETWORK_ID": 508,
+    "COUNTRY_ID": 1
+  },
+  {
+    "TV_NETWORK_ID": 33,
+    "COUNTRY_ID": 8
+  },
+  {
+    "TV_NETWORK_ID": 526,
+    "COUNTRY_ID": 99
+  },
+  {
+    "TV_NETWORK_ID": 559,
+    "COUNTRY_ID": 100
+  },
+  {
+    "TV_NETWORK_ID": 500,
+    "COUNTRY_ID": 1
+  },
+  {
+    "TV_NETWORK_ID": 504,
+    "COUNTRY_ID": 8
+  },
+  {
+    "TV_NETWORK_ID": 579,
+    "COUNTRY_ID": 99
+  },
+  {
+    "TV_NETWORK_ID": 544,
+    "COUNTRY_ID": 100
+  },
+  {
+    "TV_NETWORK_ID": 520,
+    "COUNTRY_ID": 1
+  },
+  {
+    "TV_NETWORK_ID": 581,
+    "COUNTRY_ID": 8
+  },
+  {
+    "TV_NETWORK_ID": 527,
+    "COUNTRY_ID": 99
+  },
+  {
+    "TV_NETWORK_ID": 106,
+    "COUNTRY_ID": 100
+  },
+  {
+    "TV_NETWORK_ID": 538,
+    "COUNTRY_ID": 1
+  },
+  {
+    "TV_NETWORK_ID": 540,
+    "COUNTRY_ID": 8
+  },
+  {
+    "TV_NETWORK_ID": 565,
+    "COUNTRY_ID": 99
+  },
+  {
+    "TV_NETWORK_ID": 507,
+    "COUNTRY_ID": 100
+  },
+  {
+    "TV_NETWORK_ID": 105,
+    "COUNTRY_ID": 166
+  },
+  {
+    "TV_NETWORK_ID": 591,
+    "COUNTRY_ID": 1
+  },
+  {
+    "TV_NETWORK_ID": 573,
+    "COUNTRY_ID": 8
+  },
+  {
+    "TV_NETWORK_ID": 543,
+    "COUNTRY_ID": 99
+  },
+  {
+    "TV_NETWORK_ID": 596,
+    "COUNTRY_ID": 100
+  },
+  {
+    "TV_NETWORK_ID": 511,
+    "COUNTRY_ID": 1
+  },
+  {
+    "TV_NETWORK_ID": 544,
+    "COUNTRY_ID": 8
+  },
+  {
+    "TV_NETWORK_ID": 105,
+    "COUNTRY_ID": 166
+  },
+  {
+    "TV_NETWORK_ID": 510,
+    "COUNTRY_ID": 1
+  },
+  {
+    "TV_NETWORK_ID": 530,
+    "COUNTRY_ID": 8
+  },
+  {
+    "TV_NETWORK_ID": 510,
+    "COUNTRY_ID": 99
+  },
+  {
+    "TV_NETWORK_ID": 581,
+    "COUNTRY_ID": 100
+  },
+  {
+    "TV_NETWORK_ID": 543,
+    "COUNTRY_ID": 1
+  },
+  {
+    "TV_NETWORK_ID": 605,
+    "COUNTRY_ID": 8
+  },
+  {
+    "TV_NETWORK_ID": 537,
+    "COUNTRY_ID": 99
+  },
+  {
+    "TV_NETWORK_ID": 530,
+    "COUNTRY_ID": 100
+  },
+  {
+    "TV_NETWORK_ID": 545,
+    "COUNTRY_ID": 166
+  },
+  {
+    "TV_NETWORK_ID": 518,
+    "COUNTRY_ID": 1
+  },
+  {
+    "TV_NETWORK_ID": 600,
+    "COUNTRY_ID": 8
+  },
+  {
+    "TV_NETWORK_ID": 563,
+    "COUNTRY_ID": 99
+  },
+  {
+    "TV_NETWORK_ID": 539,
+    "COUNTRY_ID": 100
+  },
+  {
+    "TV_NETWORK_ID": 529,
+    "COUNTRY_ID": 1
+  },
+  {
+    "TV_NETWORK_ID": 509,
+    "COUNTRY_ID": 8
+  },
+  {
+    "TV_NETWORK_ID": 529,
+    "COUNTRY_ID": 99
+  },
+  {
+    "TV_NETWORK_ID": 511,
+    "COUNTRY_ID": 100
+  },
+  {
+    "TV_NETWORK_ID": 525,
+    "COUNTRY_ID": 1
+  },
+  {
+    "TV_NETWORK_ID": 576,
+    "COUNTRY_ID": 8
+  },
+  {
+    "TV_NETWORK_ID": 502,
+    "COUNTRY_ID": 99
+  },
+  {
+    "TV_NETWORK_ID": 591,
+    "COUNTRY_ID": 100
+  },
+  {
+    "TV_NETWORK_ID": 563,
+    "COUNTRY_ID": 1
+  },
+  {
+    "TV_NETWORK_ID": 547,
+    "COUNTRY_ID": 8
+  },
+  {
+    "TV_NETWORK_ID": 520,
+    "COUNTRY_ID": 99
+  },
+  {
+    "TV_NETWORK_ID": 528,
+    "COUNTRY_ID": 100
+  },
+  {
+    "TV_NETWORK_ID": 505,
+    "COUNTRY_ID": 166
+  },
+  {
+    "TV_NETWORK_ID": 508,
+    "COUNTRY_ID": 1
+  },
+  {
+    "TV_NETWORK_ID": 512,
+    "COUNTRY_ID": 8
+  },
+  {
+    "TV_NETWORK_ID": 598,
+    "COUNTRY_ID": 99
+  },
+  {
+    "TV_NETWORK_ID": 560,
+    "COUNTRY_ID": 100
+  },
+  {
+    "TV_NETWORK_ID": 527,
+    "COUNTRY_ID": 166
+  },
+  {
+    "TV_NETWORK_ID": 585,
+    "COUNTRY_ID": 1
+  },
+  {
+    "TV_NETWORK_ID": 572,
+    "COUNTRY_ID": 8
+  },
+  {
+    "TV_NETWORK_ID": 600,
+    "COUNTRY_ID": 99
+  },
+  {
+    "TV_NETWORK_ID": 585,
+    "COUNTRY_ID": 100
+  },
+  {
+    "TV_NETWORK_ID": 31,
+    "COUNTRY_ID": 1
+  },
+  {
+    "TV_NETWORK_ID": 31,
+    "COUNTRY_ID": 4
+  },
+  {
+    "TV_NETWORK_ID": 31,
+    "COUNTRY_ID": 5
+  },
+  {
+    "TV_NETWORK_ID": 31,
+    "COUNTRY_ID": 7
+  },
+  {
+    "TV_NETWORK_ID": 31,
+    "COUNTRY_ID": 26
+  },
+  {
+    "TV_NETWORK_ID": 31,
+    "COUNTRY_ID": 38
+  },
+  {
+    "TV_NETWORK_ID": 31,
+    "COUNTRY_ID": 46
+  },
+  {
+    "TV_NETWORK_ID": 31,
+    "COUNTRY_ID": 33
+  },
+  {
+    "TV_NETWORK_ID": 614,
+    "COUNTRY_ID": 3
+  },
+  {
+    "TV_NETWORK_ID": 614,
+    "COUNTRY_ID": 7
+  }
+]

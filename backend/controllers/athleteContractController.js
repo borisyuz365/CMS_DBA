@@ -44,7 +44,7 @@ function resolveTermName(term, languageId = null) {
 /**
  * Enrich contract with related entities
  */
-async function enrichContract(contract, terms, competitors, countries, competitions, athletesPositions) {
+async function enrichContract(contract, terms, competitors, countries, competitions, positionTypes = [], formationPositionTypes = []) {
   const enriched = { ...contract };
 
   // Enrich competitor (club) information
@@ -88,21 +88,21 @@ async function enrichContract(contract, terms, competitors, countries, competiti
     }
   }
 
-  // Enrich position
-  if (contract.POSITION) {
-    const position = athletesPositions.find(p => p.POSITION_ID === contract.POSITION);
-    if (position) {
-      enriched.positionName = position.POSITION_NAME || null;
-      
-      // Enrich formation position
-      if (contract.FORMATION_POSITION && position.FORMATION_POSITIONS) {
-        const formationPos = position.FORMATION_POSITIONS.find(
-          fp => fp.FORMATION_POSITION_ID === contract.FORMATION_POSITION
-        );
-        if (formationPos) {
-          enriched.formationPositionName = formationPos.FORMATION_POSITION_NAME || null;
-        }
-      }
+  // Enrich position from new position types
+  if (contract.POSITION !== null && contract.POSITION !== undefined && positionTypes.length > 0) {
+    const pt = positionTypes.find(p => p.POSITION_TYPE_ID === contract.POSITION);
+    if (pt) {
+      const term = terms.find(t => t.id === pt.NAME_ID);
+      enriched.positionName = (term ? resolveTermName(term) : null) || pt.ALIAS_NAME;
+    }
+  }
+
+  // Enrich formation position from new formation position types
+  if (contract.FORMATION_POSITION !== null && contract.FORMATION_POSITION !== undefined && formationPositionTypes.length > 0) {
+    const fpt = formationPositionTypes.find(fp => fp.FORMATION_POSITION_TYPE_ID === contract.FORMATION_POSITION);
+    if (fpt) {
+      const term = terms.find(t => t.id === fpt.NAME_ID);
+      enriched.formationPositionName = (term ? resolveTermName(term) : null) || fpt.ALIAS_NAME;
     }
   }
 
@@ -130,13 +130,14 @@ class AthleteContractController {
       }
 
       // Load all required data
-      const [contracts, terms, competitors, countries, competitions, athletesPositions] = await Promise.all([
+      const [contracts, terms, competitors, countries, competitions, positionTypes, formationPositionTypes] = await Promise.all([
         dataLoader.loadData('athlete_contracts.json').catch(() => []),
         dataLoader.loadData('terms.json'),
         dataLoader.loadData('competitors.json'),
         dataLoader.loadData('countries.json'),
         dataLoader.loadData('competitions.json').catch(() => []),
-        dataLoader.loadData('athletes_positions.json').catch(() => [])
+        dataLoader.loadData('athletes_position_types.json').catch(() => []),
+        dataLoader.loadData('athletes_formation_position_types.json').catch(() => [])
       ]);
 
       // Filter contracts for this athlete
@@ -145,7 +146,7 @@ class AthleteContractController {
       // Enrich contracts
       const enrichedContracts = await Promise.all(
         athleteContracts.map(contract => 
-          enrichContract(contract, terms, competitors, countries, competitions, athletesPositions)
+          enrichContract(contract, terms, competitors, countries, competitions, positionTypes, formationPositionTypes)
         )
       );
 
@@ -325,12 +326,13 @@ class AthleteContractController {
       await dataLoader.saveData('athlete_contracts.json', contracts);
 
       // Load enrichment data and return enriched contract
-      const [terms, competitors, countries, competitions, athletesPositions] = await Promise.all([
+      const [terms, competitors, countries, competitions, positionTypes, formationPositionTypes] = await Promise.all([
         dataLoader.loadData('terms.json'),
         dataLoader.loadData('competitors.json'),
         dataLoader.loadData('countries.json'),
         dataLoader.loadData('competitions.json').catch(() => []),
-        dataLoader.loadData('athletes_positions.json').catch(() => [])
+        dataLoader.loadData('athletes_position_types.json').catch(() => []),
+        dataLoader.loadData('athletes_formation_position_types.json').catch(() => [])
       ]);
 
       const enrichedContract = await enrichContract(
@@ -339,7 +341,8 @@ class AthleteContractController {
         competitors,
         countries,
         competitions,
-        athletesPositions
+        positionTypes,
+        formationPositionTypes
       );
 
       res.status(201).json({
@@ -453,12 +456,13 @@ class AthleteContractController {
       await dataLoader.saveData('athlete_contracts.json', contracts);
 
       // Load enrichment data and return enriched contract
-      const [terms, competitors, countries, competitions, athletesPositions] = await Promise.all([
+      const [terms, competitors, countries, competitions, positionTypes, formationPositionTypes] = await Promise.all([
         dataLoader.loadData('terms.json'),
         dataLoader.loadData('competitors.json'),
         dataLoader.loadData('countries.json'),
         dataLoader.loadData('competitions.json').catch(() => []),
-        dataLoader.loadData('athletes_positions.json').catch(() => [])
+        dataLoader.loadData('athletes_position_types.json').catch(() => []),
+        dataLoader.loadData('athletes_formation_position_types.json').catch(() => [])
       ]);
 
       const enrichedContract = await enrichContract(
@@ -467,7 +471,8 @@ class AthleteContractController {
         competitors,
         countries,
         competitions,
-        athletesPositions
+        positionTypes,
+        formationPositionTypes
       );
 
       res.json({

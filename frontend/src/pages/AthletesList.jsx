@@ -116,7 +116,8 @@ function AthletesList() {
   const [pendingChanges, setPendingChanges] = useState({});
   
   // Athletes positions data
-  const [athletesPositions, setAthletesPositions] = useState([]);
+  const [positionTypes, setPositionTypes] = useState([]);
+  const [formationPositionTypes, setFormationPositionTypes] = useState([]);
 
   // Snackbar state for notifications
   const [snackbar, setSnackbar] = useState({
@@ -161,7 +162,7 @@ function AthletesList() {
       
       // Load only dropdown data (countries, competitions, competitors, languages, sports, terms, categories, positions)
       // Use Promise.allSettled so failures don't block the page
-      const [countriesResult, competitionsResult, competitorsResult, languagesResult, sportsResult, termsResult, categoriesResult, positionsResult] = await Promise.allSettled([
+      const [countriesResult, competitionsResult, competitorsResult, languagesResult, sportsResult, termsResult, categoriesResult, positionTypesResult, formationPositionTypesResult] = await Promise.allSettled([
         api.getCountries(),
         api.getCompetitions(),
         api.getCompetitors(),
@@ -169,7 +170,8 @@ function AthletesList() {
         api.getSports(),
         api.getTerms(),
         api.getCategories(),
-        api.getAthletesPositions(),
+        api.getPositionTypes(),
+        api.getFormationPositionTypes(),
       ]);
       
       if (countriesResult.status === 'fulfilled') {
@@ -222,11 +224,18 @@ function AthletesList() {
         setAllCategories([]);
       }
       
-      if (positionsResult.status === 'fulfilled') {
-        setAthletesPositions(positionsResult.value || []);
+      if (positionTypesResult.status === 'fulfilled') {
+        setPositionTypes(positionTypesResult.value || []);
       } else {
-        console.warn('Failed to load athletes positions:', positionsResult.reason);
-        setAthletesPositions([]);
+        console.warn('Failed to load position types:', positionTypesResult.reason);
+        setPositionTypes([]);
+      }
+      
+      if (formationPositionTypesResult.status === 'fulfilled') {
+        setFormationPositionTypes(formationPositionTypesResult.value || []);
+      } else {
+        console.warn('Failed to load formation position types:', formationPositionTypesResult.reason);
+        setFormationPositionTypes([]);
       }
     } catch (err) {
       console.error('Failed to load dropdown data:', err);
@@ -783,17 +792,15 @@ function AthletesList() {
         if (isEditMode) {
           const currentValue = pendingChanges[row.ATHLETE_ID]?.POSITION ?? row.POSITION;
           const sportTypeId = pendingChanges[row.ATHLETE_ID]?.SPORT_TYPE_ID ?? row.SPORT_TYPE_ID;
-          const availablePositions = athletesPositions.filter(p => p.SPORT_TYPE_ID === sportTypeId);
-          // Ensure value exists in options
-          const validValue = availablePositions.some(p => p.POSITION_ID === currentValue) ? currentValue : '';
+          const availablePositions = positionTypes.filter(p => p.SPORT_TYPE_ID === sportTypeId);
+          const validValue = availablePositions.some(p => p.POSITION_TYPE_ID === currentValue) ? currentValue : '';
           
           return (
             <FormControl size="small" fullWidth>
               <Select
-                value={validValue || ''}
+                value={validValue ?? ''}
                 onChange={(e) => {
                   handleFieldChange(row.ATHLETE_ID, 'POSITION', e.target.value);
-                  // Reset formation position when position changes
                   handleFieldChange(row.ATHLETE_ID, 'FORMATION_POSITION', null);
                 }}
                 sx={{
@@ -805,8 +812,8 @@ function AthletesList() {
                 }}
               >
                 {availablePositions.length > 0 ? availablePositions.map(position => (
-                  <MenuItem key={position.POSITION_ID} value={position.POSITION_ID}>
-                    {position.POSITION_NAME}
+                  <MenuItem key={position.POSITION_TYPE_ID} value={position.POSITION_TYPE_ID}>
+                    {position.name || position.ALIAS_NAME}
                   </MenuItem>
                 )) : (
                   <MenuItem value="" disabled>No positions available</MenuItem>
@@ -829,25 +836,17 @@ function AthletesList() {
           const sportTypeId = pendingChanges[row.ATHLETE_ID]?.SPORT_TYPE_ID ?? row.SPORT_TYPE_ID;
           const positionId = pendingChanges[row.ATHLETE_ID]?.POSITION ?? row.POSITION;
           
-          // Get formation positions for the selected position
-          let availableFormPositions = [];
-          if (positionId) {
-            const position = athletesPositions.find(p => 
-              p.POSITION_ID === positionId && p.SPORT_TYPE_ID === sportTypeId
-            );
-            if (position && position.FORMATION_POSITIONS) {
-              availableFormPositions = position.FORMATION_POSITIONS;
-            }
-          }
-          // Ensure value exists in options
-          const validValue = availableFormPositions.some(fp => fp.FORMATION_POSITION_ID === currentValue) ? currentValue : '';
+          const availableFormPositions = formationPositionTypes.filter(fp =>
+            fp.SPORT_TYPE_ID === sportTypeId && fp.POSITION_ID === positionId
+          );
+          const validValue = availableFormPositions.some(fp => fp.FORMATION_POSITION_TYPE_ID === currentValue) ? currentValue : '';
           
           return (
             <FormControl size="small" fullWidth>
               <Select
-                value={validValue || ''}
+                value={validValue ?? ''}
                 onChange={(e) => handleFieldChange(row.ATHLETE_ID, 'FORMATION_POSITION', e.target.value)}
-                disabled={!positionId || availableFormPositions.length === 0}
+                disabled={positionId === null || positionId === undefined || availableFormPositions.length === 0}
                 sx={{
                   height: '32px',
                   fontSize: '0.875rem',
@@ -857,8 +856,8 @@ function AthletesList() {
                 }}
               >
                 {availableFormPositions.length > 0 ? availableFormPositions.map(formPos => (
-                  <MenuItem key={formPos.FORMATION_POSITION_ID} value={formPos.FORMATION_POSITION_ID}>
-                    {formPos.FORMATION_POSITION_NAME}
+                  <MenuItem key={formPos.FORMATION_POSITION_TYPE_ID} value={formPos.FORMATION_POSITION_TYPE_ID}>
+                    {formPos.name || formPos.ALIAS_NAME}
                   </MenuItem>
                 )) : (
                   <MenuItem value="" disabled>Select position first</MenuItem>
@@ -889,7 +888,7 @@ function AthletesList() {
         </Typography>
       ),
     },
-  ], [navigate, handleShortNameClick, isEditMode, pendingChanges, sports, countries, athletesPositions, handleFieldChange]);
+  ], [navigate, handleShortNameClick, isEditMode, pendingChanges, sports, countries, positionTypes, formationPositionTypes, handleFieldChange]);
 
   // Handle filter changes
   const handleFilterChange = (field, value) => {
@@ -2486,18 +2485,18 @@ function AthletesList() {
               <FormControl fullWidth>
                 <InputLabel sx={{ fontSize: '0.875rem' }}>Position</InputLabel>
                 <Select
-                  value={createFormData.POSITION || ''}
+                  value={createFormData.POSITION ?? ''}
                   label="Position"
-                  onChange={(e) => handleCreateFormChange('POSITION', e.target.value || null)}
+                  onChange={(e) => handleCreateFormChange('POSITION', e.target.value === '' ? null : e.target.value)}
                   disabled={!createFormData.SPORT_TYPE_ID}
                   sx={{ fontSize: '0.875rem' }}
                 >
                   <MenuItem value="">None</MenuItem>
-                  {athletesPositions
+                  {positionTypes
                     .filter(p => p.SPORT_TYPE_ID === (typeof createFormData.SPORT_TYPE_ID === 'number' ? createFormData.SPORT_TYPE_ID : parseInt(createFormData.SPORT_TYPE_ID)))
                     .map(position => (
-                      <MenuItem key={position.POSITION_ID} value={position.POSITION_ID}>
-                        {position.POSITION_NAME}
+                      <MenuItem key={position.POSITION_TYPE_ID} value={position.POSITION_TYPE_ID}>
+                        {position.name || position.ALIAS_NAME}
                       </MenuItem>
                     ))}
                 </Select>
@@ -2509,24 +2508,23 @@ function AthletesList() {
               <FormControl fullWidth>
                 <InputLabel sx={{ fontSize: '0.875rem' }}>Formation Position</InputLabel>
                 <Select
-                  value={createFormData.FORMATION_POSITION || ''}
+                  value={createFormData.FORMATION_POSITION ?? ''}
                   label="Formation Position"
-                  onChange={(e) => handleCreateFormChange('FORMATION_POSITION', e.target.value || null)}
-                  disabled={!createFormData.POSITION}
+                  onChange={(e) => handleCreateFormChange('FORMATION_POSITION', e.target.value === '' ? null : e.target.value)}
+                  disabled={createFormData.POSITION === null || createFormData.POSITION === undefined || createFormData.POSITION === ''}
                   sx={{ fontSize: '0.875rem' }}
                 >
                   <MenuItem value="">None</MenuItem>
-                  {(() => {
-                    const pos = athletesPositions.find(p =>
-                      p.POSITION_ID === createFormData.POSITION &&
-                      p.SPORT_TYPE_ID === (typeof createFormData.SPORT_TYPE_ID === 'number' ? createFormData.SPORT_TYPE_ID : parseInt(createFormData.SPORT_TYPE_ID))
-                    );
-                    return (pos?.FORMATION_POSITIONS || []).map(fp => (
-                      <MenuItem key={fp.FORMATION_POSITION_ID} value={fp.FORMATION_POSITION_ID}>
-                        {fp.FORMATION_POSITION_NAME}
+                  {formationPositionTypes
+                    .filter(fp =>
+                      fp.SPORT_TYPE_ID === (typeof createFormData.SPORT_TYPE_ID === 'number' ? createFormData.SPORT_TYPE_ID : parseInt(createFormData.SPORT_TYPE_ID)) &&
+                      fp.POSITION_ID === createFormData.POSITION
+                    )
+                    .map(fp => (
+                      <MenuItem key={fp.FORMATION_POSITION_TYPE_ID} value={fp.FORMATION_POSITION_TYPE_ID}>
+                        {fp.name || fp.ALIAS_NAME}
                       </MenuItem>
-                    ));
-                  })()}
+                    ))}
                 </Select>
               </FormControl>
             </Grid>

@@ -158,6 +158,11 @@ class ApiService {
     return response.data || [];
   }
 
+  async getCities() {
+    const response = await this.fetch('/data/cities');
+    return response.data || [];
+  }
+
   /**
    * Get countries list with optional filters (for Countries entity page)
    */
@@ -226,6 +231,59 @@ class ApiService {
       changes: { IS_DELETED: false },
     }));
     const response = await this.fetch('/countries/bulk', {
+      method: 'PUT',
+      body: JSON.stringify({ updates }),
+    });
+    return response.data;
+  }
+
+  // ─── Cities ───────────────────────────────────────────
+
+  async getCitiesList(filters = {}) {
+    const queryParams = new URLSearchParams();
+    if (filters.cityId) queryParams.append('cityId', filters.cityId);
+    if (filters.name) queryParams.append('name', filters.name);
+    if (filters.countryId) queryParams.append('countryId', filters.countryId);
+    const queryString = queryParams.toString();
+    const url = `/cities${queryString ? `?${queryString}` : ''}`;
+    const response = await this.fetch(url);
+    return response.data || [];
+  }
+
+  async createCity(cityData) {
+    const response = await this.fetch('/cities', {
+      method: 'POST',
+      body: JSON.stringify(cityData),
+    });
+    return response.data;
+  }
+
+  async updateCitiesBulk(updates) {
+    const response = await this.fetch('/cities/bulk', {
+      method: 'PUT',
+      body: JSON.stringify({ updates }),
+    });
+    return response.data;
+  }
+
+  async deleteCities(cityIds) {
+    const updates = cityIds.map(id => ({
+      cityId: id,
+      changes: { IS_DELETED: true },
+    }));
+    const response = await this.fetch('/cities/bulk', {
+      method: 'PUT',
+      body: JSON.stringify({ updates }),
+    });
+    return response.data;
+  }
+
+  async restoreCities(cityIds) {
+    const updates = cityIds.map(id => ({
+      cityId: id,
+      changes: { IS_DELETED: false },
+    }));
+    const response = await this.fetch('/cities/bulk', {
       method: 'PUT',
       body: JSON.stringify({ updates }),
     });
@@ -576,6 +634,11 @@ class ApiService {
 
   async getCompetitorTypes() {
     const response = await this.fetch('/data/competitor-types');
+    return response.data || [];
+  }
+
+  async getTableTypes() {
+    const response = await this.fetch('/data/table-types');
     return response.data || [];
   }
 
@@ -935,10 +998,18 @@ class ApiService {
   }
 
   /**
-   * Get all athletes positions
+   * Get athlete position types (new flat structure, enriched with term names)
    */
-  async getAthletesPositions() {
-    const response = await this.fetch('/data/athletes-positions');
+  async getPositionTypes() {
+    const response = await this.fetch('/data/athletes-position-types');
+    return response.data || [];
+  }
+
+  /**
+   * Get athlete formation position types (new flat structure, enriched with term names)
+   */
+  async getFormationPositionTypes() {
+    const response = await this.fetch('/data/athletes-formation-position-types');
     return response.data || [];
   }
 
@@ -971,6 +1042,14 @@ class ApiService {
    */
   async getSurfaces() {
     const response = await this.fetch('/data/surfaces');
+    return response.data || [];
+  }
+
+  /**
+   * Get tennis court surface types from enums
+   */
+  async getTennisCourtSurfaces() {
+    const response = await this.fetch('/data/tennis-court-surfaces');
     return response.data || [];
   }
 
@@ -1128,6 +1207,14 @@ class ApiService {
     const response = await this.fetch('/tv-networks/bulk', {
       method: 'PUT',
       body: JSON.stringify({ updates }),
+    });
+    return response.data;
+  }
+
+  async updateTvNetworkRelatedCountries(tvNetworkId, countryIds) {
+    const response = await this.fetch(`/tv-networks/${tvNetworkId}/related-countries`, {
+      method: 'PUT',
+      body: JSON.stringify({ countryIds }),
     });
     return response.data;
   }

@@ -1,48 +1,18 @@
 [
   {
-    "COMPETITOR_ID": 653394,
-    "NAME": "Penarol AM",
-    "LANG_ID": 117,
-    "SPORT_TYPE_ID": 1,
-    "COMPETITOR_TYPE": null,
-    "COUNTRY_ID": 21,
-    "COMPETITION_ID": 8702,
-    "UPDATE_TEXT": "Soccer Game Update:\r\nPenarol AM (PartnerId=sr:competitor:857279) => NotParsed (-1) - Atletico de Alagoinhas BA (PartnerId=sr:competitor:1035593) => NotParsed (-1)\r\nStartTime: 4/29/2026 7:00:00 PM\r\nCompetition: Copa do Brasil, Women (PartnerId=sr:competition:47097) => 8702\r\nCountry: Brazil (PartnerId=sr:category:13) => 21\r\nData Source: SR_Soccer_DailySummaries => 278\r\nPartners GameIDs:\r\n\r\nPartner: SR_Soccer_DailySummaries, GameID: sr:sport_event:70271130",
-    "ACTIVE": 1,
-    "TEMP_GAME_ID": -1,
-    "CREATED_TIME": "23/04/26 07:00",
-    "GAME_START_TIME": null,
-    "DATA_SOURCE_ID": 278
-  },
-  {
-    "COMPETITOR_ID": 653392,
-    "NAME": "CD Real Santander (COL) (Women)",
-    "LANG_ID": 256,
-    "SPORT_TYPE_ID": 1,
-    "COMPETITOR_TYPE": null,
-    "COUNTRY_ID": 109,
-    "COMPETITION_ID": 7041,
-    "UPDATE_TEXT": "Soccer Game Update:\nCD Real Santander (COL) (Women) => NotParsed (-1) - America de Cali (Women) => NotParsed (-1)\nStartTime: 04/23/2026 00:00:00\nCompetition: other league (PartnerId=101692) => 7041\nCountry:  => 109\nData Source: SportingBet => 249\nPartners GameIDs:\n\nPartner: SportingBet, GameID: 7790767",
-    "ACTIVE": 1,
-    "TEMP_GAME_ID": -1,
-    "CREATED_TIME": "23/04/26 06:30",
-    "GAME_START_TIME": null,
-    "DATA_SOURCE_ID": 249
-  },
-  {
     "COMPETITOR_ID": 653391,
     "NAME": "Wild, match no 3",
-    "LANG_ID": 45,
-    "SPORT_TYPE_ID": 4,
+    "LANG_ID": 1,
+    "SPORT_TYPE_ID": 1,
     "COMPETITOR_TYPE": null,
-    "COUNTRY_ID": 18,
-    "COMPETITION_ID": 366,
+    "COUNTRY_ID": 2,
+    "COMPETITION_ID": 7,
     "UPDATE_TEXT": "Hockey Game Update:\r\nStars => 6392 (-1) - Wild, match no 3 => NotParsed (-1)\r\nStartTime: 4/23/2026 6:15:00 PM\r\nCompetition: NHL => 366\r\nCountry: USA => 18\r\nData Source: Youtube => 22",
     "ACTIVE": 1,
     "TEMP_GAME_ID": -1,
     "CREATED_TIME": "23/04/26 06:30",
     "GAME_START_TIME": null,
-    "DATA_SOURCE_ID": 22
+    "DATA_SOURCE_ID": 1
   },
   {
     "COMPETITOR_ID": 653389,

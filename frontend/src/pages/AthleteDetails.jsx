@@ -53,7 +53,8 @@ function AthleteDetails() {
   const [competitors, setCompetitors] = useState([]);
   const [athleteStatuses, setAthleteStatuses] = useState([]);
   const [sports, setSports] = useState([]);
-  const [athletesPositions, setAthletesPositions] = useState([]);
+  const [positionTypes, setPositionTypes] = useState([]);
+  const [formationPositionTypes, setFormationPositionTypes] = useState([]);
   const [surfaces, setSurfaces] = useState([]);
   const [tennisBackhandTypes, setTennisBackhandTypes] = useState([]);
   const [currencies, setCurrencies] = useState([]);
@@ -265,24 +266,24 @@ function AthleteDetails() {
 
   const loadSportsAndPositions = async () => {
     try {
-      const [sportsData, positionsData] = await Promise.all([
+      const [sportsData, posTypesData, fpTypesData] = await Promise.all([
         api.getSports(),
-        api.getAthletesPositions(),
+        api.getPositionTypes(),
+        api.getFormationPositionTypes(),
       ]);
       setSports(sportsData || []);
-      setAthletesPositions(positionsData || []);
+      setPositionTypes(posTypesData || []);
+      setFormationPositionTypes(fpTypesData || []);
     } catch (err) {
       console.error('Failed to load sports/positions:', err);
     }
   };
 
-  // Load options for tennis dropdowns: surfaces from backend/data/surfaces.json only,
-  // backhand types from backend/data/tennis_backhand_types.json only.
   const loadTennisOptions = async () => {
     try {
       const [surfacesData, backhandTypesData] = await Promise.all([
-        api.getSurfaces(),       // GET /data/surfaces → surfaces.json
-        api.getTennisBackhandTypes(), // GET /data/tennis-backhand-types → tennis_backhand_types.json
+        api.getTennisCourtSurfaces(),
+        api.getTennisBackhandTypes(),
       ]);
       setSurfaces(surfacesData || []);
       setTennisBackhandTypes(backhandTypesData || []);
@@ -1523,7 +1524,7 @@ function AthleteDetails() {
                     <FormControl fullWidth size="small">
                       <InputLabel sx={{ fontSize: '0.75rem' }}>Position</InputLabel>
                       <Select
-                        value={formData.POSITION || ''}
+                        value={formData.POSITION ?? ''}
                         label="Position"
                         onChange={(e) => handleFormChange('POSITION', e.target.value)}
                         disabled={!formData.SPORT_TYPE_ID}
@@ -1534,10 +1535,10 @@ function AthleteDetails() {
                         }}
                       >
                         {(() => {
-                          const availablePositions = athletesPositions.filter(p => p.SPORT_TYPE_ID === formData.SPORT_TYPE_ID);
+                          const availablePositions = positionTypes.filter(p => p.SPORT_TYPE_ID === formData.SPORT_TYPE_ID);
                           return availablePositions.length > 0 ? availablePositions.map(position => (
-                            <MenuItem key={position.POSITION_ID} value={position.POSITION_ID}>
-                              {position.POSITION_NAME}
+                            <MenuItem key={position.POSITION_TYPE_ID} value={position.POSITION_TYPE_ID}>
+                              {position.name || position.ALIAS_NAME}
                             </MenuItem>
                           )) : (
                             <MenuItem value="" disabled>Select sport first</MenuItem>
@@ -1550,10 +1551,10 @@ function AthleteDetails() {
                     <FormControl fullWidth size="small">
                       <InputLabel sx={{ fontSize: '0.75rem' }}>Formation Position</InputLabel>
                       <Select
-                        value={formData.FORMATION_POSITION || ''}
+                        value={formData.FORMATION_POSITION ?? ''}
                         label="Formation Position"
                         onChange={(e) => handleFormChange('FORMATION_POSITION', e.target.value)}
-                        disabled={!formData.POSITION}
+                        disabled={formData.POSITION === null || formData.POSITION === undefined || formData.POSITION === ''}
                         sx={{
                           '& .MuiOutlinedInput-input': {
                             py: 1,
@@ -1561,16 +1562,15 @@ function AthleteDetails() {
                         }}
                       >
                         {(() => {
-                          if (!formData.POSITION) {
+                          if (formData.POSITION === null || formData.POSITION === undefined || formData.POSITION === '') {
                             return <MenuItem value="" disabled>Select position first</MenuItem>;
                           }
-                          const position = athletesPositions.find(p => 
-                            p.POSITION_ID === formData.POSITION && p.SPORT_TYPE_ID === formData.SPORT_TYPE_ID
+                          const availableFormPositions = formationPositionTypes.filter(fp =>
+                            fp.SPORT_TYPE_ID === formData.SPORT_TYPE_ID && fp.POSITION_ID === formData.POSITION
                           );
-                          const availableFormPositions = position?.FORMATION_POSITIONS || [];
                           return availableFormPositions.length > 0 ? availableFormPositions.map(formPos => (
-                            <MenuItem key={formPos.FORMATION_POSITION_ID} value={formPos.FORMATION_POSITION_ID}>
-                              {formPos.FORMATION_POSITION_NAME}
+                            <MenuItem key={formPos.FORMATION_POSITION_TYPE_ID} value={formPos.FORMATION_POSITION_TYPE_ID}>
+                              {formPos.name || formPos.ALIAS_NAME}
                             </MenuItem>
                           )) : (
                             <MenuItem value="" disabled>No formation positions available</MenuItem>
@@ -1627,7 +1627,7 @@ function AthleteDetails() {
               {/* Row 8 - Tennis Specific Fields (SPORT_TYPE_ID === 3) */}
               {formData.SPORT_TYPE_ID === 3 && (
                 <>
-                  {/* Preferred Surface: options from backend/data/surfaces.json only */}
+                  {/* Preferred Surface */}
                   <Box sx={{ minWidth: 0 }}>
                     <FormControl fullWidth size="small">
                       <InputLabel sx={{ fontSize: '0.75rem' }}>Preferred Surface</InputLabel>
@@ -1847,7 +1847,8 @@ function AthleteDetails() {
               competitors={competitors}
               countries={countries}
               competitions={competitions}
-              athletesPositions={athletesPositions}
+              positionTypes={positionTypes}
+              formationPositionTypes={formationPositionTypes}
               currencies={currencies}
               loading={contractsLoading}
               onTermClick={handleTermClick}
@@ -2043,7 +2044,8 @@ function AthleteDetails() {
         countries={countries}
         competitions={competitions}
         seasonCompetitors={seasonCompetitors}
-        athletesPositions={athletesPositions}
+        positionTypes={positionTypes}
+        formationPositionTypes={formationPositionTypes}
         currencies={currencies}
         athleteSportTypeId={athlete?.SPORT_TYPE_ID}
       />

@@ -32,7 +32,8 @@ const ContractDialog = ({
   countries = [],
   competitions = [],
   seasonCompetitors = [],
-  athletesPositions = [],
+  positionTypes = [],
+  formationPositionTypes = [],
   currencies = [],
   athleteSportTypeId = null,
 }) => {
@@ -127,14 +128,17 @@ const ContractDialog = ({
     return true;
   });
 
-  // Get available positions for the athlete's sport
-  const availablePositions = athletesPositions.filter(
+  // Get available positions for the athlete's sport (from new flat files)
+  const availablePositions = positionTypes.filter(
     p => !athleteSportTypeId || p.SPORT_TYPE_ID === athleteSportTypeId
   );
 
-  // Get available formation positions for selected position
+  // Get available formation positions for selected position (from new flat files)
   const availableFormationPositions = formData.POSITION
-    ? (availablePositions.find(p => p.POSITION_ID === parseInt(formData.POSITION))?.FORMATION_POSITIONS || [])
+    ? formationPositionTypes.filter(fp =>
+        (!athleteSportTypeId || fp.SPORT_TYPE_ID === athleteSportTypeId) &&
+        fp.POSITION_ID === parseInt(formData.POSITION)
+      )
     : [];
 
 
@@ -437,8 +441,8 @@ const ContractDialog = ({
               >
                 <MenuItem value="">None</MenuItem>
                 {availablePositions.map(position => (
-                  <MenuItem key={position.POSITION_ID} value={position.POSITION_ID}>
-                    {position.POSITION_NAME}
+                  <MenuItem key={position.POSITION_TYPE_ID} value={position.POSITION_TYPE_ID}>
+                    {position.name || position.ALIAS_NAME}
                   </MenuItem>
                 ))}
               </Select>
@@ -457,8 +461,8 @@ const ContractDialog = ({
               >
                 <MenuItem value="">None</MenuItem>
                 {availableFormationPositions.map(formPos => (
-                  <MenuItem key={formPos.FORMATION_POSITION_ID} value={formPos.FORMATION_POSITION_ID}>
-                    {formPos.FORMATION_POSITION_NAME}
+                  <MenuItem key={formPos.FORMATION_POSITION_TYPE_ID} value={formPos.FORMATION_POSITION_TYPE_ID}>
+                    {formPos.name || formPos.ALIAS_NAME}
                   </MenuItem>
                 ))}
               </Select>

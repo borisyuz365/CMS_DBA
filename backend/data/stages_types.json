@@ -1,7 +1,0 @@
-[
-  {"STAGE_TYPE_ID": 1, "STAGE_TYPE": "LeagueCycle"},
-  {"STAGE_TYPE_ID": 2, "STAGE_TYPE": "GroupStage"},
-  {"STAGE_TYPE_ID": 3, "STAGE_TYPE": "KnockOut"},
-  {"STAGE_TYPE_ID": 4, "STAGE_TYPE": "Qualification"},
-  {"STAGE_TYPE_ID": 5, "STAGE_TYPE": "RelegationOrPromotion"}
-]

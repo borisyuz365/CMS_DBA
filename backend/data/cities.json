@@ -1,0 +1,608 @@
+[
+  {
+    "CITY_ID": 1,
+    "NAME_ID": 49389069,
+    "CITY_NAME": "Miðvágur, Vágar",
+    "COUNTRY_ID": 106
+  },
+  {
+    "CITY_ID": 2,
+    "NAME_ID": 49389070,
+    "CITY_NAME": "Sorvagur",
+    "COUNTRY_ID": 106
+  },
+  {
+    "CITY_ID": 3,
+    "NAME_ID": 49389071,
+    "CITY_NAME": "Fernando de la Mora",
+    "COUNTRY_ID": 108
+  },
+  {
+    "CITY_ID": 4,
+    "NAME_ID": 49389072,
+    "CITY_NAME": "Pilar",
+    "COUNTRY_ID": 108
+  },
+  {
+    "CITY_ID": 5,
+    "NAME_ID": 49389073,
+    "CITY_NAME": "Merseburg",
+    "COUNTRY_ID": 4
+  },
+  {
+    "CITY_ID": 6,
+    "NAME_ID": 49389074,
+    "CITY_NAME": "Mönchengladbach",
+    "COUNTRY_ID": 4
+  },
+  {
+    "CITY_ID": 7,
+    "NAME_ID": 49389075,
+    "CITY_NAME": "Ruma",
+    "COUNTRY_ID": 85
+  },
+  {
+    "CITY_ID": 8,
+    "NAME_ID": 49389076,
+    "CITY_NAME": "Tartu",
+    "COUNTRY_ID": 102
+  },
+  {
+    "CITY_ID": 9,
+    "NAME_ID": 49389077,
+    "CITY_NAME": "Çankiri",
+    "COUNTRY_ID": 12
+  },
+  {
+    "CITY_ID": 10,
+    "NAME_ID": 49389078,
+    "CITY_NAME": "Bingöl",
+    "COUNTRY_ID": 12
+  },
+  {
+    "CITY_ID": 11,
+    "NAME_ID": 49389079,
+    "CITY_NAME": "San Nicolás de los Arroyos, Provincia de Buenos Aires",
+    "COUNTRY_ID": 10
+  },
+  {
+    "CITY_ID": 12,
+    "NAME_ID": 49389080,
+    "CITY_NAME": "Itauguá",
+    "COUNTRY_ID": 108
+  },
+  {
+    "CITY_ID": 13,
+    "NAME_ID": 49389081,
+    "CITY_NAME": "Paso Yobai",
+    "COUNTRY_ID": 108
+  },
+  {
+    "CITY_ID": 14,
+    "NAME_ID": 49389082,
+    "CITY_NAME": "Santo Domingo",
+    "COUNTRY_ID": 108
+  },
+  {
+    "CITY_ID": 15,
+    "NAME_ID": 49389083,
+    "CITY_NAME": "Porto Alegre",
+    "COUNTRY_ID": 21
+  },
+  {
+    "CITY_ID": 16,
+    "NAME_ID": 49389084,
+    "CITY_NAME": "Trabzon",
+    "COUNTRY_ID": 12
+  },
+  {
+    "CITY_ID": 17,
+    "NAME_ID": 49389085,
+    "CITY_NAME": "Caazapá",
+    "COUNTRY_ID": 108
+  },
+  {
+    "CITY_ID": 18,
+    "NAME_ID": 49389086,
+    "CITY_NAME": "München",
+    "COUNTRY_ID": 1
+  },
+  {
+    "CITY_ID": 19,
+    "NAME_ID": 49389087,
+    "CITY_NAME": "Rosenheim",
+    "COUNTRY_ID": 4
+  },
+  {
+    "CITY_ID": 20,
+    "NAME_ID": 49389088,
+    "CITY_NAME": "Istanbul",
+    "COUNTRY_ID": 12
+  },
+  {
+    "CITY_ID": 21,
+    "NAME_ID": 49389089,
+    "CITY_NAME": "Wasserburg",
+    "COUNTRY_ID": 4
+  },
+  {
+    "CITY_ID": 22,
+    "NAME_ID": 49389090,
+    "CITY_NAME": "San Ignacio Guazú",
+    "COUNTRY_ID": 108
+  },
+  {
+    "CITY_ID": 23,
+    "NAME_ID": 49389091,
+    "CITY_NAME": "Kahramanmaras",
+    "COUNTRY_ID": 12
+  },
+  {
+    "CITY_ID": 24,
+    "NAME_ID": 49389092,
+    "CITY_NAME": "Konya",
+    "COUNTRY_ID": 12
+  },
+  {
+    "CITY_ID": 25,
+    "NAME_ID": 49389093,
+    "CITY_NAME": "Bulancak",
+    "COUNTRY_ID": 12
+  },
+  {
+    "CITY_ID": 26,
+    "NAME_ID": 49389094,
+    "CITY_NAME": "Tire, Izmir",
+    "COUNTRY_ID": 12
+  },
+  {
+    "CITY_ID": 27,
+    "NAME_ID": 49389095,
+    "CITY_NAME": "Gümüshane",
+    "COUNTRY_ID": 12
+  },
+  {
+    "CITY_ID": 28,
+    "NAME_ID": 49389096,
+    "CITY_NAME": "Batman",
+    "COUNTRY_ID": 12
+  },
+  {
+    "CITY_ID": 29,
+    "NAME_ID": 49389097,
+    "CITY_NAME": "Luanda",
+    "COUNTRY_ID": 136
+  },
+  {
+    "CITY_ID": 30,
+    "NAME_ID": 49389098,
+    "CITY_NAME": "Benguela",
+    "COUNTRY_ID": 136
+  },
+  {
+    "CITY_ID": 31,
+    "NAME_ID": 49389099,
+    "CITY_NAME": "Sintra",
+    "COUNTRY_ID": 11
+  },
+  {
+    "CITY_ID": 32,
+    "NAME_ID": 49389100,
+    "CITY_NAME": "Pedro Juan Caballero",
+    "COUNTRY_ID": 108
+  },
+  {
+    "CITY_ID": 33,
+    "NAME_ID": 49389101,
+    "CITY_NAME": "Pristina",
+    "COUNTRY_ID": 205
+  },
+  {
+    "CITY_ID": 34,
+    "NAME_ID": 49389102,
+    "CITY_NAME": "Erzincan",
+    "COUNTRY_ID": 12
+  },
+  {
+    "CITY_ID": 35,
+    "NAME_ID": 49389103,
+    "CITY_NAME": "Ciudad del Este",
+    "COUNTRY_ID": 108
+  },
+  {
+    "CITY_ID": 36,
+    "NAME_ID": 49389104,
+    "CITY_NAME": "Asunción",
+    "COUNTRY_ID": 108
+  },
+  {
+    "CITY_ID": 37,
+    "NAME_ID": 49389105,
+    "CITY_NAME": "Santo Domingo",
+    "COUNTRY_ID": 51
+  },
+  {
+    "CITY_ID": 38,
+    "NAME_ID": 49389106,
+    "CITY_NAME": "Capiatá",
+    "COUNTRY_ID": 108
+  },
+  {
+    "CITY_ID": 39,
+    "NAME_ID": 49389107,
+    "CITY_NAME": "Manaus",
+    "COUNTRY_ID": 21
+  },
+  {
+    "CITY_ID": 40,
+    "NAME_ID": 49389108,
+    "CITY_NAME": "Atsimo Andrefana",
+    "COUNTRY_ID": 174
+  },
+  {
+    "CITY_ID": 41,
+    "NAME_ID": 49389109,
+    "CITY_NAME": "Piripiri",
+    "COUNTRY_ID": 21
+  },
+  {
+    "CITY_ID": 42,
+    "NAME_ID": 49389110,
+    "CITY_NAME": "Dampierre Sur Salon",
+    "COUNTRY_ID": 5
+  },
+  {
+    "CITY_ID": 43,
+    "NAME_ID": 49389111,
+    "CITY_NAME": "Vologda",
+    "COUNTRY_ID": 14
+  },
+  {
+    "CITY_ID": 44,
+    "NAME_ID": 49389112,
+    "CITY_NAME": "İskenderun",
+    "COUNTRY_ID": 12
+  },
+  {
+    "CITY_ID": 45,
+    "NAME_ID": 49389113,
+    "CITY_NAME": "Ordu",
+    "COUNTRY_ID": 12
+  },
+  {
+    "CITY_ID": 46,
+    "NAME_ID": 49389114,
+    "CITY_NAME": "Aksaray",
+    "COUNTRY_ID": 12
+  },
+  {
+    "CITY_ID": 47,
+    "NAME_ID": 49389115,
+    "CITY_NAME": "Batam",
+    "COUNTRY_ID": 75
+  },
+  {
+    "CITY_ID": 48,
+    "NAME_ID": 49389116,
+    "CITY_NAME": "Formosa, Provincia de Formosa",
+    "COUNTRY_ID": 10
+  },
+  {
+    "CITY_ID": 49,
+    "NAME_ID": 49389117,
+    "CITY_NAME": "Berabevú",
+    "COUNTRY_ID": 10
+  },
+  {
+    "CITY_ID": 50,
+    "NAME_ID": 49389118,
+    "CITY_NAME": "Colonia Ayuí, Provincia de Entre Ríos",
+    "COUNTRY_ID": 10
+  },
+  {
+    "CITY_ID": 51,
+    "NAME_ID": 49389119,
+    "CITY_NAME": "Morteros, Provincia de Córdoba",
+    "COUNTRY_ID": 10
+  },
+  {
+    "CITY_ID": 52,
+    "NAME_ID": 49389120,
+    "CITY_NAME": "Freyre, Provincia de Córdoba",
+    "COUNTRY_ID": 10
+  },
+  {
+    "CITY_ID": 53,
+    "NAME_ID": 49389121,
+    "CITY_NAME": "Rafaela",
+    "COUNTRY_ID": 10
+  },
+  {
+    "CITY_ID": 54,
+    "NAME_ID": 49389122,
+    "CITY_NAME": "Guayaquil",
+    "COUNTRY_ID": 51
+  },
+  {
+    "CITY_ID": 55,
+    "NAME_ID": 49389123,
+    "CITY_NAME": "Río Tercero",
+    "COUNTRY_ID": 10
+  },
+  {
+    "CITY_ID": 56,
+    "NAME_ID": 49389124,
+    "CITY_NAME": "Prizren",
+    "COUNTRY_ID": 205
+  },
+  {
+    "CITY_ID": 57,
+    "NAME_ID": 49389125,
+    "CITY_NAME": "Aalborg",
+    "COUNTRY_ID": 23
+  },
+  {
+    "CITY_ID": 58,
+    "NAME_ID": 49389126,
+    "CITY_NAME": "Ann Arbor, Michigan",
+    "COUNTRY_ID": 18
+  },
+  {
+    "CITY_ID": 59,
+    "NAME_ID": 49389127,
+    "CITY_NAME": "Aalen",
+    "COUNTRY_ID": 4
+  },
+  {
+    "CITY_ID": 60,
+    "NAME_ID": 49389128,
+    "CITY_NAME": "Ålesund",
+    "COUNTRY_ID": 27
+  },
+  {
+    "CITY_ID": 61,
+    "NAME_ID": 49389129,
+    "CITY_NAME": "Aarau",
+    "COUNTRY_ID": 15
+  },
+  {
+    "CITY_ID": 62,
+    "NAME_ID": 49389130,
+    "CITY_NAME": "Århus",
+    "COUNTRY_ID": 23
+  },
+  {
+    "CITY_ID": 63,
+    "NAME_ID": 49389131,
+    "CITY_NAME": "Aarschot",
+    "COUNTRY_ID": 16
+  },
+  {
+    "CITY_ID": 64,
+    "NAME_ID": 49389132,
+    "CITY_NAME": "Shkodër",
+    "COUNTRY_ID": 76
+  },
+  {
+    "CITY_ID": 65,
+    "NAME_ID": 49389133,
+    "CITY_NAME": "Ushuaia, Tierra del Fuego",
+    "COUNTRY_ID": 10
+  },
+  {
+    "CITY_ID": 66,
+    "NAME_ID": 49389134,
+    "CITY_NAME": "Gladsaxe",
+    "COUNTRY_ID": 23
+  },
+  {
+    "CITY_ID": 67,
+    "NAME_ID": 49389135,
+    "CITY_NAME": "Argir",
+    "COUNTRY_ID": 106
+  },
+  {
+    "CITY_ID": 68,
+    "NAME_ID": 49389136,
+    "CITY_NAME": "Kastrup",
+    "COUNTRY_ID": 23
+  },
+  {
+    "CITY_ID": 69,
+    "NAME_ID": 49389137,
+    "CITY_NAME": "Tiga Naga",
+    "COUNTRY_ID": 75
+  },
+  {
+    "CITY_ID": 70,
+    "NAME_ID": 49389138,
+    "CITY_NAME": "Dhaka",
+    "COUNTRY_ID": 219
+  },
+  {
+    "CITY_ID": 71,
+    "NAME_ID": 49389139,
+    "CITY_NAME": "Chittagong",
+    "COUNTRY_ID": 219
+  },
+  {
+    "CITY_ID": 72,
+    "NAME_ID": 49389140,
+    "CITY_NAME": "Abanto-Zierbena",
+    "COUNTRY_ID": 2
+  },
+  {
+    "CITY_ID": 73,
+    "NAME_ID": 49389141,
+    "CITY_NAME": "Abarán",
+    "COUNTRY_ID": 2
+  },
+  {
+    "CITY_ID": 74,
+    "NAME_ID": 49389142,
+    "CITY_NAME": "Addlestone",
+    "COUNTRY_ID": 1
+  },
+  {
+    "CITY_ID": 75,
+    "NAME_ID": 49389143,
+    "CITY_NAME": "Natal",
+    "COUNTRY_ID": 21
+  },
+  {
+    "CITY_ID": 76,
+    "NAME_ID": 49389144,
+    "CITY_NAME": "Aberbargoed",
+    "COUNTRY_ID": 100
+  },
+  {
+    "CITY_ID": 77,
+    "NAME_ID": 49389145,
+    "CITY_NAME": "Aberdeen",
+    "COUNTRY_ID": 8
+  },
+  {
+    "CITY_ID": 78,
+    "NAME_ID": 49389146,
+    "CITY_NAME": "Aberffraw",
+    "COUNTRY_ID": 100
+  },
+  {
+    "CITY_ID": 79,
+    "NAME_ID": 49389147,
+    "CITY_NAME": "Abergavenny",
+    "COUNTRY_ID": 100
+  },
+  {
+    "CITY_ID": 80,
+    "NAME_ID": 49389148,
+    "CITY_NAME": "Aberystwyth",
+    "COUNTRY_ID": 100
+  },
+  {
+    "CITY_ID": 81,
+    "NAME_ID": 49389149,
+    "CITY_NAME": "Aberystwyth",
+    "COUNTRY_ID": 100
+  },
+  {
+    "CITY_ID": 82,
+    "NAME_ID": 49389150,
+    "CITY_NAME": "Minsk",
+    "COUNTRY_ID": 104
+  },
+  {
+    "CITY_ID": 83,
+    "NAME_ID": 49389151,
+    "CITY_NAME": "Abha",
+    "COUNTRY_ID": 122
+  },
+  {
+    "CITY_ID": 84,
+    "NAME_ID": 49389152,
+    "CITY_NAME": "Umuahia",
+    "COUNTRY_ID": 83
+  },
+  {
+    "CITY_ID": 85,
+    "NAME_ID": 49389153,
+    "CITY_NAME": "Abingdon",
+    "COUNTRY_ID": 1
+  },
+  {
+    "CITY_ID": 86,
+    "NAME_ID": 49389154,
+    "CITY_NAME": "Ablitas",
+    "COUNTRY_ID": 2
+  },
+  {
+    "CITY_ID": 87,
+    "NAME_ID": 49389155,
+    "CITY_NAME": "Abtswind",
+    "COUNTRY_ID": 4
+  },
+  {
+    "CITY_ID": 88,
+    "NAME_ID": 49389156,
+    "CITY_NAME": "Alexandria",
+    "COUNTRY_ID": 131
+  },
+  {
+    "CITY_ID": 89,
+    "NAME_ID": 49389157,
+    "CITY_NAME": "Tripoli",
+    "COUNTRY_ID": 161
+  },
+  {
+    "CITY_ID": 90,
+    "NAME_ID": 49389158,
+    "CITY_NAME": "Newtown, Connecticut",
+    "COUNTRY_ID": 18
+  },
+  {
+    "CITY_ID": 91,
+    "NAME_ID": 49389159,
+    "CITY_NAME": "Callao",
+    "COUNTRY_ID": 112
+  },
+  {
+    "CITY_ID": 92,
+    "NAME_ID": 49389160,
+    "CITY_NAME": "Puerto Cabello",
+    "COUNTRY_ID": 110
+  },
+  {
+    "CITY_ID": 93,
+    "NAME_ID": 49389161,
+    "CITY_NAME": "Chișinău",
+    "COUNTRY_ID": 91
+  },
+  {
+    "CITY_ID": 94,
+    "NAME_ID": 49389162,
+    "CITY_NAME": "Turlock, California",
+    "COUNTRY_ID": 18
+  },
+  {
+    "CITY_ID": 95,
+    "NAME_ID": 49389163,
+    "CITY_NAME": "Coimbra",
+    "COUNTRY_ID": 11
+  },
+  {
+    "CITY_ID": 96,
+    "NAME_ID": 49389164,
+    "CITY_NAME": "Clinceni",
+    "COUNTRY_ID": 29
+  },
+  {
+    "CITY_ID": 97,
+    "NAME_ID": 49389165,
+    "CITY_NAME": "Lobito",
+    "COUNTRY_ID": 136
+  },
+  {
+    "CITY_ID": 98,
+    "NAME_ID": 49389166,
+    "CITY_NAME": "V. de Santo Antão",
+    "COUNTRY_ID": 21
+  },
+  {
+    "CITY_ID": 99,
+    "NAME_ID": 49389167,
+    "CITY_NAME": "Viseu",
+    "COUNTRY_ID": 11
+  },
+  {
+    "CITY_ID": 100,
+    "NAME_ID": 49389168,
+    "CITY_NAME": "George Town",
+    "COUNTRY_ID": 214
+  },
+  {
+    "CITY_ID": 101,
+    "NAME_ID": 77877747,
+    "CITY_NAME": "Even Yehuda",
+    "COUNTRY_ID": 6
+  }
+]

@@ -645,8 +645,8 @@
     "JOIN_TYPE": 0,
     "NOT_IN_SEASON": false,
     "ORIGIN_COMPETITION_ID": null,
-    "SEASON_NUM": 2,
+    "SEASON_NUM": 4,
     "SEED": null,
-    "WINNER": true
+    "WINNER": false
   }
 ]

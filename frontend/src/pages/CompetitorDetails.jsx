@@ -50,6 +50,7 @@ function CompetitorDetails() {
   const [sports, setSports] = useState([]);
   const [competitions, setCompetitions] = useState([]);
   const [venues, setVenues] = useState([]);
+  const [competitorTypes, setCompetitorTypes] = useState([]);
   const [lightImageError, setLightImageError] = useState(false);
   const [darkImageError, setDarkImageError] = useState(false);
   const [urlState, setUrlState] = useUrlFilters({
@@ -119,6 +120,7 @@ function CompetitorDetails() {
     loadSports();
     loadCompetitions();
     loadVenues();
+    loadCompetitorTypes();
     setLightImageError(false); // Reset image errors when competitor changes
     setDarkImageError(false);
   }, [id]);
@@ -225,6 +227,15 @@ function CompetitorDetails() {
       setVenues(venuesData || []);
     } catch (err) {
       console.error('Failed to load venues:', err);
+    }
+  };
+
+  const loadCompetitorTypes = async () => {
+    try {
+      const types = await api.getCompetitorTypes();
+      setCompetitorTypes(types || []);
+    } catch (err) {
+      console.error('Failed to load competitor types:', err);
     }
   };
 
@@ -989,8 +1000,9 @@ function CompetitorDetails() {
                     label={FIELD_LABELS.COMPETITOR_TYPE}
                     onChange={(e) => handleFormChange('COMPETITOR_TYPE', e.target.value)}
                   >
-                    <MenuItem value={1}>Team</MenuItem>
-                    <MenuItem value={2}>Club</MenuItem>
+                    {competitorTypes.map((ct) => (
+                      <MenuItem key={ct.COMPETITOR_TYPE_ID} value={ct.COMPETITOR_TYPE_ID}>{ct.COMPETITOR_TYPE}</MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
               </Box>

@@ -2936,8 +2936,31 @@ function CompetitorsTermsFix() {
         selectedTempList.map((r) => r.COMPETITOR_ID),
         target.COMPETITOR_ID
       );
+
+      // Add competitor to current season of the competition (if not already there)
+      let seasonMsg = '';
+      if (selectedCompetitionIds.length === 1) {
+        const compId = selectedCompetitionIds[0];
+        const comp = competitionById.get(compId);
+        const currentSeason = comp?.CURRENT_SEASON;
+        if (currentSeason != null) {
+          try {
+            const seasonCompetitors = await api.getSeasonCompetitors(compId, currentSeason);
+            const alreadyInSeason = seasonCompetitors.some(
+              (sc) => Number(sc.COMPETITOR_ID) === Number(target.COMPETITOR_ID)
+            );
+            if (!alreadyInSeason) {
+              await api.addCompetitorsToSeason(compId, currentSeason, [target.COMPETITOR_ID]);
+              seasonMsg = ` | Added to season ${currentSeason} of competition ${comp.name || compId}`;
+            }
+          } catch (seasonErr) {
+            showToast(seasonErr?.message || 'Connected value but failed to add to season', 'warning');
+          }
+        }
+      }
+
       showToast(
-        `Connected ${result?.removedTempRows ?? selectedTempList.length} temp row(s) to ${target.name}`,
+        `Connected ${result?.removedTempRows ?? selectedTempList.length} temp row(s) to ${target.name}${seasonMsg}`,
         'success'
       );
       clearTempSelection();
@@ -3465,23 +3488,23 @@ function CompetitorsTermsFix() {
  * Competitor create dialog (for Terms Fix page)
  * ------------------------------------------------------------------------ */
 function CompetitorCreateDialog({ open, onClose, tempRow, countries, sports, competitions, onCreated, onError }) {
-  const [formData, setFormData] = useState({ name: '', COUNTRY_ID: '', SPORT_TYPE_ID: '', GENDER: '', COMPETITOR_TYPE: 1, MAIN_COMPETITION: '' });
+  const [formData, setFormData] = useState({ name: '', COUNTRY_ID: '', SPORT_TYPE_ID: '', GENDER: '', COMPETITOR_TYPE: 1 });
   const [formErrors, setFormErrors] = useState({});
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (open && tempRow) {
+      const comp = (competitions || []).find(c => c.COMPETITION_ID === Number(tempRow.COMPETITION_ID));
       setFormData({
         name: tempRow.NAME || '',
         COUNTRY_ID: tempRow.COUNTRY_ID != null && Number(tempRow.COUNTRY_ID) > 0 ? Number(tempRow.COUNTRY_ID) : '',
         SPORT_TYPE_ID: tempRow.SPORT_TYPE_ID != null ? Number(tempRow.SPORT_TYPE_ID) : '',
-        GENDER: '',
-        COMPETITOR_TYPE: 1,
-        MAIN_COMPETITION: '',
+        GENDER: comp?.GENDER != null ? Number(comp.GENDER) : '',
+        COMPETITOR_TYPE: comp?.COMPETITORS_TYPE != null ? Number(comp.COMPETITORS_TYPE) : 1,
       });
       setFormErrors({});
     }
-  }, [open, tempRow]);
+  }, [open, tempRow, competitions]);
 
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -3508,7 +3531,6 @@ function CompetitorCreateDialog({ open, onClose, tempRow, countries, sports, com
         COMPETITOR_TYPE: Number(formData.COMPETITOR_TYPE),
         COUNTRY_ID: formData.COUNTRY_ID !== '' ? Number(formData.COUNTRY_ID) : null,
         GENDER: formData.GENDER !== '' ? Number(formData.GENDER) : null,
-        MAIN_COMPETITION: formData.MAIN_COMPETITION !== '' ? Number(formData.MAIN_COMPETITION) : null,
       });
       const created = res?.data ?? res;
       onCreated(created);
@@ -3518,13 +3540,6 @@ function CompetitorCreateDialog({ open, onClose, tempRow, countries, sports, com
       setSaving(false);
     }
   };
-
-  const filteredCompetitions = useMemo(
-    () => formData.SPORT_TYPE_ID
-      ? (competitions || []).filter((c) => c.SPORT_TYPE_ID === Number(formData.SPORT_TYPE_ID))
-      : competitions || [],
-    [competitions, formData.SPORT_TYPE_ID]
-  );
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
@@ -3580,17 +3595,6 @@ function CompetitorCreateDialog({ open, onClose, tempRow, countries, sports, com
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <Autocomplete
-              size="small"
-              options={filteredCompetitions}
-              getOptionLabel={(o) => o.name || ''}
-              value={filteredCompetitions.find((c) => c.COMPETITION_ID === formData.MAIN_COMPETITION) || null}
-              onChange={(_e, v) => handleChange('MAIN_COMPETITION', v ? v.COMPETITION_ID : '')}
-              disabled={!formData.SPORT_TYPE_ID}
-              renderInput={(params) => <TextField {...params} label="Main Competition" />}
-            />
-          </Grid>
         </Grid>
       </DialogContent>
       <DialogActions sx={{ p: 2, borderTop: '1px solid #e0e0e0' }}>
@@ -3605,22 +3609,22 @@ function CompetitorCreateDialog({ open, onClose, tempRow, countries, sports, com
  * Many-to-One Competitor dialog
  * ------------------------------------------------------------------------ */
 function ManyToOneCompetitorDialog({ open, onClose, tempRows = [], countries, sports, competitions, onCreated }) {
-  const [formData, setFormData] = useState({ name: '', COUNTRY_ID: '', SPORT_TYPE_ID: '', GENDER: '', COMPETITOR_TYPE: 1, MAIN_COMPETITION: '' });
+  const [formData, setFormData] = useState({ name: '', COUNTRY_ID: '', SPORT_TYPE_ID: '', GENDER: '', COMPETITOR_TYPE: 1 });
   const [formErrors, setFormErrors] = useState({});
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (!open) return;
+    const comp = (competitions || []).find(c => c.COMPETITION_ID === Number(tempRows[0]?.COMPETITION_ID));
     setFormData({
       name: tempRows[0]?.NAME || '',
       COUNTRY_ID: tempRows[0]?.COUNTRY_ID != null && Number(tempRows[0].COUNTRY_ID) > 0 ? Number(tempRows[0].COUNTRY_ID) : '',
       SPORT_TYPE_ID: tempRows[0]?.SPORT_TYPE_ID != null ? Number(tempRows[0].SPORT_TYPE_ID) : '',
-      GENDER: '',
-      COMPETITOR_TYPE: 1,
-      MAIN_COMPETITION: '',
+      GENDER: comp?.GENDER != null ? Number(comp.GENDER) : '',
+      COMPETITOR_TYPE: comp?.COMPETITORS_TYPE != null ? Number(comp.COMPETITORS_TYPE) : 1,
     });
     setFormErrors({});
-  }, [open, tempRows]);
+  }, [open, tempRows, competitions]);
 
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -3642,11 +3646,6 @@ function ManyToOneCompetitorDialog({ open, onClose, tempRows = [], countries, sp
     return list;
   }, [tempRows]);
 
-  const filteredCompetitions = useMemo(
-    () => formData.SPORT_TYPE_ID ? (competitions || []).filter((c) => c.SPORT_TYPE_ID === Number(formData.SPORT_TYPE_ID)) : competitions || [],
-    [competitions, formData.SPORT_TYPE_ID]
-  );
-
   const handleCreate = async () => {
     const err = {};
     if (!formData.name || String(formData.name).trim() === '') err.name = 'Required';
@@ -3667,7 +3666,6 @@ function ManyToOneCompetitorDialog({ open, onClose, tempRows = [], countries, sp
         COMPETITOR_TYPE: Number(formData.COMPETITOR_TYPE),
         COUNTRY_ID: formData.COUNTRY_ID !== '' ? Number(formData.COUNTRY_ID) : null,
         GENDER: formData.GENDER !== '' ? Number(formData.GENDER) : null,
-        MAIN_COMPETITION: formData.MAIN_COMPETITION !== '' ? Number(formData.MAIN_COMPETITION) : null,
       });
       const created = res?.data ?? res;
       onCreated?.(created, newTerm, tempRows.map((r) => r.COMPETITOR_ID));
@@ -3728,9 +3726,6 @@ function ManyToOneCompetitorDialog({ open, onClose, tempRows = [], countries, sp
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <Autocomplete size="small" options={filteredCompetitions} getOptionLabel={(o) => o.name || ''} value={filteredCompetitions.find((c) => c.COMPETITION_ID === formData.MAIN_COMPETITION) || null} onChange={(_e, v) => handleChange('MAIN_COMPETITION', v ? v.COMPETITION_ID : '')} disabled={!formData.SPORT_TYPE_ID} renderInput={(params) => <TextField {...params} label="Main Competition" />} />
-          </Grid>
         </Grid>
         {formErrors._form && <Box sx={{ mt: 2, color: 'error.main', fontSize: 13 }}>{formErrors._form}</Box>}
       </DialogContent>
@@ -3746,7 +3741,7 @@ function ManyToOneCompetitorDialog({ open, onClose, tempRows = [], countries, sp
  * One-to-One Tabs Competitor dialog
  * ------------------------------------------------------------------------ */
 function OneToOneTabsCompetitorDialog({ open, onClose, tempRows = [], countries, sports, competitions, onCreated }) {
-  const DEFAULT_FORM = { name: '', COUNTRY_ID: '', SPORT_TYPE_ID: '', GENDER: '', COMPETITOR_TYPE: 1, MAIN_COMPETITION: '' };
+  const DEFAULT_FORM = { name: '', COUNTRY_ID: '', SPORT_TYPE_ID: '', GENDER: '', COMPETITOR_TYPE: 1 };
   const [activeTab, setActiveTab] = useState(0);
   const [forms, setForms] = useState([]);
   const [errors, setErrors] = useState([]);
@@ -3757,17 +3752,22 @@ function OneToOneTabsCompetitorDialog({ open, onClose, tempRows = [], countries,
   useEffect(() => {
     if (!open) return;
     setActiveTab(0);
-    setForms(tempRows.map((row) => ({
-      ...DEFAULT_FORM,
-      name: row.NAME || '',
-      COUNTRY_ID: row.COUNTRY_ID != null && Number(row.COUNTRY_ID) > 0 ? Number(row.COUNTRY_ID) : '',
-      SPORT_TYPE_ID: row.SPORT_TYPE_ID != null ? Number(row.SPORT_TYPE_ID) : '',
-      _tempRow: row,
-    })));
+    setForms(tempRows.map((row) => {
+      const comp = (competitions || []).find(c => c.COMPETITION_ID === Number(row.COMPETITION_ID));
+      return {
+        ...DEFAULT_FORM,
+        name: row.NAME || '',
+        COUNTRY_ID: row.COUNTRY_ID != null && Number(row.COUNTRY_ID) > 0 ? Number(row.COUNTRY_ID) : '',
+        SPORT_TYPE_ID: row.SPORT_TYPE_ID != null ? Number(row.SPORT_TYPE_ID) : '',
+        GENDER: comp?.GENDER != null ? Number(comp.GENDER) : '',
+        COMPETITOR_TYPE: comp?.COMPETITORS_TYPE != null ? Number(comp.COMPETITORS_TYPE) : 1,
+        _tempRow: row,
+      };
+    }));
     setErrors(tempRows.map(() => ({})));
     setCompleted(new Set());
     setFormError('');
-  }, [open, tempRows]);
+  }, [open, tempRows, competitions]);
 
   const onChange = (tabIdx, field, value) => {
     setForms((prev) => { const next = [...prev]; next[tabIdx] = { ...next[tabIdx], [field]: value }; return next; });
@@ -3815,7 +3815,6 @@ function OneToOneTabsCompetitorDialog({ open, onClose, tempRows = [], countries,
             COMPETITOR_TYPE: Number(form.COMPETITOR_TYPE),
             COUNTRY_ID: form.COUNTRY_ID !== '' ? Number(form.COUNTRY_ID) : null,
             GENDER: form.GENDER !== '' ? Number(form.GENDER) : null,
-            MAIN_COMPETITION: form.MAIN_COMPETITION !== '' ? Number(form.MAIN_COMPETITION) : null,
           });
           createdList.push(res?.data ?? res);
           createdTempIds.push(row?.COMPETITOR_ID);
@@ -3840,11 +3839,6 @@ function OneToOneTabsCompetitorDialog({ open, onClose, tempRows = [], countries,
 
   if (forms.length === 0) return null;
   const f = forms[activeTab] || {};
-
-  const filteredCompetitions = useMemo(
-    () => f.SPORT_TYPE_ID ? (competitions || []).filter((c) => c.SPORT_TYPE_ID === Number(f.SPORT_TYPE_ID)) : competitions || [],
-    [competitions, f.SPORT_TYPE_ID]
-  );
 
   return (
     <Dialog open={!!open} onClose={saving ? undefined : onClose} maxWidth="md" fullWidth>
@@ -3890,9 +3884,6 @@ function OneToOneTabsCompetitorDialog({ open, onClose, tempRows = [], countries,
                   <MenuItem value={2}>Female</MenuItem>
                 </Select>
               </FormControl>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <Autocomplete size="small" options={filteredCompetitions} getOptionLabel={(o) => o.name || ''} value={filteredCompetitions.find((c) => c.COMPETITION_ID === f.MAIN_COMPETITION) || null} onChange={(_e, v) => onChange(activeTab, 'MAIN_COMPETITION', v ? v.COMPETITION_ID : '')} disabled={!f.SPORT_TYPE_ID} renderInput={(params) => <TextField {...params} label="Main Competition" />} />
             </Grid>
           </Grid>
           {formError && <Box sx={{ mt: 2, color: 'error.main', fontSize: 13 }}>{formError}</Box>}
@@ -4091,7 +4082,8 @@ function AthletesTermsFix() {
   const [competitors, setCompetitors] = useState([]);
   const [sports, setSports] = useState([]);
   const [languages, setLanguages] = useState([]);
-  const [athletesPositions, setAthletesPositions] = useState([]);
+  const [positionTypes, setPositionTypes] = useState([]);
+  const [formationPositionTypes, setFormationPositionTypes] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -4174,20 +4166,22 @@ function AthletesTermsFix() {
   useEffect(() => {
     (async () => {
       try {
-        const [sportsList, countriesList, compsList, cmptsList, langsList, posList] = await Promise.all([
+        const [sportsList, countriesList, compsList, cmptsList, langsList, posTypesList, fpTypesList] = await Promise.all([
           api.getSports().catch(() => []),
           api.getCountries().catch(() => []),
           api.getCompetitions().catch(() => []),
           api.getCompetitors().catch(() => []),
           api.getLanguages().catch(() => []),
-          api.getAthletesPositions().catch(() => []),
+          api.getPositionTypes().catch(() => []),
+          api.getFormationPositionTypes().catch(() => []),
         ]);
         setSports(Array.isArray(sportsList) ? sportsList : []);
         setCountries(Array.isArray(countriesList) ? countriesList : []);
         setCompetitions(Array.isArray(compsList) ? compsList : []);
         setCompetitors(Array.isArray(cmptsList) ? cmptsList : []);
         setLanguages(Array.isArray(langsList) ? langsList : []);
-        setAthletesPositions(Array.isArray(posList) ? posList : []);
+        setPositionTypes(Array.isArray(posTypesList) ? posTypesList : []);
+        setFormationPositionTypes(Array.isArray(fpTypesList) ? fpTypesList : []);
       } catch { /* ignore */ }
     })();
   }, []);
@@ -4589,7 +4583,10 @@ function AthletesTermsFix() {
 
   const selectedExistCount = selectedExistList.length;
   const selectedTemps = selectedTempList.length;
-  const canConnect = selectedTemps >= 1 && selectedExistCount === 1;
+  const canConnect = selectedTemps >= 1 && selectedExistCount === 1 && !hasMultipleCompetitors;
+  const connectDisabledReason = hasMultipleCompetitors
+    ? 'Cannot connect: selected temp rows belong to different competitors'
+    : '';
   const canDelete = selectedTemps >= 1;
   const canHide = selectedTemps >= 1;
   const canCreate = selectedTemps >= 1;
@@ -4816,8 +4813,15 @@ function AthletesTermsFix() {
         <Typography variant="body2" color="text.secondary">
           Selected: <strong>{selectedTemps}</strong> temp / <strong>{selectedExistCount}</strong> existing
         </Typography>
+        {connectDisabledReason && (
+          <Typography variant="caption" color="error.main" sx={{ ml: 1 }}>{connectDisabledReason}</Typography>
+        )}
         <Box sx={{ flex: 1 }} />
-        <PrimaryButton size="small" startIcon={<LinkIcon />} disabled={!canConnect} onClick={handleConnect}>Connect</PrimaryButton>
+        <Tooltip arrow title={connectDisabledReason || ''} disableHoverListener={!connectDisabledReason}>
+          <span>
+            <PrimaryButton size="small" startIcon={<LinkIcon />} disabled={!canConnect} onClick={handleConnect}>Connect</PrimaryButton>
+          </span>
+        </Tooltip>
         <SecondaryButton size="small" startIcon={<AddIcon />} disabled={!canCreate} onClick={handleCreateClick}>Create</SecondaryButton>
         <SecondaryButton size="small" startIcon={<VisibilityOffIcon />} disabled={!canHide} onClick={handleHide}>{allSelectedHidden ? 'Unhide' : 'Hide'}</SecondaryButton>
         <SecondaryButton size="small" startIcon={<DeleteIcon />} disabled={!canDelete} onClick={handleDelete}>Delete</SecondaryButton>
@@ -4966,7 +4970,8 @@ function AthletesTermsFix() {
         tempRow={singleCreateTempRow}
         countries={countries}
         sports={sports}
-        athletesPositions={athletesPositions}
+        positionTypes={positionTypes}
+        formationPositionTypes={formationPositionTypes}
         onCreated={(ath) => {
           showToast(`Created athlete "${ath?.name ?? ''}"`, 'success');
           onSingleCreated(singleCreateTempRow);
@@ -4980,13 +4985,16 @@ function AthletesTermsFix() {
         onClose={() => setChoiceOpen(false)}
         onChoose={handleChoose}
         entityName="athlete"
+        disableManyToOne={hasMultipleCompetitors}
+        disableManyToOneReason={hasMultipleCompetitors ? 'Selected temp rows belong to different competitors — cannot create a single athlete from them.' : ''}
       />
       <ManyToOneAthleteDialog
         open={manyOneOpen}
         tempRows={selectedTempList}
         countries={countries}
         sports={sports}
-        athletesPositions={athletesPositions}
+        positionTypes={positionTypes}
+        formationPositionTypes={formationPositionTypes}
         onClose={() => setManyOneOpen(false)}
         onCreated={onManyToOneCreated}
       />
@@ -4995,7 +5003,8 @@ function AthletesTermsFix() {
         tempRows={selectedTempList}
         countries={countries}
         sports={sports}
-        athletesPositions={athletesPositions}
+        positionTypes={positionTypes}
+        formationPositionTypes={formationPositionTypes}
         onClose={() => setOneOneOpen(false)}
         onCreated={onOneToOneCreated}
       />
@@ -5013,7 +5022,7 @@ function AthletesTermsFix() {
 /* --------------------------------------------------------------------------
  * Athlete create dialog (for Terms Fix page)
  * ------------------------------------------------------------------------ */
-function AthleteCreateDialog({ open, onClose, tempRow, countries, sports, athletesPositions = [], onCreated, onError }) {
+function AthleteCreateDialog({ open, onClose, tempRow, countries, sports, positionTypes = [], formationPositionTypes = [], onCreated, onError }) {
   const [formData, setFormData] = useState({ name: '', SPORT_TYPE_ID: '', GENDER: '', NATIONALITY: '', BIRTHDATE: '', HEIGHT: '', POSITION: null, FORMATION_POSITION: null });
   const [formErrors, setFormErrors] = useState({});
   const [saving, setSaving] = useState(false);
@@ -5041,18 +5050,17 @@ function AthleteCreateDialog({ open, onClose, tempRow, countries, sports, athlet
 
   const filteredPositions = useMemo(
     () => formData.SPORT_TYPE_ID
-      ? (athletesPositions || []).filter((p) => p.SPORT_TYPE_ID === Number(formData.SPORT_TYPE_ID))
+      ? (positionTypes || []).filter((p) => p.SPORT_TYPE_ID === Number(formData.SPORT_TYPE_ID))
       : [],
-    [athletesPositions, formData.SPORT_TYPE_ID]
+    [positionTypes, formData.SPORT_TYPE_ID]
   );
 
   const formationPositions = useMemo(() => {
     if (!formData.POSITION) return [];
-    const pos = (athletesPositions || []).find(
-      (p) => p.POSITION_ID === formData.POSITION && p.SPORT_TYPE_ID === Number(formData.SPORT_TYPE_ID)
+    return (formationPositionTypes || []).filter(
+      (fp) => fp.POSITION_ID === formData.POSITION && fp.SPORT_TYPE_ID === Number(formData.SPORT_TYPE_ID)
     );
-    return pos?.FORMATION_POSITIONS || [];
-  }, [athletesPositions, formData.POSITION, formData.SPORT_TYPE_ID]);
+  }, [formationPositionTypes, formData.POSITION, formData.SPORT_TYPE_ID]);
 
   const handleSubmit = async () => {
     const err = {};
@@ -5063,10 +5071,14 @@ function AthleteCreateDialog({ open, onClose, tempRow, countries, sports, athlet
     setSaving(true);
     try {
       const langId = tempRow?.LANG_ID != null && Number.isFinite(Number(tempRow.LANG_ID)) ? Number(tempRow.LANG_ID) : 1;
-      const newTerm = await api.createTerm({
-        category: 'Athletes Names',
-        values: [{ languageId: langId, value: formData.name.trim(), isDefault: true, status: 'Approved' }],
-      });
+      const termValues = [{ languageId: 1, value: formData.name.trim(), isDefault: true, status: 'Approved' }];
+      if (langId !== 1) {
+        const origName = String(tempRow?.NAME ?? '').trim();
+        if (origName && origName.toLowerCase() !== formData.name.trim().toLowerCase()) {
+          termValues.push({ languageId: langId, value: origName, isDefault: false, status: 'Approved' });
+        }
+      }
+      const newTerm = await api.createTerm({ category: 'Athletes Names', values: termValues });
       const res = await api.createAthlete({
         NAME_ID: newTerm.id,
         SPORT_TYPE_ID: Number(formData.SPORT_TYPE_ID),
@@ -5078,6 +5090,19 @@ function AthleteCreateDialog({ open, onClose, tempRow, countries, sports, athlet
         FORMATION_POSITION: formData.FORMATION_POSITION || null,
       });
       const created = res?.data ?? res;
+      const athleteId = created?.ATHLETE_ID ?? created?.id;
+      if (athleteId && tempRow?.COMPETITOR_ID != null && Number(tempRow.COMPETITOR_ID) > 0) {
+        const rawTime = tempRow.CREATED_TIME;
+        let startDate = null;
+        if (rawTime) { const m = String(rawTime).match(/^(\d{2})\/(\d{2})\/(\d{2})/); if (m) startDate = `20${m[1]}-${m[2]}-${m[3]}`; }
+        await api.createAthleteContract(athleteId, {
+          COMPETITOR_ID: Number(tempRow.COMPETITOR_ID),
+          JERSEY_NUMBER: tempRow.JERSEY_NUM != null && Number(tempRow.JERSEY_NUM) > 0 ? Number(tempRow.JERSEY_NUM) : null,
+          CURRENT_CLUB: true,
+          START_DATE: startDate,
+          END_DATE: null,
+        });
+      }
       onCreated(created);
     } catch (e) {
       onError(e?.message || 'Create failed');
@@ -5122,7 +5147,7 @@ function AthleteCreateDialog({ open, onClose, tempRow, countries, sports, athlet
               <Select value={formData.POSITION ?? ''} label="Position" onChange={(e) => { handleChange('POSITION', e.target.value || null); handleChange('FORMATION_POSITION', null); }}>
                 <MenuItem value="">None</MenuItem>
                 {filteredPositions.map((p) => (
-                  <MenuItem key={p.POSITION_ID} value={p.POSITION_ID}>{p.NAME || p.POSITION_ID}</MenuItem>
+                  <MenuItem key={p.POSITION_TYPE_ID} value={p.POSITION_TYPE_ID}>{p.ALIAS_NAME || p.POSITION_TYPE_ID}</MenuItem>
                 ))}
               </Select>
             </FormControl>
@@ -5133,7 +5158,7 @@ function AthleteCreateDialog({ open, onClose, tempRow, countries, sports, athlet
               <Select value={formData.FORMATION_POSITION ?? ''} label="Formation Position" onChange={(e) => handleChange('FORMATION_POSITION', e.target.value || null)}>
                 <MenuItem value="">None</MenuItem>
                 {formationPositions.map((fp) => (
-                  <MenuItem key={fp.id || fp} value={fp.id || fp}>{fp.name || fp.id || fp}</MenuItem>
+                  <MenuItem key={fp.FORMATION_POSITION_TYPE_ID} value={fp.FORMATION_POSITION_TYPE_ID}>{fp.ALIAS_NAME || fp.FORMATION_POSITION_TYPE_ID}</MenuItem>
                 ))}
               </Select>
             </FormControl>
@@ -5151,7 +5176,7 @@ function AthleteCreateDialog({ open, onClose, tempRow, countries, sports, athlet
 /* --------------------------------------------------------------------------
  * Many-to-One Athlete dialog
  * ------------------------------------------------------------------------ */
-function ManyToOneAthleteDialog({ open, onClose, tempRows = [], countries, sports, athletesPositions = [], onCreated }) {
+function ManyToOneAthleteDialog({ open, onClose, tempRows = [], countries, sports, positionTypes = [], formationPositionTypes = [], onCreated }) {
   const [formData, setFormData] = useState({ name: '', SPORT_TYPE_ID: '', GENDER: '', NATIONALITY: '', BIRTHDATE: '', HEIGHT: '', POSITION: null, FORMATION_POSITION: null });
   const [formErrors, setFormErrors] = useState({});
   const [saving, setSaving] = useState(false);
@@ -5193,15 +5218,16 @@ function ManyToOneAthleteDialog({ open, onClose, tempRows = [], countries, sport
   }, [tempRows]);
 
   const filteredPositions = useMemo(
-    () => formData.SPORT_TYPE_ID ? (athletesPositions || []).filter((p) => p.SPORT_TYPE_ID === Number(formData.SPORT_TYPE_ID)) : [],
-    [athletesPositions, formData.SPORT_TYPE_ID]
+    () => formData.SPORT_TYPE_ID ? (positionTypes || []).filter((p) => p.SPORT_TYPE_ID === Number(formData.SPORT_TYPE_ID)) : [],
+    [positionTypes, formData.SPORT_TYPE_ID]
   );
 
   const formationPositions = useMemo(() => {
     if (!formData.POSITION) return [];
-    const pos = (athletesPositions || []).find((p) => p.POSITION_ID === formData.POSITION && p.SPORT_TYPE_ID === Number(formData.SPORT_TYPE_ID));
-    return pos?.FORMATION_POSITIONS || [];
-  }, [athletesPositions, formData.POSITION, formData.SPORT_TYPE_ID]);
+    return (formationPositionTypes || []).filter(
+      (fp) => fp.POSITION_ID === formData.POSITION && fp.SPORT_TYPE_ID === Number(formData.SPORT_TYPE_ID)
+    );
+  }, [formationPositionTypes, formData.POSITION, formData.SPORT_TYPE_ID]);
 
   const handleCreate = async () => {
     const err = {};
@@ -5227,6 +5253,20 @@ function ManyToOneAthleteDialog({ open, onClose, tempRows = [], countries, sport
         FORMATION_POSITION: formData.FORMATION_POSITION || null,
       });
       const created = res?.data ?? res;
+      const athleteId = created?.ATHLETE_ID ?? created?.id;
+      const firstRow = tempRows[0];
+      if (athleteId && firstRow?.COMPETITOR_ID != null && Number(firstRow.COMPETITOR_ID) > 0) {
+        const rawTime = firstRow.CREATED_TIME;
+        let startDate = null;
+        if (rawTime) { const m = String(rawTime).match(/^(\d{2})\/(\d{2})\/(\d{2})/); if (m) startDate = `20${m[1]}-${m[2]}-${m[3]}`; }
+        await api.createAthleteContract(athleteId, {
+          COMPETITOR_ID: Number(firstRow.COMPETITOR_ID),
+          JERSEY_NUMBER: firstRow.JERSEY_NUM != null && Number(firstRow.JERSEY_NUM) > 0 ? Number(firstRow.JERSEY_NUM) : null,
+          CURRENT_CLUB: true,
+          START_DATE: startDate,
+          END_DATE: null,
+        });
+      }
       onCreated?.(created, newTerm, tempRows.map((r) => r.ATHLETE_ID));
       onClose?.();
     } catch (e) {
@@ -5288,7 +5328,7 @@ function ManyToOneAthleteDialog({ open, onClose, tempRows = [], countries, sport
               <Select value={formData.POSITION ?? ''} label="Position" onChange={(e) => { handleChange('POSITION', e.target.value || null); handleChange('FORMATION_POSITION', null); }}>
                 <MenuItem value="">None</MenuItem>
                 {filteredPositions.map((p) => (
-                  <MenuItem key={p.POSITION_ID} value={p.POSITION_ID}>{p.NAME || p.POSITION_ID}</MenuItem>
+                  <MenuItem key={p.POSITION_TYPE_ID} value={p.POSITION_TYPE_ID}>{p.ALIAS_NAME || p.POSITION_TYPE_ID}</MenuItem>
                 ))}
               </Select>
             </FormControl>
@@ -5299,7 +5339,7 @@ function ManyToOneAthleteDialog({ open, onClose, tempRows = [], countries, sport
               <Select value={formData.FORMATION_POSITION ?? ''} label="Formation Position" onChange={(e) => handleChange('FORMATION_POSITION', e.target.value || null)}>
                 <MenuItem value="">None</MenuItem>
                 {formationPositions.map((fp) => (
-                  <MenuItem key={fp.id || fp} value={fp.id || fp}>{fp.name || fp.id || fp}</MenuItem>
+                  <MenuItem key={fp.FORMATION_POSITION_TYPE_ID} value={fp.FORMATION_POSITION_TYPE_ID}>{fp.ALIAS_NAME || fp.FORMATION_POSITION_TYPE_ID}</MenuItem>
                 ))}
               </Select>
             </FormControl>
@@ -5318,7 +5358,7 @@ function ManyToOneAthleteDialog({ open, onClose, tempRows = [], countries, sport
 /* --------------------------------------------------------------------------
  * One-to-One Tabs Athlete dialog
  * ------------------------------------------------------------------------ */
-function OneToOneTabsAthleteDialog({ open, onClose, tempRows = [], countries, sports, athletesPositions = [], onCreated }) {
+function OneToOneTabsAthleteDialog({ open, onClose, tempRows = [], countries, sports, positionTypes = [], formationPositionTypes = [], onCreated }) {
   const DEFAULT_FORM = { name: '', SPORT_TYPE_ID: '', GENDER: '', NATIONALITY: '', BIRTHDATE: '', HEIGHT: '', POSITION: null, FORMATION_POSITION: null };
   const [activeTab, setActiveTab] = useState(0);
   const [forms, setForms] = useState([]);
@@ -5379,10 +5419,14 @@ function OneToOneTabsAthleteDialog({ open, onClose, tempRows = [], countries, sp
         const row = form._tempRow;
         const langId = row?.LANG_ID != null && Number.isFinite(Number(row.LANG_ID)) ? Number(row.LANG_ID) : 1;
         try {
-          const newTerm = await api.createTerm({
-            category: 'Athletes Names',
-            values: [{ languageId: langId, value: form.name.trim(), isDefault: true, status: 'Approved' }],
-          });
+          const termValues = [{ languageId: 1, value: form.name.trim(), isDefault: true, status: 'Approved' }];
+          if (langId !== 1) {
+            const origName = String(row?.NAME ?? '').trim();
+            if (origName && origName.toLowerCase() !== form.name.trim().toLowerCase()) {
+              termValues.push({ languageId: langId, value: origName, isDefault: false, status: 'Approved' });
+            }
+          }
+          const newTerm = await api.createTerm({ category: 'Athletes Names', values: termValues });
           const res = await api.createAthlete({
             NAME_ID: newTerm.id,
             SPORT_TYPE_ID: Number(form.SPORT_TYPE_ID),
@@ -5393,7 +5437,21 @@ function OneToOneTabsAthleteDialog({ open, onClose, tempRows = [], countries, sp
             POSITION: form.POSITION || null,
             FORMATION_POSITION: form.FORMATION_POSITION || null,
           });
-          createdList.push(res?.data ?? res);
+          const created = res?.data ?? res;
+          const athleteId = created?.ATHLETE_ID ?? created?.id;
+          if (athleteId && row?.COMPETITOR_ID != null && Number(row.COMPETITOR_ID) > 0) {
+            const rawTime = row.CREATED_TIME;
+            let startDate = null;
+            if (rawTime) { const m = String(rawTime).match(/^(\d{2})\/(\d{2})\/(\d{2})/); if (m) startDate = `20${m[1]}-${m[2]}-${m[3]}`; }
+            await api.createAthleteContract(athleteId, {
+              COMPETITOR_ID: Number(row.COMPETITOR_ID),
+              JERSEY_NUMBER: row.JERSEY_NUM != null && Number(row.JERSEY_NUM) > 0 ? Number(row.JERSEY_NUM) : null,
+              CURRENT_CLUB: true,
+              START_DATE: startDate,
+              END_DATE: null,
+            });
+          }
+          createdList.push(created);
           createdTempIds.push(row?.ATHLETE_ID);
           nextCompleted.add(idx);
         } catch (err) {
@@ -5417,15 +5475,16 @@ function OneToOneTabsAthleteDialog({ open, onClose, tempRows = [], countries, sp
   const f = forms[activeTab] || {};
 
   const filteredPositions = useMemo(
-    () => f.SPORT_TYPE_ID ? (athletesPositions || []).filter((p) => p.SPORT_TYPE_ID === Number(f.SPORT_TYPE_ID)) : [],
-    [athletesPositions, f.SPORT_TYPE_ID]
+    () => f.SPORT_TYPE_ID ? (positionTypes || []).filter((p) => p.SPORT_TYPE_ID === Number(f.SPORT_TYPE_ID)) : [],
+    [positionTypes, f.SPORT_TYPE_ID]
   );
 
   const formationPositions = useMemo(() => {
     if (!f.POSITION) return [];
-    const pos = (athletesPositions || []).find((p) => p.POSITION_ID === f.POSITION && p.SPORT_TYPE_ID === Number(f.SPORT_TYPE_ID));
-    return pos?.FORMATION_POSITIONS || [];
-  }, [athletesPositions, f.POSITION, f.SPORT_TYPE_ID]);
+    return (formationPositionTypes || []).filter(
+      (fp) => fp.POSITION_ID === f.POSITION && fp.SPORT_TYPE_ID === Number(f.SPORT_TYPE_ID)
+    );
+  }, [formationPositionTypes, f.POSITION, f.SPORT_TYPE_ID]);
 
   if (forms.length === 0) return null;
 
@@ -5477,7 +5536,7 @@ function OneToOneTabsAthleteDialog({ open, onClose, tempRows = [], countries, sp
                 <Select value={f.POSITION ?? ''} label="Position" onChange={(e) => { onChange(activeTab, 'POSITION', e.target.value || null); onChange(activeTab, 'FORMATION_POSITION', null); }}>
                   <MenuItem value="">None</MenuItem>
                   {filteredPositions.map((p) => (
-                    <MenuItem key={p.POSITION_ID} value={p.POSITION_ID}>{p.NAME || p.POSITION_ID}</MenuItem>
+                    <MenuItem key={p.POSITION_TYPE_ID} value={p.POSITION_TYPE_ID}>{p.ALIAS_NAME || p.POSITION_TYPE_ID}</MenuItem>
                   ))}
                 </Select>
               </FormControl>
@@ -5488,7 +5547,7 @@ function OneToOneTabsAthleteDialog({ open, onClose, tempRows = [], countries, sp
                 <Select value={f.FORMATION_POSITION ?? ''} label="Formation Position" onChange={(e) => onChange(activeTab, 'FORMATION_POSITION', e.target.value || null)}>
                   <MenuItem value="">None</MenuItem>
                   {formationPositions.map((fp) => (
-                    <MenuItem key={fp.id || fp} value={fp.id || fp}>{fp.name || fp.id || fp}</MenuItem>
+                    <MenuItem key={fp.FORMATION_POSITION_TYPE_ID} value={fp.FORMATION_POSITION_TYPE_ID}>{fp.ALIAS_NAME || fp.FORMATION_POSITION_TYPE_ID}</MenuItem>
                   ))}
                 </Select>
               </FormControl>

@@ -66,7 +66,8 @@
     "LINEUPS_BET_VALUE": null,
     "BET_VALUE": null,
     "IS_DELETED": false,
-    "name": "Spain"
+    "name": "Spain",
+    "COUNTRY_IMAGE_URL": null
   },
   {
     "COUNTRY_ID": 3,
