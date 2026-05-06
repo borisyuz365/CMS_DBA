@@ -445,15 +445,72 @@ class TempController {
 
       const remainingTemp = (tempList || []).filter((r) => !wantedIds.has(Number(r[tempIdField])));
 
-      await Promise.all([
+      const savePromises = [
         dataLoader.saveData('terms.json', terms),
         dataLoader.saveData(TEMP_FILES[entity], remainingTemp),
-      ]);
+      ];
+
+      let contractCreated = null;
+      if (entity === 'athletes') {
+        const firstRow = selectedRows[0];
+        const competitorId = firstRow.COMPETITOR_ID != null ? Number(firstRow.COMPETITOR_ID) : null;
+        if (competitorId != null && Number.isFinite(competitorId) && competitorId > 0) {
+          const contracts = (await dataLoader.loadData('athlete_contracts.json').catch(() => [])) || [];
+          const athleteId = Number(targetId);
+
+          contracts.forEach((c) => {
+            if (c.ATHLETE_ID === athleteId && c.CURRENT_CLUB === true) {
+              c.CURRENT_CLUB = false;
+            }
+          });
+
+          const maxContractId = contracts.length > 0
+            ? Math.max(...contracts.map((c) => c.CONTRACT_ID || 0))
+            : 0;
+
+          let startDate = null;
+          const raw = firstRow.CREATED_TIME;
+          if (raw) {
+            const m = String(raw).match(/^(\d{2})\/(\d{2})\/(\d{2})/);
+            if (m) startDate = `20${m[1]}-${m[2]}-${m[3]}`;
+          }
+
+          const jerseyNum = firstRow.JERSEY_NUM != null && Number(firstRow.JERSEY_NUM) > 0
+            ? Number(firstRow.JERSEY_NUM)
+            : null;
+
+          contractCreated = {
+            ATHLETE_ID: athleteId,
+            COMPETITOR_ID: competitorId,
+            START_DATE: startDate,
+            END_DATE: null,
+            CURRENT_CLUB: true,
+            JERSEY_NUMBER: jerseyNum,
+            TRANSFER_TYPE: null,
+            TRANSFER_FEE: null,
+            TRANSFER_FEE_CURRENCY: null,
+            SALARY: null,
+            SALARY_CURRENCY: null,
+            POSITION: null,
+            FORMATION_POSITION: null,
+            BLOCK_AUTOMATIC_UPDATES: false,
+            MAIN_COMPETITION_ID: null,
+            CONTRACT_ID: maxContractId + 1,
+          };
+          contracts.push(contractCreated);
+          savePromises.push(dataLoader.saveData('athlete_contracts.json', contracts));
+        }
+      }
+
+      await Promise.all(savePromises);
 
       countrySuggest.invalidateIndex();
       competitionSuggest.invalidateIndex();
+      if (entity === 'athletes') athleteSuggest.invalidateIndex();
 
-      res.json({ success: true, data: { addedValues: added, removedTempRows: selectedRows.length, term } });
+      const responseData = { addedValues: added, removedTempRows: selectedRows.length, term };
+      if (contractCreated) responseData.contractCreated = contractCreated;
+      res.json({ success: true, data: responseData });
     } catch (error) {
       next(error);
     }

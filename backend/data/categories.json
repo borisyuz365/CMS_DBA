@@ -537,5 +537,23 @@
     "fatherCategory": "All Categories",
     "description": "",
     "id": 68
+  },
+  {
+    "name": "Enums",
+    "fatherCategory": "All Categories",
+    "description": "",
+    "id": 69
+  },
+  {
+    "name": "TV Networks",
+    "fatherCategory": "All Categories",
+    "description": "",
+    "id": 70
+  },
+  {
+    "name": "Table Types",
+    "fatherCategory": "All Categories",
+    "description": "",
+    "id": 71
   }
 ]

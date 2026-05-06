@@ -1258,5 +1258,61 @@
     "SCHEDULE_PRIORITY": null,
     "USER_NAME": "DanielBelgi",
     "UPDATE_TIME": "2026-04-09T13:41:20.787Z"
+  },
+  {
+    "DATA_SOURCE": 292,
+    "UPDATE_TYPE": 2,
+    "PRIORITY_LEVEL": 4,
+    "CUT_TYPE": 1,
+    "CUT_VALUE": 1001,
+    "COMMENT": "WEFFEDFG",
+    "START_DATE": "2026-03-30T00:00:00.000Z",
+    "EXPIRATION_DATE": "2026-04-01T00:00:00.000Z",
+    "AFTER_EXPIRED_PRIORITY": 3,
+    "SCHEDULE_PRIORITY": null,
+    "USER_NAME": "DanielBelgi",
+    "UPDATE_TIME": "2026-04-28T08:03:57.654Z"
+  },
+  {
+    "DATA_SOURCE": 291,
+    "UPDATE_TYPE": 2,
+    "PRIORITY_LEVEL": 1,
+    "CUT_TYPE": 2,
+    "CUT_VALUE": 2,
+    "COMMENT": "test",
+    "START_DATE": null,
+    "EXPIRATION_DATE": null,
+    "AFTER_EXPIRED_PRIORITY": null,
+    "SCHEDULE_PRIORITY": null,
+    "USER_NAME": "DanielBelgi",
+    "UPDATE_TIME": "2026-04-28T08:04:02.762Z"
+  },
+  {
+    "DATA_SOURCE": 4,
+    "UPDATE_TYPE": 1,
+    "PRIORITY_LEVEL": 2,
+    "CUT_TYPE": 2,
+    "CUT_VALUE": 2,
+    "COMMENT": "גכעגכע",
+    "START_DATE": "2026-05-09T00:00:00.000Z",
+    "EXPIRATION_DATE": null,
+    "AFTER_EXPIRED_PRIORITY": null,
+    "SCHEDULE_PRIORITY": 4,
+    "USER_NAME": "DanielBelgi",
+    "UPDATE_TIME": "2026-05-05T12:29:08.952Z"
+  },
+  {
+    "DATA_SOURCE": 4,
+    "UPDATE_TYPE": 2,
+    "PRIORITY_LEVEL": 3,
+    "CUT_TYPE": 1,
+    "CUT_VALUE": 4689566,
+    "COMMENT": "sfafds",
+    "START_DATE": "2026-05-05T00:00:00.000Z",
+    "EXPIRATION_DATE": "2026-05-19T00:00:00.000Z",
+    "AFTER_EXPIRED_PRIORITY": 3,
+    "SCHEDULE_PRIORITY": null,
+    "USER_NAME": "DanielBelgi",
+    "UPDATE_TIME": "2026-05-05T12:39:47.254Z"
   }
 ]

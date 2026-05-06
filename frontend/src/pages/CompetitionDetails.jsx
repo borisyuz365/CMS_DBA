@@ -45,6 +45,7 @@ import {
   Chip,
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import CancelIcon from '@mui/icons-material/Cancel';
 import CloseIcon from '@mui/icons-material/Close';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
@@ -62,6 +63,7 @@ import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import LoadingSpinner from '../../reuse/LoadingSpinner';
 import Alert from '../../reuse/Alert';
 import TermEditModal from '../../reuse/TermEditModal';
+import TableSettingsEditor, { parseSettingsString } from '../components/TableSettingsEditor';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import dayjs from 'dayjs';
 import api from '../services/api';
@@ -145,12 +147,13 @@ function CompetitionDetails() {
   const [buzzItemTypes, setBuzzItemTypes] = useState([]);
   const [surfaces, setSurfaces] = useState([]);
   const [allCompetitions, setAllCompetitions] = useState([]); // for resolving FATHER_COMPETITION name
+  const [tableTypes, setTableTypes] = useState([]);
   const [generalDetailsSeasons, setGeneralDetailsSeasons] = useState([]);
   const [generalDetailsStages, setGeneralDetailsStages] = useState([]);
   const [urlState, setUrlState] = useUrlFilters({
     tab: { type: 'number', default: 0 },
   });
-  const activeTab = urlState.tab; // 0=Structure (default), 1=Configurations, 2=Tools & Screens, 3=Winners, 4=Table Settings
+  const activeTab = urlState.tab; // 0=Structure (default), 1=Configurations, 2=Winners, 3=Table Settings, 4=Extra Tools & Screens
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
   // Winners tab
   const [winnersData, setWinnersData] = useState([]);
@@ -177,7 +180,7 @@ function CompetitionDetails() {
   const [groupsByStage, setGroupsByStage] = useState({});
   const [phasesBySeason, setPhasesBySeason] = useState({});
   const [expandedStageKey, setExpandedStageKey] = useState(null); // "seasonNum-stageNum"
-  const [phasesExpanded, setPhasesExpanded] = useState(false); // Phases section: collapsed by default
+  const [expandedStructureSection, setExpandedStructureSection] = useState(null); // 'seasons' | 'stages' | 'groups' | 'phases' | null
   // Structure tab: selected season (dropdown) and inline form for Season Details + Configuration
   const [selectedStructureSeasonNum, setSelectedStructureSeasonNum] = useState(null);
   const [structureSeasonForm, setStructureSeasonForm] = useState(null); // full season fields for editing; null when none selected
@@ -186,7 +189,8 @@ function CompetitionDetails() {
   const [selectedStructureStageNum, setSelectedStructureStageNum] = useState(null);
   const [structureStageForm, setStructureStageForm] = useState(null); // full stage fields for editing; null when none selected
   const [structureStageSaving, setStructureStageSaving] = useState(false);
-  const [generateStagesDialogOpen, setGenerateStagesDialogOpen] = useState(false);
+  const [createGenerateDialogOpen, setCreateGenerateDialogOpen] = useState(false);
+  const [createGenerateDialogTab, setCreateGenerateDialogTab] = useState(0); // 0 = Generate Stages, 1 = Create Stage
   const [generateStagesImportSeasonNum, setGenerateStagesImportSeasonNum] = useState(null);
   const [generateStagesTypes, setGenerateStagesTypes] = useState({ leagueCycle: false, groupStage: false, bracketStage: false });
   const [newStageSetCurrent, setNewStageSetCurrent] = useState(false);
@@ -194,10 +198,21 @@ function CompetitionDetails() {
   // Stages table drag-and-drop visual state
   const [stagesDraggingStageNum, setStagesDraggingStageNum] = useState(null);
   const [stagesDropTargetIndex, setStagesDropTargetIndex] = useState(null);
+  // Stages table inline edit mode
+  const [isStageEditMode, setIsStageEditMode] = useState(false);
+  const [pendingStageChanges, setPendingStageChanges] = useState({});
+  const [pendingCurrentStage, setPendingCurrentStage] = useState(null);
+  const [selectedStagesForDelete, setSelectedStagesForDelete] = useState([]);
+  const [stageDeleteConfirmOpen, setStageDeleteConfirmOpen] = useState(false);
+  const [stageEditsNeedServiceUpdate, setStageEditsNeedServiceUpdate] = useState(false);
+  const [phaseEditsNeedServiceUpdate, setPhaseEditsNeedServiceUpdate] = useState(false);
   // Phases section (Structure tab): selected phase and form for Phase Details
   const [selectedStructurePhaseNum, setSelectedStructurePhaseNum] = useState(null);
   const [structurePhaseForm, setStructurePhaseForm] = useState(null);
   const [structurePhaseSaving, setStructurePhaseSaving] = useState(false);
+  const [isPhaseEditMode, setIsPhaseEditMode] = useState(false);
+  const [pendingPhaseChanges, setPendingPhaseChanges] = useState({});
+  const [selectedPhaseRows, setSelectedPhaseRows] = useState([]);
   // Groups section (Structure tab): selected group and form for Group Details
   const [selectedStructureGroupNum, setSelectedStructureGroupNum] = useState(null);
   const [structureGroupForm, setStructureGroupForm] = useState(null);
@@ -304,9 +319,9 @@ function CompetitionDetails() {
   const [competitionImageError, setCompetitionImageError] = useState(false);
   const [darkImageError, setDarkImageError] = useState(false);
   const [trophyImageError, setTrophyImageError] = useState(false);
-  const [createCityDialogOpen, setCreateCityDialogOpen] = useState(false);
-  const [createCityName, setCreateCityName] = useState('');
+  const [allCities, setAllCities] = useState([]);
   const [hostCityInputValue, setHostCityInputValue] = useState('');
+  const [fatherCompetitionInputValue, setFatherCompetitionInputValue] = useState('');
   const [createBracketFinalDialogOpen, setCreateBracketFinalDialogOpen] = useState(false);
   const [createBracketFinalName, setCreateBracketFinalName] = useState('');
   const [bracketFinalInputValue, setBracketFinalInputValue] = useState('');
@@ -393,6 +408,18 @@ function CompetitionDetails() {
   }, []);
 
   useEffect(() => {
+    const loadTableTypes = async () => {
+      try {
+        const data = await api.getTableTypes();
+        setTableTypes(Array.isArray(data) ? data : []);
+      } catch (err) {
+        console.warn('Failed to load table types:', err);
+      }
+    };
+    loadTableTypes();
+  }, []);
+
+  useEffect(() => {
     const loadSurfaces = async () => {
       try {
         const data = await api.getSurfaces();
@@ -427,7 +454,7 @@ function CompetitionDetails() {
   }, [activeTab, id]);
 
   useEffect(() => {
-    if (activeTab === 3 && id) {
+    if (activeTab === 2 && id) {
       (async () => {
         setWinnersLoading(true);
         try {
@@ -554,8 +581,10 @@ function CompetitionDetails() {
 
   // When switching competition, reset so we re-apply initial season selection
   const hasInitializedSeasonSelection = useRef(false);
+  const prevStructureSeasonNum = useRef(null);
   useEffect(() => {
     hasInitializedSeasonSelection.current = false;
+    prevStructureSeasonNum.current = null;
   }, [id]);
 
   // When structure seasons + competition are ready, select current season once (else highest NUM = most recent)
@@ -636,8 +665,11 @@ function CompetitionDetails() {
     }
   }, [activeTab, id, selectedStructureSeasonNum, selectedStructureStageNum]);
 
-  // When season changes, clear selected stage, phase and group
+  // When season truly changes (user picks a different one), clear selected stage, phase and group
   useEffect(() => {
+    const prev = prevStructureSeasonNum.current;
+    prevStructureSeasonNum.current = selectedStructureSeasonNum;
+    if (prev == null || prev === selectedStructureSeasonNum) return;
     setSelectedStructureStageNum(null);
     setStructureStageForm(null);
     setSelectedStructurePhaseNum(null);
@@ -646,7 +678,7 @@ function CompetitionDetails() {
     setStructureGroupForm(null);
     setGroupCompetitorCounts({});
     setGroupEditDialogOpen(false);
-    setPhasesExpanded(false);
+    setExpandedStructureSection(null);
   }, [selectedStructureSeasonNum]);
 
   // When stage changes, clear selected group and competitor counts cache
@@ -665,7 +697,15 @@ function CompetitionDetails() {
     }
     const stages = stagesBySeason[selectedStructureSeasonNum] || [];
     const stage = stages.find((s) => Number(s.STAGE_NUM) === Number(selectedStructureStageNum));
-    setStructureStageForm(stage ? { ...stage } : null);
+    if (stage) {
+      setStructureStageForm({
+        ...stage,
+        HAS_AGGREGATION_TABLE: !!stage.AGGREGATED_TABLE_SETTINGS,
+        HAS_RELEGATION_TABLE: !!stage.RELEGATION_TABLE_SETTINGS,
+      });
+    } else {
+      setStructureStageForm(null);
+    }
   }, [selectedStructureSeasonNum, selectedStructureStageNum, stagesBySeason]);
 
   // Sync structurePhaseForm when selected phase or phases list changes
@@ -921,6 +961,24 @@ function CompetitionDetails() {
 
   const handleSaveStructureStage = async () => {
     if (!id || selectedStructureSeasonNum == null || selectedStructureStageNum == null || !structureStageForm) return;
+
+    if (structureStageForm.HAS_AGGREGATION_TABLE && structureStageForm.AGGREGATED_TABLE_SETTINGS) {
+      const rows = parseSettingsString(structureStageForm.AGGREGATED_TABLE_SETTINGS);
+      const incomplete = rows.some((r) => !r.COMPETITION_ID || !r.SEASON_NUM || !r.STAGE_NUM || !r.TABLE_TYPE_ID);
+      if (incomplete) {
+        setSnackbar({ open: true, message: 'Aggregation Table Settings: All fields (Competition, Season, Stage, Table Type) are required for each row', severity: 'error' });
+        return;
+      }
+    }
+    if (structureStageForm.HAS_RELEGATION_TABLE && structureStageForm.RELEGATION_TABLE_SETTINGS) {
+      const rows = parseSettingsString(structureStageForm.RELEGATION_TABLE_SETTINGS);
+      const incomplete = rows.some((r) => !r.COMPETITION_ID || !r.SEASON_NUM || !r.STAGE_NUM || !r.TABLE_TYPE_ID);
+      if (incomplete) {
+        setSnackbar({ open: true, message: 'Relegation Table Settings: All fields (Competition, Season, Stage, Table Type) are required for each row', severity: 'error' });
+        return;
+      }
+    }
+
     setStructureStageSaving(true);
     try {
       const payload = {
@@ -942,10 +1000,18 @@ function CompetitionDetails() {
         HIDE_HOME_AWAY_TABLES: !!structureStageForm.HIDE_HOME_AWAY_TABLES,
         HIDE_MAIN_TABLE: !!structureStageForm.HIDE_MAIN_TABLE,
         HAS_POSITION_TABLE: !!structureStageForm.HAS_POSITION_TABLE,
-        POSITION_PARAMETER: (structureStageForm.POSITION_PARAMETER != null && String(structureStageForm.POSITION_PARAMETER).trim() !== '') ? Number(structureStageForm.POSITION_PARAMETER) : null,
-        POSITION_TABLE_NAME: structureStageForm.POSITION_TABLE_NAME_ID ?? structureStageForm.POSITION_TABLE_NAME ?? null,
-        AGGREGATED_TABLE_SETTINGS: (structureStageForm.AGGREGATED_TABLE_SETTINGS || '').trim() || null,
-        RELEGATION_TABLE_SETTINGS: (structureStageForm.RELEGATION_TABLE_SETTINGS || '').trim() || null,
+        POSITION_PARAMETER: structureStageForm.HAS_POSITION_TABLE
+          ? ((structureStageForm.POSITION_PARAMETER != null && String(structureStageForm.POSITION_PARAMETER).trim() !== '') ? Number(structureStageForm.POSITION_PARAMETER) : null)
+          : null,
+        POSITION_TABLE_NAME: structureStageForm.HAS_POSITION_TABLE
+          ? (structureStageForm.POSITION_TABLE_NAME_ID ?? structureStageForm.POSITION_TABLE_NAME ?? null)
+          : null,
+        AGGREGATED_TABLE_SETTINGS: structureStageForm.HAS_AGGREGATION_TABLE
+          ? ((structureStageForm.AGGREGATED_TABLE_SETTINGS || '').trim() || null)
+          : null,
+        RELEGATION_TABLE_SETTINGS: structureStageForm.HAS_RELEGATION_TABLE
+          ? ((structureStageForm.RELEGATION_TABLE_SETTINGS || '').trim() || null)
+          : null,
       };
       await api.updateStage(id, selectedStructureSeasonNum, selectedStructureStageNum, payload);
       setSnackbar({ open: true, message: 'Stage updated', severity: 'success' });
@@ -1213,25 +1279,155 @@ function CompetitionDetails() {
     }
   };
 
+  const handleToggleStageEditMode = () => {
+    const hasPending = Object.keys(pendingStageChanges).length > 0 || pendingCurrentStage != null;
+    if (isStageEditMode && hasPending && !window.confirm('Discard unsaved stage changes?')) return;
+    if (isStageEditMode) {
+      setPendingStageChanges({});
+      setPendingCurrentStage(null);
+      setSelectedStagesForDelete([]);
+    }
+    setIsStageEditMode(!isStageEditMode);
+  };
+
+  const handleStageFieldChange = (stageNum, field, value) => {
+    setPendingStageChanges((prev) => ({
+      ...prev,
+      [stageNum]: { ...(prev[stageNum] || {}), [field]: value },
+    }));
+  };
+
+  const handleSaveStageEdits = async () => {
+    if (!id || selectedStructureSeasonNum == null) return;
+    const changedStageNums = Object.keys(pendingStageChanges).filter((k) => Object.keys(pendingStageChanges[k]).length > 0);
+    const hasCurrentChange = pendingCurrentStage != null;
+    if (changedStageNums.length === 0 && !hasCurrentChange) {
+      setIsStageEditMode(false);
+      return;
+    }
+    try {
+      for (const stageNum of changedStageNums) {
+        const changes = pendingStageChanges[stageNum];
+        await api.updateStage(id, selectedStructureSeasonNum, Number(stageNum), changes);
+      }
+      if (hasCurrentChange) {
+        await handleSetCurrentStage(selectedStructureSeasonNum, pendingCurrentStage);
+      }
+      setSnackbar({ open: true, message: 'Stages updated', severity: 'success' });
+      setPendingStageChanges({});
+      setPendingCurrentStage(null);
+      setSelectedStagesForDelete([]);
+      setIsStageEditMode(false);
+      setStageEditsNeedServiceUpdate(true);
+      loadStagesAndPhases(selectedStructureSeasonNum);
+    } catch (err) {
+      setSnackbar({ open: true, message: err.message || 'Failed to save stages', severity: 'error' });
+    }
+  };
+
+  const handleDeleteSelectedStages = () => {
+    if (!id || selectedStructureSeasonNum == null || selectedStagesForDelete.length === 0) return;
+    const dbCurrentStage = competition?.CURRENT_STAGE;
+    const dbCurrentSeason = competition?.CURRENT_SEASON;
+    const isCurrentSeason = dbCurrentSeason === selectedStructureSeasonNum;
+    const blockList = selectedStagesForDelete.filter((sn) => isCurrentSeason && Number(sn) === Number(dbCurrentStage));
+    if (blockList.length > 0) {
+      setSnackbar({ open: true, message: 'Cannot delete the current stage', severity: 'error' });
+      return;
+    }
+    setStageDeleteConfirmOpen(true);
+  };
+
+  const handleConfirmDeleteStages = async () => {
+    setStageDeleteConfirmOpen(false);
+    try {
+      for (const sn of selectedStagesForDelete) {
+        await api.deleteStage(id, selectedStructureSeasonNum, sn);
+      }
+      const count = selectedStagesForDelete.length;
+      setSnackbar({ open: true, message: `${count} stage(s) deleted`, severity: 'success' });
+      setGroupsByStage((prev) => {
+        const out = { ...prev };
+        for (const sn of selectedStagesForDelete) {
+          delete out[`${selectedStructureSeasonNum}-${sn}`];
+        }
+        return out;
+      });
+      setSelectedStagesForDelete([]);
+      loadStagesAndPhases(selectedStructureSeasonNum);
+      loadCompetition();
+    } catch (err) {
+      setSnackbar({ open: true, message: err.message || 'Failed to delete stages', severity: 'error' });
+    }
+  };
+
   const handleSaveStructurePhase = async () => {
-    if (!id || selectedStructureSeasonNum == null || selectedStructurePhaseNum == null || !structurePhaseForm) return;
+    if (!id || selectedStructureSeasonNum == null) return;
+    const phases = phasesBySeason[selectedStructureSeasonNum] || [];
+    const changedPhaseNums = Object.keys(pendingPhaseChanges).filter((k) => Object.keys(pendingPhaseChanges[k]).length > 0);
+    if (changedPhaseNums.length === 0) return;
     setStructurePhaseSaving(true);
     try {
-      const payload = {
-        PHASE_NAME_ID: structurePhaseForm.PHASE_NAME_ID ?? null,
-        PARENT_PHASE_NUM: structurePhaseForm.PARENT_PHASE_NUM != null && structurePhaseForm.PARENT_PHASE_NUM !== '' ? Number(structurePhaseForm.PARENT_PHASE_NUM) : null,
-        SHOW_STATS: !!structurePhaseForm.SHOW_STATS,
-        USE_NAME: !!structurePhaseForm.USE_NAME,
-        OVERTIME_LENGTH: structurePhaseForm.OVERTIME_LENGTH != null && structurePhaseForm.OVERTIME_LENGTH !== '' ? Number(structurePhaseForm.OVERTIME_LENGTH) : null,
-        TOP_ATHLETES_MIN_APPEARANCES_PERCENTAGE: structurePhaseForm.TOP_ATHLETES_MIN_APPEARANCES_PERCENTAGE != null && structurePhaseForm.TOP_ATHLETES_MIN_APPEARANCES_PERCENTAGE !== '' ? Number(structurePhaseForm.TOP_ATHLETES_MIN_APPEARANCES_PERCENTAGE) : null,
-      };
-      await api.updatePhase(id, selectedStructureSeasonNum, selectedStructurePhaseNum, payload);
-      setSnackbar({ open: true, message: 'Phase updated', severity: 'success' });
+      for (const phaseNum of changedPhaseNums) {
+        const orig = phases.find((p) => Number(p.PHASE_NUM) === Number(phaseNum));
+        if (!orig) continue;
+        const merged = { ...orig, ...pendingPhaseChanges[phaseNum] };
+        const payload = {
+          PHASE_NAME_ID: merged.PHASE_NAME_ID ?? null,
+          PARENT_PHASE_NUM: merged.PARENT_PHASE_NUM != null && merged.PARENT_PHASE_NUM !== '' ? Number(merged.PARENT_PHASE_NUM) : null,
+          SHOW_STATS: !!merged.SHOW_STATS,
+          USE_NAME: !!merged.USE_NAME,
+          OVERTIME_LENGTH: merged.OVERTIME_LENGTH != null && merged.OVERTIME_LENGTH !== '' ? Number(merged.OVERTIME_LENGTH) : null,
+          TOP_ATHLETES_MIN_APPEARANCES_PERCENTAGE: merged.TOP_ATHLETES_MIN_APPEARANCES_PERCENTAGE != null && merged.TOP_ATHLETES_MIN_APPEARANCES_PERCENTAGE !== '' ? Number(merged.TOP_ATHLETES_MIN_APPEARANCES_PERCENTAGE) : null,
+        };
+        await api.updatePhase(id, selectedStructureSeasonNum, phaseNum, payload);
+      }
+      setSnackbar({ open: true, message: `Updated ${changedPhaseNums.length} phase(s)`, severity: 'success' });
+      setPendingPhaseChanges({});
+      setIsPhaseEditMode(false);
+      setSelectedPhaseRows([]);
+      setPhaseEditsNeedServiceUpdate(true);
       loadStagesAndPhases(selectedStructureSeasonNum);
     } catch (err) {
       setSnackbar({ open: true, message: err.message || 'Failed to save phase', severity: 'error' });
     } finally {
       setStructurePhaseSaving(false);
+    }
+  };
+
+  const handlePhaseFieldChange = (phaseNum, field, value) => {
+    setPendingPhaseChanges((prev) => {
+      const next = { ...prev };
+      if (!next[phaseNum]) next[phaseNum] = {};
+      next[phaseNum][field] = value;
+      return next;
+    });
+  };
+
+  const handleTogglePhaseEditMode = () => {
+    if (isPhaseEditMode && Object.keys(pendingPhaseChanges).length > 0 && !window.confirm('Discard unsaved phase changes?')) return;
+    if (isPhaseEditMode) {
+      setPendingPhaseChanges({});
+      setSelectedPhaseRows([]);
+    }
+    setIsPhaseEditMode(!isPhaseEditMode);
+  };
+
+  const handleDeleteSelectedPhases = async () => {
+    if (!id || selectedStructureSeasonNum == null || selectedPhaseRows.length === 0) return;
+    if (!window.confirm(`Delete ${selectedPhaseRows.length} phase(s)?`)) return;
+    try {
+      for (const phaseNum of selectedPhaseRows) {
+        await api.deletePhase(id, selectedStructureSeasonNum, phaseNum);
+      }
+      setSnackbar({ open: true, message: `Deleted ${selectedPhaseRows.length} phase(s)`, severity: 'success' });
+      setSelectedPhaseRows([]);
+      loadStagesAndPhases(selectedStructureSeasonNum);
+      if (selectedPhaseRows.includes(Number(selectedStructurePhaseNum))) {
+        setSelectedStructurePhaseNum(null);
+      }
+    } catch (err) {
+      setSnackbar({ open: true, message: err.message || 'Failed to delete phases', severity: 'error' });
     }
   };
 
@@ -1344,6 +1540,42 @@ function CompetitionDetails() {
     setStageModalOpen(true);
   };
 
+  const handleOpenCreateGenerateDialog = (tab = 0) => {
+    setCreateGenerateDialogTab(tab);
+    setGenerateStagesImportSeasonNum(null);
+    setGenerateStagesTypes({ leagueCycle: false, groupStage: false, bracketStage: false });
+    if (tab === 1) {
+      setStageModalMode('add');
+      setStageFormContext({ seasonNum: selectedStructureSeasonNum });
+      setStageEditTarget(null);
+      setNewStageName('');
+      setNewStageSetCurrent(false);
+      setStageForm({
+        STAGE_NUM: '',
+        NAME_ID: null,
+        STAGE_TYPE: 1,
+        NUM_OF_GAMES: -1,
+        START_DATE: '',
+        END_DATE: '',
+        HAS_TABLE: false,
+        INCLUDE_IN_BRACKET: false,
+        FILTER_DIVISION: false,
+        CONNECTED_IN_BRACKETS: false,
+        PRE_VISUAL_BRACKETS: false,
+        IS_SERIES: false,
+        CONNECTED_TO_PREVIOUS_STAGE: false,
+        PHASE: '',
+      });
+    }
+    setCreateGenerateDialogOpen(true);
+  };
+
+  const handleCloseCreateGenerateDialog = () => {
+    setCreateGenerateDialogOpen(false);
+    setGenerateStagesImportSeasonNum(null);
+    setGenerateStagesTypes({ leagueCycle: false, groupStage: false, bracketStage: false });
+  };
+
   const handleEditStage = (seasonNum, stage) => {
     setStageModalMode('edit');
     setStageFormContext({ seasonNum });
@@ -1370,6 +1602,7 @@ function CompetitionDetails() {
 
   const handleStageModalClose = () => {
     setStageModalOpen(false);
+    setCreateGenerateDialogOpen(false);
     setStageFormContext(null);
     setStageEditTarget(null);
   };
@@ -1457,24 +1690,15 @@ function CompetitionDetails() {
     }
   };
 
-  const handleDeleteStage = async (seasonNum, stage) => {
+  const handleDeleteStage = (seasonNum, stage) => {
     if (!id) return;
     const isCurrent = competition?.CURRENT_SEASON === seasonNum && competition?.CURRENT_STAGE === stage.STAGE_NUM;
-    if (isCurrent) return;
-    if (!window.confirm(`Delete stage ${stage.STAGE_NUM}?`)) return;
-    try {
-      await api.deleteStage(id, seasonNum, stage.STAGE_NUM);
-      setSnackbar({ open: true, message: 'Stage deleted', severity: 'success' });
-      loadStagesAndPhases(seasonNum);
-      loadCompetition();
-      setGroupsByStage((prev) => {
-        const out = { ...prev };
-        Object.keys(out).forEach(k => { if (k.startsWith(`${seasonNum}-`)) delete out[k]; });
-        return out;
-      });
-    } catch (err) {
-      setSnackbar({ open: true, message: err.message || 'Cannot delete stage', severity: 'error' });
+    if (isCurrent) {
+      setSnackbar({ open: true, message: 'Cannot delete the current stage', severity: 'error' });
+      return;
     }
+    setSelectedStagesForDelete([stage.STAGE_NUM]);
+    setStageDeleteConfirmOpen(true);
   };
 
   const handleSetCurrentStage = async (seasonNum, stageNum) => {
@@ -2234,7 +2458,7 @@ function CompetitionDetails() {
 
   const loadCountriesAndSports = async () => {
     try {
-      const [c, s, g, ct, st, sst, compt, pl, stgTypes] = await Promise.all([
+      const [c, s, g, ct, st, sst, compt, pl, stgTypes, cities] = await Promise.all([
         api.getCountries(),
         api.getSports(),
         api.getGenders(),
@@ -2244,6 +2468,7 @@ function CompetitionDetails() {
         api.getCompetitorTypes(),
         api.getPriorityLevels(),
         api.getStagesTypes(),
+        api.getCities(),
       ]);
       setCountries(c || []);
       setSports(s || []);
@@ -2254,6 +2479,7 @@ function CompetitionDetails() {
       setCompetitorTypes(compt || []);
       setPriorityLevels(pl || []);
       setStagesTypes(stgTypes || []);
+      setAllCities(cities || []);
     } catch (err) {
       console.warn('Failed to load dropdown data:', err);
     }
@@ -2277,14 +2503,38 @@ function CompetitionDetails() {
   const currentStageObj = generalDetailsStages.find((s) => Number(s.STAGE_NUM) === Number(competition?.CURRENT_STAGE));
 
   const fatherCompetitionId = formData.FATHER_COMPETITION != null && formData.FATHER_COMPETITION !== '' ? (Number(formData.FATHER_COMPETITION) || formData.FATHER_COMPETITION) : null;
-  const fatherCompetitionName = fatherCompetitionId != null ? (allCompetitions.find((c) => Number(c.COMPETITION_ID) === Number(fatherCompetitionId))?.name ?? null) : null;
+  const fatherCompetitionObj = fatherCompetitionId != null ? allCompetitions.find((c) => Number(c.COMPETITION_ID) === Number(fatherCompetitionId)) : null;
+  const fatherCompetitionName = fatherCompetitionObj?.name ?? null;
+  const fatherCompetitionDisplayName = fatherCompetitionId != null
+    ? (fatherCompetitionName ? `${fatherCompetitionName} (${fatherCompetitionId})` : `${fatherCompetitionId}`)
+    : '';
 
-  const cityCategoryId = (allCategories || []).find((c) => c.name === 'Cities')?.id;
-  const cityTerms = (allTerms || []).filter((t) => t.categoryId === cityCategoryId);
   const resolveTermDisplayValue = (t) => (t?.engValue || (t?.values && t.values[0] && t.values[0].value) || (t?.id != null ? `Term ${t.id}` : ''));
-  const hostCityTerm = (formData.HOST_CITY != null && String(formData.HOST_CITY).trim() !== '')
-    ? cityTerms.find((t) => resolveTermDisplayValue(t) === String(formData.HOST_CITY).trim())
-    : null;
+
+  const competitionCountryId = formData.COUNTRY_ID != null && formData.COUNTRY_ID !== '' ? Number(formData.COUNTRY_ID) : null;
+  const competitionSportTypeId = formData.SPORT_TYPE_ID != null && formData.SPORT_TYPE_ID !== '' ? Number(formData.SPORT_TYPE_ID) : null;
+  const competitionsForFatherAutocomplete = allCompetitions.filter((c) =>
+    competitionCountryId != null && Number(c.COUNTRY_ID) === competitionCountryId &&
+    competitionSportTypeId != null && Number(c.SPORT_TYPE_ID) === competitionSportTypeId &&
+    Number(c.COMPETITION_ID) !== Number(id)
+  );
+  const citiesForCountry = allCities.filter((c) => competitionCountryId != null && Number(c.COUNTRY_ID) === competitionCountryId);
+
+  const hostCityId = formData.HOST_CITY != null && String(formData.HOST_CITY).trim() !== '' ? Number(formData.HOST_CITY) : null;
+  const hostCityObj = hostCityId != null ? allCities.find((c) => Number(c.CITY_ID) === hostCityId) : null;
+  const hostCityDisplayName = (() => {
+    if (!hostCityObj) return hostCityId != null ? `(${hostCityId})` : '';
+    const nameId = hostCityObj.NAME_ID;
+    let cityName = hostCityObj.CITY_NAME || '';
+    if (nameId != null) {
+      const term = (allTerms || []).find((t) => t.id === nameId);
+      if (term) {
+        const engVal = term.values?.find((v) => v.languageId === 1);
+        if (engVal?.value) cityName = engVal.value;
+      }
+    }
+    return cityName ? `${cityName} (${hostCityId})` : `(${hostCityId})`;
+  })();
 
   const finalsCategoryId = (allCategories || []).find((c) => c.name === 'Finals')?.id;
   const finalsTerms = (allTerms || []).filter((t) => t.categoryId === finalsCategoryId || t.category === 'Finals');
@@ -2312,18 +2562,6 @@ function CompetitionDetails() {
 
   const sportTypeId = formData.SPORT_TYPE_ID ?? competition?.SPORT_TYPE_ID;
   const isTennisCompetition = Number(sportTypeId) === 3; // Tennis = SPORT_TYPE_ID 3
-
-  const handleHostCityNameClick = async () => {
-    if (!hostCityTerm?.id) return;
-    try {
-      const term = await api.getTermById(hostCityTerm.id);
-      setCurrentTerm(term);
-      setTermModalCategory('Cities');
-      setTermModalOpen(true);
-    } catch (err) {
-      setSnackbar({ open: true, message: 'Failed to load term', severity: 'error' });
-    }
-  };
 
   const handleBracketFinalNameClick = async () => {
     if (!bracketFinalTerm?.id) return;
@@ -2425,7 +2663,7 @@ function CompetitionDetails() {
       payload.GENDER = formData.GENDER !== '' && formData.GENDER != null ? Number(formData.GENDER) : competition.GENDER;
       payload.COMPETITION_TYPE = formData.COMPETITION_TYPE !== '' && formData.COMPETITION_TYPE != null ? Number(formData.COMPETITION_TYPE) : competition.COMPETITION_TYPE;
       payload.FATHER_COMPETITION = formData.FATHER_COMPETITION != null && formData.FATHER_COMPETITION !== '' ? String(formData.FATHER_COMPETITION).trim() : '';
-      payload.HOST_CITY = formData.HOST_CITY != null ? String(formData.HOST_CITY).trim() : (competition.HOST_CITY ?? '');
+      payload.HOST_CITY = formData.HOST_CITY != null && String(formData.HOST_CITY).trim() !== '' ? Number(formData.HOST_CITY) : (competition.HOST_CITY ?? '');
       payload.CURRENT_ROUND = formData.CURRENT_ROUND !== '' && formData.CURRENT_ROUND != null && !isNaN(Number(formData.CURRENT_ROUND)) ? Number(formData.CURRENT_ROUND) : competition.CURRENT_ROUND;
       // Statistics: direct mapping to DB field TOP_ATHLETES_MIN_APPEARANCES_PERCENTAGE
       const minAppearancesPct = formData.TOP_ATHLETES_MIN_APPEARANCES_PERCENTAGE;
@@ -2566,21 +2804,8 @@ function CompetitionDetails() {
         if (String(fn(fv) ?? '') !== String(fn(ov) ?? '')) return true;
       }
     }
-    const phases = phasesBySeason[selectedStructureSeasonNum] || [];
-    const origPhase = phases.find((p) => Number(p.PHASE_NUM) === Number(selectedStructurePhaseNum));
-    if (structurePhaseForm && origPhase) {
-      const phaseKeys = ['PHASE_NAME_ID', 'PARENT_PHASE_NUM', 'SHOW_STATS', 'USE_NAME', 'OVERTIME_LENGTH', 'TOP_ATHLETES_MIN_APPEARANCES_PERCENTAGE'];
-      for (const k of phaseKeys) {
-        const fv = structurePhaseForm[k];
-        const ov = origPhase[k];
-        const fn = (v) => {
-          if (v === null || v === undefined || v === '') return null;
-          if (k === 'PHASE_NAME_ID') return v?.id ?? v ?? null;
-          return typeof v === 'boolean' ? !!v : v;
-        };
-        if (String(fn(fv) ?? '') !== String(fn(ov) ?? '')) return true;
-      }
-    }
+    if (Object.keys(pendingStageChanges).some((k) => Object.keys(pendingStageChanges[k]).length > 0) || pendingCurrentStage != null) return true;
+    if (Object.keys(pendingPhaseChanges).some((k) => Object.keys(pendingPhaseChanges[k]).length > 0)) return true;
     const key = `${selectedStructureSeasonNum}-${selectedStructureStageNum}`;
     const groups = groupsByStage[key] || [];
     const origGroup = groups.find((g) => Number(g.GROUP_NUM) === Number(selectedStructureGroupNum));
@@ -2605,8 +2830,10 @@ function CompetitionDetails() {
       if (!o || w.seasonNum !== o.seasonNum || w.competitorId !== o.competitorId ||
           (w.coach?.athleteId ?? null) !== (o.coach?.athleteId ?? null)) return true;
     }
+    if (stageEditsNeedServiceUpdate) return true;
+    if (phaseEditsNeedServiceUpdate) return true;
     return false;
-  }, [formData, competition, structureSeasonForm, structureStageForm, structurePhaseForm, structureGroupForm, structureSeasons, stagesBySeason, phasesBySeason, groupsByStage, selectedStructureSeasonNum, selectedStructureStageNum, selectedStructurePhaseNum, selectedStructureGroupNum, winnersData, winnersOriginalData]);
+  }, [formData, competition, structureSeasonForm, structureStageForm, pendingPhaseChanges, structureGroupForm, structureSeasons, stagesBySeason, phasesBySeason, groupsByStage, selectedStructureSeasonNum, selectedStructureStageNum, selectedStructureGroupNum, winnersData, winnersOriginalData, stageEditsNeedServiceUpdate, phaseEditsNeedServiceUpdate]);
 
   const hasWinnersChanges = useMemo(() => {
     if (winnersData.length !== winnersOriginalData.length) return true;
@@ -2778,10 +3005,14 @@ function CompetitionDetails() {
   const handleExtendedDetailsSave = async () => {
     await handleSave();
     if (structureSeasonForm) await handleSaveStructureSeason();
+    if (Object.keys(pendingStageChanges).length > 0) await handleSaveStageEdits();
     if (structureStageForm) await handleSaveStructureStage();
-    if (structurePhaseForm) await handleSaveStructurePhase();
+    if (Object.keys(pendingPhaseChanges).length > 0) await handleSaveStructurePhase();
     if (structureGroupForm) await handleSaveStructureGroup();
     if (hasWinnersChanges) await handleSaveWinners();
+    setStageEditsNeedServiceUpdate(false);
+    setPhaseEditsNeedServiceUpdate(false);
+    // TODO: call UPDATE IN SERVICES endpoint here when ready
   };
 
   const handleSaveTableSettings = async () => {
@@ -2984,28 +3215,6 @@ function CompetitionDetails() {
     }
   };
 
-  const handleCreateCitySave = async () => {
-    const name = (createCityName || '').trim();
-    if (!name) {
-      setSnackbar({ open: true, message: 'City name is required', severity: 'warning' });
-      return;
-    }
-    try {
-      // Create new term under Cities with the entered value as English (languageId: 1)
-      await api.createTerm({
-        category: 'Cities',
-        values: [{ languageId: 1, value: name, isDefault: true, status: 'Approved' }],
-      });
-      const terms = await api.getTerms();
-      setAllTerms(terms || []);
-      handleFormChange('HOST_CITY', name);
-      setCreateCityDialogOpen(false);
-      setCreateCityName('');
-      setSnackbar({ open: true, message: 'City term created', severity: 'success' });
-    } catch (err) {
-      setSnackbar({ open: true, message: err.message || 'Failed to create city term', severity: 'error' });
-    }
-  };
 
   if (loading && !competition) {
     return (
@@ -3286,17 +3495,92 @@ function CompetitionDetails() {
                 />
               </Box>
               <Box sx={{ minWidth: 0 }}>
-                <TextField
-                  fullWidth
-                  size="small"
-                  label={FIELD_LABELS.FATHER_COMPETITION}
-                  value={formData.FATHER_COMPETITION ?? ''}
-                  onChange={(e) => handleFormChange('FATHER_COMPETITION', e.target.value)}
-                  placeholder={fatherCompetitionName ? `${fatherCompetitionName} (ID: ${formData.FATHER_COMPETITION})` : 'Enter competition ID'}
-                  sx={fieldSx}
-                />
-                {fatherCompetitionName && (
-                  <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 0.5 }}>Name: {fatherCompetitionName}</Typography>
+                {fatherCompetitionId != null ? (
+                  <TextField
+                    fullWidth
+                    size="small"
+                    label={FIELD_LABELS.FATHER_COMPETITION}
+                    value={fatherCompetitionDisplayName}
+                    InputProps={{
+                      readOnly: true,
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton size="small" onClick={(e) => { e.stopPropagation(); handleFormChange('FATHER_COMPETITION', ''); }} title="Remove father competition" sx={{ p: 0.5 }}>
+                            <CloseIcon fontSize="small" />
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                    sx={fieldSx}
+                  />
+                ) : (
+                  <Autocomplete
+                    fullWidth
+                    size="small"
+                    freeSolo
+                    clearOnBlur={false}
+                    options={competitionsForFatherAutocomplete}
+                    getOptionLabel={(option) => {
+                      if (typeof option === 'string') return option;
+                      return `${option.name || ''} (${option.COMPETITION_ID})`;
+                    }}
+                    value={null}
+                    inputValue={fatherCompetitionInputValue}
+                    onInputChange={(_, v, reason) => { if (reason !== 'reset') setFatherCompetitionInputValue(v); }}
+                    onChange={(_, v) => {
+                      if (v == null) return;
+                      if (typeof v === 'string') {
+                        const trimmed = v.trim();
+                        if (trimmed !== '' && !isNaN(Number(trimmed))) {
+                          handleFormChange('FATHER_COMPETITION', trimmed);
+                        }
+                      } else {
+                        handleFormChange('FATHER_COMPETITION', String(v.COMPETITION_ID));
+                      }
+                      setFatherCompetitionInputValue('');
+                    }}
+                    filterOptions={(options, state) => {
+                      const input = (state.inputValue || '').trim();
+                      if (!input) return options;
+                      const lower = input.toLowerCase();
+                      return options.filter((o) =>
+                        (o.name || '').toLowerCase().includes(lower) ||
+                        String(o.COMPETITION_ID).includes(input)
+                      );
+                    }}
+                    ListboxProps={{ style: { maxHeight: 240 } }}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option.COMPETITION_ID}>
+                        {option.name || 'Unknown'} <span style={{ color: '#999', marginLeft: 8, fontSize: '0.85em' }}>({option.COMPETITION_ID})</span>
+                      </li>
+                    )}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label={FIELD_LABELS.FATHER_COMPETITION}
+                        placeholder="Search competition or enter ID"
+                        sx={fieldSx}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            const val = (e.target.value || '').trim();
+                            if (val !== '' && !isNaN(Number(val))) {
+                              handleFormChange('FATHER_COMPETITION', val);
+                              setFatherCompetitionInputValue('');
+                              e.preventDefault();
+                              e.stopPropagation();
+                            }
+                          }
+                        }}
+                        onBlur={(e) => {
+                          const val = (e.target.value || '').trim();
+                          if (val !== '' && !isNaN(Number(val))) {
+                            handleFormChange('FATHER_COMPETITION', val);
+                            setFatherCompetitionInputValue('');
+                          }
+                        }}
+                      />
+                    )}
+                  />
                 )}
               </Box>
               <Box sx={{ minWidth: 0 }}>
@@ -3309,6 +3593,128 @@ function CompetitionDetails() {
                   onChange={(e) => handleFormChange('CURRENT_ROUND', e.target.value)}
                   sx={fieldSx}
                 />
+              </Box>
+              <Box sx={{ minWidth: 0, display: 'flex', gap: 1 }}>
+                <TextField
+                  fullWidth
+                  size="small"
+                  type="color"
+                  label={FIELD_LABELS.MAIN_COLOR}
+                  value={formData.MAIN_COLOR}
+                  onChange={(e) => handleFormChange('MAIN_COLOR', e.target.value)}
+                  InputLabelProps={{ shrink: true }}
+                  sx={fieldSx}
+                />
+                <TextField
+                  fullWidth
+                  size="small"
+                  type="color"
+                  label={FIELD_LABELS.SECONDARY_COLOR}
+                  value={formData.SECONDARY_COLOR}
+                  onChange={(e) => handleFormChange('SECONDARY_COLOR', e.target.value)}
+                  InputLabelProps={{ shrink: true }}
+                  sx={fieldSx}
+                />
+              </Box>
+              <Box sx={{ minWidth: 0 }}>
+                <FormControl fullWidth size="small" sx={fieldSx}>
+                  <InputLabel>{FIELD_LABELS.COMPETITORS_TYPE}</InputLabel>
+                  <Select value={formData.COMPETITORS_TYPE ?? ''} label={FIELD_LABELS.COMPETITORS_TYPE} onChange={(e) => handleFormChange('COMPETITORS_TYPE', e.target.value)}>
+                    <MenuItem value="">—</MenuItem>
+                    {competitorTypes.map((ct) => (
+                      <MenuItem key={ct.COMPETITOR_TYPE_ID} value={ct.COMPETITOR_TYPE_ID}>{ct.COMPETITOR_TYPE}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Box>
+              <Box sx={{ minWidth: 0 }}>
+                {hostCityId != null ? (
+                  <TextField
+                    fullWidth
+                    size="small"
+                    label={FIELD_LABELS.HOST_CITY}
+                    value={hostCityDisplayName}
+                    InputProps={{
+                      readOnly: true,
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton size="small" onClick={(e) => { e.stopPropagation(); handleFormChange('HOST_CITY', ''); }} title="Remove city" sx={{ p: 0.5 }}>
+                            <CloseIcon fontSize="small" />
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                    sx={fieldSx}
+                  />
+                ) : (
+                  <Autocomplete
+                    freeSolo
+                    fullWidth
+                    size="small"
+                    clearOnBlur={false}
+                    options={citiesForCountry}
+                    getOptionLabel={(option) => {
+                      if (typeof option === 'string') return option;
+                      return option.CITY_NAME ? `${option.CITY_NAME} (${option.CITY_ID})` : `(${option.CITY_ID})`;
+                    }}
+                    value={null}
+                    inputValue={hostCityInputValue}
+                    onInputChange={(_, v, reason) => { if (reason !== 'reset') setHostCityInputValue(v); }}
+                    onChange={(_, v) => {
+                      if (v == null) return;
+                      if (typeof v === 'string') {
+                        const trimmed = v.trim();
+                        if (trimmed !== '' && !isNaN(Number(trimmed))) {
+                          handleFormChange('HOST_CITY', Number(trimmed));
+                        }
+                      } else {
+                        handleFormChange('HOST_CITY', v.CITY_ID);
+                      }
+                      setHostCityInputValue('');
+                    }}
+                    filterOptions={(options, state) => {
+                      const input = (state.inputValue || '').trim();
+                      if (!input) return options;
+                      const lower = input.toLowerCase();
+                      return options.filter((o) =>
+                        (o.CITY_NAME || '').toLowerCase().includes(lower) ||
+                        String(o.CITY_ID).includes(input)
+                      );
+                    }}
+                    ListboxProps={{ style: { maxHeight: 240 } }}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option.CITY_ID}>
+                        {option.CITY_NAME} <span style={{ color: '#999', marginLeft: 8, fontSize: '0.85em' }}>({option.CITY_ID})</span>
+                      </li>
+                    )}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label={FIELD_LABELS.HOST_CITY}
+                        placeholder="Search city or enter City ID"
+                        sx={fieldSx}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            const val = (e.target.value || '').trim();
+                            if (val !== '' && !isNaN(Number(val))) {
+                              handleFormChange('HOST_CITY', Number(val));
+                              setHostCityInputValue('');
+                              e.preventDefault();
+                              e.stopPropagation();
+                            }
+                          }
+                        }}
+                        onBlur={(e) => {
+                          const val = (e.target.value || '').trim();
+                          if (val !== '' && !isNaN(Number(val))) {
+                            handleFormChange('HOST_CITY', Number(val));
+                            setHostCityInputValue('');
+                          }
+                        }}
+                      />
+                    )}
+                  />
+                )}
               </Box>
               {/* SUB_SPORT_TYPE only for Tennis (3) and Basketball (2) */}
               {(Number(formData.SPORT_TYPE_ID) === 2 || Number(formData.SPORT_TYPE_ID) === 3) && (
@@ -3326,111 +3732,6 @@ function CompetitionDetails() {
                   </FormControl>
                 </Box>
               )}
-              <Box sx={{ minWidth: 0 }}>
-                <FormControl fullWidth size="small" sx={fieldSx}>
-                  <InputLabel>{FIELD_LABELS.COMPETITORS_TYPE}</InputLabel>
-                  <Select value={formData.COMPETITORS_TYPE ?? ''} label={FIELD_LABELS.COMPETITORS_TYPE} onChange={(e) => handleFormChange('COMPETITORS_TYPE', e.target.value)}>
-                    <MenuItem value="">—</MenuItem>
-                    {competitorTypes.map((ct) => (
-                      <MenuItem key={ct.COMPETITOR_TYPE_ID} value={ct.COMPETITOR_TYPE_ID}>{ct.COMPETITOR_TYPE}</MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Box>
-              <Box sx={{ minWidth: 0 }}>
-                {formData.HOST_CITY != null && String(formData.HOST_CITY).trim() !== '' ? (
-                  <TextField
-                    fullWidth
-                    size="small"
-                    label={FIELD_LABELS.HOST_CITY}
-                    value={formData.HOST_CITY}
-                    InputProps={{
-                      readOnly: true,
-                      sx: {
-                        cursor: hostCityTerm ? 'pointer' : 'default',
-                        '& input': {
-                          color: hostCityTerm ? '#1976d2' : 'inherit',
-                          fontWeight: 500,
-                          textDecoration: hostCityTerm ? 'underline' : 'none',
-                          cursor: hostCityTerm ? 'pointer' : 'default',
-                        },
-                      },
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton size="small" onClick={(e) => { e.stopPropagation(); handleFormChange('HOST_CITY', ''); }} title="Remove city" sx={{ p: 0.5 }}>
-                            <CloseIcon fontSize="small" />
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                    onClick={hostCityTerm ? handleHostCityNameClick : undefined}
-                    sx={{
-                      ...fieldSx,
-                      ...(hostCityTerm ? { '& .MuiOutlinedInput-root:hover input': { color: '#1565c0', textDecoration: 'underline' } } : {}),
-                    }}
-                  />
-                ) : (
-                  <Autocomplete
-                    freeSolo
-                    fullWidth
-                    size="small"
-                    options={cityTerms.map((t) => resolveTermDisplayValue(t))}
-                    value=""
-                    inputValue={hostCityInputValue}
-                    onInputChange={(_, v) => setHostCityInputValue(v)}
-                    onChange={(_, v) => { if (v != null && String(v).trim() !== '') handleFormChange('HOST_CITY', String(v).trim()); setHostCityInputValue(''); }}
-                    filterOptions={(options, state) => {
-                      if ((state.inputValue || '').length < 3) return [];
-                      const input = (state.inputValue || '').toLowerCase().trim();
-                      return options.filter((o) => String(o).toLowerCase().includes(input));
-                    }}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label={FIELD_LABELS.HOST_CITY}
-                        sx={fieldSx}
-                        InputProps={{
-                          ...params.InputProps,
-                          endAdornment: (
-                            <>
-                              {params.InputProps.endAdornment}
-                              <InputAdornment position="end">
-                                <IconButton size="small" onClick={(e) => { e.stopPropagation(); setCreateCityName(''); setCreateCityDialogOpen(true); }} title="New city term" sx={{ p: 0.5 }}>
-                                  <AddIcon fontSize="small" />
-                                </IconButton>
-                              </InputAdornment>
-                            </>
-                          ),
-                        }}
-                      />
-                    )}
-                  />
-                )}
-              </Box>
-              <Box sx={{ minWidth: 0 }}>
-                <TextField
-                  fullWidth
-                  size="small"
-                  type="color"
-                  label={FIELD_LABELS.MAIN_COLOR}
-                  value={formData.MAIN_COLOR}
-                  onChange={(e) => handleFormChange('MAIN_COLOR', e.target.value)}
-                  InputLabelProps={{ shrink: true }}
-                  sx={fieldSx}
-                />
-              </Box>
-              <Box sx={{ minWidth: 0 }}>
-                <TextField
-                  fullWidth
-                  size="small"
-                  type="color"
-                  label={FIELD_LABELS.SECONDARY_COLOR}
-                  value={formData.SECONDARY_COLOR}
-                  onChange={(e) => handleFormChange('SECONDARY_COLOR', e.target.value)}
-                  InputLabelProps={{ shrink: true }}
-                  sx={fieldSx}
-                />
-              </Box>
             </Box>
           </Box>
 
@@ -3553,9 +3854,9 @@ function CompetitionDetails() {
         >
           <Tab label="Structure" />
           <Tab label="Configurations" />
-          <Tab label="Tools & Screens" />
           <Tab label="Winners" />
           <Tab label="Table Settings" />
+          <Tab label="Extra Tools & Screens" />
         </Tabs>
         <Box sx={{ p: 3 }}>
       {activeTab === 1 && (
@@ -4659,7 +4960,7 @@ function CompetitionDetails() {
         </Box>
       )}
 
-      {activeTab === 3 && (
+      {activeTab === 2 && (
         <Box>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
             <Typography variant="h6" sx={{ fontWeight: 700, color: '#000000' }}>
@@ -4910,7 +5211,7 @@ function CompetitionDetails() {
         </Box>
       )}
 
-      {activeTab === 4 && (
+      {activeTab === 3 && (
         <Box>
           <Typography variant="h6" sx={{ mb: 2, fontWeight: 700, color: '#000000' }}>
             Table Settings
@@ -5078,10 +5379,10 @@ function CompetitionDetails() {
         </Box>
       )}
 
-      {activeTab === 2 && (
+      {activeTab === 4 && (
         <Box>
           <Typography variant="h6" sx={{ fontWeight: 700, color: '#000000', mb: 2 }}>
-            Tools & Screens
+            Extra Tools & Screens
           </Typography>
           <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', alignItems: 'center' }}>
             <Button variant="outlined" size="small" sx={{ textTransform: 'none' }}>Reports</Button>
@@ -5099,8 +5400,35 @@ function CompetitionDetails() {
       {activeTab === 0 && (
         <Box>
           {/* Seasons section: dropdown + actions + details + config */}
-          <Paper variant="outlined" sx={{ p: 2, mb: 2 }}>
-            <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>Seasons</Typography>
+          <Accordion
+            expanded={expandedStructureSection === 'seasons'}
+            onChange={() => setExpandedStructureSection((prev) => prev === 'seasons' ? null : 'seasons')}
+            sx={{
+              '&:before': { display: 'none' },
+              boxShadow: 'none',
+              border: '1px solid',
+              borderColor: 'divider',
+              borderRadius: 1,
+              mb: 2,
+            }}
+          >
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                Seasons
+                {(() => {
+                  if (selectedStructureSeasonNum != null) {
+                    const s = structureSeasons.find((se) => se.SEASON_NUM === selectedStructureSeasonNum);
+                    if (s) return <Typography component="span" sx={{ fontWeight: 400, color: 'text.secondary', ml: 1 }}>— Selected Season: {s.name || `Season ${s.SEASON_NUM}`} ({s.SEASON_NUM})</Typography>;
+                  }
+                  if (competition?.CURRENT_SEASON != null) {
+                    const s = structureSeasons.find((se) => se.SEASON_NUM === competition.CURRENT_SEASON);
+                    if (s) return <Typography component="span" sx={{ fontWeight: 400, color: 'text.secondary', ml: 1 }}>— Current Season: {s.name || `Season ${s.SEASON_NUM}`} ({s.SEASON_NUM})</Typography>;
+                  }
+                  return null;
+                })()}
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails sx={{ pt: 0 }}>
             {structureLoading ? (
               <Box sx={{ py: 3, display: 'flex', justifyContent: 'center' }}>
                 <LoadingSpinner />
@@ -5130,17 +5458,18 @@ function CompetitionDetails() {
                       filterSelectedOptions={false}
                     />
                   </Box>
-                  <IconButton
+                  <Button
+                    variant="outlined"
                     size="small"
-                    title="Edit season name (term)"
+                    sx={{ textTransform: 'none' }}
                     onClick={() => {
                       const s = structureSeasons.find((se) => se.SEASON_NUM === selectedStructureSeasonNum);
                       if (s?.NAME_ID) handleSeasonNameClick(null, s);
                     }}
                     disabled={!selectedStructureSeasonNum}
                   >
-                    <MoreVertIcon fontSize="small" />
-                  </IconButton>
+                    Edit Name
+                  </Button>
                   <Button
                     variant="outlined"
                     size="small"
@@ -5174,15 +5503,6 @@ function CompetitionDetails() {
                     }}
                   >
                     DELETE
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    size="small"
-                    sx={{ textTransform: 'none' }}
-                    onClick={handleOpenSeasonTableSettingsDialog}
-                    disabled={!selectedStructureSeasonNum}
-                  >
-                    TABLE SETTINGS
                   </Button>
                 </Box>
 
@@ -5729,13 +6049,14 @@ function CompetitionDetails() {
                 )}
               </>
             )}
-          </Paper>
+            </AccordionDetails>
+          </Accordion>
 
           {/* Phases section: only when a season is selected; above Stages, below Season; collapsed by default */}
           {structureSeasons.length > 0 && selectedStructureSeasonNum != null && (
             <Accordion
-              expanded={phasesExpanded}
-              onChange={() => setPhasesExpanded((prev) => !prev)}
+              expanded={expandedStructureSection === 'phases'}
+              onChange={() => setExpandedStructureSection((prev) => prev === 'phases' ? null : 'phases')}
               sx={{
                 '&:before': { display: 'none' },
                 boxShadow: 'none',
@@ -5761,14 +6082,44 @@ function CompetitionDetails() {
                   CREATE NEW
                 </Button>
                 <Button
+                  variant={isPhaseEditMode ? 'contained' : 'outlined'}
+                  size="small"
+                  startIcon={isPhaseEditMode ? <CancelIcon /> : <EditIcon />}
+                  onClick={handleTogglePhaseEditMode}
+                  sx={{
+                    textTransform: 'none',
+                    borderColor: '#E0E0E0',
+                    bgcolor: isPhaseEditMode ? '#1976d2' : '#fff',
+                    color: isPhaseEditMode ? '#fff' : '#000',
+                    '&:hover': { bgcolor: isPhaseEditMode ? '#1565c0' : '#f5f5f5' },
+                  }}
+                >
+                  {isPhaseEditMode ? 'Cancel Edit' : 'Edit Mode'}
+                </Button>
+                {isPhaseEditMode && (
+                  <Button
+                    variant="contained"
+                    size="small"
+                    startIcon={<SaveIcon />}
+                    onClick={handleSaveStructurePhase}
+                    disabled={Object.keys(pendingPhaseChanges).length === 0}
+                    sx={{
+                      textTransform: 'none',
+                      backgroundColor: '#15803d',
+                      color: '#fff',
+                      '&:hover': { backgroundColor: '#166534' },
+                      '&.Mui-disabled': { backgroundColor: '#ccc', color: '#fff' },
+                    }}
+                  >
+                    Save Changes
+                  </Button>
+                )}
+                <Button
                   variant="contained"
                   size="small"
-                  onClick={() => {
-                    const phasesList = phasesBySeason[selectedStructureSeasonNum] || [];
-                    const ph = phasesList.find((p) => Number(p.PHASE_NUM) === Number(selectedStructurePhaseNum));
-                    if (ph) handleDeletePhase(selectedStructureSeasonNum, ph);
-                  }}
-                  disabled={selectedStructurePhaseNum == null}
+                  startIcon={<DeleteIcon />}
+                  onClick={handleDeleteSelectedPhases}
+                  disabled={selectedPhaseRows.length === 0}
                   sx={{
                     textTransform: 'none',
                     backgroundColor: '#d32f2f',
@@ -5777,7 +6128,7 @@ function CompetitionDetails() {
                     '&.Mui-disabled': { backgroundColor: '#ccc', color: '#fff' },
                   }}
                 >
-                  DELETE PHASE
+                  Delete ({selectedPhaseRows.length})
                 </Button>
               </Box>
 
@@ -5791,134 +6142,119 @@ function CompetitionDetails() {
                   );
                 }
                 return (
-                  <>
-                    <TableContainer sx={{ mb: 2 }}>
-                      <Table size="small" stickyHeader sx={{ tableLayout: 'fixed' }}>
-                        <TableHead>
-                          <TableRow>
-                            <TableCell sx={{ fontWeight: 600, width: '16.66%' }}>Order</TableCell>
-                            <TableCell sx={{ fontWeight: 600, width: '16.66%' }}>Name</TableCell>
-                            <TableCell sx={{ fontWeight: 600, width: '16.66%' }}>Parent Phase</TableCell>
-                            <TableCell sx={{ fontWeight: 600, width: '16.66%' }} padding="checkbox">Show Stats</TableCell>
-                            <TableCell sx={{ fontWeight: 600, width: '16.66%' }} padding="checkbox">Use Name</TableCell>
-                            <TableCell sx={{ fontWeight: 600, width: '16.66%' }}>Top Athletes %</TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {phasesList.map((ph, idx) => {
-                            const isSelected = Number(ph.PHASE_NUM) === Number(selectedStructurePhaseNum);
-                            const cellSx = { width: '16.66%' };
-                            return (
-                              <TableRow
-                                key={ph.PHASE_NUM}
-                                hover
-                                selected={isSelected}
-                                onClick={() => setSelectedStructurePhaseNum(ph.PHASE_NUM)}
-                                sx={{
-                                  cursor: 'pointer',
-                                  backgroundColor: isSelected ? 'action.selected' : undefined,
-                                }}
-                              >
-                                <TableCell sx={cellSx}>{idx + 1}</TableCell>
-                                <TableCell sx={cellSx}>
-                                  <Box
-                                    component="span"
-                                    sx={{ color: 'primary.main', textDecoration: 'underline', cursor: 'pointer' }}
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      handlePhaseNameClick(e, selectedStructureSeasonNum, ph);
-                                    }}
-                                  >
-                                    {ph.name || `Phase ${ph.PHASE_NUM}`}
-                                  </Box>
-                                </TableCell>
-                                <TableCell sx={cellSx}>
-                                  {ph.PARENT_PHASE_NUM != null
-                                    ? (phasesList.find((p) => Number(p.PHASE_NUM) === Number(ph.PARENT_PHASE_NUM))?.name || `Phase ${ph.PARENT_PHASE_NUM}`)
-                                    : '—'}
-                                </TableCell>
-                                <TableCell sx={cellSx} padding="checkbox">
-                                  <Checkbox size="small" checked={!!ph.SHOW_STATS} disabled />
-                                </TableCell>
-                                <TableCell sx={cellSx} padding="checkbox">
-                                  <Checkbox size="small" checked={!!ph.USE_NAME} disabled />
-                                </TableCell>
-                                <TableCell sx={cellSx}>{ph.TOP_ATHLETES_MIN_APPEARANCES_PERCENTAGE ?? '—'}</TableCell>
-                              </TableRow>
-                            );
-                          })}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-
-                    {structurePhaseForm && (
-                      <>
-                        <Typography variant="subtitle2" sx={{ fontWeight: 600, mt: 2, mb: 1 }}>
-                          Phase Details: {structurePhaseForm.name || `Phase ${structurePhaseForm.PHASE_NUM}`}
-                        </Typography>
-                        <Grid container spacing={2} sx={{ mb: 2 }} alignItems="center">
-                          <Grid item xs={12} sm={2}>
-                            <FormControl fullWidth size="small">
-                              <InputLabel>Parent Phase</InputLabel>
-                              <Select
-                                label="Parent Phase"
-                                value={structurePhaseForm.PARENT_PHASE_NUM != null && structurePhaseForm.PARENT_PHASE_NUM !== '' ? Number(structurePhaseForm.PARENT_PHASE_NUM) : ''}
-                                onChange={(e) => setStructurePhaseForm((f) => ({ ...f, PARENT_PHASE_NUM: e.target.value === '' ? '' : Number(e.target.value) }))}
-                                renderValue={(v) => {
-                                  if (v === '' || v == null) return '—';
-                                  const list = phasesBySeason[selectedStructureSeasonNum] || [];
-                                  const p = list.find((ph) => Number(ph.PHASE_NUM) === Number(v));
-                                  return p ? (p.name || `Phase ${p.PHASE_NUM}`) : `Phase ${v}`;
-                                }}
-                              >
-                                <MenuItem value="">—</MenuItem>
-                                {(phasesBySeason[selectedStructureSeasonNum] || [])
-                                  .filter((ph) => Number(ph.PHASE_NUM) !== Number(structurePhaseForm.PHASE_NUM))
-                                  .map((ph) => (
-                                    <MenuItem key={ph.PHASE_NUM} value={ph.PHASE_NUM}>
-                                      {ph.name || `Phase ${ph.PHASE_NUM}`}
-                                    </MenuItem>
-                                  ))}
-                              </Select>
-                            </FormControl>
-                          </Grid>
-                          <Grid item xs={12} sm={2}>
-                            <TextField
-                              fullWidth
+                  <TableContainer sx={{ mb: 2 }}>
+                    <Table size="small" stickyHeader sx={{ tableLayout: 'fixed' }}>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell padding="checkbox" sx={{ fontWeight: 600, width: 48 }}>
+                            <Checkbox
                               size="small"
-                              type="number"
-                              label="Top Athletes %"
-                              value={structurePhaseForm.TOP_ATHLETES_MIN_APPEARANCES_PERCENTAGE ?? ''}
-                              onChange={(e) => setStructurePhaseForm((f) => ({ ...f, TOP_ATHLETES_MIN_APPEARANCES_PERCENTAGE: e.target.value === '' ? '' : Number(e.target.value) }))}
-                              inputProps={{ min: 0, max: 100, step: 0.01 }}
+                              indeterminate={selectedPhaseRows.length > 0 && selectedPhaseRows.length < phasesList.length}
+                              checked={phasesList.length > 0 && selectedPhaseRows.length === phasesList.length}
+                              onChange={(e) => setSelectedPhaseRows(e.target.checked ? phasesList.map((p) => p.PHASE_NUM) : [])}
                             />
-                          </Grid>
-                          <Grid item xs={12} sm={4}>
-                            <FormControlLabel
-                              control={
+                          </TableCell>
+                          <TableCell sx={{ fontWeight: 600, width: '14%' }}>Number</TableCell>
+                          <TableCell sx={{ fontWeight: 600, width: '20%' }}>Name</TableCell>
+                          <TableCell sx={{ fontWeight: 600, width: '20%' }}>Parent Phase</TableCell>
+                          <TableCell sx={{ fontWeight: 600, width: '14%' }} padding="checkbox">Show Stats</TableCell>
+                          <TableCell sx={{ fontWeight: 600, width: '14%' }} padding="checkbox">Use Name</TableCell>
+                          <TableCell sx={{ fontWeight: 600, width: '18%' }}>Top Athletes %</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {phasesList.map((ph, idx) => {
+                          const phNum = ph.PHASE_NUM;
+                          const pending = pendingPhaseChanges[phNum] || {};
+                          const parentVal = pending.PARENT_PHASE_NUM !== undefined ? pending.PARENT_PHASE_NUM : ph.PARENT_PHASE_NUM;
+                          const showStatsVal = pending.SHOW_STATS !== undefined ? pending.SHOW_STATS : !!ph.SHOW_STATS;
+                          const useNameVal = pending.USE_NAME !== undefined ? pending.USE_NAME : !!ph.USE_NAME;
+                          const topAthVal = pending.TOP_ATHLETES_MIN_APPEARANCES_PERCENTAGE !== undefined ? pending.TOP_ATHLETES_MIN_APPEARANCES_PERCENTAGE : ph.TOP_ATHLETES_MIN_APPEARANCES_PERCENTAGE;
+                          return (
+                            <TableRow key={phNum} hover>
+                              <TableCell padding="checkbox" onClick={(e) => e.stopPropagation()}>
                                 <Checkbox
                                   size="small"
-                                  checked={!!structurePhaseForm.SHOW_STATS}
-                                  onChange={(e) => setStructurePhaseForm((f) => ({ ...f, SHOW_STATS: e.target.checked }))}
+                                  checked={selectedPhaseRows.includes(phNum)}
+                                  onChange={(e) => {
+                                    e.stopPropagation();
+                                    setSelectedPhaseRows((s) => e.target.checked ? [...s, phNum] : s.filter((id) => id !== phNum));
+                                  }}
                                 />
-                              }
-                              label="Show Stats"
-                            />
-                            <FormControlLabel
-                              control={
+                              </TableCell>
+                              <TableCell>{ph.PHASE_NUM}</TableCell>
+                              <TableCell>
+                                <Box
+                                  component="span"
+                                  sx={{ color: 'primary.main', textDecoration: 'underline', cursor: 'pointer' }}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handlePhaseNameClick(e, selectedStructureSeasonNum, ph);
+                                  }}
+                                >
+                                  {ph.name || `Phase ${ph.PHASE_NUM}`}
+                                </Box>
+                              </TableCell>
+                              <TableCell onClick={(e) => isPhaseEditMode && e.stopPropagation()}>
+                                {isPhaseEditMode ? (
+                                  <FormControl size="small" fullWidth sx={{ minWidth: 120 }}>
+                                    <Select
+                                      value={parentVal != null && parentVal !== '' ? Number(parentVal) : ''}
+                                      onChange={(e) => handlePhaseFieldChange(phNum, 'PARENT_PHASE_NUM', e.target.value === '' ? null : Number(e.target.value))}
+                                      sx={{ height: 32, fontSize: '0.8125rem' }}
+                                    >
+                                      <MenuItem value="">—</MenuItem>
+                                      {phasesList
+                                        .filter((p) => Number(p.PHASE_NUM) !== Number(phNum))
+                                        .map((p) => (
+                                          <MenuItem key={p.PHASE_NUM} value={p.PHASE_NUM}>
+                                            {p.name || `Phase ${p.PHASE_NUM}`}
+                                          </MenuItem>
+                                        ))}
+                                    </Select>
+                                  </FormControl>
+                                ) : (
+                                  parentVal != null
+                                    ? (phasesList.find((p) => Number(p.PHASE_NUM) === Number(parentVal))?.name || `Phase ${parentVal}`)
+                                    : '—'
+                                )}
+                              </TableCell>
+                              <TableCell padding="checkbox" onClick={(e) => isPhaseEditMode && e.stopPropagation()}>
                                 <Checkbox
                                   size="small"
-                                  checked={!!structurePhaseForm.USE_NAME}
-                                  onChange={(e) => setStructurePhaseForm((f) => ({ ...f, USE_NAME: e.target.checked }))}
+                                  checked={showStatsVal}
+                                  disabled={!isPhaseEditMode}
+                                  onChange={(e) => handlePhaseFieldChange(phNum, 'SHOW_STATS', e.target.checked)}
                                 />
-                              }
-                              label="Use Name"
-                            />
-                          </Grid>
-                        </Grid>
-                      </>
-                    )}
-                  </>
+                              </TableCell>
+                              <TableCell padding="checkbox" onClick={(e) => isPhaseEditMode && e.stopPropagation()}>
+                                <Checkbox
+                                  size="small"
+                                  checked={useNameVal}
+                                  disabled={!isPhaseEditMode}
+                                  onChange={(e) => handlePhaseFieldChange(phNum, 'USE_NAME', e.target.checked)}
+                                />
+                              </TableCell>
+                              <TableCell onClick={(e) => isPhaseEditMode && e.stopPropagation()}>
+                                {isPhaseEditMode ? (
+                                  <TextField
+                                    size="small"
+                                    type="number"
+                                    value={topAthVal ?? ''}
+                                    onChange={(e) => handlePhaseFieldChange(phNum, 'TOP_ATHLETES_MIN_APPEARANCES_PERCENTAGE', e.target.value === '' ? null : Number(e.target.value))}
+                                    inputProps={{ min: 0, max: 100, step: 0.01 }}
+                                    sx={{ width: 100, '& .MuiInputBase-root': { height: 32, fontSize: '0.8125rem' } }}
+                                  />
+                                ) : (
+                                  topAthVal ?? '—'
+                                )}
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
                 );
               })()}
               </AccordionDetails>
@@ -5927,35 +6263,46 @@ function CompetitionDetails() {
 
           {/* Stages section: only when a season is selected */}
           {structureSeasons.length > 0 && selectedStructureSeasonNum != null && (
-            <Paper variant="outlined" sx={{ p: 2, mb: 2 }}>
-              <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>Stages</Typography>
+            <Accordion
+              expanded={expandedStructureSection === 'stages'}
+              onChange={() => setExpandedStructureSection((prev) => prev === 'stages' ? null : 'stages')}
+              sx={{
+                '&:before': { display: 'none' },
+                boxShadow: 'none',
+                border: '1px solid',
+                borderColor: 'divider',
+                borderRadius: 1,
+                mb: 2,
+              }}
+            >
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                  Stages ({(stagesBySeason[selectedStructureSeasonNum] || []).length})
+                  {(() => {
+                    if (competition?.CURRENT_SEASON === selectedStructureSeasonNum && competition?.CURRENT_STAGE != null) {
+                      const stages = stagesBySeason[selectedStructureSeasonNum] || [];
+                      const cs = stages.find((s) => s.STAGE_NUM === competition.CURRENT_STAGE);
+                      if (cs) return <Typography component="span" sx={{ fontWeight: 400, color: 'text.secondary', ml: 1 }}>— Current Stage: {cs.name || `Stage ${cs.STAGE_NUM}`} ({cs.STAGE_NUM})</Typography>;
+                    }
+                    return null;
+                  })()}
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails sx={{ pt: 0 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap', mb: 2 }}>
                 <Button
-                  variant="outlined"
+                  variant="contained"
                   size="small"
-                  onClick={() => handleSetCurrentStage(selectedStructureSeasonNum, selectedStructureStageNum)}
-                  disabled={selectedStructureStageNum == null || (competition?.CURRENT_SEASON === selectedStructureSeasonNum && competition?.CURRENT_STAGE === selectedStructureStageNum)}
+                  onClick={() => handleOpenCreateGenerateDialog(0)}
                   sx={{ textTransform: 'none' }}
                 >
-                  SET AS CURRENT
+                  Create/Generate
                 </Button>
                 <Button
                   variant="contained"
                   size="small"
-                  onClick={() => handleAddStage(selectedStructureSeasonNum)}
-                  sx={{ textTransform: 'none' }}
-                >
-                  CREATE NEW
-                </Button>
-                <Button
-                  variant="contained"
-                  size="small"
-                  onClick={() => {
-                    const stages = stagesBySeason[selectedStructureSeasonNum] || [];
-                    const stage = stages.find((s) => Number(s.STAGE_NUM) === Number(selectedStructureStageNum));
-                    if (stage) handleDeleteStage(selectedStructureSeasonNum, stage);
-                  }}
-                  disabled={selectedStructureStageNum == null || (competition?.CURRENT_SEASON === selectedStructureSeasonNum && competition?.CURRENT_STAGE === selectedStructureStageNum)}
+                  onClick={handleDeleteSelectedStages}
+                  disabled={selectedStagesForDelete.length === 0}
                   sx={{
                     textTransform: 'none',
                     backgroundColor: '#d32f2f',
@@ -5964,11 +6311,41 @@ function CompetitionDetails() {
                     '&.Mui-disabled': { backgroundColor: '#ccc', color: '#fff' },
                   }}
                 >
-                  DELETE STAGE
+                  {selectedStagesForDelete.length > 0 ? `DELETE (${selectedStagesForDelete.length})` : 'DELETE'}
                 </Button>
-                <Button variant="contained" size="small" onClick={() => setGenerateStagesDialogOpen(true)} sx={{ textTransform: 'none' }}>
-                  GENERATE
+                <Button
+                  variant={isStageEditMode ? 'contained' : 'outlined'}
+                  size="small"
+                  startIcon={isStageEditMode ? <CancelIcon /> : <EditIcon />}
+                  onClick={handleToggleStageEditMode}
+                  sx={{
+                    textTransform: 'none',
+                    borderColor: '#E0E0E0',
+                    bgcolor: isStageEditMode ? '#1976d2' : '#fff',
+                    color: isStageEditMode ? '#fff' : '#000',
+                    '&:hover': { bgcolor: isStageEditMode ? '#1565c0' : '#f5f5f5' },
+                  }}
+                >
+                  {isStageEditMode ? 'Cancel Edit' : 'Edit Mode'}
                 </Button>
+                {isStageEditMode && (
+                  <Button
+                    variant="contained"
+                    size="small"
+                    startIcon={<SaveIcon />}
+                    onClick={handleSaveStageEdits}
+                    disabled={Object.keys(pendingStageChanges).length === 0 && pendingCurrentStage == null}
+                    sx={{
+                      textTransform: 'none',
+                      backgroundColor: '#15803d',
+                      color: '#fff',
+                      '&:hover': { backgroundColor: '#166534' },
+                      '&.Mui-disabled': { backgroundColor: '#ccc', color: '#fff' },
+                    }}
+                  >
+                    Save Changes
+                  </Button>
+                )}
               </Box>
 
               {(() => {
@@ -5976,7 +6353,7 @@ function CompetitionDetails() {
                 if (stagesList.length === 0) {
                   return (
                     <Typography color="text.secondary" sx={{ py: 2 }}>
-                      No stages for this season. Create one or use Generate.
+                      No stages for this season. Use Create/Generate to add stages.
                     </Typography>
                   );
                 }
@@ -5988,54 +6365,79 @@ function CompetitionDetails() {
                 const stageTypeLabel = (type) => stagesTypes.find((t) => Number(t.STAGE_TYPE_ID) === Number(type))?.STAGE_TYPE ?? `Type ${type}`;
                 return (
                   <>
-                    <TableContainer sx={{ mb: 2 }}>
-                      <Table size="small" stickyHeader sx={{ tableLayout: 'fixed' }}>
+                    <TableContainer sx={{ mb: 2, overflowX: 'auto' }}>
+                      <Table size="small" stickyHeader>
                         <TableHead>
                           <TableRow>
-                            <TableCell sx={{ fontWeight: 600, width: '8.33%' }}>Order</TableCell>
-                            <TableCell sx={{ fontWeight: 600, width: '8.33%' }}>Name</TableCell>
-                            <TableCell sx={{ fontWeight: 600, width: '8.33%' }}>Type</TableCell>
-                            <TableCell sx={{ fontWeight: 600, width: '8.33%' }} padding="checkbox">Has Table</TableCell>
-                            <TableCell sx={{ fontWeight: 600, width: '8.33%' }}>Num Of Games</TableCell>
-                            <TableCell sx={{ fontWeight: 600, width: '8.33%' }} padding="checkbox">Is Series</TableCell>
-                            <TableCell sx={{ fontWeight: 600, width: '8.33%' }} padding="checkbox">Connected To Previous</TableCell>
-                            <TableCell sx={{ fontWeight: 600, width: '8.33%' }} padding="checkbox">Filter Division</TableCell>
-                            <TableCell sx={{ fontWeight: 600, width: '8.33%' }} padding="checkbox">Include in bracket</TableCell>
-                            <TableCell sx={{ fontWeight: 600, width: '8.33%' }} padding="checkbox">Pre Visual Brackets</TableCell>
-                            <TableCell sx={{ fontWeight: 600, width: '8.33%' }} padding="checkbox">Connected In Brackets</TableCell>
-                            <TableCell sx={{ fontWeight: 600, width: '8.33%' }}>Phase</TableCell>
+                            <TableCell sx={{ fontWeight: 600, whiteSpace: 'nowrap', width: 40 }} padding="checkbox">
+                              <Checkbox
+                                size="small"
+                                indeterminate={selectedStagesForDelete.length > 0 && selectedStagesForDelete.length < sortedStages.length}
+                                checked={selectedStagesForDelete.length === sortedStages.length && sortedStages.length > 0}
+                                onChange={(e) => {
+                                  if (e.target.checked) {
+                                    setSelectedStagesForDelete(sortedStages.map((s) => s.STAGE_NUM));
+                                  } else {
+                                    setSelectedStagesForDelete([]);
+                                  }
+                                }}
+                              />
+                            </TableCell>
+                            <TableCell sx={{ fontWeight: 600, whiteSpace: 'nowrap', width: 50 }}>Order</TableCell>
+                            <TableCell sx={{ fontWeight: 600, whiteSpace: 'nowrap', width: 40 }}>Num</TableCell>
+                            <TableCell sx={{ fontWeight: 600, whiteSpace: 'nowrap' }}>Name</TableCell>
+                            <TableCell sx={{ fontWeight: 600, whiteSpace: 'nowrap' }}>Type</TableCell>
+                            <TableCell sx={{ fontWeight: 600, whiteSpace: 'nowrap' }} padding="checkbox">Current</TableCell>
+                            <TableCell sx={{ fontWeight: 600 }} padding="checkbox">Has Table</TableCell>
+                            <TableCell sx={{ fontWeight: 600 }}>Num Of Games</TableCell>
+                            <TableCell sx={{ fontWeight: 600 }} padding="checkbox">Is Series</TableCell>
+                            <TableCell sx={{ fontWeight: 600 }} padding="checkbox">Connected To Previous</TableCell>
+                            <TableCell sx={{ fontWeight: 600 }} padding="checkbox">Filter Division</TableCell>
+                            <TableCell sx={{ fontWeight: 600 }} padding="checkbox">Include in bracket</TableCell>
+                            <TableCell sx={{ fontWeight: 600 }} padding="checkbox">Pre Visual Brackets</TableCell>
+                            <TableCell sx={{ fontWeight: 600 }} padding="checkbox">Connected In Brackets</TableCell>
+                            <TableCell sx={{ fontWeight: 600, whiteSpace: 'nowrap' }}>Phase</TableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>
                           {sortedStages.map((stage, idx) => {
-                            const isSelected = Number(stage.STAGE_NUM) === Number(selectedStructureStageNum);
-                            const isDragging = Number(stage.STAGE_NUM) === Number(stagesDraggingStageNum);
+                            const sn = stage.STAGE_NUM;
+                            const pending = pendingStageChanges[sn] || {};
+                            const isSelected = Number(sn) === Number(selectedStructureStageNum);
+                            const isDragging = Number(sn) === Number(stagesDraggingStageNum);
                             const isDropTarget = stagesDropTargetIndex === idx;
-                            const cellSx = { width: '8.33%' };
+                            const cellSx = { whiteSpace: 'nowrap' };
+                            const getVal = (field) => pending[field] !== undefined ? pending[field] : stage[field];
+                            const dbCurrent = competition?.CURRENT_SEASON === selectedStructureSeasonNum && competition?.CURRENT_STAGE === sn;
+                            const isCurrent = pendingCurrentStage != null ? Number(pendingCurrentStage) === Number(sn) : dbCurrent;
+                            const isCheckedForDelete = selectedStagesForDelete.includes(sn);
                             return (
                               <TableRow
-                                key={stage.STAGE_NUM}
+                                key={sn}
                                 hover={!stagesDraggingStageNum}
                                 selected={isSelected}
-                                onClick={() => setSelectedStructureStageNum(stage.STAGE_NUM)}
-                                draggable
+                                onClick={() => setSelectedStructureStageNum(sn)}
+                                draggable={isStageEditMode}
                                 onDragStart={(e) => {
-                                  e.dataTransfer.setData('text/plain', String(stage.STAGE_NUM));
+                                  if (!isStageEditMode) { e.preventDefault(); return; }
+                                  e.dataTransfer.setData('text/plain', String(sn));
                                   e.dataTransfer.effectAllowed = 'move';
                                   e.dataTransfer.setDragImage(e.currentTarget, 0, 0);
-                                  setStagesDraggingStageNum(stage.STAGE_NUM);
+                                  setStagesDraggingStageNum(sn);
                                 }}
                                 onDragEnd={() => {
                                   setStagesDraggingStageNum(null);
                                   setStagesDropTargetIndex(null);
                                 }}
                                 onDragOver={(e) => {
+                                  if (!isStageEditMode) return;
                                   e.preventDefault();
                                   e.dataTransfer.dropEffect = 'move';
                                   setStagesDropTargetIndex(idx);
                                 }}
                                 onDragLeave={() => setStagesDropTargetIndex(null)}
                                 onDrop={(e) => {
+                                  if (!isStageEditMode) return;
                                   e.preventDefault();
                                   setStagesDraggingStageNum(null);
                                   setStagesDropTargetIndex(null);
@@ -6057,25 +6459,40 @@ function CompetitionDetails() {
                                   '&:hover': { '& .drag-handle': { opacity: 1 } },
                                 }}
                               >
-                                <TableCell sx={cellSx}>
-                                  <Box
-                                    className="drag-handle"
-                                    component="span"
-                                    draggable
-                                    onDragStart={(e) => {
-                                      e.stopPropagation();
-                                      e.dataTransfer.setData('text/plain', String(stage.STAGE_NUM));
-                                      e.dataTransfer.effectAllowed = 'move';
-                                      setStagesDraggingStageNum(stage.STAGE_NUM);
+                                <TableCell padding="checkbox" onClick={(e) => e.stopPropagation()}>
+                                  <Checkbox
+                                    size="small"
+                                    checked={isCheckedForDelete}
+                                    onChange={(e) => {
+                                      if (e.target.checked) {
+                                        setSelectedStagesForDelete((prev) => [...prev, sn]);
+                                      } else {
+                                        setSelectedStagesForDelete((prev) => prev.filter((s) => s !== sn));
+                                      }
                                     }}
-                                    sx={{ display: 'inline-flex', alignItems: 'center', cursor: 'grab', color: 'primary.main', opacity: 0.7, transition: 'opacity 0.15s ease', '&:active': { cursor: 'grabbing' }, '&:hover': { opacity: 1 } }}
-                                    aria-label="Drag to reorder"
-                                  >
-                                    <DragIndicatorIcon fontSize="small" />
-                                  </Box>
-                                  {' '}
-                                  {idx + 1}
+                                  />
                                 </TableCell>
+                                <TableCell sx={{ width: 50, maxWidth: 50 }}>
+                                  {isStageEditMode && (
+                                    <Box
+                                      className="drag-handle"
+                                      component="span"
+                                      draggable
+                                      onDragStart={(e) => {
+                                        e.stopPropagation();
+                                        e.dataTransfer.setData('text/plain', String(sn));
+                                        e.dataTransfer.effectAllowed = 'move';
+                                        setStagesDraggingStageNum(sn);
+                                      }}
+                                      sx={{ display: 'inline-flex', alignItems: 'center', cursor: 'grab', color: 'primary.main', opacity: 0.7, transition: 'opacity 0.15s ease', '&:active': { cursor: 'grabbing' }, '&:hover': { opacity: 1 } }}
+                                      aria-label="Drag to reorder"
+                                    >
+                                      <DragIndicatorIcon fontSize="small" />
+                                    </Box>
+                                  )}
+                                  {' '}{idx + 1}
+                                </TableCell>
+                                <TableCell sx={{ width: 40, maxWidth: 40 }}>{sn}</TableCell>
                                 <TableCell sx={cellSx}>
                                   <Box
                                     component="span"
@@ -6085,33 +6502,119 @@ function CompetitionDetails() {
                                       handleStageNameClick(e, selectedStructureSeasonNum, stage);
                                     }}
                                   >
-                                    {stage.name || `Stage ${stage.STAGE_NUM}`}
+                                    {stage.name || `Stage ${sn}`}
                                   </Box>
                                 </TableCell>
-                                <TableCell sx={cellSx}>{stageTypeLabel(stage.STAGE_TYPE)}</TableCell>
-                                <TableCell sx={cellSx} padding="checkbox">
-                                  <Checkbox size="small" checked={!!stage.HAS_TABLE} disabled />
+                                <TableCell sx={cellSx} onClick={(e) => isStageEditMode && e.stopPropagation()}>
+                                  {isStageEditMode ? (
+                                    <FormControl size="small" sx={{ minWidth: 110 }}>
+                                      <Select
+                                        value={getVal('STAGE_TYPE') ?? 1}
+                                        onChange={(e) => handleStageFieldChange(sn, 'STAGE_TYPE', Number(e.target.value))}
+                                        sx={{ height: 32, fontSize: '0.8125rem' }}
+                                      >
+                                        {stagesTypes.map((t) => (
+                                          <MenuItem key={t.STAGE_TYPE_ID} value={t.STAGE_TYPE_ID}>{t.STAGE_TYPE}</MenuItem>
+                                        ))}
+                                      </Select>
+                                    </FormControl>
+                                  ) : stageTypeLabel(stage.STAGE_TYPE)}
                                 </TableCell>
-                                <TableCell sx={cellSx}>{stage.NUM_OF_GAMES ?? '-'}</TableCell>
-                                <TableCell sx={cellSx} padding="checkbox">
-                                  <Checkbox size="small" checked={!!stage.IS_SERIES} disabled />
+                                <TableCell sx={cellSx} padding="checkbox" onClick={(e) => isStageEditMode && e.stopPropagation()}>
+                                  <Checkbox
+                                    size="small"
+                                    checked={isCurrent}
+                                    disabled={!isStageEditMode}
+                                    onChange={() => {
+                                      if (!isCurrent) setPendingCurrentStage(sn);
+                                    }}
+                                  />
                                 </TableCell>
-                                <TableCell sx={cellSx} padding="checkbox">
-                                  <Checkbox size="small" checked={!!stage.CONNECTED_TO_PREVIOUS_STAGE} disabled />
+                                <TableCell sx={cellSx} padding="checkbox" onClick={(e) => isStageEditMode && e.stopPropagation()}>
+                                  <Checkbox
+                                    size="small"
+                                    checked={!!getVal('HAS_TABLE')}
+                                    disabled={!isStageEditMode}
+                                    onChange={(e) => handleStageFieldChange(sn, 'HAS_TABLE', e.target.checked)}
+                                  />
                                 </TableCell>
-                                <TableCell sx={cellSx} padding="checkbox">
-                                  <Checkbox size="small" checked={!!stage.FILTER_DIVISION} disabled />
+                                <TableCell sx={cellSx} onClick={(e) => isStageEditMode && e.stopPropagation()}>
+                                  {isStageEditMode ? (
+                                    <TextField
+                                      size="small"
+                                      type="number"
+                                      value={getVal('NUM_OF_GAMES') ?? ''}
+                                      onChange={(e) => handleStageFieldChange(sn, 'NUM_OF_GAMES', e.target.value === '' ? null : Number(e.target.value))}
+                                      sx={{ width: 70, '& .MuiInputBase-root': { height: 32, fontSize: '0.8125rem' } }}
+                                    />
+                                  ) : (stage.NUM_OF_GAMES ?? '-')}
                                 </TableCell>
-                                <TableCell sx={cellSx} padding="checkbox">
-                                  <Checkbox size="small" checked={!!stage.INCLUDE_IN_BRACKET} disabled />
+                                <TableCell sx={cellSx} padding="checkbox" onClick={(e) => isStageEditMode && e.stopPropagation()}>
+                                  <Checkbox
+                                    size="small"
+                                    checked={!!getVal('IS_SERIES')}
+                                    disabled={!isStageEditMode}
+                                    onChange={(e) => handleStageFieldChange(sn, 'IS_SERIES', e.target.checked)}
+                                  />
                                 </TableCell>
-                                <TableCell sx={cellSx} padding="checkbox">
-                                  <Checkbox size="small" checked={!!stage.PRE_VISUAL_BRACKETS} disabled />
+                                <TableCell sx={cellSx} padding="checkbox" onClick={(e) => isStageEditMode && e.stopPropagation()}>
+                                  <Checkbox
+                                    size="small"
+                                    checked={!!getVal('CONNECTED_TO_PREVIOUS_STAGE')}
+                                    disabled={!isStageEditMode}
+                                    onChange={(e) => handleStageFieldChange(sn, 'CONNECTED_TO_PREVIOUS_STAGE', e.target.checked)}
+                                  />
                                 </TableCell>
-                                <TableCell sx={cellSx} padding="checkbox">
-                                  <Checkbox size="small" checked={!!stage.CONNECTED_IN_BRACKETS} disabled />
+                                <TableCell sx={cellSx} padding="checkbox" onClick={(e) => isStageEditMode && e.stopPropagation()}>
+                                  <Checkbox
+                                    size="small"
+                                    checked={!!getVal('FILTER_DIVISION')}
+                                    disabled={!isStageEditMode}
+                                    onChange={(e) => handleStageFieldChange(sn, 'FILTER_DIVISION', e.target.checked)}
+                                  />
                                 </TableCell>
-                                <TableCell sx={cellSx}>{stage.PHASE || 'Not Selected'}</TableCell>
+                                <TableCell sx={cellSx} padding="checkbox" onClick={(e) => isStageEditMode && e.stopPropagation()}>
+                                  <Checkbox
+                                    size="small"
+                                    checked={!!getVal('INCLUDE_IN_BRACKET')}
+                                    disabled={!isStageEditMode}
+                                    onChange={(e) => handleStageFieldChange(sn, 'INCLUDE_IN_BRACKET', e.target.checked)}
+                                  />
+                                </TableCell>
+                                <TableCell sx={cellSx} padding="checkbox" onClick={(e) => isStageEditMode && e.stopPropagation()}>
+                                  <Checkbox
+                                    size="small"
+                                    checked={!!getVal('PRE_VISUAL_BRACKETS')}
+                                    disabled={!isStageEditMode}
+                                    onChange={(e) => handleStageFieldChange(sn, 'PRE_VISUAL_BRACKETS', e.target.checked)}
+                                  />
+                                </TableCell>
+                                <TableCell sx={cellSx} padding="checkbox" onClick={(e) => isStageEditMode && e.stopPropagation()}>
+                                  <Checkbox
+                                    size="small"
+                                    checked={!!getVal('CONNECTED_IN_BRACKETS')}
+                                    disabled={!isStageEditMode}
+                                    onChange={(e) => handleStageFieldChange(sn, 'CONNECTED_IN_BRACKETS', e.target.checked)}
+                                  />
+                                </TableCell>
+                                <TableCell sx={cellSx} onClick={(e) => isStageEditMode && e.stopPropagation()}>
+                                  {isStageEditMode ? (
+                                    <FormControl size="small" sx={{ minWidth: 120 }}>
+                                      <Select
+                                        value={getVal('PHASE') ?? ''}
+                                        onChange={(e) => handleStageFieldChange(sn, 'PHASE', e.target.value || '')}
+                                        sx={{ height: 32, fontSize: '0.8125rem' }}
+                                      >
+                                        <MenuItem value="">Not Selected</MenuItem>
+                                        {(phasesBySeason[selectedStructureSeasonNum] || []).map((ph) => (
+                                          <MenuItem key={ph.PHASE_NUM} value={ph.name || `Phase ${ph.PHASE_NUM}`}>
+                                            {ph.name || `Phase ${ph.PHASE_NUM}`}
+                                          </MenuItem>
+                                        ))}
+                                      </Select>
+                                    </FormControl>
+                                  ) : (stage.PHASE || 'Not Selected')}
+                                </TableCell>
                               </TableRow>
                             );
                           })}
@@ -6125,55 +6628,6 @@ function CompetitionDetails() {
                           Stage Details: {structureStageForm.name || `Stage ${structureStageForm.STAGE_NUM}`}
                         </Typography>
                         <Grid container spacing={2} sx={{ mb: 2 }} alignItems="center">
-                          <Grid item xs={12} sm={2}>
-                            <FormControl fullWidth size="small">
-                              <InputLabel>Stage Type</InputLabel>
-                              <Select
-                                label="Stage Type"
-                                value={structureStageForm.STAGE_TYPE ?? 1}
-                                onChange={(e) => setStructureStageForm((f) => ({ ...f, STAGE_TYPE: Number(e.target.value) }))}
-                                renderValue={(v) => stagesTypes.find((t) => Number(t.STAGE_TYPE_ID) === Number(v))?.STAGE_TYPE ?? String(v)}
-                              >
-                                {stagesTypes.map((t) => (
-                                  <MenuItem key={t.STAGE_TYPE_ID} value={t.STAGE_TYPE_ID}>
-                                    {t.STAGE_TYPE}
-                                  </MenuItem>
-                                ))}
-                              </Select>
-                            </FormControl>
-                          </Grid>
-                          <Grid item xs={12} sm={2}>
-                            <FormControl fullWidth size="small">
-                              <InputLabel>Phase</InputLabel>
-                              <Select
-                                label="Phase"
-                                value={structureStageForm.PHASE ?? ''}
-                                onChange={(e) => setStructureStageForm((f) => ({ ...f, PHASE: e.target.value || '' }))}
-                                renderValue={(v) => v || 'Not Selected'}
-                              >
-                                <MenuItem value="">Not Selected</MenuItem>
-                                {(phasesBySeason[selectedStructureSeasonNum] || []).map((ph) => {
-                                  const displayName = ph.name || `Phase ${ph.PHASE_NUM}`;
-                                  return (
-                                    <MenuItem key={ph.PHASE_NUM} value={displayName}>
-                                      {displayName}
-                                    </MenuItem>
-                                  );
-                                })}
-                              </Select>
-                            </FormControl>
-                          </Grid>
-                          <Grid item xs={12} sm={2}>
-                            <TextField
-                              fullWidth
-                              size="small"
-                              type="number"
-                              label="Num Of Games"
-                              value={structureStageForm.NUM_OF_GAMES ?? ''}
-                              onChange={(e) => setStructureStageForm((f) => ({ ...f, NUM_OF_GAMES: e.target.value === '' ? '' : Number(e.target.value) }))}
-                              placeholder="-1"
-                            />
-                          </Grid>
                           <Grid item xs={12} sm={2}>
                             <DateTimePicker
                               label="Start Date"
@@ -6195,39 +6649,7 @@ function CompetitionDetails() {
                           </Grid>
                         </Grid>
 
-                        <Typography variant="subtitle2" sx={{ fontWeight: 600, mt: 2, mb: 1 }}>Stage Configuration</Typography>
-                        <Grid container spacing={1} sx={{ mb: 2 }}>
-                          {[
-                            { key: 'HAS_TABLE', label: 'Has Table' },
-                            { key: 'IS_SERIES', label: 'Is Series' },
-                            { key: 'CONNECTED_TO_PREVIOUS_STAGE', label: 'Connected To Previous Stage' },
-                            { key: 'FILTER_DIVISION', label: 'Filter Division' },
-                            { key: 'INCLUDE_IN_BRACKET', label: 'Include in bracket' },
-                            { key: 'PRE_VISUAL_BRACKETS', label: 'Pre Visual Brackets' },
-                            { key: 'CONNECTED_IN_BRACKETS', label: 'Connected In Brackets' },
-                          ].map(({ key, label }) => (
-                            <Grid item xs={6} sm={4} md={3} key={key}>
-                              <FormControlLabel
-                                control={
-                                  <Checkbox
-                                    size="small"
-                                    checked={!!structureStageForm[key]}
-                                    onChange={(e) => {
-                                      const checked = e.target.checked;
-                                      setStructureStageForm((f) => ({ ...f, [key]: checked }));
-                                      if (key === 'HAS_TABLE' && checked && structureSeasonForm) {
-                                        setStructureSeasonForm((s) => ({ ...s, HAS_TABLE: true }));
-                                      }
-                                    }}
-                                  />
-                                }
-                                label={label}
-                              />
-                            </Grid>
-                          ))}
-                        </Grid>
-
-                        {!!structureStageForm.HAS_TABLE && (
+                        {!isStageEditMode && !!structureStageForm.HAS_TABLE && (
                           <>
                             <Typography variant="subtitle2" sx={{ fontWeight: 600, mt: 2, mb: 1 }}>Table Options</Typography>
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 1, mb: 2 }}>
@@ -6253,11 +6675,45 @@ function CompetitionDetails() {
                                 label="Hide Main Table"
                               />
                               <FormControlLabel
-                                control={<Checkbox size="small" checked={!!structureStageForm.HAS_POSITION_TABLE} onChange={(e) => setStructureStageForm((f) => ({ ...f, HAS_POSITION_TABLE: e.target.checked }))} />}
+                                control={<Checkbox size="small" checked={!!structureStageForm.HAS_POSITION_TABLE} onChange={(e) => {
+                                  const checked = e.target.checked;
+                                  setStructureStageForm((f) => ({
+                                    ...f,
+                                    HAS_POSITION_TABLE: checked,
+                                    ...(!checked && { POSITION_PARAMETER: null, POSITION_TABLE_NAME: null, POSITION_TABLE_NAME_ID: null }),
+                                  }));
+                                }} />}
                                 label="Has Position Table"
                               />
-                              {!!structureStageForm.HAS_POSITION_TABLE && (
-                                <>
+                              <FormControlLabel
+                                control={<Checkbox size="small" checked={!!structureStageForm.HAS_AGGREGATION_TABLE} onChange={(e) => {
+                                  const checked = e.target.checked;
+                                  setStructureStageForm((f) => ({
+                                    ...f,
+                                    HAS_AGGREGATION_TABLE: checked,
+                                    ...(!checked && { AGGREGATED_TABLE_SETTINGS: null }),
+                                  }));
+                                }} />}
+                                label="Has Aggregation Table"
+                              />
+                              <FormControlLabel
+                                control={<Checkbox size="small" checked={!!structureStageForm.HAS_RELEGATION_TABLE} onChange={(e) => {
+                                  const checked = e.target.checked;
+                                  setStructureStageForm((f) => ({
+                                    ...f,
+                                    HAS_RELEGATION_TABLE: checked,
+                                    ...(!checked && { RELEGATION_TABLE_SETTINGS: null }),
+                                  }));
+                                }} />}
+                                label="Has Relegation Table"
+                              />
+                            </Box>
+                            {!!structureStageForm.HAS_POSITION_TABLE && (
+                              <Paper variant="outlined" sx={{ p: 2, mt: 1 }}>
+                                <Typography variant="subtitle2" sx={{ mb: 1.5, fontWeight: 600 }}>
+                                  Position Table Settings
+                                </Typography>
+                                <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center', flexWrap: 'wrap' }}>
                                   <TextField
                                     size="small"
                                     type="number"
@@ -6269,74 +6725,99 @@ function CompetitionDetails() {
                                       POSITION_PARAMETER: e.target.value === '' ? null : Number(e.target.value),
                                     }))}
                                     inputProps={{ min: 1, step: 1 }}
-                                    sx={{ width: 100 }}
+                                    sx={{ width: 120 }}
                                   />
                                   <Autocomplete
                                     size="small"
-                                    sx={{ minWidth: 180 }}
+                                    sx={{ minWidth: 220 }}
                                     options={positionTableNamesTermOptions}
-                                  getOptionLabel={(opt) => (opt?.engValue || opt?.values?.[0]?.value || `Term ${opt?.id}` || '')}
-                                  value={
-                                    (() => {
-                                      const termId = structureStageForm.POSITION_TABLE_NAME_ID ?? structureStageForm.POSITION_TABLE_NAME;
-                                      return termId != null && termId !== 0 ? ((allTerms || []).find((t) => t.id === termId) || null) : null;
-                                    })()
-                                  }
-                                  isOptionEqualToValue={(opt, val) => opt && val && opt.id === val.id}
-                                  onChange={(_, v) => {
-                                    const termId = v?.id ?? null;
-                                    setStructureStageForm((f) => ({ ...f, POSITION_TABLE_NAME_ID: termId, POSITION_TABLE_NAME: termId }));
-                                  }}
-                                  renderInput={(params) => (
-                                    <TextField {...params} size="small" placeholder="Position table name" />
-                                  )}
-                                />
-                                </>
-                              )}
+                                    getOptionLabel={(opt) => (opt?.engValue || opt?.values?.[0]?.value || `Term ${opt?.id}` || '')}
+                                    value={
+                                      (() => {
+                                        const termId = structureStageForm.POSITION_TABLE_NAME_ID ?? structureStageForm.POSITION_TABLE_NAME;
+                                        return termId != null && termId !== 0 ? ((allTerms || []).find((t) => t.id === termId) || null) : null;
+                                      })()
+                                    }
+                                    isOptionEqualToValue={(opt, val) => opt && val && opt.id === val.id}
+                                    onChange={(_, v) => {
+                                      const termId = v?.id ?? null;
+                                      setStructureStageForm((f) => ({ ...f, POSITION_TABLE_NAME_ID: termId, POSITION_TABLE_NAME: termId }));
+                                    }}
+                                    renderInput={(params) => (
+                                      <TextField {...params} size="small" label="Position Table Name" />
+                                    )}
+                                  />
+                                </Box>
+                              </Paper>
+                            )}
+                            {(!!structureStageForm.HAS_AGGREGATION_TABLE || !!structureStageForm.HAS_RELEGATION_TABLE) && (
+                              <Box sx={{ display: 'flex', gap: 2, mt: 1, flexWrap: 'wrap' }}>
+                                {!!structureStageForm.HAS_AGGREGATION_TABLE && (
+                                  <Box sx={{ flex: '1 1 0', minWidth: 300 }}>
+                                    <TableSettingsEditor
+                                      label="Aggregation Table Settings"
+                                      value={structureStageForm.AGGREGATED_TABLE_SETTINGS ?? ''}
+                                      onChange={(val) => setStructureStageForm((f) => ({ ...f, AGGREGATED_TABLE_SETTINGS: val }))}
+                                      competitions={allCompetitions}
+                                      tableTypes={tableTypes}
+                                      competitionSportTypeId={competition?.SPORT_TYPE_ID}
+                                      competitionCountryId={competition?.COUNTRY_ID}
+                                    />
+                                  </Box>
+                                )}
+                                {!!structureStageForm.HAS_RELEGATION_TABLE && (
+                                  <Box sx={{ flex: '1 1 0', minWidth: 300 }}>
+                                    <TableSettingsEditor
+                                      label="Relegation Table Settings"
+                                      value={structureStageForm.RELEGATION_TABLE_SETTINGS ?? ''}
+                                      onChange={(val) => setStructureStageForm((f) => ({ ...f, RELEGATION_TABLE_SETTINGS: val }))}
+                                      competitions={allCompetitions}
+                                      tableTypes={tableTypes}
+                                      competitionSportTypeId={competition?.SPORT_TYPE_ID}
+                                      competitionCountryId={competition?.COUNTRY_ID}
+                                    />
+                                  </Box>
+                                )}
+                              </Box>
+                            )}
+                            <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mt: 2 }}>
+                              <Button variant="outlined" size="small" onClick={handleOpenManageStandingsDialog} sx={{ textTransform: 'none' }}>MANAGE STANDINGS</Button>
                             </Box>
-                            <Grid container spacing={2} sx={{ mb: 2 }}>
-                              <Grid item xs={12} sm={6}>
-                                <TextField
-                                  fullWidth
-                                  size="small"
-                                  label="Aggregation Table"
-                                  placeholder="Numbers and symbols"
-                                  value={structureStageForm.AGGREGATED_TABLE_SETTINGS ?? ''}
-                                  onChange={(e) => setStructureStageForm((f) => ({ ...f, AGGREGATED_TABLE_SETTINGS: e.target.value || null }))}
-                                />
-                              </Grid>
-                              <Grid item xs={12} sm={6}>
-                                <TextField
-                                  fullWidth
-                                  size="small"
-                                  label="Relegation Table"
-                                  placeholder="Numbers and symbols"
-                                  value={structureStageForm.RELEGATION_TABLE_SETTINGS ?? ''}
-                                  onChange={(e) => setStructureStageForm((f) => ({ ...f, RELEGATION_TABLE_SETTINGS: e.target.value || null }))}
-                                />
-                              </Grid>
-                            </Grid>
                           </>
                         )}
-                        <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mt: 2 }}>
-                          <Button variant="outlined" size="small" onClick={handleOpenManageStandingsDialog} sx={{ textTransform: 'none' }}>MANAGE STANDINGS</Button>
-                        </Box>
                       </>
                     )}
                   </>
                 );
               })()}
-            </Paper>
+              </AccordionDetails>
+            </Accordion>
           )}
 
           {/* Groups section: accordion left, Competitors Not In Groups always on right */}
           {structureSeasons.length > 0 && selectedStructureSeasonNum != null && selectedStructureStageNum != null && (
-            <Paper variant="outlined" sx={{ p: 2, mb: 2 }}>
+            <Accordion
+              expanded={expandedStructureSection === 'groups'}
+              onChange={() => setExpandedStructureSection((prev) => prev === 'groups' ? null : 'groups')}
+              sx={{
+                '&:before': { display: 'none' },
+                boxShadow: 'none',
+                border: '1px solid',
+                borderColor: 'divider',
+                borderRadius: 1,
+                mb: 2,
+              }}
+            >
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                  Groups ({(groupsByStage[`${selectedStructureSeasonNum}-${selectedStructureStageNum}`] || []).length})
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails sx={{ pt: 0 }}>
               <Box sx={{ display: 'flex', flexDirection: { xs: 'column', lg: 'row' }, gap: 2, alignItems: 'stretch' }}>
                 {/* Left: Groups + CREATE NEW, then Accordion — 55% width */}
                 <Box sx={{ flex: { xs: '1 1 100%', lg: '55 55 55%' }, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 2 }}>
                   <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 0.5 }}>
-                    <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>Groups</Typography>
                     <Button
                       variant="contained"
                       size="small"
@@ -6922,7 +7403,8 @@ function CompetitionDetails() {
                   </TableContainer>
                 </Box>
               </Box>
-            </Paper>
+              </AccordionDetails>
+            </Accordion>
           )}
 
           {/* Group Edit Dialog */}
@@ -7771,28 +8253,6 @@ function CompetitionDetails() {
         </DialogActions>
       </Dialog>
 
-      {/* Create city term (category: Cities) */}
-      <Dialog open={createCityDialogOpen} onClose={() => { setCreateCityDialogOpen(false); setCreateCityName(''); }} maxWidth="xs" fullWidth>
-        <DialogTitle>New City Term</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="City name"
-            fullWidth
-            variant="outlined"
-            value={createCityName}
-            onChange={(e) => setCreateCityName(e.target.value)}
-            placeholder="Enter city name"
-            sx={{ mt: 1 }}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => { setCreateCityDialogOpen(false); setCreateCityName(''); }} color="inherit">Cancel</Button>
-          <Button onClick={handleCreateCitySave} variant="contained" color="primary">Create</Button>
-        </DialogActions>
-      </Dialog>
-
       <Dialog open={createBracketFinalDialogOpen} onClose={() => { setCreateBracketFinalDialogOpen(false); setCreateBracketFinalName(''); setBracketFinalInputValue(''); }} maxWidth="xs" fullWidth>
         <DialogTitle>New Bracket Final Name</DialogTitle>
         <DialogContent>
@@ -7954,24 +8414,6 @@ function CompetitionDetails() {
                   slotProps={{ textField: { size: 'small', fullWidth: true } }}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <FormControlLabel
-                    control={<Checkbox size="small" checked={newSeasonRoundNameCheck} onChange={(e) => setNewSeasonRoundNameCheck(e.target.checked)} />}
-                    label="Round Name"
-                  />
-                </Box>
-              </Grid>
-              {newSeasonRoundNameCheck && (
-                <Grid item xs={12} sm={6}>
-                  <FormControl fullWidth size="small">
-                    <InputLabel>Round name</InputLabel>
-                    <Select label="Round name" value={newSeasonRoundNameId ?? ''} onChange={(e) => setNewSeasonRoundNameId(e.target.value === '' ? null : e.target.value)}>
-                      <MenuItem value="">select round name</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-              )}
               <Grid item xs={12} sm={6}>
                 <DateTimePicker
                   label="End Date"
@@ -8227,152 +8669,366 @@ function CompetitionDetails() {
         </DialogActions>
       </Dialog>
 
-      {/* Generate Stages dialog */}
-      <Dialog open={generateStagesDialogOpen} onClose={() => { setGenerateStagesDialogOpen(false); setGenerateStagesImportSeasonNum(null); setGenerateStagesTypes({ leagueCycle: false, groupStage: false, bracketStage: false }); }} maxWidth="sm" fullWidth>
+      {/* Create / Generate Stages unified dialog */}
+      <Dialog open={createGenerateDialogOpen} onClose={handleCloseCreateGenerateDialog} maxWidth="sm" fullWidth>
         <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          Generate Stages
-          <IconButton size="small" onClick={() => setGenerateStagesDialogOpen(false)} aria-label="Close">
+          Create / Generate Stages
+          <IconButton size="small" onClick={handleCloseCreateGenerateDialog} aria-label="Close">
             <CloseIcon fontSize="small" />
           </IconButton>
         </DialogTitle>
-        <DialogContent>
-          <Typography variant="subtitle2" sx={{ fontWeight: 600, mt: 1, mb: 1 }}>Import Stages from previous season</Typography>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-            <FormControl size="small" sx={{ minWidth: 200 }}>
-              <InputLabel>Select Season</InputLabel>
-              <Select
-                label="Select Season"
-                value={generateStagesImportSeasonNum ?? ''}
-                onChange={(e) => setGenerateStagesImportSeasonNum(e.target.value === '' ? null : e.target.value)}
-                displayEmpty
-              >
-                <MenuItem value="">Select Season</MenuItem>
-                {(structureSeasons || [])
-                  .filter((s) => s.SEASON_NUM !== selectedStructureSeasonNum)
-                  .map((s) => (
-                    <MenuItem key={s.SEASON_NUM} value={s.SEASON_NUM}>
-                      #{s.SEASON_NUM} - {s.name || `Season ${s.SEASON_NUM}`}
-                    </MenuItem>
-                  ))}
-              </Select>
-            </FormControl>
+        <DialogContent sx={{ px: 0, pb: 0 }}>
+          <Box sx={{ borderBottom: 1, borderColor: 'divider', px: 3 }}>
+            <Tabs
+              value={createGenerateDialogTab}
+              onChange={(_, newVal) => {
+                setCreateGenerateDialogTab(newVal);
+                if (newVal === 1 && !stageFormContext) {
+                  setStageModalMode('add');
+                  setStageFormContext({ seasonNum: selectedStructureSeasonNum });
+                  setStageEditTarget(null);
+                  setNewStageName('');
+                  setNewStageSetCurrent(false);
+                  setStageForm({
+                    STAGE_NUM: '', NAME_ID: null, STAGE_TYPE: 1, NUM_OF_GAMES: -1,
+                    START_DATE: '', END_DATE: '', HAS_TABLE: false, INCLUDE_IN_BRACKET: false,
+                    FILTER_DIVISION: false, CONNECTED_IN_BRACKETS: false, PRE_VISUAL_BRACKETS: false,
+                    IS_SERIES: false, CONNECTED_TO_PREVIOUS_STAGE: false, PHASE: '',
+                  });
+                }
+              }}
+              sx={{ '& .MuiTab-root': { textTransform: 'none', fontWeight: 500 }, '& .Mui-selected': { color: '#1976d2' } }}
+            >
+              <Tab label="Generate Stages" />
+              <Tab label="Create Stage" />
+            </Tabs>
+          </Box>
+
+          {createGenerateDialogTab === 0 && (
+            <Box sx={{ px: 3, pt: 2, pb: 2 }}>
+              <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>Import Stages from previous season</Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+                <FormControl size="small" sx={{ minWidth: 200 }}>
+                  <InputLabel>Select Season</InputLabel>
+                  <Select
+                    label="Select Season"
+                    value={generateStagesImportSeasonNum ?? ''}
+                    onChange={(e) => setGenerateStagesImportSeasonNum(e.target.value === '' ? null : e.target.value)}
+                    displayEmpty
+                  >
+                    <MenuItem value="">Select Season</MenuItem>
+                    {(structureSeasons || [])
+                      .filter((s) => s.SEASON_NUM !== selectedStructureSeasonNum)
+                      .map((s) => (
+                        <MenuItem key={s.SEASON_NUM} value={s.SEASON_NUM}>
+                          #{s.SEASON_NUM} - {s.name || `Season ${s.SEASON_NUM}`}
+                        </MenuItem>
+                      ))}
+                  </Select>
+                </FormControl>
+                <Button
+                  variant="contained"
+                  size="small"
+                  disabled={!generateStagesImportSeasonNum || !id}
+                  sx={{ textTransform: 'none' }}
+                  onClick={async () => {
+                    if (!id || !generateStagesImportSeasonNum || selectedStructureSeasonNum == null) return;
+                    try {
+                      const sourceStages = await api.getStages(id, generateStagesImportSeasonNum);
+                      const currentStages = stagesBySeason[selectedStructureSeasonNum] || [];
+                      const maxNum = currentStages.length ? Math.max(...currentStages.map((s) => Number(s.STAGE_NUM))) : 0;
+                      let nextNum = maxNum + 1;
+                      for (const s of sourceStages) {
+                        const payload = {
+                          STAGE_NUM: nextNum,
+                          NAME_ID: s.NAME_ID,
+                          STAGE_TYPE: s.STAGE_TYPE ?? 1,
+                          NUM_OF_GAMES: s.NUM_OF_GAMES ?? -1,
+                          START_DATE: s.START_DATE,
+                          END_DATE: s.END_DATE,
+                          HAS_TABLE: !!s.HAS_TABLE,
+                          INCLUDE_IN_BRACKET: !!s.INCLUDE_IN_BRACKET,
+                          FILTER_DIVISION: !!s.FILTER_DIVISION,
+                          CONNECTED_IN_BRACKETS: !!s.CONNECTED_IN_BRACKETS,
+                          PRE_VISUAL_BRACKETS: !!s.PRE_VISUAL_BRACKETS,
+                          IS_SERIES: !!s.IS_SERIES,
+                          CONNECTED_TO_PREVIOUS_STAGE: !!s.CONNECTED_TO_PREVIOUS_STAGE,
+                          PHASE: s.PHASE ?? '',
+                        };
+                        await api.createStage(id, selectedStructureSeasonNum, payload);
+                        nextNum += 1;
+                      }
+                      setSnackbar({ open: true, message: `Imported ${sourceStages.length} stage(s)`, severity: 'success' });
+                      loadStagesAndPhases(selectedStructureSeasonNum);
+                      handleCloseCreateGenerateDialog();
+                    } catch (err) {
+                      setSnackbar({ open: true, message: err.message || 'Import failed', severity: 'error' });
+                    }
+                  }}
+                >
+                  IMPORT STAGES
+                </Button>
+              </Box>
+              <Typography variant="subtitle2" sx={{ fontWeight: 600, mt: 2, mb: 1 }}>Stages Types</Typography>
+              <Grid container spacing={1} sx={{ mb: 2 }}>
+                {[
+                  { key: 'leagueCycle', label: 'League Cycle' },
+                  { key: 'groupStage', label: 'Group Stage' },
+                  { key: 'bracketStage', label: 'Bracket Stage' },
+                ].map(({ key, label }) => (
+                  <Grid item xs={12} key={key}>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          size="small"
+                          checked={!!generateStagesTypes[key]}
+                          onChange={(e) => setGenerateStagesTypes((prev) => ({ ...prev, [key]: e.target.checked }))}
+                        />
+                      }
+                      label={label}
+                    />
+                  </Grid>
+                ))}
+              </Grid>
+            </Box>
+          )}
+
+          {createGenerateDialogTab === 1 && (
+            <Box sx={{ px: 3, pt: 2, pb: 2 }}>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <Autocomplete
+                    freeSolo
+                    size="small"
+                    options={stageTermOptions}
+                    getOptionLabel={(opt) => (opt?.values && opt.values.find(v => v.languageId === 1)?.value) || opt?.engValue || (opt?.id ? `Term ${opt.id}` : '')}
+                    value={stageForm.NAME_ID ? (stageTermOptions.find(t => t.id === (stageForm.NAME_ID?.id ?? stageForm.NAME_ID)) || null) : null}
+                    inputValue={newStageName}
+                    onInputChange={(_, v) => {
+                      setNewStageName(v);
+                      if (stageForm.NAME_ID) setStageForm((f) => ({ ...f, NAME_ID: null }));
+                    }}
+                    onChange={(_, v) => {
+                      if (v && typeof v === 'object' && v.id) {
+                        setStageForm((f) => ({ ...f, NAME_ID: v }));
+                        setNewStageName((v.values && v.values.find(x => x.languageId === 1)?.value) || v.engValue || `Term ${v.id}`);
+                      } else if (typeof v === 'string') {
+                        setStageForm((f) => ({ ...f, NAME_ID: null }));
+                        setNewStageName(v);
+                      }
+                    }}
+                    filterOptions={(options, { inputValue }) => {
+                      const trim = (inputValue || '').trim();
+                      if (trim.length < 3) return [];
+                      const lower = trim.toLowerCase();
+                      return options.filter((opt) => {
+                        const label = (opt.values && opt.values.find(v => v.languageId === 1)?.value) || opt.engValue || '';
+                        return String(label).toLowerCase().includes(lower);
+                      });
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Stage Name"
+                        placeholder="Enter 3+ letters for suggestions"
+                        required
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <FormControl fullWidth size="small">
+                    <InputLabel>Stage Type</InputLabel>
+                    <Select
+                      label="Stage Type"
+                      value={stageForm.STAGE_TYPE ?? 1}
+                      onChange={(e) => setStageForm((f) => ({ ...f, STAGE_TYPE: Number(e.target.value) }))}
+                      renderValue={(v) => stagesTypes.find((t) => Number(t.STAGE_TYPE_ID) === Number(v))?.STAGE_TYPE ?? String(v)}
+                    >
+                      {stagesTypes.map((t) => (
+                        <MenuItem key={t.STAGE_TYPE_ID} value={t.STAGE_TYPE_ID}>
+                          {t.STAGE_TYPE}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    fullWidth
+                    size="small"
+                    type="number"
+                    label="Num Of Games"
+                    value={stageForm.NUM_OF_GAMES ?? -1}
+                    onChange={(e) => setStageForm((f) => ({ ...f, NUM_OF_GAMES: e.target.value === '' ? -1 : Number(e.target.value) }))}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <FormControl fullWidth size="small">
+                    <InputLabel>Phase</InputLabel>
+                    <Select
+                      label="Phase"
+                      value={stageForm.PHASE ?? ''}
+                      onChange={(e) => setStageForm((f) => ({ ...f, PHASE: e.target.value || '' }))}
+                      renderValue={(v) => v || 'Not Selected'}
+                    >
+                      <MenuItem value="">Not Selected</MenuItem>
+                      {(phasesBySeason[stageFormContext?.seasonNum] || []).map((ph) => {
+                        const displayName = ph.name || `Phase ${ph.PHASE_NUM}`;
+                        return (
+                          <MenuItem key={ph.PHASE_NUM} value={displayName}>
+                            {displayName}
+                          </MenuItem>
+                        );
+                      })}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>Stage Parameters</Typography>
+                  <Grid container spacing={1}>
+                    {[
+                      { key: 'HAS_TABLE', label: 'Has Table' },
+                      { key: 'INCLUDE_IN_BRACKET', label: 'Include in bracket' },
+                      { key: 'FILTER_DIVISION', label: 'Filter Division' },
+                      { key: 'CONNECTED_IN_BRACKETS', label: 'Connected In Brackets' },
+                      { key: 'PRE_VISUAL_BRACKETS', label: 'Pre Visual Brackets' },
+                      { key: 'IS_SERIES', label: 'Is Series' },
+                      { key: 'CONNECTED_TO_PREVIOUS_STAGE', label: 'Connected To previous stage' },
+                    ].map(({ key, label }) => (
+                      <Grid item xs={6} sm={4} key={key}>
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              size="small"
+                              checked={!!stageForm[key]}
+                              onChange={(e) => setStageForm((f) => ({ ...f, [key]: e.target.checked }))}
+                            />
+                          }
+                          label={<Typography variant="body2">{label}</Typography>}
+                        />
+                      </Grid>
+                    ))}
+                  </Grid>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>Stage Dates</Typography>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} sm={6}>
+                      <DateTimePicker
+                        label="Start Date"
+                        value={stageForm.START_DATE ? dayjs(stageForm.START_DATE) : null}
+                        onChange={(v) => setStageForm((f) => ({ ...f, START_DATE: v ? v.toISOString() : '' }))}
+                        slotProps={{ textField: { size: 'small', fullWidth: true } }}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <DateTimePicker
+                        label="End Date"
+                        value={stageForm.END_DATE ? dayjs(stageForm.END_DATE) : null}
+                        onChange={(v) => setStageForm((f) => ({ ...f, END_DATE: v ? v.toISOString() : '' }))}
+                        slotProps={{ textField: { size: 'small', fullWidth: true } }}
+                      />
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item xs={12}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        size="small"
+                        checked={newStageSetCurrent}
+                        onChange={(e) => setNewStageSetCurrent(e.target.checked)}
+                      />
+                    }
+                    label="Set Current Stage"
+                  />
+                </Grid>
+              </Grid>
+            </Box>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseCreateGenerateDialog}>CANCEL</Button>
+          {createGenerateDialogTab === 0 && (
             <Button
               variant="contained"
-              size="small"
-              disabled={!generateStagesImportSeasonNum || !id}
+              disabled={!generateStagesTypes.leagueCycle && !generateStagesTypes.groupStage && !generateStagesTypes.bracketStage}
               sx={{ textTransform: 'none' }}
               onClick={async () => {
-                if (!id || !generateStagesImportSeasonNum || selectedStructureSeasonNum == null) return;
+                if (!id || selectedStructureSeasonNum == null) return;
+                const names = {
+                  leagueCycle: 'League Cycle',
+                  groupStage: 'Group Stage',
+                  bracketStage: 'Bracket Stage',
+                };
+                const types = { leagueCycle: 1, groupStage: 1, bracketStage: 2 };
+                const currentStages = stagesBySeason[selectedStructureSeasonNum] || [];
+                const maxNum = currentStages.length ? Math.max(...currentStages.map((s) => Number(s.STAGE_NUM))) : 0;
+                let nextNum = maxNum + 1;
                 try {
-                  const sourceStages = await api.getStages(id, generateStagesImportSeasonNum);
-                  const currentStages = stagesBySeason[selectedStructureSeasonNum] || [];
-                  const maxNum = currentStages.length ? Math.max(...currentStages.map((s) => Number(s.STAGE_NUM))) : 0;
-                  let nextNum = maxNum + 1;
-                  for (const s of sourceStages) {
-                    const payload = {
+                  for (const key of ['leagueCycle', 'groupStage', 'bracketStage']) {
+                    if (!generateStagesTypes[key]) continue;
+                    const term = await api.createTerm({
+                      category: 'Stages Names',
+                      values: [{ languageId: 1, value: names[key], isDefault: true, status: 'Approved' }],
+                    });
+                    await api.createStage(id, selectedStructureSeasonNum, {
                       STAGE_NUM: nextNum,
-                      NAME_ID: s.NAME_ID,
-                      STAGE_TYPE: s.STAGE_TYPE ?? 1,
-                      NUM_OF_GAMES: s.NUM_OF_GAMES ?? -1,
-                      START_DATE: s.START_DATE,
-                      END_DATE: s.END_DATE,
-                      HAS_TABLE: !!s.HAS_TABLE,
-                      INCLUDE_IN_BRACKET: !!s.INCLUDE_IN_BRACKET,
-                      FILTER_DIVISION: !!s.FILTER_DIVISION,
-                      CONNECTED_IN_BRACKETS: !!s.CONNECTED_IN_BRACKETS,
-                      PRE_VISUAL_BRACKETS: !!s.PRE_VISUAL_BRACKETS,
-                      IS_SERIES: !!s.IS_SERIES,
-                      CONNECTED_TO_PREVIOUS_STAGE: !!s.CONNECTED_TO_PREVIOUS_STAGE,
-                      PHASE: s.PHASE ?? '',
-                    };
-                    await api.createStage(id, selectedStructureSeasonNum, payload);
+                      NAME_ID: term?.id ?? term,
+                      STAGE_TYPE: types[key],
+                      NUM_OF_GAMES: -1,
+                      HAS_TABLE: key === 'groupStage' || key === 'leagueCycle',
+                      INCLUDE_IN_BRACKET: key === 'bracketStage',
+                      PRE_VISUAL_BRACKETS: false,
+                      IS_SERIES: false,
+                      CONNECTED_TO_PREVIOUS_STAGE: false,
+                      FILTER_DIVISION: false,
+                      CONNECTED_IN_BRACKETS: false,
+                      PHASE: '',
+                    });
                     nextNum += 1;
                   }
-                  setSnackbar({ open: true, message: `Imported ${sourceStages.length} stage(s)`, severity: 'success' });
+                  setSnackbar({ open: true, message: 'Stages created', severity: 'success' });
                   loadStagesAndPhases(selectedStructureSeasonNum);
-                  setGenerateStagesDialogOpen(false);
-                  setGenerateStagesImportSeasonNum(null);
+                  handleCloseCreateGenerateDialog();
                 } catch (err) {
-                  setSnackbar({ open: true, message: err.message || 'Import failed', severity: 'error' });
+                  setSnackbar({ open: true, message: err.message || 'Create failed', severity: 'error' });
                 }
               }}
             >
-              IMPORT STAGES
+              CREATE
             </Button>
-          </Box>
-          <Typography variant="subtitle2" sx={{ fontWeight: 600, mt: 2, mb: 1 }}>Stages Types</Typography>
-          <Grid container spacing={1} sx={{ mb: 2 }}>
-            {[
-              { key: 'leagueCycle', label: 'League Cycle' },
-              { key: 'groupStage', label: 'Group Stage' },
-              { key: 'bracketStage', label: 'Bracket Stage' },
-            ].map(({ key, label }) => (
-              <Grid item xs={12} key={key}>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      size="small"
-                      checked={!!generateStagesTypes[key]}
-                      onChange={(e) => setGenerateStagesTypes((prev) => ({ ...prev, [key]: e.target.checked }))}
-                    />
-                  }
-                  label={label}
-                />
-              </Grid>
-            ))}
-          </Grid>
+          )}
+          {createGenerateDialogTab === 1 && (
+            <Button
+              variant="contained"
+              onClick={handleStageModalSave}
+              disabled={stageSaving || (!(newStageName || '').trim() && !stageForm.NAME_ID)}
+              sx={{ textTransform: 'none' }}
+            >
+              {stageSaving ? 'Saving…' : 'SAVE'}
+            </Button>
+          )}
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={stageDeleteConfirmOpen} onClose={() => setStageDeleteConfirmOpen(false)} maxWidth="xs" fullWidth>
+        <DialogTitle sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Box component="span" sx={{ color: '#d32f2f', display: 'inline-flex' }}>⚠️</Box>
+          Delete Stages
+        </DialogTitle>
+        <DialogContent>
+          <Typography variant="body2">
+            You are about to delete <strong>{selectedStagesForDelete.length}</strong> stage(s). This action is irreversible and will remove all associated data (games, competitors, groups) for the selected stages.
+          </Typography>
+          <Typography variant="body2" sx={{ mt: 1, color: 'text.secondary' }}>
+            Are you sure you want to proceed?
+          </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setGenerateStagesDialogOpen(false)}>CANCEL</Button>
-          <Button
-            variant="contained"
-            disabled={!generateStagesTypes.leagueCycle && !generateStagesTypes.groupStage && !generateStagesTypes.bracketStage}
-            sx={{ textTransform: 'none' }}
-            onClick={async () => {
-              if (!id || selectedStructureSeasonNum == null) return;
-              const names = {
-                leagueCycle: 'League Cycle',
-                groupStage: 'Group Stage',
-                bracketStage: 'Bracket Stage',
-              };
-              const types = { leagueCycle: 1, groupStage: 1, bracketStage: 2 };
-              const currentStages = stagesBySeason[selectedStructureSeasonNum] || [];
-              const maxNum = currentStages.length ? Math.max(...currentStages.map((s) => Number(s.STAGE_NUM))) : 0;
-              let nextNum = maxNum + 1;
-              try {
-                for (const key of ['leagueCycle', 'groupStage', 'bracketStage']) {
-                  if (!generateStagesTypes[key]) continue;
-                  const term = await api.createTerm({
-                    category: 'Stages Names',
-                    values: [{ languageId: 1, value: names[key], isDefault: true, status: 'Approved' }],
-                  });
-                  await api.createStage(id, selectedStructureSeasonNum, {
-                    STAGE_NUM: nextNum,
-                    NAME_ID: term?.id ?? term,
-                    STAGE_TYPE: types[key],
-                    NUM_OF_GAMES: -1,
-                    HAS_TABLE: key === 'groupStage' || key === 'leagueCycle',
-                    INCLUDE_IN_BRACKET: key === 'bracketStage',
-                    PRE_VISUAL_BRACKETS: false,
-                    IS_SERIES: false,
-                    CONNECTED_TO_PREVIOUS_STAGE: false,
-                    FILTER_DIVISION: false,
-                    CONNECTED_IN_BRACKETS: false,
-                    PHASE: '',
-                  });
-                  nextNum += 1;
-                }
-                setSnackbar({ open: true, message: 'Stages created', severity: 'success' });
-                loadStagesAndPhases(selectedStructureSeasonNum);
-                setGenerateStagesDialogOpen(false);
-                setGenerateStagesTypes({ leagueCycle: false, groupStage: false, bracketStage: false });
-              } catch (err) {
-                setSnackbar({ open: true, message: err.message || 'Create failed', severity: 'error' });
-              }
-            }}
-          >
-            CREATE
-          </Button>
+          <Button onClick={() => setStageDeleteConfirmOpen(false)} sx={{ textTransform: 'none' }}>Cancel</Button>
+          <Button onClick={handleConfirmDeleteStages} variant="contained" color="error" sx={{ textTransform: 'none' }}>Delete</Button>
         </DialogActions>
       </Dialog>
 

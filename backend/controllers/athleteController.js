@@ -131,9 +131,8 @@ function resolveShortName(term, languageId = null) {
  * @param {number} languageId - Optional language ID for name resolution
  * @param {Array} athleteContracts - All athlete contracts (optional)
  * @param {Array} competitors - All competitors (optional)
- * @param {Array} athletesPositions - All athlete positions (optional)
  */
-async function enrichAthlete(athlete, terms, sports, countries, languageId = null, athleteContracts = [], competitors = [], athletesPositions = []) {
+async function enrichAthlete(athlete, terms, sports, countries, languageId = null, athleteContracts = [], competitors = [], positionTypes = [], formationPositionTypes = []) {
   // Start with all original fields
   const enriched = { ...athlete };
 
@@ -186,52 +185,31 @@ async function enrichAthlete(athlete, terms, sports, countries, languageId = nul
     enriched.placeOfBirthName = null;
   }
 
-  // Resolve position from ATHLETES_POSITIONS (add as 'positionName', keep original POSITION)
-  if (athlete.POSITION && athletesPositions.length > 0) {
-    const position = athletesPositions.find(p => p.POSITION_ID === athlete.POSITION && p.SPORT_TYPE_ID === athlete.SPORT_TYPE_ID);
-    enriched.positionName = position ? position.POSITION_NAME : null;
-  } else if (athlete.POSITION) {
-    // Fallback to terms if ATHLETES_POSITIONS not available
-    const positionTerm = terms.find(t => t.id === athlete.POSITION);
-    enriched.positionName = resolveTermName(positionTerm) || null;
+  // Resolve position name from position types (new flat files) with term name lookup
+  if (athlete.POSITION !== null && athlete.POSITION !== undefined && positionTypes.length > 0) {
+    const pt = positionTypes.find(p => p.POSITION_TYPE_ID === athlete.POSITION && p.SPORT_TYPE_ID === athlete.SPORT_TYPE_ID);
+    if (pt) {
+      const term = terms.find(t => t.id === pt.NAME_ID);
+      enriched.positionName = (term ? resolveTermName(term) : null) || pt.ALIAS_NAME;
+    } else {
+      enriched.positionName = null;
+    }
   } else {
     enriched.positionName = null;
   }
 
-  // Resolve formation position from ATHLETES_POSITIONS (add as 'formationPositionName', keep original FORMATION_POSITION)
-  if (athlete.FORMATION_POSITION && athletesPositions.length > 0) {
-    let formationPos = null;
-    
-    // First, try to find it in the athlete's specific position (if POSITION is set)
-    if (athlete.POSITION) {
-      const athletePosition = athletesPositions.find(p => 
-        p.POSITION_ID === athlete.POSITION && 
-        p.SPORT_TYPE_ID === athlete.SPORT_TYPE_ID
-      );
-      if (athletePosition && athletePosition.FORMATION_POSITIONS) {
-        formationPos = athletePosition.FORMATION_POSITIONS.find(fp => 
-          fp.FORMATION_POSITION_ID === athlete.FORMATION_POSITION
-        );
-      }
+  // Resolve formation position name from formation position types (new flat files) with term name lookup
+  if (athlete.FORMATION_POSITION !== null && athlete.FORMATION_POSITION !== undefined && formationPositionTypes.length > 0) {
+    const fpt = formationPositionTypes.find(fp =>
+      fp.FORMATION_POSITION_TYPE_ID === athlete.FORMATION_POSITION &&
+      fp.SPORT_TYPE_ID === athlete.SPORT_TYPE_ID
+    );
+    if (fpt) {
+      const term = terms.find(t => t.id === fpt.NAME_ID);
+      enriched.formationPositionName = (term ? resolveTermName(term) : null) || fpt.ALIAS_NAME;
+    } else {
+      enriched.formationPositionName = null;
     }
-    
-    // If not found in specific position, search all positions for this sport
-    if (!formationPos) {
-      const position = athletesPositions.find(p => 
-        p.SPORT_TYPE_ID === athlete.SPORT_TYPE_ID &&
-        p.FORMATION_POSITIONS &&
-        p.FORMATION_POSITIONS.some(fp => fp.FORMATION_POSITION_ID === athlete.FORMATION_POSITION)
-      );
-      if (position) {
-        formationPos = position.FORMATION_POSITIONS.find(fp => fp.FORMATION_POSITION_ID === athlete.FORMATION_POSITION);
-      }
-    }
-    
-    enriched.formationPositionName = formationPos ? formationPos.FORMATION_POSITION_NAME : null;
-  } else if (athlete.FORMATION_POSITION) {
-    // Fallback to terms if ATHLETES_POSITIONS not available
-    const formationTerm = terms.find(t => t.id === athlete.FORMATION_POSITION);
-    enriched.formationPositionName = resolveTermName(formationTerm) || null;
   } else {
     enriched.formationPositionName = null;
   }
@@ -309,7 +287,7 @@ class AthleteController {
       } = req.query;
 
       // Load all required data
-      const [athletes, terms, sports, countries, competitions, competitors, athleteContracts, languages, athletesPositions] = await Promise.all([
+      const [athletes, terms, sports, countries, competitions, competitors, athleteContracts, languages, positionTypes, formationPositionTypes] = await Promise.all([
         dataLoader.loadData('athletes.json'),
         dataLoader.loadData('terms.json'),
         dataLoader.loadData('sports.json'),
@@ -318,7 +296,8 @@ class AthleteController {
         dataLoader.loadData('competitors.json'),
         dataLoader.loadData('athlete_contracts.json').catch(() => []),
         dataLoader.loadData('languages.json').catch(() => []),
-        dataLoader.loadData('athletes_positions.json').catch(() => [])
+        dataLoader.loadData('athletes_position_types.json').catch(() => []),
+        dataLoader.loadData('athletes_formation_position_types.json').catch(() => [])
       ]);
 
       // Get language ID if language code is provided
@@ -436,7 +415,7 @@ class AthleteController {
 
       // Enrich each athlete
       let enrichedAthletes = await Promise.all(
-        filteredAthletes.map(athlete => enrichAthlete(athlete, terms, sports, countries, languageId, athleteContracts, competitors, athletesPositions))
+        filteredAthletes.map(athlete => enrichAthlete(athlete, terms, sports, countries, languageId, athleteContracts, competitors, positionTypes, formationPositionTypes))
       );
 
       // Apply name filter after enrichment
@@ -472,14 +451,15 @@ class AthleteController {
       }
 
       // Load all required data
-      const [athletes, terms, sports, countries, competitors, athleteContracts, athletesPositions] = await Promise.all([
+      const [athletes, terms, sports, countries, competitors, athleteContracts, positionTypes, formationPositionTypes] = await Promise.all([
         dataLoader.loadData('athletes.json'),
         dataLoader.loadData('terms.json'),
         dataLoader.loadData('sports.json'),
         dataLoader.loadData('countries.json'),
         dataLoader.loadData('competitors.json'),
         dataLoader.loadData('athlete_contracts.json').catch(() => []),
-        dataLoader.loadData('athletes_positions.json').catch(() => [])
+        dataLoader.loadData('athletes_position_types.json').catch(() => []),
+        dataLoader.loadData('athletes_formation_position_types.json').catch(() => [])
       ]);
 
       // Find athlete
@@ -495,7 +475,7 @@ class AthleteController {
       }
 
       // Enrich athlete
-      const enrichedAthlete = await enrichAthlete(athlete, terms, sports, countries, null, athleteContracts, competitors, athletesPositions);
+      const enrichedAthlete = await enrichAthlete(athlete, terms, sports, countries, null, athleteContracts, competitors, positionTypes, formationPositionTypes);
 
       res.json({
         success: true,
@@ -749,16 +729,17 @@ class AthleteController {
       await dataLoader.saveData('athletes.json', athletes);
 
       // Enrich and return
-      const [terms, sports, countries, athleteContracts, competitors, athletesPositions] = await Promise.all([
+      const [terms, sports, countries, athleteContracts, competitors, positionTypes, formationPositionTypes] = await Promise.all([
         dataLoader.loadData('terms.json'),
         dataLoader.loadData('sports.json'),
         dataLoader.loadData('countries.json'),
         dataLoader.loadData('athlete_contracts.json').catch(() => []),
         dataLoader.loadData('competitors.json').catch(() => []),
-        dataLoader.loadData('athletes_positions.json').catch(() => [])
+        dataLoader.loadData('athletes_position_types.json').catch(() => []),
+        dataLoader.loadData('athletes_formation_position_types.json').catch(() => [])
       ]);
 
-      const enrichedAthlete = await enrichAthlete(newAthlete, terms, sports, countries, null, athleteContracts, competitors, athletesPositions);
+      const enrichedAthlete = await enrichAthlete(newAthlete, terms, sports, countries, null, athleteContracts, competitors, positionTypes, formationPositionTypes);
 
       res.status(201).json({
         success: true,

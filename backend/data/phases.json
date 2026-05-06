@@ -246,7 +246,7 @@
     "SEASON_NUM": 3,
     "PHASE_NUM": 1,
     "PHASE_NAME_ID": 77643630,
-    "PARENT_PHASE_NUM": null,
+    "PARENT_PHASE_NUM": 2,
     "SHOW_STATS": true,
     "USE_NAME": true,
     "OVERTIME_LENGTH": null,
@@ -273,5 +273,16 @@
     "USE_NAME": false,
     "OVERTIME_LENGTH": null,
     "TOP_ATHLETES_MIN_APPEARANCES_PERCENTAGE": null
+  },
+  {
+    "COMPETITION_ID": 2,
+    "SEASON_NUM": 3,
+    "PHASE_NUM": 2,
+    "PHASE_NAME_ID": 77877767,
+    "PARENT_PHASE_NUM": 1,
+    "SHOW_STATS": true,
+    "USE_NAME": true,
+    "OVERTIME_LENGTH": null,
+    "TOP_ATHLETES_MIN_APPEARANCES_PERCENTAGE": 33
   }
 ]

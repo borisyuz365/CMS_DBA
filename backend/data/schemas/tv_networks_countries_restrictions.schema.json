@@ -1,0 +1,10 @@
+{
+  "TV_NETWORK_ID": {
+    "type": "int",
+    "default": 1
+  },
+  "COUNTRY_ID": {
+    "type": "int",
+    "default": 1
+  }
+}

@@ -55,7 +55,8 @@ const TransferHistoryTable = ({
   competitors = [],
   countries = [],
   competitions = [],
-  athletesPositions = [],
+  positionTypes = [],
+  formationPositionTypes = [],
   currencies = [],
   loading = false,
   onTermClick, // Callback for term clicks: (nameId, category) => void
@@ -84,22 +85,16 @@ const TransferHistoryTable = ({
     return currency ? currency.SYMBOL || currency.CURRENCY_CODE : '€';
   };
 
-  // Get position name
   const getPositionName = (positionId) => {
-    if (!positionId) return '';
-    const position = athletesPositions.find(p => p.POSITION_ID === positionId);
-    return position ? position.POSITION_NAME : '';
+    if (positionId === null || positionId === undefined) return '';
+    const pt = positionTypes.find(p => p.POSITION_TYPE_ID === positionId);
+    return pt ? (pt.name || pt.ALIAS_NAME) : '';
   };
 
-  // Get formation position name
   const getFormationPositionName = (positionId, formationPositionId) => {
-    if (!positionId || !formationPositionId) return '';
-    const position = athletesPositions.find(p => p.POSITION_ID === positionId);
-    if (!position || !position.FORMATION_POSITIONS) return '';
-    const formationPos = position.FORMATION_POSITIONS.find(
-      fp => fp.FORMATION_POSITION_ID === formationPositionId
-    );
-    return formationPos ? formationPos.FORMATION_POSITION_NAME : '';
+    if (formationPositionId === null || formationPositionId === undefined) return '';
+    const fpt = formationPositionTypes.find(fp => fp.FORMATION_POSITION_TYPE_ID === formationPositionId);
+    return fpt ? (fpt.name || fpt.ALIAS_NAME) : '';
   };
 
   return (
@@ -145,23 +140,17 @@ const TransferHistoryTable = ({
           overflowX: 'auto',
         }}
       >
-        <Table stickyHeader size="small" sx={{ minWidth: 2000 }}>
+        <Table stickyHeader size="small" sx={{ minWidth: 1700 }}>
           <TableHead>
             <TableRow>
               <TableCell sx={{ fontWeight: 700, backgroundColor: '#fafafa', minWidth: 80 }}>
                 Jersey Number
               </TableCell>
-              <TableCell sx={{ fontWeight: 700, backgroundColor: '#fafafa', minWidth: 100 }}>
-                Competitor ID
-              </TableCell>
               <TableCell sx={{ fontWeight: 700, backgroundColor: '#fafafa', minWidth: 200 }}>
-                Competitor Name
+                Competitor
               </TableCell>
               <TableCell sx={{ fontWeight: 700, backgroundColor: '#fafafa', minWidth: 150 }}>
                 Competitor Country
-              </TableCell>
-              <TableCell sx={{ fontWeight: 700, backgroundColor: '#fafafa', minWidth: 150 }}>
-                Main Competition
               </TableCell>
               <TableCell sx={{ fontWeight: 700, backgroundColor: '#fafafa', minWidth: 120 }}>
                 Transfer Type
@@ -198,13 +187,13 @@ const TransferHistoryTable = ({
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={15} align="center" sx={{ py: 4 }}>
+                <TableCell colSpan={13} align="center" sx={{ py: 4 }}>
                   <Typography color="text.secondary">Loading...</Typography>
                 </TableCell>
               </TableRow>
             ) : contracts.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={15} align="center" sx={{ py: 4 }}>
+                <TableCell colSpan={13} align="center" sx={{ py: 4 }}>
                   <Typography color="text.secondary">No contracts found</Typography>
                 </TableCell>
               </TableRow>
@@ -229,7 +218,6 @@ const TransferHistoryTable = ({
                     }}
                   >
                     <TableCell>{contract.JERSEY_NUMBER || '-'}</TableCell>
-                    <TableCell>{contract.COMPETITOR_ID}</TableCell>
                     <TableCell>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         {competitor && (
@@ -244,7 +232,7 @@ const TransferHistoryTable = ({
                               },
                             }}
                           >
-                            {contract.competitorName || `Competitor ${contract.COMPETITOR_ID}`}
+                            {contract.competitorName || `Competitor ${contract.COMPETITOR_ID}`} ({contract.COMPETITOR_ID})
                           </Typography>
                         )}
                       </Box>
@@ -269,24 +257,6 @@ const TransferHistoryTable = ({
                             {country.name || `Country ${country.COUNTRY_ID}`}
                           </Typography>
                         </Box>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      {competition ? (
-                        <Typography
-                          onClick={() => competition.NAME_ID && onTermClick && onTermClick(competition.NAME_ID, 'Competitions Names')}
-                          sx={{
-                            color: competition.NAME_ID && onTermClick ? '#1976d2' : 'inherit',
-                            cursor: competition.NAME_ID && onTermClick ? 'pointer' : 'default',
-                            '&:hover': {
-                              textDecoration: competition.NAME_ID && onTermClick ? 'underline' : 'none',
-                            },
-                          }}
-                        >
-                          {contract.mainCompetitionName || competition.name || '-'}
-                        </Typography>
-                      ) : (
-                        '-'
                       )}
                     </TableCell>
                     <TableCell>

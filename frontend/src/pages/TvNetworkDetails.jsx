@@ -38,7 +38,7 @@ function TvNetworkDetails() {
   const [languages, setLanguages] = useState([]);
   const [tvNetworkTypes, setTvNetworkTypes] = useState([]);
   const [formData, setFormData] = useState({
-    COUNTRY_IDS: [],
+    COUNTRY_ID: null,
     WEBSITE: '',
     CHANNEL_TYPE: '',
     LANG_ID: '',
@@ -47,6 +47,7 @@ function TvNetworkDetails() {
     PROMOTE_IN_MATCH_REMINDER_NOTIFICATION: false,
     NETWORK_IMAGE_URL: '',
   });
+  const [relatedCountryIds, setRelatedCountryIds] = useState([]);
 
   const [networkImageError, setNetworkImageError] = useState(false);
   const [imageDialogOpen, setImageDialogOpen] = useState(false);
@@ -77,11 +78,11 @@ function TvNetworkDetails() {
 
   useEffect(() => {
     if (network) {
-      const countryIds = Array.isArray(network.COUNTRY_IDS) && network.COUNTRY_IDS.length > 0
-        ? network.COUNTRY_IDS
-        : (network.COUNTRY_ID ? [network.COUNTRY_ID] : []);
+      const countryId = Array.isArray(network.COUNTRY_IDS) && network.COUNTRY_IDS.length > 0
+        ? network.COUNTRY_IDS[0]
+        : (network.COUNTRY_ID ?? null);
       setFormData({
-        COUNTRY_IDS: countryIds,
+        COUNTRY_ID: countryId,
         WEBSITE: network.WEBSITE ?? '',
         CHANNEL_TYPE: network.CHANNEL_TYPE ?? '',
         LANG_ID: network.LANG_ID ?? '',
@@ -90,6 +91,7 @@ function TvNetworkDetails() {
         PROMOTE_IN_MATCH_REMINDER_NOTIFICATION: network.PROMOTE_IN_MATCH_REMINDER_NOTIFICATION ?? false,
         NETWORK_IMAGE_URL: network.NETWORK_IMAGE_URL ?? '',
       });
+      setRelatedCountryIds((network.relatedCountries || []).map(c => c.COUNTRY_ID));
       setNetworkImageError(false);
     }
   }, [network]);
@@ -216,7 +218,7 @@ function TvNetworkDetails() {
   };
 
   const FIELD_LABELS = {
-    COUNTRY_IDS: 'Countries',
+    COUNTRY_ID: 'Country',
     WEBSITE: 'Website',
     CHANNEL_TYPE: 'Channel Type',
     LANG_ID: 'Language',
@@ -231,12 +233,11 @@ function TvNetworkDetails() {
       setLoading(true);
       setError(null);
       const changes = {};
-      const currentIds = Array.isArray(formData.COUNTRY_IDS) ? formData.COUNTRY_IDS : [];
-      const originalIds = Array.isArray(network.COUNTRY_IDS) && network.COUNTRY_IDS.length > 0
-        ? network.COUNTRY_IDS
-        : (network.COUNTRY_ID ? [network.COUNTRY_ID] : []);
-      if (JSON.stringify(currentIds.sort()) !== JSON.stringify([...originalIds].sort())) {
-        changes.COUNTRY_IDS = currentIds;
+      const originalCountryId = Array.isArray(network.COUNTRY_IDS) && network.COUNTRY_IDS.length > 0
+        ? network.COUNTRY_IDS[0]
+        : (network.COUNTRY_ID ?? null);
+      if (formData.COUNTRY_ID !== originalCountryId) {
+        changes.COUNTRY_IDS = formData.COUNTRY_ID ? [formData.COUNTRY_ID] : [];
       }
       if (formData.WEBSITE !== undefined && (formData.WEBSITE ?? '') !== (network.WEBSITE ?? '')) {
         changes.WEBSITE = formData.WEBSITE?.trim() || null;
@@ -263,11 +264,20 @@ function TvNetworkDetails() {
       if (formData.NETWORK_IMAGE_URL !== undefined && newImageUrl !== (network.NETWORK_IMAGE_URL ?? null)) {
         changes.NETWORK_IMAGE_URL = newImageUrl;
       }
-      if (Object.keys(changes).length === 0) {
+      const originalRelatedIds = (network.relatedCountries || []).map(c => c.COUNTRY_ID).sort().join(',');
+      const currentRelatedIds = [...relatedCountryIds].sort().join(',');
+      const relatedChanged = originalRelatedIds !== currentRelatedIds;
+
+      if (Object.keys(changes).length === 0 && !relatedChanged) {
         setLoading(false);
         return;
       }
-      await api.updateTvNetworksBulk([{ tvNetworkId: network.TV_NETWORK_ID, changes }]);
+      if (Object.keys(changes).length > 0) {
+        await api.updateTvNetworksBulk([{ tvNetworkId: network.TV_NETWORK_ID, changes }]);
+      }
+      if (relatedChanged) {
+        await api.updateTvNetworkRelatedCountries(network.TV_NETWORK_ID, relatedCountryIds);
+      }
       await loadNetwork();
     } catch (err) {
       setError(err.message || 'Failed to save TV channel');
@@ -428,17 +438,31 @@ function TvNetworkDetails() {
 
           {/* Middle: Fields – 5 per row, responsive, uniform height per UI-STANDARDS */}
           <Box sx={{ flex: { xs: '1 1 100%', md: '1 1 0' }, minWidth: 0, display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(5, 1fr)' }, gap: { xs: 1.5, md: 1.25 }, width: '100%', alignContent: 'start' }}>
+            <Box sx={{ minWidth: 0 }}>
+              <Autocomplete
+                options={countries}
+                getOptionLabel={(option) => (option.EMOJI ? `${option.EMOJI} ` : '') + (option.name || '')}
+                value={countries.find((c) => c.COUNTRY_ID === formData.COUNTRY_ID) || null}
+                onChange={(e, newValue) => handleFormChange('COUNTRY_ID', newValue ? newValue.COUNTRY_ID : null)}
+                isOptionEqualToValue={(option, value) => Number(option?.COUNTRY_ID) === Number(value?.COUNTRY_ID)}
+                ListboxProps={{ style: { maxHeight: 48 * 6 } }}
+                renderInput={(params) => (
+                  <TextField {...params} label={FIELD_LABELS.COUNTRY_ID} size="small" sx={{ '& .MuiOutlinedInput-root': { minHeight: 40 }, '& .MuiOutlinedInput-input': { py: 1, fontSize: '0.8rem' }, '& .MuiInputLabel-root': { fontSize: '0.75rem' } }} />
+                )}
+                sx={{ '& .MuiOutlinedInput-root': { minHeight: 40 } }}
+              />
+            </Box>
             <Box sx={{ minWidth: 0, gridColumn: { xs: '1', md: 'span 2' } }}>
               <Autocomplete
                 multiple
                 options={countries}
                 getOptionLabel={(option) => (option.EMOJI ? `${option.EMOJI} ` : '') + (option.name || '')}
-                value={countries.filter((c) => (formData.COUNTRY_IDS || []).includes(c.COUNTRY_ID))}
-                onChange={(e, newValue) => handleFormChange('COUNTRY_IDS', newValue.map((c) => c.COUNTRY_ID))}
+                value={countries.filter((c) => relatedCountryIds.includes(c.COUNTRY_ID))}
+                onChange={(e, newValue) => setRelatedCountryIds(newValue.map((c) => c.COUNTRY_ID))}
                 isOptionEqualToValue={(option, value) => Number(option?.COUNTRY_ID) === Number(value?.COUNTRY_ID)}
                 ListboxProps={{ style: { maxHeight: 48 * 6 } }}
                 renderInput={(params) => (
-                  <TextField {...params} label={FIELD_LABELS.COUNTRY_IDS} size="small" sx={{ '& .MuiOutlinedInput-root': { minHeight: 40 }, '& .MuiOutlinedInput-input': { py: 1, fontSize: '0.8rem' }, '& .MuiInputLabel-root': { fontSize: '0.75rem' } }} />
+                  <TextField {...params} label="Related Countries" size="small" sx={{ '& .MuiOutlinedInput-root': { minHeight: 40 }, '& .MuiOutlinedInput-input': { py: 1, fontSize: '0.8rem' }, '& .MuiInputLabel-root': { fontSize: '0.75rem' } }} />
                 )}
                 sx={{ '& .MuiOutlinedInput-root': { minHeight: 40 } }}
               />

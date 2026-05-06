@@ -506,7 +506,7 @@
   {
     "DATA_SOURCE": 291,
     "UPDATE_TYPE": 2,
-    "PRIORITY": -1,
+    "PRIORITY": 1,
     "CUT_TYPE": 2,
     "CUT_VALUE": 2,
     "COMMENT": "test",
@@ -954,7 +954,7 @@
   {
     "DATA_SOURCE": 292,
     "UPDATE_TYPE": 2,
-    "PRIORITY": 3,
+    "PRIORITY": 4,
     "CUT_TYPE": 1,
     "CUT_VALUE": 1001,
     "COMMENT": "WEFFEDFG",
@@ -962,6 +962,34 @@
     "CREATE_TIME": "2026-03-30T10:36:45.423Z",
     "START_DATE": "2026-03-30T00:00:00.000Z",
     "EXPIRATION_DATE": "2026-04-01T00:00:00.000Z",
+    "AFTER_EXPIRED_PRIORITY": 3,
+    "SCHEDULE_PRIORITY": null
+  },
+  {
+    "DATA_SOURCE": 4,
+    "UPDATE_TYPE": 1,
+    "PRIORITY": 2,
+    "CUT_TYPE": 2,
+    "CUT_VALUE": 2,
+    "COMMENT": "גכעגכע",
+    "USER_NAME": "DanielBelgi",
+    "CREATE_TIME": "2026-05-05T12:29:08.949Z",
+    "START_DATE": "2026-05-09T00:00:00.000Z",
+    "EXPIRATION_DATE": null,
+    "AFTER_EXPIRED_PRIORITY": null,
+    "SCHEDULE_PRIORITY": 4
+  },
+  {
+    "DATA_SOURCE": 4,
+    "UPDATE_TYPE": 2,
+    "PRIORITY": 3,
+    "CUT_TYPE": 1,
+    "CUT_VALUE": 4689566,
+    "COMMENT": "sfafds",
+    "USER_NAME": "DanielBelgi",
+    "CREATE_TIME": "2026-05-05T12:39:47.247Z",
+    "START_DATE": "2026-05-05T00:00:00.000Z",
+    "EXPIRATION_DATE": "2026-05-19T00:00:00.000Z",
     "AFTER_EXPIRED_PRIORITY": 3,
     "SCHEDULE_PRIORITY": null
   }

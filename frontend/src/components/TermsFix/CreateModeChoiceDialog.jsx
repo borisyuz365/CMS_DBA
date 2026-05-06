@@ -19,24 +19,28 @@ import DynamicFeedIcon from '@mui/icons-material/DynamicFeed';
  *
  * @param {string} entityName - e.g. "country", "competition", "competitor"
  */
-export default function CreateModeChoiceDialog({ open, onClose, count = 0, onChoose, entityName = 'country' }) {
-  const Option = ({ icon, title, description, onClick }) => (
+export default function CreateModeChoiceDialog({ open, onClose, count = 0, onChoose, entityName = 'country', disableManyToOne = false, disableManyToOneReason = '' }) {
+  const Option = ({ icon, title, description, onClick, disabled, disabledReason }) => (
     <Paper
-      onClick={onClick}
+      onClick={disabled ? undefined : onClick}
       sx={{
         p: 2,
         flex: 1,
-        cursor: 'pointer',
+        cursor: disabled ? 'not-allowed' : 'pointer',
         border: '1px solid #e0e0e0',
         boxShadow: 1,
-        '&:hover': { borderColor: '#1976d2', boxShadow: 2 },
+        opacity: disabled ? 0.5 : 1,
+        ...(!disabled && { '&:hover': { borderColor: '#1976d2', boxShadow: 2 } }),
       }}
     >
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1 }}>
-        <Box sx={{ color: '#1976d2', display: 'flex' }}>{icon}</Box>
-        <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>{title}</Typography>
+        <Box sx={{ color: disabled ? 'text.disabled' : '#1976d2', display: 'flex' }}>{icon}</Box>
+        <Typography variant="subtitle1" sx={{ fontWeight: 700, color: disabled ? 'text.disabled' : 'text.primary' }}>{title}</Typography>
       </Box>
       <Typography variant="body2" color="text.secondary">{description}</Typography>
+      {disabled && disabledReason && (
+        <Typography variant="caption" color="error.main" sx={{ display: 'block', mt: 1 }}>{disabledReason}</Typography>
+      )}
     </Paper>
   );
 
@@ -55,6 +59,8 @@ export default function CreateModeChoiceDialog({ open, onClose, count = 0, onCho
             title="Many → One"
             description={`Create a single new ${entityName} and attach every selected temp NAME as a value (under its own LANG_ID) on that ${entityName}'s term.`}
             onClick={() => onChoose?.('many-to-one')}
+            disabled={disableManyToOne}
+            disabledReason={disableManyToOneReason}
           />
           <Option
             icon={<DynamicFeedIcon />}

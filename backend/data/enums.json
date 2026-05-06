@@ -1,0 +1,2952 @@
+[
+  {
+    "ENUM_ID": 1,
+    "ENUM_NAME": 77877711,
+    "ALIAS_NAME": "ELanguageDirection",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Dictionary.DAL.ELanguageDirection, Sportifier.Dictionary.DAL, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 1,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 77877720,
+    "ALIAS_NAME1": "LeftToRight"
+  },
+  {
+    "ENUM_ID": 1,
+    "ENUM_NAME": 77877711,
+    "ALIAS_NAME": "ELanguageDirection",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Dictionary.DAL.ELanguageDirection, Sportifier.Dictionary.DAL, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 1,
+    "ITEM_ID": 2,
+    "ITEM_TERM": 77877721,
+    "ALIAS_NAME1": "RightToLeft"
+  },
+  {
+    "ENUM_ID": 2,
+    "ENUM_NAME": 77877712,
+    "ALIAS_NAME": "ELanguageType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Dictionary.DAL.ELanguageType, Sportifier.Dictionary.DAL, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 2,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 77877722,
+    "ALIAS_NAME1": "Humen"
+  },
+  {
+    "ENUM_ID": 2,
+    "ENUM_NAME": 77877712,
+    "ALIAS_NAME": "ELanguageType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Dictionary.DAL.ELanguageType, Sportifier.Dictionary.DAL, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 2,
+    "ITEM_ID": 2,
+    "ITEM_TERM": 77877723,
+    "ALIAS_NAME1": "Thechnical"
+  },
+  {
+    "ENUM_ID": 3,
+    "ENUM_NAME": 77877713,
+    "ALIAS_NAME": "ETermValueStatus",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Dictionary.DAL.ETermValueStatus, Sportifier.Dictionary.DAL, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 3,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 77877724,
+    "ALIAS_NAME1": "Approved"
+  },
+  {
+    "ENUM_ID": 3,
+    "ENUM_NAME": 77877713,
+    "ALIAS_NAME": "ETermValueStatus",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Dictionary.DAL.ETermValueStatus, Sportifier.Dictionary.DAL, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 3,
+    "ITEM_ID": 2,
+    "ITEM_TERM": 77877725,
+    "ALIAS_NAME1": "NotApproved"
+  },
+  {
+    "ENUM_ID": 3,
+    "ENUM_NAME": 77877713,
+    "ALIAS_NAME": "ETermValueStatus",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Dictionary.DAL.ETermValueStatus, Sportifier.Dictionary.DAL, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 3,
+    "ITEM_ID": 3,
+    "ITEM_TERM": 77877726,
+    "ALIAS_NAME1": "NotForUse"
+  },
+  {
+    "ENUM_ID": 4,
+    "ENUM_NAME": 77877714,
+    "ALIAS_NAME": "ECompetitorType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.ECompetitorType, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 4,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 77877727,
+    "ALIAS_NAME1": "Team"
+  },
+  {
+    "ENUM_ID": 4,
+    "ENUM_NAME": 77877714,
+    "ALIAS_NAME": "ECompetitorType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.ECompetitorType, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 4,
+    "ITEM_ID": 2,
+    "ITEM_TERM": 77877728,
+    "ALIAS_NAME1": "NationalTeam"
+  },
+  {
+    "ENUM_ID": 4,
+    "ENUM_NAME": 77877714,
+    "ALIAS_NAME": "ECompetitorType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.ECompetitorType, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 4,
+    "ITEM_ID": 3,
+    "ITEM_TERM": 77877729,
+    "ALIAS_NAME1": "Player"
+  },
+  {
+    "ENUM_ID": 4,
+    "ENUM_NAME": 77877714,
+    "ALIAS_NAME": "ECompetitorType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.ECompetitorType, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 4,
+    "ITEM_ID": 4,
+    "ITEM_TERM": 77877730,
+    "ALIAS_NAME1": "Couple"
+  },
+  {
+    "ENUM_ID": 4,
+    "ENUM_NAME": 77877714,
+    "ALIAS_NAME": "ECompetitorType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.ECompetitorType, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 4,
+    "ITEM_ID": 5,
+    "ITEM_TERM": 58388714,
+    "ALIAS_NAME1": "Exhibition"
+  },
+  {
+    "ENUM_ID": 4,
+    "ENUM_NAME": 77877714,
+    "ALIAS_NAME": "ECompetitorType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.ECompetitorType, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 4,
+    "ITEM_ID": 6,
+    "ITEM_TERM": 58388716,
+    "ALIAS_NAME1": "College"
+  },
+  {
+    "ENUM_ID": 5,
+    "ENUM_NAME": 77877715,
+    "ALIAS_NAME": "ECompetitonTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.ECompetitonTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 5,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 77877731,
+    "ALIAS_NAME1": "League"
+  },
+  {
+    "ENUM_ID": 5,
+    "ENUM_NAME": 77877715,
+    "ALIAS_NAME": "ECompetitonTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.ECompetitonTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 5,
+    "ITEM_ID": 2,
+    "ITEM_TERM": 77877732,
+    "ALIAS_NAME1": "Cup"
+  },
+  {
+    "ENUM_ID": 5,
+    "ENUM_NAME": 77877715,
+    "ALIAS_NAME": "ECompetitonTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.ECompetitonTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 5,
+    "ITEM_ID": 3,
+    "ITEM_TERM": 77877733,
+    "ALIAS_NAME1": "Tournament"
+  },
+  {
+    "ENUM_ID": 5,
+    "ENUM_NAME": 77877715,
+    "ALIAS_NAME": "ECompetitonTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.ECompetitonTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 5,
+    "ITEM_ID": 4,
+    "ITEM_TERM": 77877733,
+    "ALIAS_NAME1": "Other"
+  },
+  {
+    "ENUM_ID": 5,
+    "ENUM_NAME": 77877715,
+    "ALIAS_NAME": "ECompetitonTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.ECompetitonTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 5,
+    "ITEM_ID": 5,
+    "ITEM_TERM": 10148858,
+    "ALIAS_NAME1": "Rankings"
+  },
+  {
+    "ENUM_ID": 5,
+    "ENUM_NAME": 77877715,
+    "ALIAS_NAME": "ECompetitonTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.ECompetitonTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 5,
+    "ITEM_ID": 6,
+    "ITEM_TERM": 65921231,
+    "ALIAS_NAME1": "Qualification"
+  },
+  {
+    "ENUM_ID": 5,
+    "ENUM_NAME": 77877715,
+    "ALIAS_NAME": "ECompetitonTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.ECompetitonTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 5,
+    "ITEM_ID": 7,
+    "ITEM_TERM": 71677813,
+    "ALIAS_NAME1": "Exhibition"
+  },
+  {
+    "ENUM_ID": 6,
+    "ENUM_NAME": 77877716,
+    "ALIAS_NAME": "ECompetitonStageTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.ECompetitonStageTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 6,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 77877734,
+    "ALIAS_NAME1": "LeagueCycle"
+  },
+  {
+    "ENUM_ID": 6,
+    "ENUM_NAME": 77877716,
+    "ALIAS_NAME": "ECompetitonStageTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.ECompetitonStageTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 6,
+    "ITEM_ID": 2,
+    "ITEM_TERM": 77877735,
+    "ALIAS_NAME1": "GroupStage"
+  },
+  {
+    "ENUM_ID": 6,
+    "ENUM_NAME": 77877716,
+    "ALIAS_NAME": "ECompetitonStageTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.ECompetitonStageTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 6,
+    "ITEM_ID": 3,
+    "ITEM_TERM": 77877736,
+    "ALIAS_NAME1": "KnockOut"
+  },
+  {
+    "ENUM_ID": 6,
+    "ENUM_NAME": 77877716,
+    "ALIAS_NAME": "ECompetitonStageTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.ECompetitonStageTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 6,
+    "ITEM_ID": 4,
+    "ITEM_TERM": 77877737,
+    "ALIAS_NAME1": "Quilification"
+  },
+  {
+    "ENUM_ID": 6,
+    "ENUM_NAME": 77877716,
+    "ALIAS_NAME": "ECompetitonStageTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.ECompetitonStageTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 6,
+    "ITEM_ID": 5,
+    "ITEM_TERM": 70758852,
+    "ALIAS_NAME1": "RELEGATION_OR_PROMOTION"
+  },
+  {
+    "ENUM_ID": 7,
+    "ENUM_NAME": 77877717,
+    "ALIAS_NAME": "EGameStageType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.EGameStageType, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 7,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 77877738,
+    "ALIAS_NAME1": "GameStage"
+  },
+  {
+    "ENUM_ID": 7,
+    "ENUM_NAME": 77877717,
+    "ALIAS_NAME": "EGameStageType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.EGameStageType, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 7,
+    "ITEM_ID": 2,
+    "ITEM_TERM": 77877739,
+    "ALIAS_NAME1": "CurrentResultStage"
+  },
+  {
+    "ENUM_ID": 8,
+    "ENUM_NAME": 77877718,
+    "ALIAS_NAME": "ETranslatorType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.PhoneticDictionary.BLL.ETranslatorType, Sportifier.PhoneticDictionary.BLL, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 8,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 77877740,
+    "ALIAS_NAME1": "Standart"
+  },
+  {
+    "ENUM_ID": 8,
+    "ENUM_NAME": 77877718,
+    "ALIAS_NAME": "ETranslatorType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.PhoneticDictionary.BLL.ETranslatorType, Sportifier.PhoneticDictionary.BLL, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 8,
+    "ITEM_ID": 2,
+    "ITEM_TERM": 77877740,
+    "ALIAS_NAME1": "EnglishToHebrew"
+  },
+  {
+    "ENUM_ID": 8,
+    "ENUM_NAME": 77877718,
+    "ALIAS_NAME": "ETranslatorType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.PhoneticDictionary.BLL.ETranslatorType, Sportifier.PhoneticDictionary.BLL, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 8,
+    "ITEM_ID": 3,
+    "ITEM_TERM": 77877740,
+    "ALIAS_NAME1": "GoogleTransliterate"
+  },
+  {
+    "ENUM_ID": 9,
+    "ENUM_NAME": 77877719,
+    "ALIAS_NAME": "EParamType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Updates.Common.EParamType, Sportifier.Updates.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 9,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 77877741,
+    "ALIAS_NAME1": "INT"
+  },
+  {
+    "ENUM_ID": 9,
+    "ENUM_NAME": 77877719,
+    "ALIAS_NAME": "EParamType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Updates.Common.EParamType, Sportifier.Updates.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 9,
+    "ITEM_ID": 2,
+    "ITEM_TERM": 77877742,
+    "ALIAS_NAME1": "DOUBLE"
+  },
+  {
+    "ENUM_ID": 9,
+    "ENUM_NAME": 77877719,
+    "ALIAS_NAME": "EParamType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Updates.Common.EParamType, Sportifier.Updates.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 9,
+    "ITEM_ID": 3,
+    "ITEM_TERM": 77877743,
+    "ALIAS_NAME1": "FLOAT"
+  },
+  {
+    "ENUM_ID": 9,
+    "ENUM_NAME": 77877719,
+    "ALIAS_NAME": "EParamType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Updates.Common.EParamType, Sportifier.Updates.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 9,
+    "ITEM_ID": 4,
+    "ITEM_TERM": 77877744,
+    "ALIAS_NAME1": "LONG"
+  },
+  {
+    "ENUM_ID": 9,
+    "ENUM_NAME": 77877719,
+    "ALIAS_NAME": "EParamType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Updates.Common.EParamType, Sportifier.Updates.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 9,
+    "ITEM_ID": 5,
+    "ITEM_TERM": 77877745,
+    "ALIAS_NAME1": "STRING"
+  },
+  {
+    "ENUM_ID": 9,
+    "ENUM_NAME": 77877719,
+    "ALIAS_NAME": "EParamType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Updates.Common.EParamType, Sportifier.Updates.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 9,
+    "ITEM_ID": 6,
+    "ITEM_TERM": 77877746,
+    "ALIAS_NAME1": "TERM_ID"
+  },
+  {
+    "ENUM_ID": 9,
+    "ENUM_NAME": 77877719,
+    "ALIAS_NAME": "EParamType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Updates.Common.EParamType, Sportifier.Updates.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 9,
+    "ITEM_ID": 7,
+    "ITEM_TERM": 61061187,
+    "ALIAS_NAME1": "LONGS_WITH_COMMAS"
+  },
+  {
+    "ENUM_ID": 9,
+    "ENUM_NAME": 77877719,
+    "ALIAS_NAME": "EParamType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Updates.Common.EParamType, Sportifier.Updates.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 9,
+    "ITEM_ID": 8,
+    "ITEM_TERM": 77877746,
+    "ALIAS_NAME1": "TERM_ID_SHORT_VALUE"
+  },
+  {
+    "ENUM_ID": 35,
+    "ENUM_NAME": 222816,
+    "ALIAS_NAME": "EVideoType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.EVideoType, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 35,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 222817,
+    "ALIAS_NAME1": "Unknown"
+  },
+  {
+    "ENUM_ID": 35,
+    "ENUM_NAME": 222816,
+    "ALIAS_NAME": "EVideoType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.EVideoType, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 35,
+    "ITEM_ID": 2,
+    "ITEM_TERM": 222818,
+    "ALIAS_NAME1": "Highlights"
+  },
+  {
+    "ENUM_ID": 35,
+    "ENUM_NAME": 222816,
+    "ALIAS_NAME": "EVideoType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.EVideoType, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 35,
+    "ITEM_ID": 3,
+    "ITEM_TERM": 222819,
+    "ALIAS_NAME1": "Score"
+  },
+  {
+    "ENUM_ID": 35,
+    "ENUM_NAME": 222816,
+    "ALIAS_NAME": "EVideoType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.EVideoType, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 35,
+    "ITEM_ID": 4,
+    "ITEM_TERM": 222820,
+    "ALIAS_NAME1": "Event"
+  },
+  {
+    "ENUM_ID": 35,
+    "ENUM_NAME": 222816,
+    "ALIAS_NAME": "EVideoType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.EVideoType, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 35,
+    "ITEM_ID": 5,
+    "ITEM_TERM": 222821,
+    "ALIAS_NAME1": "Other"
+  },
+  {
+    "ENUM_ID": 38,
+    "ENUM_NAME": 267555,
+    "ALIAS_NAME": "EOlympicMedalType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Olympics.EOlympicMedalType, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 38,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 267556,
+    "ALIAS_NAME1": "Gold"
+  },
+  {
+    "ENUM_ID": 38,
+    "ENUM_NAME": 267555,
+    "ALIAS_NAME": "EOlympicMedalType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Olympics.EOlympicMedalType, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 38,
+    "ITEM_ID": 2,
+    "ITEM_TERM": 267557,
+    "ALIAS_NAME1": "Silver"
+  },
+  {
+    "ENUM_ID": 38,
+    "ENUM_NAME": 267555,
+    "ALIAS_NAME": "EOlympicMedalType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Olympics.EOlympicMedalType, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 38,
+    "ITEM_ID": 3,
+    "ITEM_TERM": 267558,
+    "ALIAS_NAME1": "Bronze"
+  },
+  {
+    "ENUM_ID": 41,
+    "ENUM_NAME": 317382,
+    "ALIAS_NAME": "ESoccerGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Soccer.ESoccerGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 41,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 317383,
+    "ALIAS_NAME1": "Yellowcards"
+  },
+  {
+    "ENUM_ID": 41,
+    "ENUM_NAME": 317382,
+    "ALIAS_NAME": "ESoccerGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Soccer.ESoccerGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 41,
+    "ITEM_ID": 2,
+    "ITEM_TERM": 317384,
+    "ALIAS_NAME1": "RedCards"
+  },
+  {
+    "ENUM_ID": 41,
+    "ENUM_NAME": 317382,
+    "ALIAS_NAME": "ESoccerGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Soccer.ESoccerGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 41,
+    "ITEM_ID": 3,
+    "ITEM_TERM": 317385,
+    "ALIAS_NAME1": "TotalShots"
+  },
+  {
+    "ENUM_ID": 41,
+    "ENUM_NAME": 317382,
+    "ALIAS_NAME": "ESoccerGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Soccer.ESoccerGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 41,
+    "ITEM_ID": 4,
+    "ITEM_TERM": 317386,
+    "ALIAS_NAME1": "ShotsOnTarget"
+  },
+  {
+    "ENUM_ID": 41,
+    "ENUM_NAME": 317382,
+    "ALIAS_NAME": "ESoccerGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Soccer.ESoccerGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 41,
+    "ITEM_ID": 5,
+    "ITEM_TERM": 317387,
+    "ALIAS_NAME1": "ShotsOffTarget"
+  },
+  {
+    "ENUM_ID": 41,
+    "ENUM_NAME": 317382,
+    "ALIAS_NAME": "ESoccerGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Soccer.ESoccerGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 41,
+    "ITEM_ID": 6,
+    "ITEM_TERM": 317388,
+    "ALIAS_NAME1": "ShotsBlocked"
+  },
+  {
+    "ENUM_ID": 41,
+    "ENUM_NAME": 317382,
+    "ALIAS_NAME": "ESoccerGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Soccer.ESoccerGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 41,
+    "ITEM_ID": 7,
+    "ITEM_TERM": 317389,
+    "ALIAS_NAME1": "Crosses"
+  },
+  {
+    "ENUM_ID": 41,
+    "ENUM_NAME": 317382,
+    "ALIAS_NAME": "ESoccerGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Soccer.ESoccerGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 41,
+    "ITEM_ID": 8,
+    "ITEM_TERM": 317390,
+    "ALIAS_NAME1": "Corners"
+  },
+  {
+    "ENUM_ID": 41,
+    "ENUM_NAME": 317382,
+    "ALIAS_NAME": "ESoccerGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Soccer.ESoccerGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 41,
+    "ITEM_ID": 9,
+    "ITEM_TERM": 317391,
+    "ALIAS_NAME1": "Offsides"
+  },
+  {
+    "ENUM_ID": 41,
+    "ENUM_NAME": 317382,
+    "ALIAS_NAME": "ESoccerGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Soccer.ESoccerGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 41,
+    "ITEM_ID": 10,
+    "ITEM_TERM": 317392,
+    "ALIAS_NAME1": "BallPossession"
+  },
+  {
+    "ENUM_ID": 42,
+    "ENUM_NAME": 324303,
+    "ALIAS_NAME": "ETeamLineupStatus",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.ETeamLineupStatus, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 42,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 324304,
+    "ALIAS_NAME1": "NotExist"
+  },
+  {
+    "ENUM_ID": 42,
+    "ENUM_NAME": 324303,
+    "ALIAS_NAME": "ETeamLineupStatus",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.ETeamLineupStatus, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 42,
+    "ITEM_ID": 2,
+    "ITEM_TERM": 324305,
+    "ALIAS_NAME1": "NotConfirmed"
+  },
+  {
+    "ENUM_ID": 42,
+    "ENUM_NAME": 324303,
+    "ALIAS_NAME": "ETeamLineupStatus",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.ETeamLineupStatus, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 42,
+    "ITEM_ID": 3,
+    "ITEM_TERM": 324306,
+    "ALIAS_NAME1": "Confirmed"
+  },
+  {
+    "ENUM_ID": 43,
+    "ENUM_NAME": 324307,
+    "ALIAS_NAME": "EPlayerLineupStatus",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.EPlayerLineupStatus, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 43,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 324308,
+    "ALIAS_NAME1": "None"
+  },
+  {
+    "ENUM_ID": 43,
+    "ENUM_NAME": 324307,
+    "ALIAS_NAME": "EPlayerLineupStatus",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.EPlayerLineupStatus, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 43,
+    "ITEM_ID": 2,
+    "ITEM_TERM": 324309,
+    "ALIAS_NAME1": "Starting"
+  },
+  {
+    "ENUM_ID": 43,
+    "ENUM_NAME": 324307,
+    "ALIAS_NAME": "EPlayerLineupStatus",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.EPlayerLineupStatus, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 43,
+    "ITEM_ID": 3,
+    "ITEM_TERM": 324310,
+    "ALIAS_NAME1": "Substitute"
+  },
+  {
+    "ENUM_ID": 43,
+    "ENUM_NAME": 324307,
+    "ALIAS_NAME": "EPlayerLineupStatus",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.EPlayerLineupStatus, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 43,
+    "ITEM_ID": 4,
+    "ITEM_TERM": 324311,
+    "ALIAS_NAME1": "Injured"
+  },
+  {
+    "ENUM_ID": 43,
+    "ENUM_NAME": 324307,
+    "ALIAS_NAME": "EPlayerLineupStatus",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.EPlayerLineupStatus, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 43,
+    "ITEM_ID": 5,
+    "ITEM_TERM": 324312,
+    "ALIAS_NAME1": "Management"
+  },
+  {
+    "ENUM_ID": 47,
+    "ENUM_NAME": 328236,
+    "ALIAS_NAME": "EBasketballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Basketball.EBasketballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 47,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 328237,
+    "ALIAS_NAME1": "Minutes"
+  },
+  {
+    "ENUM_ID": 47,
+    "ENUM_NAME": 328236,
+    "ALIAS_NAME": "EBasketballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Basketball.EBasketballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 47,
+    "ITEM_ID": 2,
+    "ITEM_TERM": 328238,
+    "ALIAS_NAME1": "FieldGoalMade"
+  },
+  {
+    "ENUM_ID": 47,
+    "ENUM_NAME": 328236,
+    "ALIAS_NAME": "EBasketballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Basketball.EBasketballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 47,
+    "ITEM_ID": 3,
+    "ITEM_TERM": 328239,
+    "ALIAS_NAME1": "FieldGoalAttempts"
+  },
+  {
+    "ENUM_ID": 47,
+    "ENUM_NAME": 328236,
+    "ALIAS_NAME": "EBasketballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Basketball.EBasketballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 47,
+    "ITEM_ID": 4,
+    "ITEM_TERM": 328240,
+    "ALIAS_NAME1": "FieldGoalPercentage"
+  },
+  {
+    "ENUM_ID": 47,
+    "ENUM_NAME": 328236,
+    "ALIAS_NAME": "EBasketballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Basketball.EBasketballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 47,
+    "ITEM_ID": 5,
+    "ITEM_TERM": 328241,
+    "ALIAS_NAME1": "ThreePointsMade"
+  },
+  {
+    "ENUM_ID": 47,
+    "ENUM_NAME": 328236,
+    "ALIAS_NAME": "EBasketballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Basketball.EBasketballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 47,
+    "ITEM_ID": 6,
+    "ITEM_TERM": 328242,
+    "ALIAS_NAME1": "ThreePointsAttemps"
+  },
+  {
+    "ENUM_ID": 47,
+    "ENUM_NAME": 328236,
+    "ALIAS_NAME": "EBasketballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Basketball.EBasketballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 47,
+    "ITEM_ID": 7,
+    "ITEM_TERM": 328243,
+    "ALIAS_NAME1": "ThreePoints"
+  },
+  {
+    "ENUM_ID": 47,
+    "ENUM_NAME": 328236,
+    "ALIAS_NAME": "EBasketballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Basketball.EBasketballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 47,
+    "ITEM_ID": 8,
+    "ITEM_TERM": 328244,
+    "ALIAS_NAME1": "ThreePointsPercentage"
+  },
+  {
+    "ENUM_ID": 47,
+    "ENUM_NAME": 328236,
+    "ALIAS_NAME": "EBasketballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Basketball.EBasketballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 47,
+    "ITEM_ID": 9,
+    "ITEM_TERM": 328245,
+    "ALIAS_NAME1": "FreeThrowsMade"
+  },
+  {
+    "ENUM_ID": 47,
+    "ENUM_NAME": 328236,
+    "ALIAS_NAME": "EBasketballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Basketball.EBasketballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 47,
+    "ITEM_ID": 10,
+    "ITEM_TERM": 328246,
+    "ALIAS_NAME1": "FreeThrowsAttempts"
+  },
+  {
+    "ENUM_ID": 47,
+    "ENUM_NAME": 328236,
+    "ALIAS_NAME": "EBasketballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Basketball.EBasketballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 47,
+    "ITEM_ID": 11,
+    "ITEM_TERM": 328247,
+    "ALIAS_NAME1": "FreeThrows"
+  },
+  {
+    "ENUM_ID": 47,
+    "ENUM_NAME": 328236,
+    "ALIAS_NAME": "EBasketballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Basketball.EBasketballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 47,
+    "ITEM_ID": 12,
+    "ITEM_TERM": 328248,
+    "ALIAS_NAME1": "FreeThrowsPercentage"
+  },
+  {
+    "ENUM_ID": 47,
+    "ENUM_NAME": 328236,
+    "ALIAS_NAME": "EBasketballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Basketball.EBasketballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 47,
+    "ITEM_ID": 13,
+    "ITEM_TERM": 328249,
+    "ALIAS_NAME1": "OffensiveRebounds"
+  },
+  {
+    "ENUM_ID": 47,
+    "ENUM_NAME": 328236,
+    "ALIAS_NAME": "EBasketballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Basketball.EBasketballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 47,
+    "ITEM_ID": 14,
+    "ITEM_TERM": 328250,
+    "ALIAS_NAME1": "DefensiveRebounds"
+  },
+  {
+    "ENUM_ID": 47,
+    "ENUM_NAME": 328236,
+    "ALIAS_NAME": "EBasketballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Basketball.EBasketballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 47,
+    "ITEM_ID": 15,
+    "ITEM_TERM": 328251,
+    "ALIAS_NAME1": "Rebounds"
+  },
+  {
+    "ENUM_ID": 47,
+    "ENUM_NAME": 328236,
+    "ALIAS_NAME": "EBasketballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Basketball.EBasketballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 47,
+    "ITEM_ID": 16,
+    "ITEM_TERM": 328252,
+    "ALIAS_NAME1": "Assists"
+  },
+  {
+    "ENUM_ID": 47,
+    "ENUM_NAME": 328236,
+    "ALIAS_NAME": "EBasketballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Basketball.EBasketballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 47,
+    "ITEM_ID": 17,
+    "ITEM_TERM": 328253,
+    "ALIAS_NAME1": "Steals"
+  },
+  {
+    "ENUM_ID": 47,
+    "ENUM_NAME": 328236,
+    "ALIAS_NAME": "EBasketballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Basketball.EBasketballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 47,
+    "ITEM_ID": 18,
+    "ITEM_TERM": 328254,
+    "ALIAS_NAME1": "Turnovers"
+  },
+  {
+    "ENUM_ID": 47,
+    "ENUM_NAME": 328236,
+    "ALIAS_NAME": "EBasketballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Basketball.EBasketballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 47,
+    "ITEM_ID": 19,
+    "ITEM_TERM": 328255,
+    "ALIAS_NAME1": "Blocks"
+  },
+  {
+    "ENUM_ID": 47,
+    "ENUM_NAME": 328236,
+    "ALIAS_NAME": "EBasketballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Basketball.EBasketballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 47,
+    "ITEM_ID": 20,
+    "ITEM_TERM": 328256,
+    "ALIAS_NAME1": "Fouls"
+  },
+  {
+    "ENUM_ID": 47,
+    "ENUM_NAME": 328236,
+    "ALIAS_NAME": "EBasketballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Basketball.EBasketballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 47,
+    "ITEM_ID": 21,
+    "ITEM_TERM": 328257,
+    "ALIAS_NAME1": "PlusMinus"
+  },
+  {
+    "ENUM_ID": 47,
+    "ENUM_NAME": 328236,
+    "ALIAS_NAME": "EBasketballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Basketball.EBasketballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 47,
+    "ITEM_ID": 22,
+    "ITEM_TERM": 328258,
+    "ALIAS_NAME1": "FastBreakPoints"
+  },
+  {
+    "ENUM_ID": 47,
+    "ENUM_NAME": 328236,
+    "ALIAS_NAME": "EBasketballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Basketball.EBasketballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 47,
+    "ITEM_ID": 23,
+    "ITEM_TERM": 328259,
+    "ALIAS_NAME1": "LargestLead"
+  },
+  {
+    "ENUM_ID": 47,
+    "ENUM_NAME": 328236,
+    "ALIAS_NAME": "EBasketballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Basketball.EBasketballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 47,
+    "ITEM_ID": 24,
+    "ITEM_TERM": 328260,
+    "ALIAS_NAME1": "PointsOffTurnovers"
+  },
+  {
+    "ENUM_ID": 48,
+    "ENUM_NAME": 328261,
+    "ALIAS_NAME": "EHockeyGameStatisticCategories",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Hockey.EHockeyGameStatisticCategories, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 48,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 328262,
+    "ALIAS_NAME1": "FieldPlayers"
+  },
+  {
+    "ENUM_ID": 48,
+    "ENUM_NAME": 328261,
+    "ALIAS_NAME": "EHockeyGameStatisticCategories",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Hockey.EHockeyGameStatisticCategories, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 48,
+    "ITEM_ID": 2,
+    "ITEM_TERM": 328263,
+    "ALIAS_NAME1": "Goalkeepers"
+  },
+  {
+    "ENUM_ID": 50,
+    "ENUM_NAME": 328277,
+    "ALIAS_NAME": "EHockeyGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Hockey.EHockeyGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 50,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 328278,
+    "ALIAS_NAME1": "Goals"
+  },
+  {
+    "ENUM_ID": 50,
+    "ENUM_NAME": 328277,
+    "ALIAS_NAME": "EHockeyGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Hockey.EHockeyGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 50,
+    "ITEM_ID": 2,
+    "ITEM_TERM": 328279,
+    "ALIAS_NAME1": "Assists"
+  },
+  {
+    "ENUM_ID": 50,
+    "ENUM_NAME": 328277,
+    "ALIAS_NAME": "EHockeyGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Hockey.EHockeyGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 50,
+    "ITEM_ID": 3,
+    "ITEM_TERM": 328280,
+    "ALIAS_NAME1": "Points"
+  },
+  {
+    "ENUM_ID": 50,
+    "ENUM_NAME": 328277,
+    "ALIAS_NAME": "EHockeyGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Hockey.EHockeyGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 50,
+    "ITEM_ID": 4,
+    "ITEM_TERM": 328281,
+    "ALIAS_NAME1": "PlusMinus"
+  },
+  {
+    "ENUM_ID": 50,
+    "ENUM_NAME": 328277,
+    "ALIAS_NAME": "EHockeyGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Hockey.EHockeyGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 50,
+    "ITEM_ID": 5,
+    "ITEM_TERM": 328282,
+    "ALIAS_NAME1": "ShotsOnGoal"
+  },
+  {
+    "ENUM_ID": 50,
+    "ENUM_NAME": 328277,
+    "ALIAS_NAME": "EHockeyGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Hockey.EHockeyGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 50,
+    "ITEM_ID": 6,
+    "ITEM_TERM": 328283,
+    "ALIAS_NAME1": "PenaltiesMinutes"
+  },
+  {
+    "ENUM_ID": 50,
+    "ENUM_NAME": 328277,
+    "ALIAS_NAME": "EHockeyGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Hockey.EHockeyGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 50,
+    "ITEM_ID": 7,
+    "ITEM_TERM": 328284,
+    "ALIAS_NAME1": "TimeOnIce"
+  },
+  {
+    "ENUM_ID": 50,
+    "ENUM_NAME": 328277,
+    "ALIAS_NAME": "EHockeyGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Hockey.EHockeyGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 50,
+    "ITEM_ID": 8,
+    "ITEM_TERM": 328285,
+    "ALIAS_NAME1": "GKSaves"
+  },
+  {
+    "ENUM_ID": 50,
+    "ENUM_NAME": 328277,
+    "ALIAS_NAME": "EHockeyGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Hockey.EHockeyGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 50,
+    "ITEM_ID": 9,
+    "ITEM_TERM": 328286,
+    "ALIAS_NAME1": "GKTotalShotsOnGoal"
+  },
+  {
+    "ENUM_ID": 50,
+    "ENUM_NAME": 328277,
+    "ALIAS_NAME": "EHockeyGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Hockey.EHockeyGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 50,
+    "ITEM_ID": 10,
+    "ITEM_TERM": 328287,
+    "ALIAS_NAME1": "GKSavesPrecentage"
+  },
+  {
+    "ENUM_ID": 50,
+    "ENUM_NAME": 328277,
+    "ALIAS_NAME": "EHockeyGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Hockey.EHockeyGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 50,
+    "ITEM_ID": 11,
+    "ITEM_TERM": 328288,
+    "ALIAS_NAME1": "GKTimeOnIce"
+  },
+  {
+    "ENUM_ID": 50,
+    "ENUM_NAME": 328277,
+    "ALIAS_NAME": "EHockeyGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Hockey.EHockeyGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 50,
+    "ITEM_ID": 12,
+    "ITEM_TERM": 328289,
+    "ALIAS_NAME1": "GKPenanties"
+  },
+  {
+    "ENUM_ID": 51,
+    "ENUM_NAME": 328290,
+    "ALIAS_NAME": "EFootballGameStatisticCategories",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticCategories, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 51,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 328291,
+    "ALIAS_NAME1": "Passing"
+  },
+  {
+    "ENUM_ID": 51,
+    "ENUM_NAME": 328290,
+    "ALIAS_NAME": "EFootballGameStatisticCategories",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticCategories, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 51,
+    "ITEM_ID": 2,
+    "ITEM_TERM": 328292,
+    "ALIAS_NAME1": "Rushing"
+  },
+  {
+    "ENUM_ID": 51,
+    "ENUM_NAME": 328290,
+    "ALIAS_NAME": "EFootballGameStatisticCategories",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticCategories, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 51,
+    "ITEM_ID": 3,
+    "ITEM_TERM": 328293,
+    "ALIAS_NAME1": "Recieving"
+  },
+  {
+    "ENUM_ID": 51,
+    "ENUM_NAME": 328290,
+    "ALIAS_NAME": "EFootballGameStatisticCategories",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticCategories, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 51,
+    "ITEM_ID": 4,
+    "ITEM_TERM": 328294,
+    "ALIAS_NAME1": "Fumbles"
+  },
+  {
+    "ENUM_ID": 51,
+    "ENUM_NAME": 328290,
+    "ALIAS_NAME": "EFootballGameStatisticCategories",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticCategories, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 51,
+    "ITEM_ID": 5,
+    "ITEM_TERM": 328295,
+    "ALIAS_NAME1": "Intersections"
+  },
+  {
+    "ENUM_ID": 51,
+    "ENUM_NAME": 328290,
+    "ALIAS_NAME": "EFootballGameStatisticCategories",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticCategories, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 51,
+    "ITEM_ID": 6,
+    "ITEM_TERM": 328296,
+    "ALIAS_NAME1": "Defensive"
+  },
+  {
+    "ENUM_ID": 51,
+    "ENUM_NAME": 328290,
+    "ALIAS_NAME": "EFootballGameStatisticCategories",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticCategories, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 51,
+    "ITEM_ID": 7,
+    "ITEM_TERM": 328297,
+    "ALIAS_NAME1": "KickReturns"
+  },
+  {
+    "ENUM_ID": 51,
+    "ENUM_NAME": 328290,
+    "ALIAS_NAME": "EFootballGameStatisticCategories",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticCategories, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 51,
+    "ITEM_ID": 8,
+    "ITEM_TERM": 328298,
+    "ALIAS_NAME1": "PuntReturns"
+  },
+  {
+    "ENUM_ID": 51,
+    "ENUM_NAME": 328290,
+    "ALIAS_NAME": "EFootballGameStatisticCategories",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticCategories, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 51,
+    "ITEM_ID": 9,
+    "ITEM_TERM": 328299,
+    "ALIAS_NAME1": "Kicking"
+  },
+  {
+    "ENUM_ID": 51,
+    "ENUM_NAME": 328290,
+    "ALIAS_NAME": "EFootballGameStatisticCategories",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticCategories, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 51,
+    "ITEM_ID": 10,
+    "ITEM_TERM": 328300,
+    "ALIAS_NAME1": "Punting"
+  },
+  {
+    "ENUM_ID": 52,
+    "ENUM_NAME": 328301,
+    "ALIAS_NAME": "EFootballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 52,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 328302,
+    "ALIAS_NAME1": "PassC"
+  },
+  {
+    "ENUM_ID": 52,
+    "ENUM_NAME": 328301,
+    "ALIAS_NAME": "EFootballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 52,
+    "ITEM_ID": 2,
+    "ITEM_TERM": 328303,
+    "ALIAS_NAME1": "PassAtt"
+  },
+  {
+    "ENUM_ID": 52,
+    "ENUM_NAME": 328301,
+    "ALIAS_NAME": "EFootballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 52,
+    "ITEM_ID": 3,
+    "ITEM_TERM": 328304,
+    "ALIAS_NAME1": "PassYds"
+  },
+  {
+    "ENUM_ID": 52,
+    "ENUM_NAME": 328301,
+    "ALIAS_NAME": "EFootballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 52,
+    "ITEM_ID": 4,
+    "ITEM_TERM": 328305,
+    "ALIAS_NAME1": "PassTD"
+  },
+  {
+    "ENUM_ID": 52,
+    "ENUM_NAME": 328301,
+    "ALIAS_NAME": "EFootballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 52,
+    "ITEM_ID": 5,
+    "ITEM_TERM": 328306,
+    "ALIAS_NAME1": "PassInt"
+  },
+  {
+    "ENUM_ID": 52,
+    "ENUM_NAME": 328301,
+    "ALIAS_NAME": "EFootballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 52,
+    "ITEM_ID": 6,
+    "ITEM_TERM": 328307,
+    "ALIAS_NAME1": "RushAtt"
+  },
+  {
+    "ENUM_ID": 52,
+    "ENUM_NAME": 328301,
+    "ALIAS_NAME": "EFootballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 52,
+    "ITEM_ID": 7,
+    "ITEM_TERM": 328308,
+    "ALIAS_NAME1": "RushYds"
+  },
+  {
+    "ENUM_ID": 52,
+    "ENUM_NAME": 328301,
+    "ALIAS_NAME": "EFootballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 52,
+    "ITEM_ID": 8,
+    "ITEM_TERM": 328309,
+    "ALIAS_NAME1": "RushTD"
+  },
+  {
+    "ENUM_ID": 52,
+    "ENUM_NAME": 328301,
+    "ALIAS_NAME": "EFootballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 52,
+    "ITEM_ID": 9,
+    "ITEM_TERM": 328310,
+    "ALIAS_NAME1": "RushLG"
+  },
+  {
+    "ENUM_ID": 52,
+    "ENUM_NAME": 328301,
+    "ALIAS_NAME": "EFootballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 52,
+    "ITEM_ID": 10,
+    "ITEM_TERM": 328311,
+    "ALIAS_NAME1": "RecAtt"
+  },
+  {
+    "ENUM_ID": 52,
+    "ENUM_NAME": 328301,
+    "ALIAS_NAME": "EFootballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 52,
+    "ITEM_ID": 11,
+    "ITEM_TERM": 328312,
+    "ALIAS_NAME1": "RecYds"
+  },
+  {
+    "ENUM_ID": 52,
+    "ENUM_NAME": 328301,
+    "ALIAS_NAME": "EFootballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 52,
+    "ITEM_ID": 12,
+    "ITEM_TERM": 328313,
+    "ALIAS_NAME1": "RecTD"
+  },
+  {
+    "ENUM_ID": 52,
+    "ENUM_NAME": 328301,
+    "ALIAS_NAME": "EFootballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 52,
+    "ITEM_ID": 13,
+    "ITEM_TERM": 328314,
+    "ALIAS_NAME1": "RecLG"
+  },
+  {
+    "ENUM_ID": 52,
+    "ENUM_NAME": 328301,
+    "ALIAS_NAME": "EFootballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 52,
+    "ITEM_ID": 14,
+    "ITEM_TERM": 328315,
+    "ALIAS_NAME1": "Fum"
+  },
+  {
+    "ENUM_ID": 52,
+    "ENUM_NAME": 328301,
+    "ALIAS_NAME": "EFootballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 52,
+    "ITEM_ID": 15,
+    "ITEM_TERM": 328316,
+    "ALIAS_NAME1": "FumLost"
+  },
+  {
+    "ENUM_ID": 52,
+    "ENUM_NAME": 328301,
+    "ALIAS_NAME": "EFootballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 52,
+    "ITEM_ID": 16,
+    "ITEM_TERM": 328317,
+    "ALIAS_NAME1": "FumRec"
+  },
+  {
+    "ENUM_ID": 52,
+    "ENUM_NAME": 328301,
+    "ALIAS_NAME": "EFootballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 52,
+    "ITEM_ID": 17,
+    "ITEM_TERM": 328318,
+    "ALIAS_NAME1": "FumYds"
+  },
+  {
+    "ENUM_ID": 52,
+    "ENUM_NAME": 328301,
+    "ALIAS_NAME": "EFootballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 52,
+    "ITEM_ID": 18,
+    "ITEM_TERM": 328319,
+    "ALIAS_NAME1": "Interceptions"
+  },
+  {
+    "ENUM_ID": 52,
+    "ENUM_NAME": 328301,
+    "ALIAS_NAME": "EFootballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 52,
+    "ITEM_ID": 19,
+    "ITEM_TERM": 328320,
+    "ALIAS_NAME1": "DefTOT"
+  },
+  {
+    "ENUM_ID": 52,
+    "ENUM_NAME": 328301,
+    "ALIAS_NAME": "EFootballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 52,
+    "ITEM_ID": 20,
+    "ITEM_TERM": 328321,
+    "ALIAS_NAME1": "DefA"
+  },
+  {
+    "ENUM_ID": 52,
+    "ENUM_NAME": 328301,
+    "ALIAS_NAME": "EFootballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 52,
+    "ITEM_ID": 21,
+    "ITEM_TERM": 328322,
+    "ALIAS_NAME1": "DefSacks"
+  },
+  {
+    "ENUM_ID": 52,
+    "ENUM_NAME": 328301,
+    "ALIAS_NAME": "EFootballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 52,
+    "ITEM_ID": 22,
+    "ITEM_TERM": 328323,
+    "ALIAS_NAME1": "DefInt"
+  },
+  {
+    "ENUM_ID": 52,
+    "ENUM_NAME": 328301,
+    "ALIAS_NAME": "EFootballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 52,
+    "ITEM_ID": 23,
+    "ITEM_TERM": 328324,
+    "ALIAS_NAME1": "DefFF"
+  },
+  {
+    "ENUM_ID": 52,
+    "ENUM_NAME": 328301,
+    "ALIAS_NAME": "EFootballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 52,
+    "ITEM_ID": 24,
+    "ITEM_TERM": 328325,
+    "ALIAS_NAME1": "KrNo"
+  },
+  {
+    "ENUM_ID": 52,
+    "ENUM_NAME": 328301,
+    "ALIAS_NAME": "EFootballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 52,
+    "ITEM_ID": 25,
+    "ITEM_TERM": 328326,
+    "ALIAS_NAME1": "KrAvg"
+  },
+  {
+    "ENUM_ID": 52,
+    "ENUM_NAME": 328301,
+    "ALIAS_NAME": "EFootballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 52,
+    "ITEM_ID": 26,
+    "ITEM_TERM": 328327,
+    "ALIAS_NAME1": "KrTD"
+  },
+  {
+    "ENUM_ID": 52,
+    "ENUM_NAME": 328301,
+    "ALIAS_NAME": "EFootballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 52,
+    "ITEM_ID": 27,
+    "ITEM_TERM": 328328,
+    "ALIAS_NAME1": "KrLG"
+  },
+  {
+    "ENUM_ID": 52,
+    "ENUM_NAME": 328301,
+    "ALIAS_NAME": "EFootballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 52,
+    "ITEM_ID": 28,
+    "ITEM_TERM": 328329,
+    "ALIAS_NAME1": "PrNo"
+  },
+  {
+    "ENUM_ID": 52,
+    "ENUM_NAME": 328301,
+    "ALIAS_NAME": "EFootballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 52,
+    "ITEM_ID": 29,
+    "ITEM_TERM": 328330,
+    "ALIAS_NAME1": "PrAvg"
+  },
+  {
+    "ENUM_ID": 52,
+    "ENUM_NAME": 328301,
+    "ALIAS_NAME": "EFootballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 52,
+    "ITEM_ID": 30,
+    "ITEM_TERM": 328331,
+    "ALIAS_NAME1": "PrTD"
+  },
+  {
+    "ENUM_ID": 52,
+    "ENUM_NAME": 328301,
+    "ALIAS_NAME": "EFootballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 52,
+    "ITEM_ID": 31,
+    "ITEM_TERM": 328332,
+    "ALIAS_NAME1": "PrLG"
+  },
+  {
+    "ENUM_ID": 52,
+    "ENUM_NAME": 328301,
+    "ALIAS_NAME": "EFootballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 52,
+    "ITEM_ID": 32,
+    "ITEM_TERM": 328333,
+    "ALIAS_NAME1": "kickFG"
+  },
+  {
+    "ENUM_ID": 52,
+    "ENUM_NAME": 328301,
+    "ALIAS_NAME": "EFootballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 52,
+    "ITEM_ID": 33,
+    "ITEM_TERM": 328334,
+    "ALIAS_NAME1": "kickFGT"
+  },
+  {
+    "ENUM_ID": 52,
+    "ENUM_NAME": 328301,
+    "ALIAS_NAME": "EFootballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 52,
+    "ITEM_ID": 34,
+    "ITEM_TERM": 328335,
+    "ALIAS_NAME1": "kickLong"
+  },
+  {
+    "ENUM_ID": 52,
+    "ENUM_NAME": 328301,
+    "ALIAS_NAME": "EFootballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 52,
+    "ITEM_ID": 35,
+    "ITEM_TERM": 328336,
+    "ALIAS_NAME1": "KickXP"
+  },
+  {
+    "ENUM_ID": 52,
+    "ENUM_NAME": 328301,
+    "ALIAS_NAME": "EFootballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 52,
+    "ITEM_ID": 36,
+    "ITEM_TERM": 328337,
+    "ALIAS_NAME1": "kickXPT"
+  },
+  {
+    "ENUM_ID": 52,
+    "ENUM_NAME": 328301,
+    "ALIAS_NAME": "EFootballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 52,
+    "ITEM_ID": 37,
+    "ITEM_TERM": 328338,
+    "ALIAS_NAME1": "kickPts"
+  },
+  {
+    "ENUM_ID": 52,
+    "ENUM_NAME": 328301,
+    "ALIAS_NAME": "EFootballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 52,
+    "ITEM_ID": 38,
+    "ITEM_TERM": 328339,
+    "ALIAS_NAME1": "PuntTot"
+  },
+  {
+    "ENUM_ID": 52,
+    "ENUM_NAME": 328301,
+    "ALIAS_NAME": "EFootballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 52,
+    "ITEM_ID": 39,
+    "ITEM_TERM": 328340,
+    "ALIAS_NAME1": "PuntAvg"
+  },
+  {
+    "ENUM_ID": 52,
+    "ENUM_NAME": 328301,
+    "ALIAS_NAME": "EFootballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 52,
+    "ITEM_ID": 40,
+    "ITEM_TERM": 328341,
+    "ALIAS_NAME1": "Punt20"
+  },
+  {
+    "ENUM_ID": 52,
+    "ENUM_NAME": 328301,
+    "ALIAS_NAME": "EFootballGameStatisticTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AmericanFootball.EFootballGameStatisticTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 52,
+    "ITEM_ID": 41,
+    "ITEM_TERM": 328342,
+    "ALIAS_NAME1": "PuntLG"
+  },
+  {
+    "ENUM_ID": 55,
+    "ENUM_NAME": 384149,
+    "ALIAS_NAME": "ETransferType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Transfers.Common.ETransferType, Sportifier.Transfers.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 55,
+    "ITEM_ID": 0,
+    "ITEM_TERM": 384150,
+    "ALIAS_NAME1": "Unkown"
+  },
+  {
+    "ENUM_ID": 55,
+    "ENUM_NAME": 384149,
+    "ALIAS_NAME": "ETransferType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Transfers.Common.ETransferType, Sportifier.Transfers.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 55,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 38352368,
+    "ALIAS_NAME1": "FreeTransfer"
+  },
+  {
+    "ENUM_ID": 55,
+    "ENUM_NAME": 384149,
+    "ALIAS_NAME": "ETransferType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Transfers.Common.ETransferType, Sportifier.Transfers.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 55,
+    "ITEM_ID": 2,
+    "ITEM_TERM": 38352358,
+    "ALIAS_NAME1": "FullOwnership"
+  },
+  {
+    "ENUM_ID": 55,
+    "ENUM_NAME": 384149,
+    "ALIAS_NAME": "ETransferType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Transfers.Common.ETransferType, Sportifier.Transfers.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 55,
+    "ITEM_ID": 3,
+    "ITEM_TERM": 38353371,
+    "ALIAS_NAME1": "Loan"
+  },
+  {
+    "ENUM_ID": 55,
+    "ENUM_NAME": 384149,
+    "ALIAS_NAME": "ETransferType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Transfers.Common.ETransferType, Sportifier.Transfers.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 55,
+    "ITEM_ID": 4,
+    "ITEM_TERM": 38353374,
+    "ALIAS_NAME1": "EndOfLoan"
+  },
+  {
+    "ENUM_ID": 55,
+    "ENUM_NAME": 384149,
+    "ALIAS_NAME": "ETransferType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Transfers.Common.ETransferType, Sportifier.Transfers.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 55,
+    "ITEM_ID": 5,
+    "ITEM_TERM": 47483645,
+    "ALIAS_NAME1": "TermsAgreed"
+  },
+  {
+    "ENUM_ID": 55,
+    "ENUM_NAME": 384149,
+    "ALIAS_NAME": "ETransferType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Transfers.Common.ETransferType, Sportifier.Transfers.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 55,
+    "ITEM_ID": 6,
+    "ITEM_TERM": 47770189,
+    "ALIAS_NAME1": "Appointed"
+  },
+  {
+    "ENUM_ID": 55,
+    "ENUM_NAME": 384149,
+    "ALIAS_NAME": "ETransferType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Transfers.Common.ETransferType, Sportifier.Transfers.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 55,
+    "ITEM_ID": 7,
+    "ITEM_TERM": 47770190,
+    "ALIAS_NAME1": "Sacked"
+  },
+  {
+    "ENUM_ID": 55,
+    "ENUM_NAME": 384149,
+    "ALIAS_NAME": "ETransferType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Transfers.Common.ETransferType, Sportifier.Transfers.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 55,
+    "ITEM_ID": 8,
+    "ITEM_TERM": 49449586,
+    "ALIAS_NAME1": "ContractExtension"
+  },
+  {
+    "ENUM_ID": 55,
+    "ENUM_NAME": 384149,
+    "ALIAS_NAME": "ETransferType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Transfers.Common.ETransferType, Sportifier.Transfers.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 55,
+    "ITEM_ID": 9,
+    "ITEM_TERM": 55652884,
+    "ALIAS_NAME1": "FreeAgency"
+  },
+  {
+    "ENUM_ID": 55,
+    "ENUM_NAME": 384149,
+    "ALIAS_NAME": "ETransferType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Transfers.Common.ETransferType, Sportifier.Transfers.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 55,
+    "ITEM_ID": 10,
+    "ITEM_TERM": 55652885,
+    "ALIAS_NAME1": "Trade"
+  },
+  {
+    "ENUM_ID": 55,
+    "ENUM_NAME": 384149,
+    "ALIAS_NAME": "ETransferType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Transfers.Common.ETransferType, Sportifier.Transfers.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 55,
+    "ITEM_ID": 11,
+    "ITEM_TERM": 55652886,
+    "ALIAS_NAME1": "Drafted"
+  },
+  {
+    "ENUM_ID": 55,
+    "ENUM_NAME": 384149,
+    "ALIAS_NAME": "ETransferType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Transfers.Common.ETransferType, Sportifier.Transfers.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 55,
+    "ITEM_ID": 12,
+    "ITEM_TERM": 55652887,
+    "ALIAS_NAME1": "College"
+  },
+  {
+    "ENUM_ID": 56,
+    "ENUM_NAME": 396046,
+    "ALIAS_NAME": "EFeedItemTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Common.DTO.Feed.EFeedItemTypes, Sportifier.Common.DTO, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 56,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 396047,
+    "ALIAS_NAME1": "Scores"
+  },
+  {
+    "ENUM_ID": 56,
+    "ENUM_NAME": 396046,
+    "ALIAS_NAME": "EFeedItemTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Common.DTO.Feed.EFeedItemTypes, Sportifier.Common.DTO, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 56,
+    "ITEM_ID": 2,
+    "ITEM_TERM": 396048,
+    "ALIAS_NAME1": "News"
+  },
+  {
+    "ENUM_ID": 56,
+    "ENUM_NAME": 396046,
+    "ALIAS_NAME": "EFeedItemTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Common.DTO.Feed.EFeedItemTypes, Sportifier.Common.DTO, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 56,
+    "ITEM_ID": 3,
+    "ITEM_TERM": 396049,
+    "ALIAS_NAME1": "Videos"
+  },
+  {
+    "ENUM_ID": 56,
+    "ENUM_NAME": 396046,
+    "ALIAS_NAME": "EFeedItemTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Common.DTO.Feed.EFeedItemTypes, Sportifier.Common.DTO, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 56,
+    "ITEM_ID": 4,
+    "ITEM_TERM": 396050,
+    "ALIAS_NAME1": "Social"
+  },
+  {
+    "ENUM_ID": 56,
+    "ENUM_NAME": 396046,
+    "ALIAS_NAME": "EFeedItemTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Common.DTO.Feed.EFeedItemTypes, Sportifier.Common.DTO, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 56,
+    "ITEM_ID": 5,
+    "ITEM_TERM": 396051,
+    "ALIAS_NAME1": "Commentary"
+  },
+  {
+    "ENUM_ID": 56,
+    "ENUM_NAME": 396046,
+    "ALIAS_NAME": "EFeedItemTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Common.DTO.Feed.EFeedItemTypes, Sportifier.Common.DTO, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 56,
+    "ITEM_ID": 6,
+    "ITEM_TERM": 396052,
+    "ALIAS_NAME1": "Gossip"
+  },
+  {
+    "ENUM_ID": 61,
+    "ENUM_NAME": 448648,
+    "ALIAS_NAME": "ECricketPlayingStatus",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Cricket.ECricketPlayingStatus, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 61,
+    "ITEM_ID": 0,
+    "ITEM_TERM": 448649,
+    "ALIAS_NAME1": "Unknown"
+  },
+  {
+    "ENUM_ID": 61,
+    "ENUM_NAME": 448648,
+    "ALIAS_NAME": "ECricketPlayingStatus",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Cricket.ECricketPlayingStatus, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 61,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 448650,
+    "ALIAS_NAME1": "InSession"
+  },
+  {
+    "ENUM_ID": 61,
+    "ENUM_NAME": 448648,
+    "ALIAS_NAME": "ECricketPlayingStatus",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Cricket.ECricketPlayingStatus, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 61,
+    "ITEM_ID": 2,
+    "ITEM_TERM": 448651,
+    "ALIAS_NAME1": "lunch"
+  },
+  {
+    "ENUM_ID": 61,
+    "ENUM_NAME": 448648,
+    "ALIAS_NAME": "ECricketPlayingStatus",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Cricket.ECricketPlayingStatus, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 61,
+    "ITEM_ID": 3,
+    "ITEM_TERM": 448653,
+    "ALIAS_NAME1": "Tea"
+  },
+  {
+    "ENUM_ID": 61,
+    "ENUM_NAME": 448648,
+    "ALIAS_NAME": "ECricketPlayingStatus",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Cricket.ECricketPlayingStatus, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 61,
+    "ITEM_ID": 4,
+    "ITEM_TERM": 448655,
+    "ALIAS_NAME1": "Stumps"
+  },
+  {
+    "ENUM_ID": 61,
+    "ENUM_NAME": 448648,
+    "ALIAS_NAME": "ECricketPlayingStatus",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Cricket.ECricketPlayingStatus, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 61,
+    "ITEM_ID": 5,
+    "ITEM_TERM": 448656,
+    "ALIAS_NAME1": "InningsBreak"
+  },
+  {
+    "ENUM_ID": 63,
+    "ENUM_NAME": 512893,
+    "ALIAS_NAME": "ESoccerPlayerFormationPositions",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Soccer.ESoccerPlayerFormationPositions, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 63,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 512894,
+    "ALIAS_NAME1": "GK"
+  },
+  {
+    "ENUM_ID": 63,
+    "ENUM_NAME": 512893,
+    "ALIAS_NAME": "ESoccerPlayerFormationPositions",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Soccer.ESoccerPlayerFormationPositions, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 63,
+    "ITEM_ID": 2,
+    "ITEM_TERM": 512895,
+    "ALIAS_NAME1": "RD"
+  },
+  {
+    "ENUM_ID": 63,
+    "ENUM_NAME": 512893,
+    "ALIAS_NAME": "ESoccerPlayerFormationPositions",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Soccer.ESoccerPlayerFormationPositions, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 63,
+    "ITEM_ID": 3,
+    "ITEM_TERM": 512896,
+    "ALIAS_NAME1": "LB"
+  },
+  {
+    "ENUM_ID": 63,
+    "ENUM_NAME": 512893,
+    "ALIAS_NAME": "ESoccerPlayerFormationPositions",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Soccer.ESoccerPlayerFormationPositions, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 63,
+    "ITEM_ID": 4,
+    "ITEM_TERM": 512897,
+    "ALIAS_NAME1": "SW"
+  },
+  {
+    "ENUM_ID": 63,
+    "ENUM_NAME": 512893,
+    "ALIAS_NAME": "ESoccerPlayerFormationPositions",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Soccer.ESoccerPlayerFormationPositions, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 63,
+    "ITEM_ID": 5,
+    "ITEM_TERM": 512898,
+    "ALIAS_NAME1": "CB"
+  },
+  {
+    "ENUM_ID": 63,
+    "ENUM_NAME": 512893,
+    "ALIAS_NAME": "ESoccerPlayerFormationPositions",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Soccer.ESoccerPlayerFormationPositions, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 63,
+    "ITEM_ID": 6,
+    "ITEM_TERM": 512899,
+    "ALIAS_NAME1": "RB"
+  },
+  {
+    "ENUM_ID": 63,
+    "ENUM_NAME": 512893,
+    "ALIAS_NAME": "ESoccerPlayerFormationPositions",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Soccer.ESoccerPlayerFormationPositions, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 63,
+    "ITEM_ID": 7,
+    "ITEM_TERM": 512900,
+    "ALIAS_NAME1": "LM"
+  },
+  {
+    "ENUM_ID": 63,
+    "ENUM_NAME": 512893,
+    "ALIAS_NAME": "ESoccerPlayerFormationPositions",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Soccer.ESoccerPlayerFormationPositions, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 63,
+    "ITEM_ID": 8,
+    "ITEM_TERM": 512901,
+    "ALIAS_NAME1": "CM"
+  },
+  {
+    "ENUM_ID": 63,
+    "ENUM_NAME": 512893,
+    "ALIAS_NAME": "ESoccerPlayerFormationPositions",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Soccer.ESoccerPlayerFormationPositions, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 63,
+    "ITEM_ID": 9,
+    "ITEM_TERM": 512902,
+    "ALIAS_NAME1": "AM"
+  },
+  {
+    "ENUM_ID": 63,
+    "ENUM_NAME": 512893,
+    "ALIAS_NAME": "ESoccerPlayerFormationPositions",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Soccer.ESoccerPlayerFormationPositions, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 63,
+    "ITEM_ID": 10,
+    "ITEM_TERM": 512903,
+    "ALIAS_NAME1": "RM"
+  },
+  {
+    "ENUM_ID": 63,
+    "ENUM_NAME": 512893,
+    "ALIAS_NAME": "ESoccerPlayerFormationPositions",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Soccer.ESoccerPlayerFormationPositions, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 63,
+    "ITEM_ID": 11,
+    "ITEM_TERM": 512904,
+    "ALIAS_NAME1": "LF"
+  },
+  {
+    "ENUM_ID": 63,
+    "ENUM_NAME": 512893,
+    "ALIAS_NAME": "ESoccerPlayerFormationPositions",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Soccer.ESoccerPlayerFormationPositions, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 63,
+    "ITEM_ID": 12,
+    "ITEM_TERM": 512905,
+    "ALIAS_NAME1": "CF"
+  },
+  {
+    "ENUM_ID": 63,
+    "ENUM_NAME": 512893,
+    "ALIAS_NAME": "ESoccerPlayerFormationPositions",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Soccer.ESoccerPlayerFormationPositions, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 63,
+    "ITEM_ID": 13,
+    "ITEM_TERM": 512906,
+    "ALIAS_NAME1": "SS"
+  },
+  {
+    "ENUM_ID": 63,
+    "ENUM_NAME": 512893,
+    "ALIAS_NAME": "ESoccerPlayerFormationPositions",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Soccer.ESoccerPlayerFormationPositions, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 63,
+    "ITEM_ID": 14,
+    "ITEM_TERM": 512907,
+    "ALIAS_NAME1": "RF"
+  },
+  {
+    "ENUM_ID": 63,
+    "ENUM_NAME": 512893,
+    "ALIAS_NAME": "ESoccerPlayerFormationPositions",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Soccer.ESoccerPlayerFormationPositions, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 63,
+    "ITEM_ID": 15,
+    "ITEM_TERM": 512908,
+    "ALIAS_NAME1": "Manager"
+  },
+  {
+    "ENUM_ID": 63,
+    "ENUM_NAME": 512893,
+    "ALIAS_NAME": "ESoccerPlayerFormationPositions",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Soccer.ESoccerPlayerFormationPositions, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 63,
+    "ITEM_ID": 16,
+    "ITEM_TERM": 512909,
+    "ALIAS_NAME1": "Coach"
+  },
+  {
+    "ENUM_ID": 63,
+    "ENUM_NAME": 512893,
+    "ALIAS_NAME": "ESoccerPlayerFormationPositions",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Soccer.ESoccerPlayerFormationPositions, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 63,
+    "ITEM_ID": 17,
+    "ITEM_TERM": 512910,
+    "ALIAS_NAME1": "AssistCoach"
+  },
+  {
+    "ENUM_ID": 63,
+    "ENUM_NAME": 512893,
+    "ALIAS_NAME": "ESoccerPlayerFormationPositions",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Soccer.ESoccerPlayerFormationPositions, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 63,
+    "ITEM_ID": 18,
+    "ITEM_TERM": 72036200,
+    "ALIAS_NAME1": "SportDirector"
+  },
+  {
+    "ENUM_ID": 64,
+    "ENUM_NAME": 512911,
+    "ALIAS_NAME": "ESoccerPlayerStatistics",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Soccer.ESoccerPlayerStatistics, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 64,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 512912,
+    "ALIAS_NAME1": "Goals"
+  },
+  {
+    "ENUM_ID": 64,
+    "ENUM_NAME": 512911,
+    "ALIAS_NAME": "ESoccerPlayerStatistics",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Soccer.ESoccerPlayerStatistics, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 64,
+    "ITEM_ID": 2,
+    "ITEM_TERM": 512913,
+    "ALIAS_NAME1": "Assists"
+  },
+  {
+    "ENUM_ID": 64,
+    "ENUM_NAME": 512911,
+    "ALIAS_NAME": "ESoccerPlayerStatistics",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Soccer.ESoccerPlayerStatistics, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 64,
+    "ITEM_ID": 3,
+    "ITEM_TERM": 512914,
+    "ALIAS_NAME1": "YellowCards"
+  },
+  {
+    "ENUM_ID": 64,
+    "ENUM_NAME": 512911,
+    "ALIAS_NAME": "ESoccerPlayerStatistics",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Soccer.ESoccerPlayerStatistics, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 64,
+    "ITEM_ID": 4,
+    "ITEM_TERM": 512915,
+    "ALIAS_NAME1": "RedCards"
+  },
+  {
+    "ENUM_ID": 64,
+    "ENUM_NAME": 512911,
+    "ALIAS_NAME": "ESoccerPlayerStatistics",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Soccer.ESoccerPlayerStatistics, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 64,
+    "ITEM_ID": 5,
+    "ITEM_TERM": 512916,
+    "ALIAS_NAME1": "Appearences"
+  },
+  {
+    "ENUM_ID": 64,
+    "ENUM_NAME": 512911,
+    "ALIAS_NAME": "ESoccerPlayerStatistics",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Soccer.ESoccerPlayerStatistics, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 64,
+    "ITEM_ID": 6,
+    "ITEM_TERM": 512917,
+    "ALIAS_NAME1": "Lineups"
+  },
+  {
+    "ENUM_ID": 64,
+    "ENUM_NAME": 512911,
+    "ALIAS_NAME": "ESoccerPlayerStatistics",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Soccer.ESoccerPlayerStatistics, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 64,
+    "ITEM_ID": 7,
+    "ITEM_TERM": 512918,
+    "ALIAS_NAME1": "Substitutions"
+  },
+  {
+    "ENUM_ID": 64,
+    "ENUM_NAME": 512911,
+    "ALIAS_NAME": "ESoccerPlayerStatistics",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Soccer.ESoccerPlayerStatistics, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 64,
+    "ITEM_ID": 8,
+    "ITEM_TERM": 512919,
+    "ALIAS_NAME1": "TimePlayed"
+  },
+  {
+    "ENUM_ID": 64,
+    "ENUM_NAME": 512911,
+    "ALIAS_NAME": "ESoccerPlayerStatistics",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Soccer.ESoccerPlayerStatistics, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 64,
+    "ITEM_ID": 9,
+    "ITEM_TERM": 512920,
+    "ALIAS_NAME1": "MinutesPerGoal"
+  },
+  {
+    "ENUM_ID": 65,
+    "ENUM_NAME": 512921,
+    "ALIAS_NAME": "ESoccerPlayerStatisticsCategories",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Soccer.ESoccerPlayerStatisticsCategories, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 65,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 512922,
+    "ALIAS_NAME1": "Goals"
+  },
+  {
+    "ENUM_ID": 66,
+    "ENUM_NAME": 607383,
+    "ALIAS_NAME": "ETransferStatuses",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Transfers.Common.ETransferStatuses, Sportifier.Transfers.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 66,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 607384,
+    "ALIAS_NAME1": "Unknown"
+  },
+  {
+    "ENUM_ID": 66,
+    "ENUM_NAME": 607383,
+    "ALIAS_NAME": "ETransferStatuses",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Transfers.Common.ETransferStatuses, Sportifier.Transfers.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 66,
+    "ITEM_ID": 2,
+    "ITEM_TERM": 607385,
+    "ALIAS_NAME1": "Approved"
+  },
+  {
+    "ENUM_ID": 66,
+    "ENUM_NAME": 607383,
+    "ALIAS_NAME": "ETransferStatuses",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Transfers.Common.ETransferStatuses, Sportifier.Transfers.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 66,
+    "ITEM_ID": 3,
+    "ITEM_TERM": 607388,
+    "ALIAS_NAME1": "WaitingForApproval"
+  },
+  {
+    "ENUM_ID": 66,
+    "ENUM_NAME": 607383,
+    "ALIAS_NAME": "ETransferStatuses",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Transfers.Common.ETransferStatuses, Sportifier.Transfers.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 66,
+    "ITEM_ID": 4,
+    "ITEM_TERM": 607389,
+    "ALIAS_NAME1": "Denied"
+  },
+  {
+    "ENUM_ID": 66,
+    "ENUM_NAME": 607383,
+    "ALIAS_NAME": "ETransferStatuses",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Transfers.Common.ETransferStatuses, Sportifier.Transfers.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 66,
+    "ITEM_ID": 5,
+    "ITEM_TERM": 607390,
+    "ALIAS_NAME1": "Rumor"
+  },
+  {
+    "ENUM_ID": 66,
+    "ENUM_NAME": 607383,
+    "ALIAS_NAME": "ETransferStatuses",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Transfers.Common.ETransferStatuses, Sportifier.Transfers.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 66,
+    "ITEM_ID": 6,
+    "ITEM_TERM": 1765132,
+    "ALIAS_NAME1": "RumorWaitingForApproval"
+  },
+  {
+    "ENUM_ID": 67,
+    "ENUM_NAME": 902425,
+    "ALIAS_NAME": "EBasketBallSubSportTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Basketball.EBasketBallSubSportTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 67,
+    "ITEM_ID": 0,
+    "ITEM_TERM": 902426,
+    "ALIAS_NAME1": "Regular"
+  },
+  {
+    "ENUM_ID": 67,
+    "ENUM_NAME": 902425,
+    "ALIAS_NAME": "EBasketBallSubSportTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Basketball.EBasketBallSubSportTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 67,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 902427,
+    "ALIAS_NAME1": "TwoHalves"
+  },
+  {
+    "ENUM_ID": 68,
+    "ENUM_NAME": 910710,
+    "ALIAS_NAME": "ERugbyCompetitionType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Rugby.ERugbyCompetitionType, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 68,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 910711,
+    "ALIAS_NAME1": "RugbyUnion"
+  },
+  {
+    "ENUM_ID": 68,
+    "ENUM_NAME": 910710,
+    "ALIAS_NAME": "ERugbyCompetitionType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Rugby.ERugbyCompetitionType, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 68,
+    "ITEM_ID": 2,
+    "ITEM_TERM": 910712,
+    "ALIAS_NAME1": "RugbyLeague"
+  },
+  {
+    "ENUM_ID": 72,
+    "ENUM_NAME": 3057765,
+    "ALIAS_NAME": "ESoccerSuspensionTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Soccer.ESoccerSuspensionTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 72,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 3057766,
+    "ALIAS_NAME1": "RedCard"
+  },
+  {
+    "ENUM_ID": 72,
+    "ENUM_NAME": 3057765,
+    "ALIAS_NAME": "ESoccerSuspensionTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Soccer.ESoccerSuspensionTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 72,
+    "ITEM_ID": 2,
+    "ITEM_TERM": 3057767,
+    "ALIAS_NAME1": "YellowCards"
+  },
+  {
+    "ENUM_ID": 72,
+    "ENUM_NAME": 3057765,
+    "ALIAS_NAME": "ESoccerSuspensionTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Soccer.ESoccerSuspensionTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 72,
+    "ITEM_ID": 3,
+    "ITEM_TERM": 3057768,
+    "ALIAS_NAME1": "Disciplinary"
+  },
+  {
+    "ENUM_ID": 73,
+    "ENUM_NAME": 3075438,
+    "ALIAS_NAME": "ETennisSubSportTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Tennis.ETennisSubSportTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 73,
+    "ITEM_ID": 0,
+    "ITEM_TERM": 3075439,
+    "ALIAS_NAME1": "Regular"
+  },
+  {
+    "ENUM_ID": 73,
+    "ENUM_NAME": 3075438,
+    "ALIAS_NAME": "ETennisSubSportTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Tennis.ETennisSubSportTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 73,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 3075440,
+    "ALIAS_NAME1": "FiveSets"
+  },
+  {
+    "ENUM_ID": 80,
+    "ENUM_NAME": 3467539,
+    "ALIAS_NAME": "ETennisCourtSurfaceTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Tennis.ETennisCourtSurfaceTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 80,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 3467540,
+    "ALIAS_NAME1": "Acrylic"
+  },
+  {
+    "ENUM_ID": 80,
+    "ENUM_NAME": 3467539,
+    "ALIAS_NAME": "ETennisCourtSurfaceTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Tennis.ETennisCourtSurfaceTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 80,
+    "ITEM_ID": 2,
+    "ITEM_TERM": 3467541,
+    "ALIAS_NAME1": "ArtificialGrass"
+  },
+  {
+    "ENUM_ID": 80,
+    "ENUM_NAME": 3467539,
+    "ALIAS_NAME": "ETennisCourtSurfaceTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Tennis.ETennisCourtSurfaceTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 80,
+    "ITEM_ID": 3,
+    "ITEM_TERM": 3467542,
+    "ALIAS_NAME1": "Asphalt"
+  },
+  {
+    "ENUM_ID": 80,
+    "ENUM_NAME": 3467539,
+    "ALIAS_NAME": "ETennisCourtSurfaceTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Tennis.ETennisCourtSurfaceTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 80,
+    "ITEM_ID": 4,
+    "ITEM_TERM": 3467543,
+    "ALIAS_NAME1": "Carpet"
+  },
+  {
+    "ENUM_ID": 80,
+    "ENUM_NAME": 3467539,
+    "ALIAS_NAME": "ETennisCourtSurfaceTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Tennis.ETennisCourtSurfaceTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 80,
+    "ITEM_ID": 5,
+    "ITEM_TERM": 3467544,
+    "ALIAS_NAME1": "Clay"
+  },
+  {
+    "ENUM_ID": 80,
+    "ENUM_NAME": 3467539,
+    "ALIAS_NAME": "ETennisCourtSurfaceTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Tennis.ETennisCourtSurfaceTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 80,
+    "ITEM_ID": 6,
+    "ITEM_TERM": 3467545,
+    "ALIAS_NAME1": "Concrete"
+  },
+  {
+    "ENUM_ID": 80,
+    "ENUM_NAME": 3467539,
+    "ALIAS_NAME": "ETennisCourtSurfaceTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Tennis.ETennisCourtSurfaceTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 80,
+    "ITEM_ID": 7,
+    "ITEM_TERM": 3467546,
+    "ALIAS_NAME1": "Grass"
+  },
+  {
+    "ENUM_ID": 80,
+    "ENUM_NAME": 3467539,
+    "ALIAS_NAME": "ETennisCourtSurfaceTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Tennis.ETennisCourtSurfaceTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 80,
+    "ITEM_ID": 8,
+    "ITEM_TERM": 3467547,
+    "ALIAS_NAME1": "Other"
+  },
+  {
+    "ENUM_ID": 80,
+    "ENUM_NAME": 3467539,
+    "ALIAS_NAME": "ETennisCourtSurfaceTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Tennis.ETennisCourtSurfaceTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 80,
+    "ITEM_ID": 9,
+    "ITEM_TERM": 3467548,
+    "ALIAS_NAME1": "UnknownHard"
+  },
+  {
+    "ENUM_ID": 84,
+    "ENUM_NAME": 6408577,
+    "ALIAS_NAME": "InsightOutcome",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Bets.Common.InsightOutcome, Sportifier.Bets.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 84,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 6408578,
+    "ALIAS_NAME1": "Win"
+  },
+  {
+    "ENUM_ID": 84,
+    "ENUM_NAME": 6408577,
+    "ALIAS_NAME": "InsightOutcome",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Bets.Common.InsightOutcome, Sportifier.Bets.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 84,
+    "ITEM_ID": 2,
+    "ITEM_TERM": 6408579,
+    "ALIAS_NAME1": "Lose"
+  },
+  {
+    "ENUM_ID": 84,
+    "ENUM_NAME": 6408577,
+    "ALIAS_NAME": "InsightOutcome",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Bets.Common.InsightOutcome, Sportifier.Bets.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 84,
+    "ITEM_ID": 3,
+    "ITEM_TERM": 6408580,
+    "ALIAS_NAME1": "Void"
+  },
+  {
+    "ENUM_ID": 85,
+    "ENUM_NAME": 6677695,
+    "ALIAS_NAME": "EUpdateEntityType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Updates.Common.EUpdateEntityType, Sportifier.Updates.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 85,
+    "ITEM_ID": 0,
+    "ITEM_TERM": 6677696,
+    "ALIAS_NAME1": "DataEntity"
+  },
+  {
+    "ENUM_ID": 85,
+    "ENUM_NAME": 6677695,
+    "ALIAS_NAME": "EUpdateEntityType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Updates.Common.EUpdateEntityType, Sportifier.Updates.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 85,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 6677697,
+    "ALIAS_NAME1": "Game"
+  },
+  {
+    "ENUM_ID": 85,
+    "ENUM_NAME": 6677695,
+    "ALIAS_NAME": "EUpdateEntityType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Updates.Common.EUpdateEntityType, Sportifier.Updates.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 85,
+    "ITEM_ID": 2,
+    "ITEM_TERM": 6677698,
+    "ALIAS_NAME1": "BetLine"
+  },
+  {
+    "ENUM_ID": 85,
+    "ENUM_NAME": 6677695,
+    "ALIAS_NAME": "EUpdateEntityType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Updates.Common.EUpdateEntityType, Sportifier.Updates.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 85,
+    "ITEM_ID": 3,
+    "ITEM_TERM": 6677699,
+    "ALIAS_NAME1": "NewsItem"
+  },
+  {
+    "ENUM_ID": 85,
+    "ENUM_NAME": 6677695,
+    "ALIAS_NAME": "EUpdateEntityType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Updates.Common.EUpdateEntityType, Sportifier.Updates.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 85,
+    "ITEM_ID": 4,
+    "ITEM_TERM": 6677700,
+    "ALIAS_NAME1": "Transfer"
+  },
+  {
+    "ENUM_ID": 85,
+    "ENUM_NAME": 6677695,
+    "ALIAS_NAME": "EUpdateEntityType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Updates.Common.EUpdateEntityType, Sportifier.Updates.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 85,
+    "ITEM_ID": 5,
+    "ITEM_TERM": 6677701,
+    "ALIAS_NAME1": "Athlete"
+  },
+  {
+    "ENUM_ID": 85,
+    "ENUM_NAME": 6677695,
+    "ALIAS_NAME": "EUpdateEntityType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Updates.Common.EUpdateEntityType, Sportifier.Updates.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 85,
+    "ITEM_ID": 6,
+    "ITEM_TERM": 6677702,
+    "ALIAS_NAME1": "Competition"
+  },
+  {
+    "ENUM_ID": 85,
+    "ENUM_NAME": 6677695,
+    "ALIAS_NAME": "EUpdateEntityType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Updates.Common.EUpdateEntityType, Sportifier.Updates.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 85,
+    "ITEM_ID": 7,
+    "ITEM_TERM": 6677703,
+    "ALIAS_NAME1": "Insight"
+  },
+  {
+    "ENUM_ID": 85,
+    "ENUM_NAME": 6677695,
+    "ALIAS_NAME": "EUpdateEntityType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Updates.Common.EUpdateEntityType, Sportifier.Updates.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 85,
+    "ITEM_ID": 8,
+    "ITEM_TERM": 67392370,
+    "ALIAS_NAME1": "SocialAccounts"
+  },
+  {
+    "ENUM_ID": 85,
+    "ENUM_NAME": 6677695,
+    "ALIAS_NAME": "EUpdateEntityType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Updates.Common.EUpdateEntityType, Sportifier.Updates.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 85,
+    "ITEM_ID": 9,
+    "ITEM_TERM": 67392371,
+    "ALIAS_NAME1": "Competitor"
+  },
+  {
+    "ENUM_ID": 85,
+    "ENUM_NAME": 6677695,
+    "ALIAS_NAME": "EUpdateEntityType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Updates.Common.EUpdateEntityType, Sportifier.Updates.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 85,
+    "ITEM_ID": 10,
+    "ITEM_TERM": 67392372,
+    "ALIAS_NAME1": "CompetitionBetLine"
+  },
+  {
+    "ENUM_ID": 89,
+    "ENUM_NAME": 20226470,
+    "ALIAS_NAME": "ESoccerVarEventType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Soccer.ESoccerVarEventType, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 89,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 20226471,
+    "ALIAS_NAME1": "Goal"
+  },
+  {
+    "ENUM_ID": 89,
+    "ENUM_NAME": 20226470,
+    "ALIAS_NAME": "ESoccerVarEventType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Soccer.ESoccerVarEventType, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 89,
+    "ITEM_ID": 2,
+    "ITEM_TERM": 20226472,
+    "ALIAS_NAME1": "Penalty"
+  },
+  {
+    "ENUM_ID": 89,
+    "ENUM_NAME": 20226470,
+    "ALIAS_NAME": "ESoccerVarEventType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Soccer.ESoccerVarEventType, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 89,
+    "ITEM_ID": 3,
+    "ITEM_TERM": 20226473,
+    "ALIAS_NAME1": "RedCard"
+  },
+  {
+    "ENUM_ID": 91,
+    "ENUM_NAME": 47483646,
+    "ALIAS_NAME": "ETrophyType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.BLL.Trophy.ETrophyType, Sportifier.Competitions.BLL, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 91,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 47483647,
+    "ALIAS_NAME1": "Personal"
+  },
+  {
+    "ENUM_ID": 91,
+    "ENUM_NAME": 47483646,
+    "ALIAS_NAME": "ETrophyType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.BLL.Trophy.ETrophyType, Sportifier.Competitions.BLL, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 91,
+    "ITEM_ID": 2,
+    "ITEM_TERM": 47483648,
+    "ALIAS_NAME1": "Club"
+  },
+  {
+    "ENUM_ID": 91,
+    "ENUM_NAME": 47483646,
+    "ALIAS_NAME": "ETrophyType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.BLL.Trophy.ETrophyType, Sportifier.Competitions.BLL, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 91,
+    "ITEM_ID": 3,
+    "ITEM_TERM": 47483649,
+    "ALIAS_NAME1": "International"
+  },
+  {
+    "ENUM_ID": 92,
+    "ENUM_NAME": 48520748,
+    "ALIAS_NAME": "AthleteStatus",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AthleteStatus, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 92,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 48520749,
+    "ALIAS_NAME1": "Active"
+  },
+  {
+    "ENUM_ID": 92,
+    "ENUM_NAME": 48520748,
+    "ALIAS_NAME": "AthleteStatus",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AthleteStatus, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 92,
+    "ITEM_ID": 2,
+    "ITEM_TERM": 48520750,
+    "ALIAS_NAME1": "Dead"
+  },
+  {
+    "ENUM_ID": 92,
+    "ENUM_NAME": 48520748,
+    "ALIAS_NAME": "AthleteStatus",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.AthleteStatus, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 92,
+    "ITEM_ID": 3,
+    "ITEM_TERM": 48520751,
+    "ALIAS_NAME1": "Retired"
+  },
+  {
+    "ENUM_ID": 99,
+    "ENUM_NAME": 56803404,
+    "ALIAS_NAME": "EBasketballSuspensionTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Basketball.EBasketballSuspensionTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 99,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 56803405,
+    "ALIAS_NAME1": "DISCIPLINARY_SUSPENSION"
+  },
+  {
+    "ENUM_ID": 100,
+    "ENUM_NAME": 57986130,
+    "ALIAS_NAME": "EAthleteCareerStatsDisplayType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.BLL.SportTypes.EAthleteCareerStatsDisplayType, Sportifier.Competitions.BLL.SportTypes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 100,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 57986131,
+    "ALIAS_NAME1": "BySeason"
+  },
+  {
+    "ENUM_ID": 100,
+    "ENUM_NAME": 57986130,
+    "ALIAS_NAME": "EAthleteCareerStatsDisplayType",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.BLL.SportTypes.EAthleteCareerStatsDisplayType, Sportifier.Competitions.BLL.SportTypes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 100,
+    "ITEM_ID": 2,
+    "ITEM_TERM": 57986132,
+    "ALIAS_NAME1": "ByCompetition"
+  },
+  {
+    "ENUM_ID": 119,
+    "ENUM_NAME": 64601030,
+    "ALIAS_NAME": "EBaseballInningDivisions",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Baseball.EBaseballInningDivisions, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 119,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 64601031,
+    "ALIAS_NAME1": "Top"
+  },
+  {
+    "ENUM_ID": 119,
+    "ENUM_NAME": 64601030,
+    "ALIAS_NAME": "EBaseballInningDivisions",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Baseball.EBaseballInningDivisions, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 119,
+    "ITEM_ID": 2,
+    "ITEM_TERM": 64601032,
+    "ALIAS_NAME1": "Middle"
+  },
+  {
+    "ENUM_ID": 119,
+    "ENUM_NAME": 64601030,
+    "ALIAS_NAME": "EBaseballInningDivisions",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Baseball.EBaseballInningDivisions, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 119,
+    "ITEM_ID": 3,
+    "ITEM_TERM": 64601033,
+    "ALIAS_NAME1": "Bottom"
+  },
+  {
+    "ENUM_ID": 119,
+    "ENUM_NAME": 64601030,
+    "ALIAS_NAME": "EBaseballInningDivisions",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Baseball.EBaseballInningDivisions, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 119,
+    "ITEM_ID": 4,
+    "ITEM_TERM": 64601034,
+    "ALIAS_NAME1": "End"
+  },
+  {
+    "ENUM_ID": 120,
+    "ENUM_NAME": 64601035,
+    "ALIAS_NAME": "EBaseballBaseLoads",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Baseball.EBaseballBaseLoads, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 120,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 64601036,
+    "ALIAS_NAME1": "AllBasesAreNotLoaded"
+  },
+  {
+    "ENUM_ID": 120,
+    "ENUM_NAME": 64601035,
+    "ALIAS_NAME": "EBaseballBaseLoads",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Baseball.EBaseballBaseLoads, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 120,
+    "ITEM_ID": 2,
+    "ITEM_TERM": 64601037,
+    "ALIAS_NAME1": "Base1IsLoaded"
+  },
+  {
+    "ENUM_ID": 120,
+    "ENUM_NAME": 64601035,
+    "ALIAS_NAME": "EBaseballBaseLoads",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Baseball.EBaseballBaseLoads, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 120,
+    "ITEM_ID": 3,
+    "ITEM_TERM": 64601038,
+    "ALIAS_NAME1": "Base2IsLoaded"
+  },
+  {
+    "ENUM_ID": 120,
+    "ENUM_NAME": 64601035,
+    "ALIAS_NAME": "EBaseballBaseLoads",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Baseball.EBaseballBaseLoads, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 120,
+    "ITEM_ID": 4,
+    "ITEM_TERM": 64601039,
+    "ALIAS_NAME1": "Bases1And2AreLoaded"
+  },
+  {
+    "ENUM_ID": 120,
+    "ENUM_NAME": 64601035,
+    "ALIAS_NAME": "EBaseballBaseLoads",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Baseball.EBaseballBaseLoads, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 120,
+    "ITEM_ID": 5,
+    "ITEM_TERM": 64601040,
+    "ALIAS_NAME1": "Base3IsLoaded"
+  },
+  {
+    "ENUM_ID": 120,
+    "ENUM_NAME": 64601035,
+    "ALIAS_NAME": "EBaseballBaseLoads",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Baseball.EBaseballBaseLoads, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 120,
+    "ITEM_ID": 6,
+    "ITEM_TERM": 64601041,
+    "ALIAS_NAME1": "Bases1And3AreLoaded"
+  },
+  {
+    "ENUM_ID": 120,
+    "ENUM_NAME": 64601035,
+    "ALIAS_NAME": "EBaseballBaseLoads",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Baseball.EBaseballBaseLoads, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 120,
+    "ITEM_ID": 7,
+    "ITEM_TERM": 64601042,
+    "ALIAS_NAME1": "Bases2And3AreLoaded"
+  },
+  {
+    "ENUM_ID": 120,
+    "ENUM_NAME": 64601035,
+    "ALIAS_NAME": "EBaseballBaseLoads",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Baseball.EBaseballBaseLoads, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 120,
+    "ITEM_ID": 8,
+    "ITEM_TERM": 64601043,
+    "ALIAS_NAME1": "AllBasesAreLoaded"
+  },
+  {
+    "ENUM_ID": 126,
+    "ENUM_NAME": 65921246,
+    "ALIAS_NAME": "EOddsFormats",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Bets.Common.EOddsFormats, Sportifier.Bets.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 126,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 65921247,
+    "ALIAS_NAME1": "Decimal"
+  },
+  {
+    "ENUM_ID": 126,
+    "ENUM_NAME": 65921246,
+    "ALIAS_NAME": "EOddsFormats",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Bets.Common.EOddsFormats, Sportifier.Bets.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 126,
+    "ITEM_ID": 2,
+    "ITEM_TERM": 65921248,
+    "ALIAS_NAME1": "Fractional"
+  },
+  {
+    "ENUM_ID": 126,
+    "ENUM_NAME": 65921246,
+    "ALIAS_NAME": "EOddsFormats",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Bets.Common.EOddsFormats, Sportifier.Bets.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 126,
+    "ITEM_ID": 3,
+    "ITEM_TERM": 65921249,
+    "ALIAS_NAME1": "American"
+  },
+  {
+    "ENUM_ID": 136,
+    "ENUM_NAME": 70864824,
+    "ALIAS_NAME": "EEventChartOutcomeTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.EEventChartOutcomeTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 136,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 70842325,
+    "ALIAS_NAME1": "Goal"
+  },
+  {
+    "ENUM_ID": 136,
+    "ENUM_NAME": 70864824,
+    "ALIAS_NAME": "EEventChartOutcomeTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.EEventChartOutcomeTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 136,
+    "ITEM_ID": 2,
+    "ITEM_TERM": 70842326,
+    "ALIAS_NAME1": "Missed"
+  },
+  {
+    "ENUM_ID": 136,
+    "ENUM_NAME": 70864824,
+    "ALIAS_NAME": "EEventChartOutcomeTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.EEventChartOutcomeTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 136,
+    "ITEM_ID": 3,
+    "ITEM_TERM": 70842327,
+    "ALIAS_NAME1": "AttemptSaved"
+  },
+  {
+    "ENUM_ID": 136,
+    "ENUM_NAME": 70864824,
+    "ALIAS_NAME": "EEventChartOutcomeTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.EEventChartOutcomeTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 136,
+    "ITEM_ID": 4,
+    "ITEM_TERM": 70853277,
+    "ALIAS_NAME1": "Post"
+  },
+  {
+    "ENUM_ID": 136,
+    "ENUM_NAME": 70864824,
+    "ALIAS_NAME": "EEventChartOutcomeTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.EEventChartOutcomeTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 136,
+    "ITEM_ID": 5,
+    "ITEM_TERM": 70842328,
+    "ALIAS_NAME1": "Blocked"
+  },
+  {
+    "ENUM_ID": 137,
+    "ENUM_NAME": 77164500,
+    "ALIAS_NAME": "EContentNotificationPriorityLevel",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Common.ContentNotifier.Entities.EContentNotificationPriorityLevel, Sportifier.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 137,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 72766156,
+    "ALIAS_NAME1": "Blocked"
+  },
+  {
+    "ENUM_ID": 137,
+    "ENUM_NAME": 77164500,
+    "ALIAS_NAME": "EContentNotificationPriorityLevel",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Common.ContentNotifier.Entities.EContentNotificationPriorityLevel, Sportifier.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 137,
+    "ITEM_ID": 2,
+    "ITEM_TERM": 72766157,
+    "ALIAS_NAME1": "Low"
+  },
+  {
+    "ENUM_ID": 137,
+    "ENUM_NAME": 77164500,
+    "ALIAS_NAME": "EContentNotificationPriorityLevel",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Common.ContentNotifier.Entities.EContentNotificationPriorityLevel, Sportifier.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 137,
+    "ITEM_ID": 3,
+    "ITEM_TERM": 72766158,
+    "ALIAS_NAME1": "High"
+  },
+  {
+    "ENUM_ID": 138,
+    "ENUM_NAME": 72860899,
+    "ALIAS_NAME": "ETennisPreferredSurfaceTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.ETennisPreferredSurfaceTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 138,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 72860900,
+    "ALIAS_NAME1": "Unknown"
+  },
+  {
+    "ENUM_ID": 138,
+    "ENUM_NAME": 72860899,
+    "ALIAS_NAME": "ETennisPreferredSurfaceTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.ETennisPreferredSurfaceTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 138,
+    "ITEM_ID": 2,
+    "ITEM_TERM": 72860901,
+    "ALIAS_NAME1": "Grass"
+  },
+  {
+    "ENUM_ID": 138,
+    "ENUM_NAME": 72860899,
+    "ALIAS_NAME": "ETennisPreferredSurfaceTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.ETennisPreferredSurfaceTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 138,
+    "ITEM_ID": 3,
+    "ITEM_TERM": 72860902,
+    "ALIAS_NAME1": "Hard"
+  },
+  {
+    "ENUM_ID": 138,
+    "ENUM_NAME": 72860899,
+    "ALIAS_NAME": "ETennisPreferredSurfaceTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.ETennisPreferredSurfaceTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 138,
+    "ITEM_ID": 4,
+    "ITEM_TERM": 72860903,
+    "ALIAS_NAME1": "Clay"
+  },
+  {
+    "ENUM_ID": 139,
+    "ENUM_NAME": 72860904,
+    "ALIAS_NAME": "ETennisBackhandTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.ETennisBackhandTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 139,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 72860905,
+    "ALIAS_NAME1": "OneHanded"
+  },
+  {
+    "ENUM_ID": 139,
+    "ENUM_NAME": 72860904,
+    "ALIAS_NAME": "ETennisBackhandTypes",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.ETennisBackhandTypes, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 139,
+    "ITEM_ID": 2,
+    "ITEM_TERM": 72860906,
+    "ALIAS_NAME1": "TwoHanded"
+  },
+  {
+    "ENUM_ID": 144,
+    "ENUM_NAME": 75396411,
+    "ALIAS_NAME": "EVoleyballSetStatisticsPossibleValues",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Volleyball.EVoleyballSetStatisticsPossibleValues, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 144,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 75396412,
+    "ALIAS_NAME1": "DidNotPlay"
+  },
+  {
+    "ENUM_ID": 144,
+    "ENUM_NAME": 75396411,
+    "ALIAS_NAME": "EVoleyballSetStatisticsPossibleValues",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Volleyball.EVoleyballSetStatisticsPossibleValues, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 144,
+    "ITEM_ID": 2,
+    "ITEM_TERM": 75396413,
+    "ALIAS_NAME1": "Started"
+  },
+  {
+    "ENUM_ID": 144,
+    "ENUM_NAME": 75396411,
+    "ALIAS_NAME": "EVoleyballSetStatisticsPossibleValues",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Volleyball.EVoleyballSetStatisticsPossibleValues, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 144,
+    "ITEM_ID": 3,
+    "ITEM_TERM": 75396414,
+    "ALIAS_NAME1": "SubbedIn"
+  },
+  {
+    "ENUM_ID": 144,
+    "ENUM_NAME": 75396411,
+    "ALIAS_NAME": "EVoleyballSetStatisticsPossibleValues",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.Volleyball.EVoleyballSetStatisticsPossibleValues, Sportifier.Competitions.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 144,
+    "ITEM_ID": 4,
+    "ITEM_TERM": 75396415,
+    "ALIAS_NAME1": "Libero"
+  },
+  {
+    "ENUM_ID": 145,
+    "ENUM_NAME": 76804602,
+    "ALIAS_NAME": "ECompetitorStatisticDimension",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.ECompetitorStatisticDimension, Sportifier.Competitions.Common, Version=3.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 145,
+    "ITEM_ID": 1,
+    "ITEM_TERM": 76804603,
+    "ALIAS_NAME1": "All"
+  },
+  {
+    "ENUM_ID": 145,
+    "ENUM_NAME": 76804602,
+    "ALIAS_NAME": "ECompetitorStatisticDimension",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.ECompetitorStatisticDimension, Sportifier.Competitions.Common, Version=3.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 145,
+    "ITEM_ID": 2,
+    "ITEM_TERM": 76804604,
+    "ALIAS_NAME1": "LastX"
+  },
+  {
+    "ENUM_ID": 145,
+    "ENUM_NAME": 76804602,
+    "ALIAS_NAME": "ECompetitorStatisticDimension",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.ECompetitorStatisticDimension, Sportifier.Competitions.Common, Version=3.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 145,
+    "ITEM_ID": 3,
+    "ITEM_TERM": 76804605,
+    "ALIAS_NAME1": "AllHome"
+  },
+  {
+    "ENUM_ID": 145,
+    "ENUM_NAME": 76804602,
+    "ALIAS_NAME": "ECompetitorStatisticDimension",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.ECompetitorStatisticDimension, Sportifier.Competitions.Common, Version=3.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 145,
+    "ITEM_ID": 4,
+    "ITEM_TERM": 76804606,
+    "ALIAS_NAME1": "AllAway"
+  },
+  {
+    "ENUM_ID": 145,
+    "ENUM_NAME": 76804602,
+    "ALIAS_NAME": "ECompetitorStatisticDimension",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.ECompetitorStatisticDimension, Sportifier.Competitions.Common, Version=3.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 145,
+    "ITEM_ID": 5,
+    "ITEM_TERM": 76804607,
+    "ALIAS_NAME1": "LastXHome"
+  },
+  {
+    "ENUM_ID": 145,
+    "ENUM_NAME": 76804602,
+    "ALIAS_NAME": "ECompetitorStatisticDimension",
+    "ASSEMBLY_QUALIFIED_NAME": "Sportifier.Competitions.Common.ECompetitorStatisticDimension, Sportifier.Competitions.Common, Version=3.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ENUM_ID1": 145,
+    "ITEM_ID": 6,
+    "ITEM_TERM": 76804608,
+    "ALIAS_NAME1": "LastXAway"
+  }
+]

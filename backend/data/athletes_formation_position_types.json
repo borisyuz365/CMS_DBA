@@ -1,0 +1,632 @@
+[
+  {
+    "FORMATION_POSITION_TYPE_ID": 1,
+    "SPORT_TYPE_ID": 1,
+    "ALIAS_NAME": "GK",
+    "NAME_ID": 77877748,
+    "POSITION_ID": 1,
+    "POSITION_ORDER": 4,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": 0
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 2,
+    "SPORT_TYPE_ID": 1,
+    "ALIAS_NAME": "RD",
+    "NAME_ID": 77877749,
+    "POSITION_ID": 2,
+    "POSITION_ORDER": 6,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 3,
+    "SPORT_TYPE_ID": 1,
+    "ALIAS_NAME": "LB",
+    "NAME_ID": 77877750,
+    "POSITION_ID": 2,
+    "POSITION_ORDER": 5,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": 3
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 4,
+    "SPORT_TYPE_ID": 1,
+    "ALIAS_NAME": "SW",
+    "NAME_ID": 77877751,
+    "POSITION_ID": 2,
+    "POSITION_ORDER": 8,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": 4
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 5,
+    "SPORT_TYPE_ID": 1,
+    "ALIAS_NAME": "CB",
+    "NAME_ID": 77877752,
+    "POSITION_ID": 2,
+    "POSITION_ORDER": 6,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": 1
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 6,
+    "SPORT_TYPE_ID": 1,
+    "ALIAS_NAME": "RB",
+    "NAME_ID": 77877753,
+    "POSITION_ID": 2,
+    "POSITION_ORDER": 7,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": 2
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 7,
+    "SPORT_TYPE_ID": 1,
+    "ALIAS_NAME": "LM",
+    "NAME_ID": 77877754,
+    "POSITION_ID": 3,
+    "POSITION_ORDER": 9,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": 7
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 8,
+    "SPORT_TYPE_ID": 1,
+    "ALIAS_NAME": "CM",
+    "NAME_ID": 77877755,
+    "POSITION_ID": 3,
+    "POSITION_ORDER": 10,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": 5
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 9,
+    "SPORT_TYPE_ID": 1,
+    "ALIAS_NAME": "AM",
+    "NAME_ID": 77877756,
+    "POSITION_ID": 3,
+    "POSITION_ORDER": 12,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": 8
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 10,
+    "SPORT_TYPE_ID": 1,
+    "ALIAS_NAME": "RM",
+    "NAME_ID": 77877757,
+    "POSITION_ID": 3,
+    "POSITION_ORDER": 11,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": 6
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 11,
+    "SPORT_TYPE_ID": 1,
+    "ALIAS_NAME": "LF",
+    "NAME_ID": 77877758,
+    "POSITION_ID": 4,
+    "POSITION_ORDER": 13,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": 10
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 12,
+    "SPORT_TYPE_ID": 1,
+    "ALIAS_NAME": "CF",
+    "NAME_ID": 77877759,
+    "POSITION_ID": 4,
+    "POSITION_ORDER": 15,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": 12
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 13,
+    "SPORT_TYPE_ID": 1,
+    "ALIAS_NAME": "SS",
+    "NAME_ID": 77877760,
+    "POSITION_ID": 4,
+    "POSITION_ORDER": 14,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": 11
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 14,
+    "SPORT_TYPE_ID": 1,
+    "ALIAS_NAME": "RF",
+    "NAME_ID": 77877761,
+    "POSITION_ID": 4,
+    "POSITION_ORDER": 16,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": 9
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 15,
+    "SPORT_TYPE_ID": 1,
+    "ALIAS_NAME": "Manager",
+    "NAME_ID": 77877762,
+    "POSITION_ID": 0,
+    "POSITION_ORDER": 1,
+    "MANAGER_POSITION_ORDER": 1,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 16,
+    "SPORT_TYPE_ID": 1,
+    "ALIAS_NAME": "Coach",
+    "NAME_ID": 77877763,
+    "POSITION_ID": 0,
+    "POSITION_ORDER": 2,
+    "MANAGER_POSITION_ORDER": 2,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 17,
+    "SPORT_TYPE_ID": 1,
+    "ALIAS_NAME": "AssistCoach",
+    "NAME_ID": 77877764,
+    "POSITION_ID": 0,
+    "POSITION_ORDER": 3,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 18,
+    "SPORT_TYPE_ID": 2,
+    "ALIAS_NAME": "PointGuard",
+    "NAME_ID": 14419389,
+    "POSITION_ID": 6,
+    "POSITION_ORDER": 10,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 19,
+    "SPORT_TYPE_ID": 2,
+    "ALIAS_NAME": "ShootingGuard",
+    "NAME_ID": 14419390,
+    "POSITION_ID": 6,
+    "POSITION_ORDER": 11,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 20,
+    "SPORT_TYPE_ID": 2,
+    "ALIAS_NAME": "SmallForward",
+    "NAME_ID": 14419391,
+    "POSITION_ID": 7,
+    "POSITION_ORDER": 20,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 21,
+    "SPORT_TYPE_ID": 2,
+    "ALIAS_NAME": "PowerForward",
+    "NAME_ID": 14419392,
+    "POSITION_ID": 7,
+    "POSITION_ORDER": 21,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 22,
+    "SPORT_TYPE_ID": 2,
+    "ALIAS_NAME": "Center",
+    "NAME_ID": 14419393,
+    "POSITION_ID": 8,
+    "POSITION_ORDER": 30,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 23,
+    "SPORT_TYPE_ID": 2,
+    "ALIAS_NAME": "GeneralManager",
+    "NAME_ID": 14419394,
+    "POSITION_ID": 5,
+    "POSITION_ORDER": 2,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 24,
+    "SPORT_TYPE_ID": 2,
+    "ALIAS_NAME": "Manager",
+    "NAME_ID": 14419395,
+    "POSITION_ID": 5,
+    "POSITION_ORDER": 4,
+    "MANAGER_POSITION_ORDER": 1,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 25,
+    "SPORT_TYPE_ID": 2,
+    "ALIAS_NAME": "Coach",
+    "NAME_ID": 14419396,
+    "POSITION_ID": 5,
+    "POSITION_ORDER": 1,
+    "MANAGER_POSITION_ORDER": 2,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 26,
+    "SPORT_TYPE_ID": 2,
+    "ALIAS_NAME": "AssistCoach",
+    "NAME_ID": 14419397,
+    "POSITION_ID": 5,
+    "POSITION_ORDER": 3,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 27,
+    "SPORT_TYPE_ID": 4,
+    "ALIAS_NAME": "Center",
+    "NAME_ID": 58388670,
+    "POSITION_ID": 9,
+    "POSITION_ORDER": 1,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 28,
+    "SPORT_TYPE_ID": 4,
+    "ALIAS_NAME": "LeftWing",
+    "NAME_ID": 58388671,
+    "POSITION_ID": 9,
+    "POSITION_ORDER": 2,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 29,
+    "SPORT_TYPE_ID": 4,
+    "ALIAS_NAME": "RightWing",
+    "NAME_ID": 58388672,
+    "POSITION_ID": 9,
+    "POSITION_ORDER": 3,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 32,
+    "SPORT_TYPE_ID": 4,
+    "ALIAS_NAME": "Goalie",
+    "NAME_ID": 58388677,
+    "POSITION_ID": 11,
+    "POSITION_ORDER": 20,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 33,
+    "SPORT_TYPE_ID": 7,
+    "ALIAS_NAME": "FirstBaseman",
+    "NAME_ID": 58388681,
+    "POSITION_ID": 12,
+    "POSITION_ORDER": 1,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 34,
+    "SPORT_TYPE_ID": 7,
+    "ALIAS_NAME": "SecondBaseman",
+    "NAME_ID": 58388682,
+    "POSITION_ID": 12,
+    "POSITION_ORDER": 2,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 35,
+    "SPORT_TYPE_ID": 7,
+    "ALIAS_NAME": "ThirdBaseman",
+    "NAME_ID": 58388683,
+    "POSITION_ID": 12,
+    "POSITION_ORDER": 3,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 36,
+    "SPORT_TYPE_ID": 7,
+    "ALIAS_NAME": "Shortstop",
+    "NAME_ID": 58388684,
+    "POSITION_ID": 12,
+    "POSITION_ORDER": 4,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 37,
+    "SPORT_TYPE_ID": 7,
+    "ALIAS_NAME": "Catcher",
+    "NAME_ID": 58388685,
+    "POSITION_ID": 12,
+    "POSITION_ORDER": 5,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 38,
+    "SPORT_TYPE_ID": 7,
+    "ALIAS_NAME": "StartingPitcher",
+    "NAME_ID": 58388687,
+    "POSITION_ID": 13,
+    "POSITION_ORDER": 21,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 39,
+    "SPORT_TYPE_ID": 7,
+    "ALIAS_NAME": "ReliefPitcher",
+    "NAME_ID": 58388688,
+    "POSITION_ID": 13,
+    "POSITION_ORDER": 22,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 40,
+    "SPORT_TYPE_ID": 7,
+    "ALIAS_NAME": "LeftField",
+    "NAME_ID": 58388690,
+    "POSITION_ID": 14,
+    "POSITION_ORDER": 11,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 41,
+    "SPORT_TYPE_ID": 7,
+    "ALIAS_NAME": "CenterField",
+    "NAME_ID": 58388691,
+    "POSITION_ID": 14,
+    "POSITION_ORDER": 12,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 42,
+    "SPORT_TYPE_ID": 7,
+    "ALIAS_NAME": "RightField",
+    "NAME_ID": 58388692,
+    "POSITION_ID": 14,
+    "POSITION_ORDER": 13,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 43,
+    "SPORT_TYPE_ID": 7,
+    "ALIAS_NAME": "DesignatedHitter",
+    "NAME_ID": 58388694,
+    "POSITION_ID": 15,
+    "POSITION_ORDER": 6,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 44,
+    "SPORT_TYPE_ID": 6,
+    "ALIAS_NAME": "QuarterBack",
+    "NAME_ID": 58388698,
+    "POSITION_ID": 16,
+    "POSITION_ORDER": 1,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 45,
+    "SPORT_TYPE_ID": 6,
+    "ALIAS_NAME": "RunningBack",
+    "NAME_ID": 58388699,
+    "POSITION_ID": 16,
+    "POSITION_ORDER": 2,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 46,
+    "SPORT_TYPE_ID": 6,
+    "ALIAS_NAME": "FullBack",
+    "NAME_ID": 58388700,
+    "POSITION_ID": 16,
+    "POSITION_ORDER": 3,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 47,
+    "SPORT_TYPE_ID": 6,
+    "ALIAS_NAME": "WideReceiver",
+    "NAME_ID": 58388701,
+    "POSITION_ID": 16,
+    "POSITION_ORDER": 4,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 48,
+    "SPORT_TYPE_ID": 6,
+    "ALIAS_NAME": "TightEnd",
+    "NAME_ID": 58388702,
+    "POSITION_ID": 16,
+    "POSITION_ORDER": 5,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 49,
+    "SPORT_TYPE_ID": 6,
+    "ALIAS_NAME": "Kicker",
+    "NAME_ID": 58388704,
+    "POSITION_ID": 17,
+    "POSITION_ORDER": 14,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 50,
+    "SPORT_TYPE_ID": 6,
+    "ALIAS_NAME": "Punter",
+    "NAME_ID": 58388705,
+    "POSITION_ID": 17,
+    "POSITION_ORDER": 15,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 51,
+    "SPORT_TYPE_ID": 6,
+    "ALIAS_NAME": "DefensiveEnd",
+    "NAME_ID": 58388707,
+    "POSITION_ID": 18,
+    "POSITION_ORDER": 9,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 52,
+    "SPORT_TYPE_ID": 6,
+    "ALIAS_NAME": "Linebacker",
+    "NAME_ID": 58388708,
+    "POSITION_ID": 18,
+    "POSITION_ORDER": 11,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 53,
+    "SPORT_TYPE_ID": 6,
+    "ALIAS_NAME": "CornerBack",
+    "NAME_ID": 58388709,
+    "POSITION_ID": 18,
+    "POSITION_ORDER": 12,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 54,
+    "SPORT_TYPE_ID": 6,
+    "ALIAS_NAME": "Center",
+    "NAME_ID": 58388710,
+    "POSITION_ID": 16,
+    "POSITION_ORDER": 6,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 55,
+    "SPORT_TYPE_ID": 6,
+    "ALIAS_NAME": "DefensiveTackle",
+    "NAME_ID": 58388711,
+    "POSITION_ID": 18,
+    "POSITION_ORDER": 10,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 56,
+    "SPORT_TYPE_ID": 6,
+    "ALIAS_NAME": "Safety",
+    "NAME_ID": 58388712,
+    "POSITION_ID": 18,
+    "POSITION_ORDER": 13,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 57,
+    "SPORT_TYPE_ID": 6,
+    "ALIAS_NAME": "OffensiveTackle",
+    "NAME_ID": 58388768,
+    "POSITION_ID": 16,
+    "POSITION_ORDER": 8,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 58,
+    "SPORT_TYPE_ID": 6,
+    "ALIAS_NAME": "Guard",
+    "NAME_ID": 58388769,
+    "POSITION_ID": 16,
+    "POSITION_ORDER": 7,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 59,
+    "SPORT_TYPE_ID": 4,
+    "ALIAS_NAME": "Defenseman",
+    "NAME_ID": 60494066,
+    "POSITION_ID": 10,
+    "POSITION_ORDER": 11,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 60,
+    "SPORT_TYPE_ID": 8,
+    "ALIAS_NAME": "WingSpiker",
+    "NAME_ID": 75383495,
+    "POSITION_ID": 19,
+    "POSITION_ORDER": 2,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 61,
+    "SPORT_TYPE_ID": 8,
+    "ALIAS_NAME": "MiddleBlocker",
+    "NAME_ID": 75383496,
+    "POSITION_ID": 20,
+    "POSITION_ORDER": 4,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 62,
+    "SPORT_TYPE_ID": 8,
+    "ALIAS_NAME": "OppositeSpiker",
+    "NAME_ID": 75383497,
+    "POSITION_ID": 21,
+    "POSITION_ORDER": 3,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 63,
+    "SPORT_TYPE_ID": 8,
+    "ALIAS_NAME": "Setter",
+    "NAME_ID": 75383498,
+    "POSITION_ID": 22,
+    "POSITION_ORDER": 1,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 64,
+    "SPORT_TYPE_ID": 8,
+    "ALIAS_NAME": "Libero",
+    "NAME_ID": 75383499,
+    "POSITION_ID": 23,
+    "POSITION_ORDER": 5,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  },
+  {
+    "FORMATION_POSITION_TYPE_ID": 65,
+    "SPORT_TYPE_ID": 1,
+    "ALIAS_NAME": "Sport Director",
+    "NAME_ID": 77877765,
+    "POSITION_ID": 0,
+    "POSITION_ORDER": null,
+    "MANAGER_POSITION_ORDER": null,
+    "BENCH_ORDER": null
+  }
+]

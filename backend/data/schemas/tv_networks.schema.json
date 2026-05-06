@@ -13,7 +13,7 @@
   },
   "WEBSITE": {
     "type": "string",
-    "default": "https://sport1.maariv.co.il/"
+    "default": null
   },
   "CHANNEL_TYPE": {
     "type": "int",
@@ -28,7 +28,7 @@
     "default": null
   },
   "CONNECTED_BOOKMAKER": {
-    "type": "any",
+    "type": "int",
     "default": null
   },
   "IMG_VER": {

@@ -949,7 +949,17 @@ const STAGE_FIELDS = [
   'USE_NAME', 'IS_FINAL', 'START_DATE', 'END_DATE',
   'HAS_HOME_TABLE', 'HAS_AWAY_TABLE', 'PHASE', 'PRE_VISUAL_BRACKETS', 'INCLUDE_IN_BRACKET',
   'IS_SERIES', 'FILTER_DIVISION', 'CONNECTED_IN_BRACKETS', 'CONNECTED_TO_PREVIOUS_STAGE',
-  'ORDER_BY', 'PRESENTATION_ORDER'
+  'ORDER_BY', 'PRESENTATION_ORDER',
+  'TABLE_WIN_AFTER_EX_POINTS', 'TABLE_LOS_AFTER_EX_POINTS',
+  'TABLE_WIN_AFTER_PEN_POINTS', 'TABLE_LOS_AFTER_PEN_POINTS',
+  'TABLE_OFF_BONUS_POINTS', 'TABLE_DEFF_BONUS_POINTS',
+  'MIN_ROUND_PERIOD', 'MAX_ROUND_PERIOD', 'ROUND_START_TIME',
+  'IGNORE_AWAY_GOALS', 'SHOW_POINTS_DEDUCTION',
+  'POSITION_PARAMETER', 'POSITION_TABLE_NAME',
+  'HIDE_HOME_AWAY_TABLES', 'HIDE_MAIN_TABLE',
+  'ROUND_NAME', 'PHASE_NUM', 'WIN_DESCRIPTION_TEMPLATE_TERM_ID',
+  'AGGREGATED_TABLE_SETTINGS', 'AGGREGATED_TABLE_NAME_ID',
+  'RELEGATION_TABLE_SETTINGS', 'RELEGATION_TABLE_NAME_ID',
 ];
 
 router.post('/competitions/:id/seasons/:seasonNum/stages', async (req, res, next) => {
@@ -2329,11 +2339,45 @@ router.get('/sports', async (req, res, next) => {
   }
 });
 
-// Get all athletes positions
-router.get('/athletes-positions', async (req, res, next) => {
+// Get athlete position types (new flat structure)
+router.get('/athletes-position-types', async (req, res, next) => {
   try {
-    const positions = await dataLoader.loadData('athletes_positions.json');
-    res.json({ success: true, data: positions });
+    const [positionTypes, terms] = await Promise.all([
+      dataLoader.loadData('athletes_position_types.json'),
+      dataLoader.loadData('terms.json'),
+    ]);
+    const enriched = positionTypes.map(pt => {
+      const term = terms.find(t => t.id === pt.NAME_ID);
+      let name = pt.ALIAS_NAME;
+      if (term && term.values) {
+        const eng = term.values.find(v => v.languageId === 1);
+        if (eng) name = eng.value;
+      }
+      return { ...pt, name };
+    });
+    res.json({ success: true, data: enriched });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Get athlete formation position types (new flat structure)
+router.get('/athletes-formation-position-types', async (req, res, next) => {
+  try {
+    const [formationTypes, terms] = await Promise.all([
+      dataLoader.loadData('athletes_formation_position_types.json'),
+      dataLoader.loadData('terms.json'),
+    ]);
+    const enriched = formationTypes.map(fpt => {
+      const term = terms.find(t => t.id === fpt.NAME_ID);
+      let name = fpt.ALIAS_NAME;
+      if (term && term.values) {
+        const eng = term.values.find(v => v.languageId === 1);
+        if (eng) name = eng.value;
+      }
+      return { ...fpt, name };
+    });
+    res.json({ success: true, data: enriched });
   } catch (error) {
     next(error);
   }
@@ -2360,8 +2404,15 @@ router.get('/genders', async (req, res, next) => {
 
 router.get('/competition-types', async (req, res, next) => {
   try {
-    const types = await dataLoader.loadData('competition_types.json');
-    res.json({ success: true, data: types || [] });
+    const allEnums = await dataLoader.loadData('enums.json');
+    const types = (allEnums || [])
+      .filter(e => e.ALIAS_NAME === 'ECompetitonTypes')
+      .map(e => ({
+        COMPETITION_TYPE_ID: e.ITEM_ID,
+        COMPETITION_TYPE: e.ALIAS_NAME1,
+        DESCRIPTION: `${e.ALIAS_NAME1} competition`
+      }));
+    res.json({ success: true, data: types });
   } catch (error) {
     next(error);
   }
@@ -2378,8 +2429,14 @@ router.get('/standing-types', async (req, res, next) => {
 
 router.get('/stages-types', async (req, res, next) => {
   try {
-    const types = await dataLoader.loadData('stages_types.json');
-    res.json({ success: true, data: types || [] });
+    const allEnums = await dataLoader.loadData('enums.json');
+    const types = (allEnums || [])
+      .filter(e => e.ALIAS_NAME === 'ECompetitonStageTypes')
+      .map(e => ({
+        STAGE_TYPE_ID: e.ITEM_ID,
+        STAGE_TYPE: e.ALIAS_NAME1
+      }));
+    res.json({ success: true, data: types });
   } catch (error) {
     next(error);
   }
@@ -2396,7 +2453,23 @@ router.get('/sub-sport-types', async (req, res, next) => {
 
 router.get('/competitor-types', async (req, res, next) => {
   try {
-    const types = await dataLoader.loadData('competitor_types.json');
+    const allEnums = await dataLoader.loadData('enums.json');
+    const types = (allEnums || [])
+      .filter(e => e.ALIAS_NAME === 'ECompetitorType')
+      .map(e => ({
+        COMPETITOR_TYPE_ID: e.ITEM_ID,
+        COMPETITOR_TYPE: e.ALIAS_NAME1,
+        DESCRIPTION: `${e.ALIAS_NAME1} competitor`
+      }));
+    res.json({ success: true, data: types });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/table-types', async (req, res, next) => {
+  try {
+    const types = await dataLoader.loadData('table_types.json');
     res.json({ success: true, data: types || [] });
   } catch (error) {
     next(error);
@@ -2424,7 +2497,14 @@ router.get('/priority-update-types', async (req, res, next) => {
 // Get all statistics types
 router.get('/statistics-types', async (req, res, next) => {
   try {
-    const statisticsTypes = await dataLoader.loadData('athlete_statistics_types.json');
+    const allEnums = await dataLoader.loadData('enums.json');
+    const statisticsTypes = (allEnums || [])
+      .filter(e => e.ALIAS_NAME === 'ESoccerPlayerStatistics')
+      .map(e => ({
+        STATISTICS_TYPE_ID: e.ITEM_ID,
+        STATISTICS_TYPE: e.ALIAS_NAME1,
+        NAME_ID: null
+      }));
     res.json({ success: true, data: statisticsTypes });
   } catch (error) {
     next(error);
@@ -2599,6 +2679,22 @@ router.get('/surfaces', async (req, res, next) => {
   }
 });
 
+// Get tennis court surface types from enums
+router.get('/tennis-court-surfaces', async (req, res, next) => {
+  try {
+    const allEnums = await dataLoader.loadData('enums.json');
+    const surfaces = (allEnums || [])
+      .filter(e => e.ALIAS_NAME === 'ETennisCourtSurfaceTypes')
+      .map(e => ({
+        SURFACE_ID: e.ITEM_ID,
+        SURFACE_NAME: e.ALIAS_NAME1
+      }));
+    res.json({ success: true, data: surfaces });
+  } catch (error) {
+    next(error);
+  }
+});
+
 // Get all tennis backhand types
 router.get('/tennis-backhand-types', async (req, res, next) => {
   try {
@@ -2714,6 +2810,15 @@ router.get('/sequence-details/:sequence', async (req, res, next) => {
     }));
 
     res.json({ success: true, data: { sequence: seq, items } });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/cities', async (req, res, next) => {
+  try {
+    const cities = await dataLoader.loadData('cities.json');
+    res.json({ success: true, data: cities || [] });
   } catch (error) {
     next(error);
   }

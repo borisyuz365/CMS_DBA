@@ -309,13 +309,13 @@ function TvNetworksList() {
   };
 
   const handleOpenCreateDialog = () => {
+    const broadcastType = tvNetworkTypes.find((t) => t.NAME === 'Broadcast');
     setCreateFormData({
       name: '',
-      COUNTRY_IDS: [],
+      COUNTRY_ID: null,
       WEBSITE: '',
-      CHANNEL_TYPE: '',
+      CHANNEL_TYPE: broadcastType ? broadcastType.ID : '',
       IS_INTERNATIONAL: false,
-      ORDER_LEVEL: '',
       PROMOTE_IN_MATCH_REMINDER_NOTIFICATION: true,
     });
     setCreateFormErrors({});
@@ -326,11 +326,10 @@ function TvNetworksList() {
     setCreateDialogOpen(false);
     setCreateFormData({
       name: '',
-      COUNTRY_IDS: [],
+      COUNTRY_ID: null,
       WEBSITE: '',
       CHANNEL_TYPE: '',
       IS_INTERNATIONAL: false,
-      ORDER_LEVEL: '',
       PROMOTE_IN_MATCH_REMINDER_NOTIFICATION: true,
     });
     setCreateFormErrors({});
@@ -352,6 +351,12 @@ function TvNetworksList() {
     if (!createFormData.name || String(createFormData.name).trim() === '') {
       errors.name = 'Name is required';
     }
+    if (!createFormData.COUNTRY_ID) {
+      errors.COUNTRY_ID = 'Country is required';
+    }
+    if (createFormData.CHANNEL_TYPE === '' || createFormData.CHANNEL_TYPE == null) {
+      errors.CHANNEL_TYPE = 'Channel Type is required';
+    }
     setCreateFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -369,11 +374,10 @@ function TvNetworksList() {
       });
       const payload = {
         NAME_ID: newTerm.id,
-        COUNTRY_IDS: createFormData.COUNTRY_IDS || [],
+        COUNTRY_IDS: createFormData.COUNTRY_ID ? [createFormData.COUNTRY_ID] : [],
         WEBSITE: createFormData.WEBSITE?.trim() || null,
         CHANNEL_TYPE: createFormData.CHANNEL_TYPE !== '' ? parseInt(createFormData.CHANNEL_TYPE) : null,
         IS_INTERNATIONAL: createFormData.IS_INTERNATIONAL || false,
-        ORDER_LEVEL: createFormData.ORDER_LEVEL !== '' ? parseInt(createFormData.ORDER_LEVEL) : null,
         PROMOTE_IN_MATCH_REMINDER_NOTIFICATION: createFormData.PROMOTE_IN_MATCH_REMINDER_NOTIFICATION !== false,
       };
       const newNetwork = await api.createTvNetwork(payload);
@@ -650,11 +654,20 @@ function TvNetworksList() {
       },
       {
         field: 'countryName',
-        header: 'Countries',
+        header: 'Country',
         render: (value, row) => {
           const rowCountries = row.countries || [];
           if (rowCountries.length === 0) return '-';
-          if (rowCountries.length === 1) return rowCountries[0].name;
+          return rowCountries[0].name;
+        },
+      },
+      {
+        field: 'relatedCountries',
+        header: 'Related Countries',
+        render: (value, row) => {
+          const related = row.relatedCountries || [];
+          if (related.length === 0) return '-';
+          if (related.length === 1) return related[0].name;
           return (
             <Typography
               sx={{
@@ -667,11 +680,11 @@ function TvNetworksList() {
               }}
               onClick={(e) => {
                 e.stopPropagation();
-                setCountriesDialogData(rowCountries);
+                setCountriesDialogData(related);
                 setCountriesDialogOpen(true);
               }}
             >
-              {rowCountries.length} countries
+              {related.length} countries
             </Typography>
           );
         },
@@ -1349,14 +1362,20 @@ function TvNetworksList() {
             </Grid>
             <Grid item xs={12} md={6}>
               <Autocomplete
-                multiple
                 options={countries}
                 getOptionLabel={(o) => (o.EMOJI ? `${o.EMOJI} ` : '') + (o.name || '')}
-                value={countries.filter((c) => (createFormData.COUNTRY_IDS || []).includes(c.COUNTRY_ID))}
-                onChange={(e, newVal) => handleCreateFormChange('COUNTRY_IDS', newVal.map((c) => c.COUNTRY_ID))}
+                value={countries.find((c) => c.COUNTRY_ID === createFormData.COUNTRY_ID) || null}
+                onChange={(e, newVal) => handleCreateFormChange('COUNTRY_ID', newVal ? newVal.COUNTRY_ID : null)}
                 isOptionEqualToValue={(option, val) => option.COUNTRY_ID === val.COUNTRY_ID}
                 renderInput={(params) => (
-                  <TextField {...params} label="Countries" sx={{ '& .MuiOutlinedInput-root': { fontSize: '0.875rem' } }} />
+                  <TextField
+                    {...params}
+                    required
+                    label="Country"
+                    error={!!createFormErrors.COUNTRY_ID}
+                    helperText={createFormErrors.COUNTRY_ID}
+                    sx={{ '& .MuiOutlinedInput-root': { fontSize: '0.875rem' } }}
+                  />
                 )}
                 ListboxProps={{ style: { maxHeight: '240px', overflow: 'auto' } }}
               />
@@ -1371,7 +1390,7 @@ function TvNetworksList() {
               />
             </Grid>
             <Grid item xs={12} md={6}>
-              <FormControl fullWidth>
+              <FormControl fullWidth required error={!!createFormErrors.CHANNEL_TYPE}>
                 <InputLabel sx={{ fontSize: '0.875rem' }}>Channel Type</InputLabel>
                 <Select
                   value={createFormData.CHANNEL_TYPE ?? ''}
@@ -1379,11 +1398,15 @@ function TvNetworksList() {
                   onChange={(e) => handleCreateFormChange('CHANNEL_TYPE', e.target.value)}
                   sx={{ fontSize: '0.875rem' }}
                 >
-                  <MenuItem value="">None</MenuItem>
                   {tvNetworkTypes.map((t) => (
                     <MenuItem key={t.ID} value={t.ID}>{t.NAME}</MenuItem>
                   ))}
                 </Select>
+                {createFormErrors.CHANNEL_TYPE && (
+                  <Typography variant="caption" color="error" sx={{ mt: 0.5, ml: 1.75, fontSize: '0.75rem' }}>
+                    {createFormErrors.CHANNEL_TYPE}
+                  </Typography>
+                )}
               </FormControl>
             </Grid>
             <Grid item xs={12} md={6}>
@@ -1396,16 +1419,6 @@ function TvNetworksList() {
                 }
                 label="International"
                 sx={{ '& .MuiFormControlLabel-label': { fontSize: '0.875rem', fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif' } }}
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                type="number"
-                label="Order Level"
-                value={createFormData.ORDER_LEVEL ?? ''}
-                onChange={(e) => handleCreateFormChange('ORDER_LEVEL', e.target.value)}
-                sx={{ '& .MuiOutlinedInput-root': { fontSize: '0.875rem' } }}
               />
             </Grid>
             <Grid item xs={12} md={6}>
@@ -1479,7 +1492,7 @@ function TvNetworksList() {
         fullWidth
       >
         <DialogTitle sx={{ fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif', fontWeight: 600, fontSize: '1.1rem', borderBottom: '1px solid #EAECF0', pb: 2 }}>
-          Countries ({countriesDialogData.length})
+          Related Countries ({countriesDialogData.length})
         </DialogTitle>
         <DialogContent sx={{ pt: 2 }}>
           <Table size="small">

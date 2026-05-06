@@ -95,6 +95,7 @@ function CompetitorsList() {
   const [allCompetitors, setAllCompetitors] = useState([]);
   const [languages, setLanguages] = useState([]);
   const [sports, setSports] = useState([]);
+  const [competitorTypes, setCompetitorTypes] = useState([]);
 
   // Term Edit Modal state
   const [termModalOpen, setTermModalOpen] = useState(false);
@@ -127,8 +128,6 @@ function CompetitorsList() {
     COMPETITOR_TYPE: '',
     COUNTRY_ID: '',
     GENDER: '',
-    MAIN_COMPETITION: '',
-    FOUNDED: '',
   });
   const [createFormErrors, setCreateFormErrors] = useState({});
 
@@ -153,13 +152,14 @@ function CompetitorsList() {
       
       // Load only dropdown data (countries, competitions, languages, sports, terms, categories)
       // Use Promise.allSettled so failures don't block the page
-      const [countriesResult, competitionsResult, languagesResult, sportsResult, termsResult, categoriesResult] = await Promise.allSettled([
+      const [countriesResult, competitionsResult, languagesResult, sportsResult, termsResult, categoriesResult, competitorTypesResult] = await Promise.allSettled([
         api.getCountries(),
         api.getCompetitions(),
         api.getLanguages(),
         api.getSports(),
         api.getTerms(),
         api.getCategories(),
+        api.getCompetitorTypes(),
       ]);
       
       if (countriesResult.status === 'fulfilled') {
@@ -204,6 +204,13 @@ function CompetitorsList() {
       } else {
         console.warn('Failed to load categories:', categoriesResult.reason);
         setAllCategories([]);
+      }
+
+      if (competitorTypesResult.status === 'fulfilled') {
+        setCompetitorTypes(competitorTypesResult.value || []);
+      } else {
+        console.warn('Failed to load competitor types:', competitorTypesResult.reason);
+        setCompetitorTypes([]);
       }
       
     } catch (err) {
@@ -676,45 +683,8 @@ function CompetitorsList() {
     },
     {
       field: 'competitionName',
-      header: 'Competition',
-      editable: true,
-      editField: 'MAIN_COMPETITION',
-      render: (value, row) => {
-        if (isEditMode) {
-          const currentValue = pendingChanges[row.COMPETITOR_ID]?.MAIN_COMPETITION ?? row.MAIN_COMPETITION;
-          // Filter competitions by sport type
-          const sportTypeId = pendingChanges[row.COMPETITOR_ID]?.SPORT_TYPE_ID ?? row.SPORT_TYPE_ID;
-          const availableCompetitions = sportTypeId 
-            ? competitions.filter(c => c.SPORT_TYPE_ID === sportTypeId)
-            : competitions;
-          // Ensure value exists in options
-          const validValue = availableCompetitions.some(c => c.COMPETITION_ID === currentValue) ? currentValue : '';
-          return (
-            <FormControl size="small" fullWidth>
-              <Select
-                value={validValue || ''}
-                onChange={(e) => handleFieldChange(row.COMPETITOR_ID, 'MAIN_COMPETITION', e.target.value)}
-                sx={{
-                  height: '32px',
-                  fontSize: '0.875rem',
-                  '& .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#1976d2',
-                  },
-                }}
-              >
-                {availableCompetitions.length > 0 ? availableCompetitions.map(comp => (
-                  <MenuItem key={comp.COMPETITION_ID} value={comp.COMPETITION_ID}>
-                    {comp.name || '-'}
-                  </MenuItem>
-                )) : (
-                  <MenuItem value="" disabled>Loading...</MenuItem>
-                )}
-              </Select>
-            </FormControl>
-          );
-        }
-        return value || '-';
-      },
+      header: 'Main Competition',
+      render: (value) => value || '-',
     },
     {
       field: 'FOUNDED',
@@ -754,8 +724,7 @@ function CompetitorsList() {
       render: (value, row) => {
         if (isEditMode) {
           const currentValue = pendingChanges[row.COMPETITOR_ID]?.COMPETITOR_TYPE ?? row.COMPETITOR_TYPE;
-          // Ensure value is 1 or 2
-          const validValue = (currentValue === 1 || currentValue === 2) ? currentValue : '';
+          const validValue = competitorTypes.some(ct => ct.COMPETITOR_TYPE_ID === currentValue) ? currentValue : '';
           return (
             <FormControl size="small" fullWidth>
               <Select
@@ -769,8 +738,9 @@ function CompetitorsList() {
                   },
                 }}
               >
-                <MenuItem value={1}>Team</MenuItem>
-                <MenuItem value={2}>Club</MenuItem>
+                {competitorTypes.map((ct) => (
+                  <MenuItem key={ct.COMPETITOR_TYPE_ID} value={ct.COMPETITOR_TYPE_ID}>{ct.COMPETITOR_TYPE}</MenuItem>
+                ))}
               </Select>
             </FormControl>
           );
@@ -781,84 +751,43 @@ function CompetitorsList() {
     {
       field: 'HOME_MAIN_COLOR',
       header: 'Colors',
-      editable: true,
-      editField: 'HOME_MAIN_COLOR',
       render: (value, row) => {
-        if (isEditMode) {
-          const homeMain = numberToHex(pendingChanges[row.COMPETITOR_ID]?.HOME_MAIN_COLOR ?? row.HOME_MAIN_COLOR);
-          const homeSecondary = numberToHex(pendingChanges[row.COMPETITOR_ID]?.HOME_SECONDARY_COLOR ?? row.HOME_SECONDARY_COLOR);
-          return (
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-              <TextField
-                type="color"
-                size="small"
-                value={homeMain || '#000000'}
-                onChange={(e) => handleFieldChange(row.COMPETITOR_ID, 'HOME_MAIN_COLOR', e.target.value)}
-                sx={{
-                  width: '40px',
-                  height: '32px',
-                  '& .MuiOutlinedInput-root': {
-                    height: '32px',
-                    padding: '4px',
-                  },
-                  '& .MuiOutlinedInput-input': {
-                    padding: '4px',
-                    height: '24px',
-                  },
-                }}
-                title="Home Main Color"
-              />
-              <TextField
-                type="color"
-                size="small"
-                value={homeSecondary || '#ffffff'}
-                onChange={(e) => handleFieldChange(row.COMPETITOR_ID, 'HOME_SECONDARY_COLOR', e.target.value)}
-                sx={{
-                  width: '40px',
-                  height: '32px',
-                  '& .MuiOutlinedInput-root': {
-                    height: '32px',
-                    padding: '4px',
-                  },
-                  '& .MuiOutlinedInput-input': {
-                    padding: '4px',
-                    height: '24px',
-                  },
-                }}
-                title="Home Secondary Color"
-              />
-            </Box>
-          );
-        }
-        const homeMain = numberToHex(row.HOME_MAIN_COLOR);
-        const homeSecondary = numberToHex(row.HOME_SECONDARY_COLOR);
+        const mainHex = numberToHex(row.HOME_MAIN_COLOR);
+        const secHex = numberToHex(row.HOME_SECONDARY_COLOR);
+        const handleCopy = (hex, label) => {
+          if (!hex) return;
+          navigator.clipboard.writeText(hex).then(() => {
+            setSnackbar({ open: true, message: `${label} color ${hex} copied to clipboard`, severity: 'success' });
+          });
+        };
         return (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-            {homeMain && (
+            {mainHex ? (
               <Box
+                onClick={(e) => { e.stopPropagation(); handleCopy(mainHex, 'Home Main'); }}
                 sx={{
-                  width: 20,
-                  height: 20,
-                  backgroundColor: homeMain,
-                  border: '1px solid #e0e0e0',
-                  borderRadius: '2px',
+                  width: 28, height: 28, borderRadius: 1, border: '1px solid #ddd',
+                  bgcolor: mainHex, flexShrink: 0, cursor: 'pointer',
+                  '&:hover': { outline: '2px solid #1976d2', outlineOffset: 1 },
                 }}
-                title={`Home Main: ${homeMain}`}
+                title={`Home Main: ${mainHex}`}
               />
+            ) : (
+              <Box sx={{ width: 28, height: 28, borderRadius: 1, border: '1px dashed #ccc', flexShrink: 0 }} title="Home Main: none" />
             )}
-            {homeSecondary && (
+            {secHex ? (
               <Box
+                onClick={(e) => { e.stopPropagation(); handleCopy(secHex, 'Home Secondary'); }}
                 sx={{
-                  width: 20,
-                  height: 20,
-                  backgroundColor: homeSecondary,
-                  border: '1px solid #e0e0e0',
-                  borderRadius: '2px',
+                  width: 28, height: 28, borderRadius: 1, border: '1px solid #ddd',
+                  bgcolor: secHex, flexShrink: 0, cursor: 'pointer',
+                  '&:hover': { outline: '2px solid #1976d2', outlineOffset: 1 },
                 }}
-                title={`Home Secondary: ${homeSecondary}`}
+                title={`Home Secondary: ${secHex}`}
               />
+            ) : (
+              <Box sx={{ width: 28, height: 28, borderRadius: 1, border: '1px dashed #ccc', flexShrink: 0 }} title="Home Secondary: none" />
             )}
-            {!homeMain && !homeSecondary && '-'}
           </Box>
         );
       },
@@ -1295,8 +1224,6 @@ function CompetitorsList() {
       COMPETITOR_TYPE: '',
       COUNTRY_ID: '',
       GENDER: '',
-      MAIN_COMPETITION: '',
-      FOUNDED: '',
     });
     setCreateFormErrors({});
     setCreateDialogOpen(true);
@@ -1311,24 +1238,13 @@ function CompetitorsList() {
       COMPETITOR_TYPE: '',
       COUNTRY_ID: '',
       GENDER: '',
-      MAIN_COMPETITION: '',
-      FOUNDED: '',
     });
     setCreateFormErrors({});
   };
 
   // Handle create form change
   const handleCreateFormChange = (field, value) => {
-    setCreateFormData(prev => {
-      const updated = { ...prev, [field]: value };
-      
-      // If sport type changed, clear competition (competition depends on sport type)
-      if (field === 'SPORT_TYPE_ID') {
-        updated.MAIN_COMPETITION = '';
-      }
-      
-      return updated;
-    });
+    setCreateFormData(prev => ({ ...prev, [field]: value }));
     
     // Clear error for this field
     if (createFormErrors[field]) {
@@ -1354,6 +1270,14 @@ function CompetitorsList() {
     
     if (!createFormData.COMPETITOR_TYPE) {
       errors.COMPETITOR_TYPE = 'Competitor Type is required';
+    }
+
+    if (!createFormData.COUNTRY_ID) {
+      errors.COUNTRY_ID = 'Country is required';
+    }
+
+    if (!createFormData.GENDER) {
+      errors.GENDER = 'Gender is required';
     }
     
     setCreateFormErrors(errors);
@@ -1390,8 +1314,6 @@ function CompetitorsList() {
         COMPETITOR_TYPE: createFormData.COMPETITOR_TYPE ? parseInt(createFormData.COMPETITOR_TYPE) : null,
         COUNTRY_ID: createFormData.COUNTRY_ID ? parseInt(createFormData.COUNTRY_ID) : null,
         GENDER: createFormData.GENDER ? parseInt(createFormData.GENDER) : null,
-        MAIN_COMPETITION: createFormData.MAIN_COMPETITION ? parseInt(createFormData.MAIN_COMPETITION) : null,
-        FOUNDED: createFormData.FOUNDED ? parseInt(createFormData.FOUNDED) : null,
       };
 
       const newCompetitor = await api.createCompetitor(competitorData);
@@ -2317,8 +2239,9 @@ function CompetitorsList() {
                   <MenuItem value="">
                     <em>Please Select</em>
                   </MenuItem>
-                  <MenuItem value={1}>Team</MenuItem>
-                  <MenuItem value={2}>Club</MenuItem>
+                  {competitorTypes.map((ct) => (
+                    <MenuItem key={ct.COMPETITOR_TYPE_ID} value={ct.COMPETITOR_TYPE_ID}>{ct.COMPETITOR_TYPE}</MenuItem>
+                  ))}
                 </Select>
                 {createFormErrors.COMPETITOR_TYPE && (
                   <Typography variant="caption" color="error" sx={{ mt: 0.5, ml: 1.75 }}>
@@ -2328,86 +2251,61 @@ function CompetitorsList() {
               </FormControl>
             </Grid>
 
-            {/* Country */}
+            {/* Country - Required */}
             <Grid item xs={12} md={6}>
-              <FormControl fullWidth>
+              <FormControl fullWidth required>
                 <InputLabel sx={{ fontSize: '0.875rem' }}>Country</InputLabel>
                 <Select
                   value={createFormData.COUNTRY_ID || ''}
                   label="Country"
                   onChange={(e) => handleCreateFormChange('COUNTRY_ID', e.target.value ? parseInt(e.target.value) : '')}
+                  error={!!createFormErrors.COUNTRY_ID}
                   sx={{
                     fontSize: '0.875rem',
                   }}
                 >
-                  <MenuItem value="">None</MenuItem>
+                  <MenuItem value="">
+                    <em>Please Select</em>
+                  </MenuItem>
                   {countries.map(country => (
                     <MenuItem key={country.COUNTRY_ID} value={country.COUNTRY_ID}>
                       {country.EMOJI ? `${country.EMOJI} ` : ''}{country.name}
                     </MenuItem>
                   ))}
                 </Select>
+                {createFormErrors.COUNTRY_ID && (
+                  <Typography variant="caption" color="error" sx={{ mt: 0.5, ml: 1.75 }}>
+                    {createFormErrors.COUNTRY_ID}
+                  </Typography>
+                )}
               </FormControl>
             </Grid>
 
-            {/* Gender */}
+            {/* Gender - Required */}
             <Grid item xs={12} md={6}>
-              <FormControl fullWidth>
+              <FormControl fullWidth required>
                 <InputLabel sx={{ fontSize: '0.875rem' }}>Gender</InputLabel>
                 <Select
                   value={createFormData.GENDER || ''}
                   label="Gender"
                   onChange={(e) => handleCreateFormChange('GENDER', e.target.value ? parseInt(e.target.value) : '')}
+                  error={!!createFormErrors.GENDER}
                   sx={{
                     fontSize: '0.875rem',
                   }}
                 >
-                  <MenuItem value="">None</MenuItem>
+                  <MenuItem value="">
+                    <em>Please Select</em>
+                  </MenuItem>
                   <MenuItem value={1}>Male</MenuItem>
                   <MenuItem value={2}>Female</MenuItem>
                 </Select>
+                {createFormErrors.GENDER && (
+                  <Typography variant="caption" color="error" sx={{ mt: 0.5, ml: 1.75 }}>
+                    {createFormErrors.GENDER}
+                  </Typography>
+                )}
               </FormControl>
-            </Grid>
-
-            {/* Competition */}
-            <Grid item xs={12} md={6}>
-              <FormControl fullWidth>
-                <InputLabel sx={{ fontSize: '0.875rem' }}>Main Competition</InputLabel>
-                <Select
-                  value={createFormData.MAIN_COMPETITION || ''}
-                  label="Main Competition"
-                  onChange={(e) => handleCreateFormChange('MAIN_COMPETITION', e.target.value ? parseInt(e.target.value) : '')}
-                  disabled={!createFormData.SPORT_TYPE_ID}
-                  sx={{
-                    fontSize: '0.875rem',
-                  }}
-                >
-                  <MenuItem value="">None</MenuItem>
-                  {competitions
-                    .filter(c => !createFormData.SPORT_TYPE_ID || c.SPORT_TYPE_ID === parseInt(createFormData.SPORT_TYPE_ID))
-                    .map(comp => (
-                      <MenuItem key={comp.COMPETITION_ID} value={comp.COMPETITION_ID}>
-                        {comp.name || '-'}
-                      </MenuItem>
-                    ))}
-                </Select>
-              </FormControl>
-            </Grid>
-
-            {/* Founded */}
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                type="number"
-                label="Founded (Year)"
-                value={createFormData.FOUNDED}
-                onChange={(e) => handleCreateFormChange('FOUNDED', e.target.value)}
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    fontSize: '0.875rem',
-                  },
-                }}
-              />
             </Grid>
           </Grid>
         </DialogContent>

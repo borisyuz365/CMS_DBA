@@ -27,7 +27,7 @@ function resolveTermName(term, languageId = null) {
 /**
  * Enrich TV network with related entities
  */
-async function enrichTvNetwork(network, terms, countries, languageId = null) {
+async function enrichTvNetwork(network, terms, countries, countriesRestrictions, languageId = null) {
   const enriched = { ...network };
   if (network.NAME_ID) {
     const nameTerm = terms.find(t => t.id === network.NAME_ID);
@@ -51,6 +51,17 @@ async function enrichTvNetwork(network, terms, countries, languageId = null) {
     ? enriched.countries.map(c => c.name).join(', ')
     : null;
 
+  const relatedCountryIds = countriesRestrictions
+    .filter(r => r.TV_NETWORK_ID === network.TV_NETWORK_ID)
+    .map(r => r.COUNTRY_ID);
+  const uniqueRelatedIds = [...new Set(relatedCountryIds)];
+  enriched.relatedCountries = uniqueRelatedIds.map(cid => {
+    const country = countries.find(c => c.COUNTRY_ID === cid);
+    return country
+      ? { COUNTRY_ID: cid, name: country.name || country.ALIAS_NAME || `Country ${cid}` }
+      : { COUNTRY_ID: cid, name: `Country ${cid}` };
+  });
+
   return enriched;
 }
 
@@ -62,11 +73,12 @@ class TvNetworksController {
     try {
       const { tvNetworkId, country, channelName, language } = req.query;
 
-      const [networks, terms, countries, languages] = await Promise.all([
+      const [networks, terms, countries, languages, countriesRestrictions] = await Promise.all([
         dataLoader.loadData('tv_networks.json'),
         dataLoader.loadData('terms.json'),
         dataLoader.loadData('countries.json'),
-        dataLoader.loadData('languages.json').catch(() => [])
+        dataLoader.loadData('languages.json').catch(() => []),
+        dataLoader.loadData('tv_networks_countries_restrictions.json').catch(() => [])
       ]);
 
       let languageId = null;
@@ -88,7 +100,11 @@ class TvNetworksController {
             const netCountryIds = Array.isArray(n.COUNTRY_IDS) && n.COUNTRY_IDS.length > 0
               ? n.COUNTRY_IDS
               : (n.COUNTRY_ID ? [n.COUNTRY_ID] : []);
-            return netCountryIds.some(cid => countryIds.includes(cid));
+            if (netCountryIds.some(cid => countryIds.includes(cid))) return true;
+            const relatedIds = countriesRestrictions
+              .filter(r => r.TV_NETWORK_ID === n.TV_NETWORK_ID)
+              .map(r => r.COUNTRY_ID);
+            return relatedIds.some(cid => countryIds.includes(cid));
           });
         }
       }
@@ -103,7 +119,7 @@ class TvNetworksController {
       }
 
       let enriched = await Promise.all(
-        filtered.map(n => enrichTvNetwork(n, terms, countries, languageId))
+        filtered.map(n => enrichTvNetwork(n, terms, countries, countriesRestrictions, languageId))
       );
 
       if (channelName) {
@@ -124,10 +140,11 @@ class TvNetworksController {
         return res.status(400).json({ success: false, error: { message: 'Invalid TV network ID' } });
       }
 
-      const [networks, terms, countries] = await Promise.all([
+      const [networks, terms, countries, countriesRestrictions] = await Promise.all([
         dataLoader.loadData('tv_networks.json'),
         dataLoader.loadData('terms.json'),
-        dataLoader.loadData('countries.json')
+        dataLoader.loadData('countries.json'),
+        dataLoader.loadData('tv_networks_countries_restrictions.json').catch(() => [])
       ]);
 
       const network = networks.find(n => n.TV_NETWORK_ID === id);
@@ -138,7 +155,7 @@ class TvNetworksController {
         });
       }
 
-      const enriched = await enrichTvNetwork(network, terms, countries, null);
+      const enriched = await enrichTvNetwork(network, terms, countries, countriesRestrictions, null);
       res.json({ success: true, data: enriched });
     } catch (error) {
       next(error);
@@ -194,11 +211,12 @@ class TvNetworksController {
       networks.push(newNetwork);
       await dataLoader.saveData('tv_networks.json', networks);
 
-      const [terms, countries] = await Promise.all([
+      const [terms, countries, countriesRestrictions] = await Promise.all([
         dataLoader.loadData('terms.json'),
-        dataLoader.loadData('countries.json')
+        dataLoader.loadData('countries.json'),
+        dataLoader.loadData('tv_networks_countries_restrictions.json').catch(() => [])
       ]);
-      const enriched = await enrichTvNetwork(newNetwork, terms, countries, null);
+      const enriched = await enrichTvNetwork(newNetwork, terms, countries, countriesRestrictions, null);
 
       res.status(201).json({ success: true, data: enriched });
     } catch (error) {
@@ -272,6 +290,32 @@ class TvNetworksController {
         success: true,
         data: { updated: updatedCount, errors: errors.length > 0 ? errors : undefined }
       });
+    } catch (error) {
+      next(error);
+    }
+  }
+  async updateRelatedCountries(req, res, next) {
+    try {
+      const tvNetworkId = parseInt(req.params.id);
+      if (isNaN(tvNetworkId)) {
+        return res.status(400).json({ success: false, error: { message: 'Invalid TV network ID' } });
+      }
+
+      const { countryIds } = req.body;
+      if (!Array.isArray(countryIds)) {
+        return res.status(400).json({ success: false, error: { message: 'countryIds must be an array' } });
+      }
+
+      const restrictions = await dataLoader.loadData('tv_networks_countries_restrictions.json').catch(() => []);
+      const filtered = restrictions.filter(r => r.TV_NETWORK_ID !== tvNetworkId);
+      const newEntries = countryIds
+        .map(id => parseInt(id))
+        .filter(id => !isNaN(id))
+        .map(cid => ({ TV_NETWORK_ID: tvNetworkId, COUNTRY_ID: cid }));
+      const updated = [...filtered, ...newEntries];
+      await dataLoader.saveData('tv_networks_countries_restrictions.json', updated);
+
+      res.json({ success: true, data: { tvNetworkId, countryIds: newEntries.map(e => e.COUNTRY_ID) } });
     } catch (error) {
       next(error);
     }
