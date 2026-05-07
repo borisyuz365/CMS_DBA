@@ -38,7 +38,227 @@ async function getDefaultsFromSchema() {
   return defaults;
 }
 
+const ENTITY_TYPE_LABELS = {
+  1: 'Game',
+  2: 'Country',
+  3: 'Competition',
+  4: 'Competitor',
+  5: 'Game',
+  6: 'Athlete',
+};
+
+const TARGET_TYPE_LABELS = {
+  1: 'Language',
+  2: 'Country',
+};
+
 class FilterController {
+  async getById(req, res, next) {
+    try {
+      const filterId = parseInt(req.params.id, 10);
+      if (isNaN(filterId)) {
+        return res.status(400).json({ success: false, error: { message: 'Invalid filter ID' } });
+      }
+
+      const [filters, terms, entities, targets, languages, countriesData, games] = await Promise.all([
+        dataLoader.loadData('filters.json'),
+        dataLoader.loadData('terms.json'),
+        dataLoader.loadData('filter_entities.json'),
+        dataLoader.loadData('filter_targets.json'),
+        dataLoader.loadData('languages.json'),
+        dataLoader.loadData('countries.json'),
+        dataLoader.loadData('games.json'),
+      ]);
+
+      const filtersArr = Array.isArray(filters) ? filters : [];
+      const filter = filtersArr.find((f) => f.FILTER_ID === filterId);
+      if (!filter) {
+        return res.status(404).json({ success: false, error: { message: 'Filter not found' } });
+      }
+
+      const termsArr = Array.isArray(terms) ? terms : [];
+      const termMap = new Map(termsArr.map((t) => [t.id, t]));
+      const term = termMap.get(filter.NAME_ID);
+
+      const langsArr = Array.isArray(languages) ? languages : [];
+      const langMap = new Map(langsArr.map((l) => [l.id, l]));
+      const countriesArr = Array.isArray(countriesData) ? countriesData : [];
+      const countryMap = new Map(countriesArr.map((c) => [c.COUNTRY_ID, c]));
+      const gamesArr = Array.isArray(games) ? games : [];
+      const gameMap = new Map(gamesArr.map((g) => [g.GAME_ID, g]));
+
+      const filterEntities = (Array.isArray(entities) ? entities : [])
+        .filter((e) => e.FILTER_ID === filterId)
+        .map((e) => {
+          let entityName = `#${e.ENTITY_ID}`;
+          if (e.ENTITY_TYPE === 5) {
+            const game = gameMap.get(e.ENTITY_ID);
+            if (game) {
+              entityName = `Game #${e.ENTITY_ID} (${game.GAME_KEY || ''})`;
+            }
+          }
+          return {
+            ...e,
+            ENTITY_TYPE_LABEL: ENTITY_TYPE_LABELS[e.ENTITY_TYPE] || `Type ${e.ENTITY_TYPE}`,
+            ENTITY_NAME: entityName,
+          };
+        });
+
+      const filterTargets = (Array.isArray(targets) ? targets : [])
+        .filter((t) => t.FILTER_ID === filterId)
+        .map((t) => {
+          let targetName = `#${t.FILTER_TARGET_ID}`;
+          if (t.FILTER_TARGET_TYPE === 1) {
+            const lang = langMap.get(t.FILTER_TARGET_ID);
+            if (lang) {
+              targetName = lang.name || `Language #${t.FILTER_TARGET_ID}`;
+            }
+          } else if (t.FILTER_TARGET_TYPE === 2) {
+            const country = countryMap.get(t.FILTER_TARGET_ID);
+            if (country) {
+              const countryTerm = termMap.get(country.NAME_ID);
+              targetName = countryTerm ? (getEnglishValue(countryTerm) || targetName) : targetName;
+              if (country.EMOJI) targetName = `${country.EMOJI} ${targetName}`;
+            }
+          }
+          return {
+            ...t,
+            TARGET_TYPE_LABEL: TARGET_TYPE_LABELS[t.FILTER_TARGET_TYPE] || `Type ${t.FILTER_TARGET_TYPE}`,
+            TARGET_NAME: targetName,
+          };
+        });
+
+      res.json({
+        success: true,
+        data: {
+          ...filter,
+          FILTER_NAME: term ? (getEnglishValue(term) || `Term #${filter.NAME_ID}`) : null,
+          entities: filterEntities,
+          targets: filterTargets,
+        },
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async addEntity(req, res, next) {
+    try {
+      const filterId = parseInt(req.params.id, 10);
+      if (isNaN(filterId)) {
+        return res.status(400).json({ success: false, error: { message: 'Invalid filter ID' } });
+      }
+      const { ENTITY_ID, ENTITY_TYPE, CAPTION, FILTER_ORDER } = req.body;
+      if (ENTITY_ID == null || ENTITY_TYPE == null) {
+        return res.status(400).json({ success: false, error: { message: 'ENTITY_ID and ENTITY_TYPE are required' } });
+      }
+
+      const entities = await dataLoader.loadData('filter_entities.json');
+      const arr = Array.isArray(entities) ? entities : [];
+      const now = formatDateTime(new Date());
+
+      const newEntity = {
+        FILTER_ID: filterId,
+        ENTITY_ID: parseInt(ENTITY_ID, 10),
+        ENTITY_TYPE: parseInt(ENTITY_TYPE, 10),
+        CAPTION: CAPTION || '',
+        CREATE_TIME: now,
+        UPDATE_TIME: now,
+        FILTER_ORDER: FILTER_ORDER != null ? parseInt(FILTER_ORDER, 10) : null,
+      };
+
+      arr.unshift(newEntity);
+      await dataLoader.saveData('filter_entities.json', arr);
+
+      res.status(201).json({ success: true, data: newEntity });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async deleteEntities(req, res, next) {
+    try {
+      const filterId = parseInt(req.params.id, 10);
+      if (isNaN(filterId)) {
+        return res.status(400).json({ success: false, error: { message: 'Invalid filter ID' } });
+      }
+      const { entityIds } = req.body;
+      if (!Array.isArray(entityIds) || entityIds.length === 0) {
+        return res.status(400).json({ success: false, error: { message: 'entityIds array is required' } });
+      }
+
+      const entities = await dataLoader.loadData('filter_entities.json');
+      const arr = Array.isArray(entities) ? entities : [];
+      const idSet = new Set(entityIds.map((id) => parseInt(id, 10)));
+
+      const filtered = arr.filter(
+        (e) => !(e.FILTER_ID === filterId && idSet.has(e.ENTITY_ID))
+      );
+      const deletedCount = arr.length - filtered.length;
+      await dataLoader.saveData('filter_entities.json', filtered);
+
+      res.json({ success: true, data: { deleted: deletedCount } });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async addTarget(req, res, next) {
+    try {
+      const filterId = parseInt(req.params.id, 10);
+      if (isNaN(filterId)) {
+        return res.status(400).json({ success: false, error: { message: 'Invalid filter ID' } });
+      }
+      const { FILTER_TARGET_ID, FILTER_TARGET_TYPE } = req.body;
+      if (FILTER_TARGET_ID == null || FILTER_TARGET_TYPE == null) {
+        return res.status(400).json({ success: false, error: { message: 'FILTER_TARGET_ID and FILTER_TARGET_TYPE are required' } });
+      }
+
+      const targets = await dataLoader.loadData('filter_targets.json');
+      const arr = Array.isArray(targets) ? targets : [];
+
+      const newTarget = {
+        FILTER_TARGET_ID: parseInt(FILTER_TARGET_ID, 10),
+        FILTER_TARGET_TYPE: parseInt(FILTER_TARGET_TYPE, 10),
+        FILTER_ID: filterId,
+      };
+
+      arr.unshift(newTarget);
+      await dataLoader.saveData('filter_targets.json', arr);
+
+      res.status(201).json({ success: true, data: newTarget });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async deleteTargets(req, res, next) {
+    try {
+      const filterId = parseInt(req.params.id, 10);
+      if (isNaN(filterId)) {
+        return res.status(400).json({ success: false, error: { message: 'Invalid filter ID' } });
+      }
+      const { targetIds } = req.body;
+      if (!Array.isArray(targetIds) || targetIds.length === 0) {
+        return res.status(400).json({ success: false, error: { message: 'targetIds array is required' } });
+      }
+
+      const targets = await dataLoader.loadData('filter_targets.json');
+      const arr = Array.isArray(targets) ? targets : [];
+      const idSet = new Set(targetIds.map((id) => parseInt(id, 10)));
+
+      const filtered = arr.filter(
+        (t) => !(t.FILTER_ID === filterId && idSet.has(t.FILTER_TARGET_ID))
+      );
+      const deletedCount = arr.length - filtered.length;
+      await dataLoader.saveData('filter_targets.json', filtered);
+
+      res.json({ success: true, data: { deleted: deletedCount } });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async getAll(req, res, next) {
     try {
       const [list, terms] = await Promise.all([

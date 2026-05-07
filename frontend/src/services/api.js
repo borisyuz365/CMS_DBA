@@ -2028,6 +2028,43 @@ class ApiService {
     return response.data;
   }
 
+  async getFilterById(filterId) {
+    const response = await this.fetch(`/filters/${filterId}`);
+    return response.data;
+  }
+
+  async addFilterEntity(filterId, entityData) {
+    const response = await this.fetch(`/filters/${filterId}/entities`, {
+      method: 'POST',
+      body: JSON.stringify(entityData),
+    });
+    return response.data;
+  }
+
+  async deleteFilterEntities(filterId, entityIds) {
+    const response = await this.fetch(`/filters/${filterId}/entities`, {
+      method: 'DELETE',
+      body: JSON.stringify({ entityIds }),
+    });
+    return response.data;
+  }
+
+  async addFilterTarget(filterId, targetData) {
+    const response = await this.fetch(`/filters/${filterId}/targets`, {
+      method: 'POST',
+      body: JSON.stringify(targetData),
+    });
+    return response.data;
+  }
+
+  async deleteFilterTargets(filterId, targetIds) {
+    const response = await this.fetch(`/filters/${filterId}/targets`, {
+      method: 'DELETE',
+      body: JSON.stringify({ targetIds }),
+    });
+    return response.data;
+  }
+
   /**
    * Get temporary (unidentified) records for an entity (countries, competitions, ...).
    * Server-side filtering + pagination; the response also contains facet lists
