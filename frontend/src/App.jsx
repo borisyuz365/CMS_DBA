@@ -30,6 +30,7 @@ import GamesList from './pages/GamesList';
 import GameReport from './pages/GameReport';
 import PrioritiesPage from './pages/PrioritiesPage';
 import FiltersList from './pages/FiltersList';
+import FilterDetails from './pages/FilterDetails';
 import CitiesList from './pages/CitiesList';
 import ScannersPage from './pages/ScannersPage';
 import ScannersListV2 from './pages/ScannersListV2';
@@ -190,6 +191,7 @@ function App() {
             <Route path="games/:id/report/:tab?" element={<GameReport />} />
             <Route path="priorities" element={<PrioritiesPage />} />
             <Route path="filters" element={<FiltersList />} />
+            <Route path="filters/:id" element={<FilterDetails />} />
             <Route path="scanners" element={<ScannersPage />} />
             <Route path="scanners-v2" element={<ScannersListV2 />} />
             <Route path="scanners-v2/:id" element={<ScannerDetailsV2 />} />

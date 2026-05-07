@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Typography,
@@ -49,6 +50,7 @@ import api from '../services/api';
 import useUrlFilters from '../hooks/useUrlFilters';
 
 function FiltersList() {
+  const navigate = useNavigate();
   const [urlState, setUrlState] = useUrlFilters({
     filterId: { type: 'string', default: '' },
     activeOnly: { type: 'boolean', default: true },
@@ -841,8 +843,9 @@ function FiltersList() {
                         key={row.FILTER_ID}
                         hover
                         selected={selectedRows.includes(row.FILTER_ID)}
+                        onClick={() => navigate(`/filters/${row.FILTER_ID}`)}
                         sx={{
-                          cursor: 'default',
+                          cursor: 'pointer',
                           '&:hover': { backgroundColor: '#F9FAFB' },
                           '&.Mui-selected': {
                             backgroundColor: '#E3F2FD',
