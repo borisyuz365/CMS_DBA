@@ -52,6 +52,10 @@ const TransferHistoryTable = ({
   onEdit,
   onDelete,
   onAdd,
+  nationalContracts = [],
+  onEditNational,
+  onDeleteNational,
+  onAddNational,
   competitors = [],
   countries = [],
   competitions = [],
@@ -59,6 +63,7 @@ const TransferHistoryTable = ({
   formationPositionTypes = [],
   currencies = [],
   loading = false,
+  nationalLoading = false,
   onTermClick, // Callback for term clicks: (nameId, category) => void
 }) => {
   const [hoveredRow, setHoveredRow] = useState(null);
@@ -377,6 +382,241 @@ const TransferHistoryTable = ({
           </TableBody>
         </Table>
       </TableContainer>
+
+      {/* National Teams Section */}
+      <Box sx={{ mt: 4 }}>
+        {/* Header */}
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            p: 2,
+            backgroundColor: '#f5f5f5',
+            borderTopLeftRadius: 4,
+            borderTopRightRadius: 4,
+            borderBottom: '1px solid #e0e0e0',
+          }}
+        >
+          <Typography variant="h6" sx={{ fontWeight: 600, fontSize: '1rem' }}>
+            National Teams
+          </Typography>
+          <IconButton
+            onClick={onAddNational}
+            size="small"
+            sx={{
+              backgroundColor: '#1976d2',
+              color: 'white',
+              '&:hover': {
+                backgroundColor: '#1565c0',
+              },
+            }}
+          >
+            <AddIcon />
+          </IconButton>
+        </Box>
+
+        {/* Table */}
+        <TableContainer
+          component={Paper}
+          sx={{
+            maxHeight: 600,
+            boxShadow: 1,
+            borderTop: 'none',
+            overflowX: 'auto',
+          }}
+        >
+          <Table stickyHeader size="small" sx={{ minWidth: 900 }}>
+            <TableHead>
+              <TableRow>
+                <TableCell sx={{ fontWeight: 700, backgroundColor: '#fafafa', minWidth: 80 }}>
+                  Jersey Number
+                </TableCell>
+                <TableCell sx={{ fontWeight: 700, backgroundColor: '#fafafa', minWidth: 150 }}>
+                  Competitor Country
+                </TableCell>
+                <TableCell sx={{ fontWeight: 700, backgroundColor: '#fafafa', minWidth: 200 }}>
+                  Competitor
+                </TableCell>
+                <TableCell sx={{ fontWeight: 700, backgroundColor: '#fafafa', minWidth: 100 }}>
+                  Position
+                </TableCell>
+                <TableCell sx={{ fontWeight: 700, backgroundColor: '#fafafa', minWidth: 150 }}>
+                  Formation
+                </TableCell>
+                <TableCell sx={{ fontWeight: 700, backgroundColor: '#fafafa', minWidth: 130 }}>
+                  International Debut
+                </TableCell>
+                <TableCell sx={{ fontWeight: 700, backgroundColor: '#fafafa', minWidth: 150 }}>
+                  International Retirement
+                </TableCell>
+                <TableCell sx={{ fontWeight: 700, backgroundColor: '#fafafa', minWidth: 80 }} align="center">
+                  In Squad
+                </TableCell>
+                <TableCell sx={{ fontWeight: 700, backgroundColor: '#fafafa', minWidth: 100 }} align="center">
+                  Actions
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {nationalLoading ? (
+                <TableRow>
+                  <TableCell colSpan={9} align="center" sx={{ py: 4 }}>
+                    <Typography color="text.secondary">Loading...</Typography>
+                  </TableCell>
+                </TableRow>
+              ) : nationalContracts.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={9} align="center" sx={{ py: 4 }}>
+                    <Typography color="text.secondary">No national team contracts found</Typography>
+                  </TableCell>
+                </TableRow>
+              ) : (
+                nationalContracts.map((contract) => {
+                  const competitor = getCompetitor(contract.COMPETITOR_ID);
+                  const country = competitor ? getCountry(competitor.COUNTRY_ID) : null;
+
+                  return (
+                    <TableRow
+                      key={contract.CONTRACT_ID}
+                      hover
+                      onMouseEnter={() => setHoveredRow(contract.CONTRACT_ID)}
+                      onMouseLeave={() => setHoveredRow(null)}
+                      sx={{
+                        '&:hover': {
+                          backgroundColor: '#f5f5f5',
+                        },
+                      }}
+                    >
+                      <TableCell>{contract.JERSEY_NUMBER || '-'}</TableCell>
+                      <TableCell>
+                        {country && (
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            {country.EMOJI && (
+                              <Typography component="span">{country.EMOJI}</Typography>
+                            )}
+                            <Typography
+                              component="span"
+                              onClick={() => country.NAME_ID && onTermClick && onTermClick(country.NAME_ID, 'Countries Names')}
+                              sx={{
+                                color: country.NAME_ID && onTermClick ? '#1976d2' : 'inherit',
+                                cursor: country.NAME_ID && onTermClick ? 'pointer' : 'default',
+                                '&:hover': {
+                                  textDecoration: country.NAME_ID && onTermClick ? 'underline' : 'none',
+                                },
+                              }}
+                            >
+                              {country.name || `Country ${country.COUNTRY_ID}`}
+                            </Typography>
+                          </Box>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          {competitor && (
+                            <Typography
+                              component="span"
+                              onClick={() => competitor.NAME_ID && onTermClick && onTermClick(competitor.NAME_ID, 'Competitors Names')}
+                              sx={{
+                                color: '#1976d2',
+                                cursor: competitor.NAME_ID && onTermClick ? 'pointer' : 'default',
+                                '&:hover': {
+                                  textDecoration: competitor.NAME_ID && onTermClick ? 'underline' : 'none',
+                                },
+                              }}
+                            >
+                              {contract.competitorName || `Competitor ${contract.COMPETITOR_ID}`} ({contract.COMPETITOR_ID})
+                            </Typography>
+                          )}
+                        </Box>
+                      </TableCell>
+                      <TableCell>
+                        {contract.POSITION ? (() => {
+                          const positionName = getPositionName(contract.POSITION);
+                          return (
+                            <Typography
+                              onClick={() => positionName && onTermClick && onTermClick(positionName, 'Athlete Position Types')}
+                              sx={{
+                                color: '#1976d2',
+                                cursor: positionName && onTermClick ? 'pointer' : 'default',
+                                '&:hover': {
+                                  textDecoration: positionName && onTermClick ? 'underline' : 'none',
+                                },
+                              }}
+                            >
+                              {positionName}
+                            </Typography>
+                          );
+                        })() : '-'}
+                      </TableCell>
+                      <TableCell>
+                        {contract.FORMATION_POSITION ? (() => {
+                          const formationPositionName = getFormationPositionName(contract.POSITION, contract.FORMATION_POSITION);
+                          return (
+                            <Typography
+                              onClick={() => formationPositionName && onTermClick && onTermClick(formationPositionName, 'Athlete Formation Position Types')}
+                              sx={{
+                                color: '#1976d2',
+                                cursor: formationPositionName && onTermClick ? 'pointer' : 'default',
+                                '&:hover': {
+                                  textDecoration: formationPositionName && onTermClick ? 'underline' : 'none',
+                                },
+                              }}
+                            >
+                              {formationPositionName}
+                            </Typography>
+                          );
+                        })() : '-'}
+                      </TableCell>
+                      <TableCell>{formatDate(contract.START_DATE)}</TableCell>
+                      <TableCell>{formatDate(contract.END_DATE)}</TableCell>
+                      <TableCell align="center">
+                        <Checkbox
+                          checked={contract.CURRENT_CLUB || false}
+                          disabled
+                          size="small"
+                        />
+                      </TableCell>
+                      <TableCell align="center">
+                        <Box sx={{ display: 'flex', gap: 0.5, justifyContent: 'center' }}>
+                          <Tooltip title="Edit">
+                            <IconButton
+                              size="small"
+                              onClick={() => onEditNational(contract)}
+                              sx={{
+                                color: '#1976d2',
+                                '&:hover': {
+                                  backgroundColor: 'rgba(25, 118, 210, 0.1)',
+                                },
+                              }}
+                            >
+                              <EditIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title="Delete">
+                            <IconButton
+                              size="small"
+                              onClick={() => onDeleteNational(contract)}
+                              sx={{
+                                color: '#d32f2f',
+                                '&:hover': {
+                                  backgroundColor: 'rgba(211, 47, 47, 0.1)',
+                                },
+                              }}
+                            >
+                              <DeleteIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Box>
     </Box>
   );
 };

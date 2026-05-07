@@ -21,9 +21,12 @@ import {
   DialogActions,
   Avatar,
   Autocomplete,
+  InputAdornment,
+  IconButton,
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import CloseIcon from '@mui/icons-material/Close';
 import LoadingSpinner from '../../reuse/LoadingSpinner';
 import Alert from '../../reuse/Alert';
 import TermEditModal from '../../reuse/TermEditModal';
@@ -32,6 +35,7 @@ import TransferHistoryTable from '../components/TransferHistoryTable';
 import StatisticsTable from '../components/StatisticsTable';
 import StatisticsDialog from '../components/StatisticsDialog';
 import ContractDialog from '../components/ContractDialog';
+import NationalTeamContractDialog from '../components/NationalTeamContractDialog';
 import InjuriesSuspensionsTable from '../components/InjuriesSuspensionsTable';
 import InjuryDialog from '../components/InjuryDialog';
 import SuspensionDialog from '../components/SuspensionDialog';
@@ -75,6 +79,14 @@ function AthleteDetails() {
     contract: null,
   });
   const [competitions, setCompetitions] = useState([]);
+
+  // National Team Contract state
+  const [nationalContractDialogOpen, setNationalContractDialogOpen] = useState(false);
+  const [editingNationalContract, setEditingNationalContract] = useState(null);
+  const [deleteNationalConfirmDialog, setDeleteNationalConfirmDialog] = useState({
+    open: false,
+    contract: null,
+  });
   
   // Statistics state
   const [statistics, setStatistics] = useState([]);
@@ -105,6 +117,7 @@ function AthleteDetails() {
     open: false,
     suspension: null,
   });
+  const [suspensionTypes, setSuspensionTypes] = useState([]);
   
   // Trophies state
   const [trophies, setTrophies] = useState([]);
@@ -120,6 +133,10 @@ function AthleteDetails() {
   const [imageDialogOpen, setImageDialogOpen] = useState(false);
   const [editingImageType, setEditingImageType] = useState(null); // 'club' or 'national'
   const [imageUrlValue, setImageUrlValue] = useState('');
+
+  // Cities state (for City of Birth)
+  const [allCities, setAllCities] = useState([]);
+  const [cityOfBirthInputValue, setCityOfBirthInputValue] = useState('');
   
   // Form state for General Details (using IDs like in AthletesList)
   const [formData, setFormData] = useState({
@@ -163,6 +180,8 @@ function AthleteDetails() {
     loadCurrencies();
     loadCompetitions();
     loadSeasons();
+    loadSuspensionTypes();
+    loadCities();
     setClubImageError(false); // Reset image errors when athlete changes
     setNationalImageError(false);
   }, [id]);
@@ -298,6 +317,24 @@ function AthleteDetails() {
       setCurrencies(currenciesData || []);
     } catch (err) {
       console.error('Failed to load currencies:', err);
+    }
+  };
+
+  const loadSuspensionTypes = async () => {
+    try {
+      const data = await api.getSuspensionTypes();
+      setSuspensionTypes(data || []);
+    } catch (err) {
+      console.error('Failed to load suspension types:', err);
+    }
+  };
+
+  const loadCities = async () => {
+    try {
+      const data = await api.getCities();
+      setAllCities(data || []);
+    } catch (err) {
+      console.error('Failed to load cities:', err);
     }
   };
 
@@ -440,8 +477,25 @@ function AthleteDetails() {
     return null;
   };
 
-  // Cities from terms (category "Cities") for City of Birth
-  const cities = (allTerms || []).filter(t => t.category === 'Cities');
+  // Cities for City of Birth - filtered by athlete's nationality
+  const athleteNationalityId = formData.NATIONALITY ? Number(formData.NATIONALITY) : null;
+  const citiesForNationality = allCities.filter(c => athleteNationalityId != null && Number(c.COUNTRY_ID) === athleteNationalityId);
+
+  const cityOfBirthId = formData.COUNTRY_OF_BIRTH != null && String(formData.COUNTRY_OF_BIRTH).trim() !== '' ? Number(formData.COUNTRY_OF_BIRTH) : null;
+  const cityOfBirthObj = cityOfBirthId != null ? allCities.find(c => Number(c.CITY_ID) === cityOfBirthId) : null;
+  const cityOfBirthDisplayName = (() => {
+    if (!cityOfBirthObj) return cityOfBirthId != null ? `(${cityOfBirthId})` : '';
+    const nameId = cityOfBirthObj.NAME_ID;
+    let cityName = cityOfBirthObj.CITY_NAME || '';
+    if (nameId != null) {
+      const term = (allTerms || []).find(t => t.id === nameId);
+      if (term) {
+        const engVal = term.values?.find(v => v.languageId === 1);
+        if (engVal?.value) cityName = engVal.value;
+      }
+    }
+    return cityName ? `${cityName} (${cityOfBirthId})` : `(${cityOfBirthId})`;
+  })();
 
   // Handle opening image edit dialog
   const handleOpenImageDialog = (imageType) => {
@@ -797,6 +851,13 @@ function AthleteDetails() {
     await handleSave();
   };
 
+  // Extended Details: currently tabs use dialog-based CRUD so no pending inline changes exist yet.
+  const hasExtendedDetailsChanges = false;
+
+  const handleExtendedDetailsSave = async () => {
+    // Placeholder for future inline-editable fields in the Extended Details tabs
+  };
+
   // Contract handlers
   const handleAddContract = () => {
     setEditingContract(null);
@@ -853,6 +914,79 @@ function AthleteDetails() {
     } catch (err) {
       console.error('Failed to save contract:', err);
       setError(err.message || 'Failed to save contract');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Split contracts into club (non-national) and national team
+  const clubContracts = contracts.filter(c => {
+    const comp = competitors.find(comp => comp.COMPETITOR_ID === c.COMPETITOR_ID);
+    return !comp || comp.COMPETITOR_TYPE !== 2;
+  });
+  const nationalContracts = contracts.filter(c => {
+    const comp = competitors.find(comp => comp.COMPETITOR_ID === c.COMPETITOR_ID);
+    return comp && comp.COMPETITOR_TYPE === 2;
+  });
+
+  // National Team Contract handlers
+  const handleAddNationalContract = () => {
+    setEditingNationalContract(null);
+    setNationalContractDialogOpen(true);
+  };
+
+  const handleEditNationalContract = (contract) => {
+    setEditingNationalContract(contract);
+    setNationalContractDialogOpen(true);
+  };
+
+  const handleDeleteNationalContract = (contract) => {
+    setDeleteNationalConfirmDialog({
+      open: true,
+      contract: contract,
+    });
+  };
+
+  const handleConfirmDeleteNationalContract = async () => {
+    if (!deleteNationalConfirmDialog.contract || !id) return;
+
+    try {
+      setLoading(true);
+      setError(null);
+      await api.deleteAthleteContract(id, deleteNationalConfirmDialog.contract.CONTRACT_ID);
+      await loadContracts();
+      setDeleteNationalConfirmDialog({ open: false, contract: null });
+    } catch (err) {
+      console.error('Failed to delete national team contract:', err);
+      setError(err.message || 'Failed to delete national team contract');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSaveNationalContract = async (contractData, replaceInSquadContractId) => {
+    if (!id) return;
+
+    try {
+      setLoading(true);
+      setError(null);
+
+      if (replaceInSquadContractId) {
+        await api.updateAthleteContract(id, replaceInSquadContractId, { CURRENT_CLUB: false });
+      }
+
+      if (editingNationalContract) {
+        await api.updateAthleteContract(id, editingNationalContract.CONTRACT_ID, contractData);
+      } else {
+        await api.createAthleteContract(id, contractData);
+      }
+
+      await loadContracts();
+      setNationalContractDialogOpen(false);
+      setEditingNationalContract(null);
+    } catch (err) {
+      console.error('Failed to save national team contract:', err);
+      setError(err.message || 'Failed to save national team contract');
     } finally {
       setLoading(false);
     }
@@ -1411,33 +1545,101 @@ function AthleteDetails() {
                 ) : null;
               })()}
               
-              {/* Row 3 - City of Birth (from terms category Cities, 5 default + search) */}
+              {/* City of Birth */}
               <Box sx={{ minWidth: 0 }}>
-                <Autocomplete
-                  size="small"
-                  options={cities}
-                  value={cities.find(c => c.id === formData.COUNTRY_OF_BIRTH) || null}
-                  getOptionLabel={(option) => resolveTermName(option) || `Term ${option.id}`}
-                  onChange={(e, newValue) => handleFormChange('COUNTRY_OF_BIRTH', newValue?.id ?? '')}
-                  filterOptions={(options, state) => {
-                    if (!state.inputValue) return options.slice(0, 5);
-                    const input = state.inputValue.toLowerCase();
-                    const filtered = options.filter(opt =>
-                      (resolveTermName(opt) || '').toLowerCase().includes(input)
-                    );
-                    return filtered;
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="City of Birth"
-                      sx={{
-                        '& .MuiOutlinedInput-input': { py: 1 },
-                        '& .MuiInputLabel-root': { fontSize: '0.75rem' },
-                      }}
-                    />
-                  )}
-                />
+                {cityOfBirthId != null ? (
+                  <TextField
+                    fullWidth
+                    size="small"
+                    label="City of Birth"
+                    value={cityOfBirthDisplayName}
+                    InputProps={{
+                      readOnly: true,
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton size="small" onClick={(e) => { e.stopPropagation(); handleFormChange('COUNTRY_OF_BIRTH', ''); }} title="Remove city" sx={{ p: 0.5 }}>
+                            <CloseIcon fontSize="small" />
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                    sx={{
+                      '& .MuiOutlinedInput-input': { py: 1 },
+                      '& .MuiInputLabel-root': { fontSize: '0.75rem' },
+                    }}
+                  />
+                ) : (
+                  <Autocomplete
+                    freeSolo
+                    fullWidth
+                    size="small"
+                    clearOnBlur={false}
+                    options={citiesForNationality}
+                    getOptionLabel={(option) => {
+                      if (typeof option === 'string') return option;
+                      return option.CITY_NAME ? `${option.CITY_NAME} (${option.CITY_ID})` : `(${option.CITY_ID})`;
+                    }}
+                    value={null}
+                    inputValue={cityOfBirthInputValue}
+                    onInputChange={(_, v, reason) => { if (reason !== 'reset') setCityOfBirthInputValue(v); }}
+                    onChange={(_, v) => {
+                      if (v == null) return;
+                      if (typeof v === 'string') {
+                        const trimmed = v.trim();
+                        if (trimmed !== '' && !isNaN(Number(trimmed))) {
+                          handleFormChange('COUNTRY_OF_BIRTH', Number(trimmed));
+                        }
+                      } else {
+                        handleFormChange('COUNTRY_OF_BIRTH', v.CITY_ID);
+                      }
+                      setCityOfBirthInputValue('');
+                    }}
+                    filterOptions={(options, state) => {
+                      const input = (state.inputValue || '').trim();
+                      if (!input) return options;
+                      const lower = input.toLowerCase();
+                      return options.filter(o =>
+                        (o.CITY_NAME || '').toLowerCase().includes(lower) ||
+                        String(o.CITY_ID).includes(input)
+                      );
+                    }}
+                    ListboxProps={{ style: { maxHeight: 240 } }}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option.CITY_ID}>
+                        {option.CITY_NAME} <span style={{ color: '#999', marginLeft: 8, fontSize: '0.85em' }}>({option.CITY_ID})</span>
+                      </li>
+                    )}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="City of Birth"
+                        placeholder="Search city or enter City ID"
+                        sx={{
+                          '& .MuiOutlinedInput-input': { py: 1 },
+                          '& .MuiInputLabel-root': { fontSize: '0.75rem' },
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            const val = (e.target.value || '').trim();
+                            if (val !== '' && !isNaN(Number(val))) {
+                              handleFormChange('COUNTRY_OF_BIRTH', Number(val));
+                              setCityOfBirthInputValue('');
+                              e.preventDefault();
+                              e.stopPropagation();
+                            }
+                          }
+                        }}
+                        onBlur={(e) => {
+                          const val = (e.target.value || '').trim();
+                          if (val !== '' && !isNaN(Number(val))) {
+                            handleFormChange('COUNTRY_OF_BIRTH', Number(val));
+                            setCityOfBirthInputValue('');
+                          }
+                        }}
+                      />
+                    )}
+                  />
+                )}
               </Box>
               {/* Height + Jersey Number (one slot, side by side - like Market Value + Currency; Jersey hidden for tennis) */}
               <Box sx={{ minWidth: 0 }}>
@@ -1815,14 +2017,58 @@ function AthleteDetails() {
         </Box>
       </Paper>
 
-      {/* Tabs Section */}
-      <Paper sx={{ boxShadow: 1 }}>
+      {/* Extended Details – sticky header, tabs with content below */}
+      <Paper
+        sx={{
+          boxShadow: 1,
+          border: '1px solid #e0e0e0',
+          backgroundColor: 'white',
+        }}
+      >
+        <Box
+          sx={{
+            position: 'sticky',
+            top: 0,
+            zIndex: 10,
+            mb: 0,
+            pb: 1,
+            borderBottom: '2px solid #e0e0e0',
+            backgroundColor: '#f5f5f5',
+            px: 2,
+            py: 1,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 2,
+            flexWrap: 'wrap',
+          }}
+        >
+          <Typography variant="h6" sx={{ fontWeight: 600 }}>
+            Extended Details
+          </Typography>
+          <Button
+            variant="contained"
+            onClick={handleExtendedDetailsSave}
+            disabled={!hasExtendedDetailsChanges}
+            sx={{
+              textTransform: 'none',
+              backgroundColor: '#15803d',
+              color: 'white',
+              px: 3,
+              py: 1,
+              '&:hover': { backgroundColor: '#166534' },
+            }}
+          >
+            Save & Update In Service
+          </Button>
+        </Box>
         <Tabs
           value={activeTab}
           onChange={(e, newValue) => setUrlState({ tab: newValue })}
           sx={{
             borderBottom: 1,
             borderColor: 'divider',
+            px: 2,
             '& .MuiTab-root': {
               textTransform: 'none',
               fontWeight: 500,
@@ -1840,10 +2086,14 @@ function AthleteDetails() {
         <Box sx={{ p: 3 }}>
           {activeTab === 0 && (
             <TransferHistoryTable
-              contracts={contracts}
+              contracts={clubContracts}
               onEdit={handleEditContract}
               onDelete={handleDeleteContract}
               onAdd={handleAddContract}
+              nationalContracts={nationalContracts}
+              onEditNational={handleEditNationalContract}
+              onDeleteNational={handleDeleteNationalContract}
+              onAddNational={handleAddNationalContract}
               competitors={competitors}
               countries={countries}
               competitions={competitions}
@@ -1851,6 +2101,7 @@ function AthleteDetails() {
               formationPositionTypes={formationPositionTypes}
               currencies={currencies}
               loading={contractsLoading}
+              nationalLoading={contractsLoading}
               onTermClick={handleTermClick}
             />
           )}
@@ -2063,6 +2314,36 @@ function AthleteDetails() {
         dangerous={true}
       />
 
+      {/* National Team Contract Dialog */}
+      <NationalTeamContractDialog
+        open={nationalContractDialogOpen}
+        onClose={() => {
+          setNationalContractDialogOpen(false);
+          setEditingNationalContract(null);
+        }}
+        onSave={handleSaveNationalContract}
+        contract={editingNationalContract}
+        existingContracts={nationalContracts}
+        competitors={competitors}
+        countries={countries}
+        positionTypes={positionTypes}
+        formationPositionTypes={formationPositionTypes}
+        athleteSportTypeId={athlete?.SPORT_TYPE_ID}
+      />
+
+      {/* Delete National Team Contract Confirmation Dialog */}
+      <ConfirmationDialog
+        open={deleteNationalConfirmDialog.open}
+        onClose={() => setDeleteNationalConfirmDialog({ open: false, contract: null })}
+        onConfirm={handleConfirmDeleteNationalContract}
+        title="Delete National Team Contract"
+        message={`Are you sure you want to delete this national team contract?`}
+        confirmText="Delete"
+        cancelText="Cancel"
+        type="warning"
+        dangerous={true}
+      />
+
       {/* Statistics Dialog */}
       <StatisticsDialog
         open={statisticsDialogOpen}
@@ -2114,6 +2395,7 @@ function AthleteDetails() {
         onSave={handleSaveSuspension}
         suspension={editingSuspension}
         competitions={competitions}
+        suspensionTypes={suspensionTypes}
       />
 
       {/* Delete Injury Confirmation Dialog */}

@@ -62562,5 +62562,43 @@
     ],
     "valsCount": 1,
     "engValue": "2"
+  },
+  {
+    "id": 77877774,
+    "categoryId": 1,
+    "aliasName": null,
+    "fatherTerm": null,
+    "createTime": "2026-05-07T08:46:25.412Z",
+    "description": null,
+    "category": "Competitors Names",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Portugal",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "Portugal"
+  },
+  {
+    "id": 77877775,
+    "categoryId": 1,
+    "aliasName": null,
+    "fatherTerm": null,
+    "createTime": "2026-05-07T08:47:56.343Z",
+    "description": null,
+    "category": "Competitors Names",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Portugal U19",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "Portugal U19"
   }
 ]

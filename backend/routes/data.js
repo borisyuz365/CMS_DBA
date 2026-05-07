@@ -2815,6 +2815,21 @@ router.get('/sequence-details/:sequence', async (req, res, next) => {
   }
 });
 
+router.get('/suspension-types', async (req, res, next) => {
+  try {
+    const allEnums = await dataLoader.loadData('enums.json');
+    const types = (allEnums || [])
+      .filter(e => e.ALIAS_NAME === 'ESoccerSuspensionTypes')
+      .map(e => ({
+        SUSPENSION_TYPE_ID: e.ITEM_ID,
+        SUSPENSION_TYPE: e.ALIAS_NAME1,
+      }));
+    res.json({ success: true, data: types });
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.get('/cities', async (req, res, next) => {
   try {
     const cities = await dataLoader.loadData('cities.json');

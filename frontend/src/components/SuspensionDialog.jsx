@@ -26,6 +26,7 @@ const SuspensionDialog = ({
   onSave,
   suspension = null,
   competitions = [],
+  suspensionTypes = [],
 }) => {
   const isEdit = !!suspension;
 
@@ -133,14 +134,22 @@ const SuspensionDialog = ({
             </FormControl>
           </Grid>
           <Grid item xs={12} md={6}>
-            <TextField
-              fullWidth
-              label="Suspension Type"
-              value={formData.SUSPENSION_TYPE}
-              onChange={(e) => handleChange('SUSPENSION_TYPE', e.target.value)}
-              error={!!errors.SUSPENSION_TYPE}
-              helperText={errors.SUSPENSION_TYPE}
-            />
+            <FormControl fullWidth>
+              <InputLabel>Suspension Type</InputLabel>
+              <Select
+                value={formData.SUSPENSION_TYPE}
+                label="Suspension Type"
+                onChange={(e) => handleChange('SUSPENSION_TYPE', e.target.value)}
+                error={!!errors.SUSPENSION_TYPE}
+              >
+                <MenuItem value="">None</MenuItem>
+                {suspensionTypes.map(type => (
+                  <MenuItem key={type.SUSPENSION_TYPE_ID} value={type.SUSPENSION_TYPE}>
+                    {type.SUSPENSION_TYPE}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Grid>
           <Grid item xs={12} md={6}>
             <TextField

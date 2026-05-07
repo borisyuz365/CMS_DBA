@@ -10,5 +10,17 @@
     "CREATE_TIME": "2026-01-25T14:58:41.317Z",
     "UPDATE_TIME": "2026-01-25T14:58:41.317Z",
     "UPDATE_BY": null
+  },
+  {
+    "SUSPENSION_ID": 3,
+    "ATHLETE_ID": 2,
+    "COMPETITION_ID": 1,
+    "START_DATE": null,
+    "END_DATE": null,
+    "GAMES_COUNT": 2,
+    "SUSPENSION_TYPE": "RedCard",
+    "CREATE_TIME": "2026-05-07T09:01:42.435Z",
+    "UPDATE_TIME": "2026-05-07T09:01:42.435Z",
+    "UPDATE_BY": null
   }
 ]

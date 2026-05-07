@@ -1061,6 +1061,11 @@ class ApiService {
     return response.data || [];
   }
 
+  async getSuspensionTypes() {
+    const response = await this.fetch('/data/suspension-types');
+    return response.data || [];
+  }
+
   /**
    * Get all currencies
    */
