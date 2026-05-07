@@ -33,6 +33,7 @@ import RadarIcon from '@mui/icons-material/Radar';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import LoadingSpinner from '../../reuse/LoadingSpinner';
+import LogsGraph from '../components/LogsGraph';
 import api from '../services/api';
 
 const FIELD_LABELS = {
@@ -322,6 +323,9 @@ export default function ScannerDetailsV2() {
           </Box>
         </Box>
       </Paper>
+
+      {/* ── Logs ── */}
+      <LogsGraph scannerId={scanner.SCANNER_ID} />
 
       {/* ── Actions ── */}
       <Paper sx={{ p: 3, mb: 2, boxShadow: 1, border: '1px solid #e0e0e0', backgroundColor: 'white' }}>

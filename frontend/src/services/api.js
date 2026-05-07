@@ -2231,6 +2231,11 @@ class ApiService {
     });
     return response.data;
   }
+
+  async getScannerLogsSummary(id, range = '1h') {
+    const response = await this.fetch(`/scanners/${id}/logs-summary?range=${encodeURIComponent(range)}`);
+    return response.data || null;
+  }
 }
 
 export default new ApiService();

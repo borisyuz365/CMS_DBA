@@ -6,6 +6,7 @@ router.get('/', scannerController.getAll.bind(scannerController));
 router.put('/bulk', scannerController.updateBulk.bind(scannerController));
 router.post('/', scannerController.create.bind(scannerController));
 router.get('/:id', scannerController.getById.bind(scannerController));
+router.get('/:id/logs-summary', scannerController.getLogsSummary.bind(scannerController));
 router.post('/:id/action', scannerController.performAction.bind(scannerController));
 
 module.exports = router;
