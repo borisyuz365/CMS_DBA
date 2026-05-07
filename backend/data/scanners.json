@@ -1,9 +1,9 @@
 [
   {
     "SCANNER_ID": 1,
-    "SCANNER_NAME": "Flash.Basketball.FlashBasketballScannerMain",
+    "SCANNER_NAME": "TotoWinner",
     "HOST_NAME": "FlashBasketballMainScannerHost",
-    "DESCRIPTION": "Primary scanner for live basketball games from FlashScore. Handles scores, game status and play-by-play updates.",
+    "DESCRIPTION": "Toto Winner scanner. Renamed from a Basketball mock to demo real Coralogix log integration.",
     "DATA_SOURCE_NAME": "FlashScore",
     "DATA_SOURCE_ID": 5,
     "ENVIRONMENT": "prod",

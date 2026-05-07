@@ -1,4 +1,66 @@
 const dataLoader = require('../utils/dataLoader');
+const { fetchScannerLogsSummary } = require('../utils/coralogix');
+
+// Coralogix's UI persists filter state as server-side snapshots referenced by an `id`
+// param, so we can't synthesize per-subsystem deep-links from scratch. For now we
+// hardcode known snapshot IDs per subsystem; add more by sharing a filtered link
+// in Coralogix and copying the `id=` value out of the resulting URL.
+const CORALOGIX_SNAPSHOTS = {
+  TotoWinner: '46RxxKqDSZZQsymijtpdC',
+};
+
+function buildCoralogixDeepLink(subsystem, range) {
+  const snapshotId = CORALOGIX_SNAPSHOTS[subsystem];
+  if (!snapshotId) return null;
+  // Coralogix accepts relative time like `from:now-15m,to:now`
+  const validRange = ['15m', '1h', '4h', '24h'].includes(range) ? range : '1h';
+  return `https://365scores.coralogix.com/#/query-new/logs?id=${snapshotId}&time=from:now-${validRange},to:now&page=0&permalink=true`;
+}
+
+function generateMockLogsSummary({ scannerId, range }) {
+  const rangeMs = range === '15m' ? 15 * 60 * 1000
+    : range === '4h' ? 4 * 60 * 60 * 1000
+    : range === '24h' ? 24 * 60 * 60 * 1000
+    : 60 * 60 * 1000;
+  const bucketCount = 60;
+  const bucketMs = Math.floor(rangeMs / bucketCount);
+  const now = Date.now();
+  const startTs = now - rangeMs;
+
+  let seed = scannerId * 9301 + 49297;
+  const rand = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
+
+  const severities = ['Info', 'Error', 'Warning', 'Debug', 'Verbose'];
+  const baselines = { Info: 1800, Error: 8, Warning: 40, Debug: 220, Verbose: 90 };
+  const variance = { Info: 600, Error: 25, Warning: 60, Debug: 120, Verbose: 70 };
+
+  const buckets = [];
+  for (let i = 0; i < bucketCount; i++) {
+    const ts = new Date(startTs + i * bucketMs).toISOString();
+    const bucket = { ts };
+    for (const sev of severities) {
+      const phase = (i / bucketCount) * Math.PI * 2 + scannerId;
+      const wave = (Math.sin(phase * 1.3) + 1) / 2;
+      const spike = rand() > 0.95 ? rand() * variance[sev] * 3 : 0;
+      const noise = (rand() - 0.5) * variance[sev];
+      bucket[sev] = Math.max(0, Math.round(baselines[sev] + wave * variance[sev] + noise + spike));
+    }
+    buckets.push(bucket);
+  }
+
+  const totals = {};
+  for (const sev of severities) {
+    const values = buckets.map((b) => b[sev]);
+    const sum = values.reduce((a, b) => a + b, 0);
+    totals[sev] = {
+      min: Math.min(...values),
+      max: Math.max(...values),
+      avg: Math.round(sum / values.length),
+      sum,
+    };
+  }
+  return { range, bucketMs, severities, buckets, totals, isMock: true };
+}
 
 class ScannerController {
   async getAll(req, res, next) {
@@ -102,6 +164,51 @@ class ScannerController {
       arr.push(newScanner);
       await dataLoader.saveData('scanners.json', arr);
       res.status(201).json({ success: true, data: newScanner });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getLogsSummary(req, res, next) {
+    try {
+      const id = parseInt(req.params.id, 10);
+      if (isNaN(id)) {
+        return res.status(400).json({ success: false, error: { message: 'Invalid scanner ID' } });
+      }
+      const list = await dataLoader.loadData('scanners.json');
+      const item = Array.isArray(list) ? list.find((s) => s.SCANNER_ID === id) : null;
+      if (!item) {
+        return res.status(404).json({ success: false, error: { message: 'Scanner not found' } });
+      }
+
+      const range = req.query.range || '1h';
+      // ?subsystem= lets us point any scanner page at a real Coralogix subsystem for testing
+      // (the seeded scanner names don't all exist in Coralogix yet).
+      const subsystem = req.query.subsystem || item.SCANNER_NAME;
+      const coralogixUrl = buildCoralogixDeepLink(subsystem, range);
+
+      let result;
+      let mockReason = null;
+      try {
+        result = await fetchScannerLogsSummary({ subsystem, range });
+      } catch (err) {
+        mockReason = err.code === 'NO_API_KEY'
+          ? 'No Coralogix API key configured (set CORALOGIX_API_KEY in backend/.env)'
+          : `Coralogix call failed: ${err.message}`;
+        console.warn(`[scanners/${id}/logs-summary] falling back to mock — ${mockReason}`);
+        result = generateMockLogsSummary({ scannerId: id, range });
+      }
+
+      res.json({
+        success: true,
+        data: {
+          scannerId: id,
+          subsystem,
+          coralogixUrl,
+          ...result,
+          ...(mockReason ? { mockReason } : {}),
+        },
+      });
     } catch (error) {
       next(error);
     }
