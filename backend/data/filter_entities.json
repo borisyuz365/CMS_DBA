@@ -1,5 +1,23 @@
 [
   {
+    "FILTER_ID": 22467,
+    "ENTITY_ID": 493,
+    "ENTITY_TYPE": 2,
+    "CAPTION": "",
+    "CREATE_TIME": "10/05/26 13:25",
+    "UPDATE_TIME": "10/05/26 14:42",
+    "FILTER_ORDER": 2
+  },
+  {
+    "FILTER_ID": 22467,
+    "ENTITY_ID": 3,
+    "ENTITY_TYPE": 6,
+    "CAPTION": "name",
+    "CREATE_TIME": "10/05/26 13:24",
+    "UPDATE_TIME": "10/05/26 14:42",
+    "FILTER_ORDER": 1
+  },
+  {
     "FILTER_ID": 22468,
     "ENTITY_ID": 4618034,
     "ENTITY_TYPE": 5,
@@ -14,8 +32,8 @@
     "ENTITY_TYPE": 5,
     "CAPTION": "",
     "CREATE_TIME": "13/04/26 14:53",
-    "UPDATE_TIME": "13/04/26 14:53",
-    "FILTER_ORDER": null
+    "UPDATE_TIME": "10/05/26 14:42",
+    "FILTER_ORDER": 3
   },
   {
     "FILTER_ID": 22466,

@@ -229,5 +229,23 @@
     "SHOW_INFO_CARD": true,
     "SHOW_MATCHES": true,
     "PRESENT_COMPETITION_RULES": true
+  },
+  {
+    "COMPETITION_ID": 10,
+    "SEASON_NUM": 1,
+    "NAME_ID": 77877779,
+    "START_DATE": "2026-05-10T21:00:00.000Z",
+    "END_DATE": "2026-12-30T22:00:00.000Z",
+    "HAS_TABLE": true,
+    "HAS_BRACKETS": false,
+    "USE_NAME": false,
+    "SHOW_TOP_ATHLETES": true,
+    "SHOW_INFO_CARD": true,
+    "SHOW_MATCHES": true,
+    "PRESENT_COMPETITION_RULES": true,
+    "SEASON_KEY": "2026",
+    "HAS_SEED": false,
+    "SHOW_TOP_TEAMS_TAB": false,
+    "SHOW_OUTRIGHTS_TAB": false
   }
 ]

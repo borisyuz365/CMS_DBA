@@ -1,28 +1,6 @@
 [
   {
     "COMPETITION_ID": 10,
-    "SEASON_NUM": 1,
-    "PHASE_NUM": 1,
-    "PHASE_NAME_ID": 1000,
-    "PARENT_PHASE_NUM": null,
-    "SHOW_STATS": true,
-    "USE_NAME": false,
-    "OVERTIME_LENGTH": 5,
-    "TOP_ATHLETES_MIN_APPEARANCES_PERCENTAGE": 0.5
-  },
-  {
-    "COMPETITION_ID": 10,
-    "SEASON_NUM": 1,
-    "PHASE_NUM": 2,
-    "PHASE_NAME_ID": 1001,
-    "PARENT_PHASE_NUM": 1,
-    "SHOW_STATS": true,
-    "USE_NAME": false,
-    "OVERTIME_LENGTH": 5,
-    "TOP_ATHLETES_MIN_APPEARANCES_PERCENTAGE": 0.5
-  },
-  {
-    "COMPETITION_ID": 10,
     "SEASON_NUM": 2,
     "PHASE_NUM": 1,
     "PHASE_NAME_ID": 1002,
@@ -284,5 +262,16 @@
     "USE_NAME": true,
     "OVERTIME_LENGTH": null,
     "TOP_ATHLETES_MIN_APPEARANCES_PERCENTAGE": 33
+  },
+  {
+    "COMPETITION_ID": 10,
+    "SEASON_NUM": 1,
+    "PHASE_NUM": 1,
+    "PHASE_NAME_ID": 77643631,
+    "PARENT_PHASE_NUM": null,
+    "SHOW_STATS": true,
+    "USE_NAME": true,
+    "OVERTIME_LENGTH": null,
+    "TOP_ATHLETES_MIN_APPEARANCES_PERCENTAGE": null
   }
 ]

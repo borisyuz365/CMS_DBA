@@ -49,7 +49,6 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import CloseIcon from '@mui/icons-material/Close';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -63,7 +62,29 @@ import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import LoadingSpinner from '../../reuse/LoadingSpinner';
 import Alert from '../../reuse/Alert';
 import TermEditModal from '../../reuse/TermEditModal';
-import TableSettingsEditor, { parseSettingsString } from '../components/TableSettingsEditor';
+import { parseSettingsString } from '../components/TableSettingsEditor';
+import CompetitionTableSettingsTab from '../features/competitions/details/CompetitionTableSettingsTab';
+import CreateGenerateStagesDialog from '../features/competitions/details/CreateGenerateStagesDialog';
+import CreateNameDialog from '../features/competitions/details/CreateNameDialog';
+import ExtraToolsTab from '../features/competitions/details/ExtraToolsTab';
+import GroupEditDialog from '../features/competitions/details/GroupEditDialog';
+import GroupModalDialog from '../features/competitions/details/GroupModalDialog';
+import GroupsSection from '../features/competitions/details/GroupsSection';
+import ImageUrlDialog from '../features/competitions/details/ImageUrlDialog';
+import ManageStandingsDialog from '../features/competitions/details/ManageStandingsDialog';
+import ParticipantAddDialog from '../features/competitions/details/ParticipantAddDialog';
+import PhaseModalDialog from '../features/competitions/details/PhaseModalDialog';
+import PhasesSection from '../features/competitions/details/PhasesSection';
+import RemoveFromAllSeasonsDialog from '../features/competitions/details/RemoveFromAllSeasonsDialog';
+import StagesSection from '../features/competitions/details/StagesSection';
+import SeasonDetailsForm from '../features/competitions/details/SeasonDetailsForm';
+import SeasonCompetitorsSection from '../features/competitions/details/SeasonCompetitorsSection';
+import SeasonToolbar from '../features/competitions/details/SeasonToolbar';
+import SeasonModalDialog from '../features/competitions/details/SeasonModalDialog';
+import SeasonTableSettingsDialog from '../features/competitions/details/SeasonTableSettingsDialog';
+import StageDeleteConfirmDialog from '../features/competitions/details/StageDeleteConfirmDialog';
+import StageModalDialog from '../features/competitions/details/StageModalDialog';
+import WinnerDeleteConfirmDialog from '../features/competitions/details/WinnerDeleteConfirmDialog';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import dayjs from 'dayjs';
 import api from '../services/api';
@@ -254,6 +275,7 @@ function CompetitionDetails() {
   const [termModalParticipantContext, setTermModalParticipantContext] = useState(null); // { seasonNum, stageNum, groupNum }
   const [termModalDestinationContext, setTermModalDestinationContext] = useState(null); // opened from destination name
   const [destinationNameCreating, setDestinationNameCreating] = useState(null); // row idx when creating new term
+  const [pointsDeductionReasonCreating, setPointsDeductionReasonCreating] = useState(null); // row idx when creating new reason term
   // Add participant dialog (name → create term under Participants Names, then participant)
   const [participantAddDialogOpen, setParticipantAddDialogOpen] = useState(false);
   const [newParticipantName, setNewParticipantName] = useState('');
@@ -1574,6 +1596,110 @@ function CompetitionDetails() {
     setCreateGenerateDialogOpen(false);
     setGenerateStagesImportSeasonNum(null);
     setGenerateStagesTypes({ leagueCycle: false, groupStage: false, bracketStage: false });
+  };
+
+  const handleCreateGenerateDialogTabChange = (newTab) => {
+    setCreateGenerateDialogTab(newTab);
+    if (newTab === 1 && !stageFormContext) {
+      setStageModalMode('add');
+      setStageFormContext({ seasonNum: selectedStructureSeasonNum });
+      setStageEditTarget(null);
+      setNewStageName('');
+      setNewStageSetCurrent(false);
+      setStageForm({
+        STAGE_NUM: '',
+        NAME_ID: null,
+        STAGE_TYPE: 1,
+        NUM_OF_GAMES: -1,
+        START_DATE: '',
+        END_DATE: '',
+        HAS_TABLE: false,
+        INCLUDE_IN_BRACKET: false,
+        FILTER_DIVISION: false,
+        CONNECTED_IN_BRACKETS: false,
+        PRE_VISUAL_BRACKETS: false,
+        IS_SERIES: false,
+        CONNECTED_TO_PREVIOUS_STAGE: false,
+        PHASE: '',
+      });
+    }
+  };
+
+  const handleImportStagesFromSeason = async () => {
+    if (!id || !generateStagesImportSeasonNum || selectedStructureSeasonNum == null) return;
+    try {
+      const sourceStages = await api.getStages(id, generateStagesImportSeasonNum);
+      const currentStages = stagesBySeason[selectedStructureSeasonNum] || [];
+      const maxNum = currentStages.length ? Math.max(...currentStages.map((s) => Number(s.STAGE_NUM))) : 0;
+      let nextNum = maxNum + 1;
+      for (const sourceStage of sourceStages) {
+        const payload = {
+          STAGE_NUM: nextNum,
+          NAME_ID: sourceStage.NAME_ID,
+          STAGE_TYPE: sourceStage.STAGE_TYPE ?? 1,
+          NUM_OF_GAMES: sourceStage.NUM_OF_GAMES ?? -1,
+          START_DATE: sourceStage.START_DATE,
+          END_DATE: sourceStage.END_DATE,
+          HAS_TABLE: !!sourceStage.HAS_TABLE,
+          INCLUDE_IN_BRACKET: !!sourceStage.INCLUDE_IN_BRACKET,
+          FILTER_DIVISION: !!sourceStage.FILTER_DIVISION,
+          CONNECTED_IN_BRACKETS: !!sourceStage.CONNECTED_IN_BRACKETS,
+          PRE_VISUAL_BRACKETS: !!sourceStage.PRE_VISUAL_BRACKETS,
+          IS_SERIES: !!sourceStage.IS_SERIES,
+          CONNECTED_TO_PREVIOUS_STAGE: !!sourceStage.CONNECTED_TO_PREVIOUS_STAGE,
+          PHASE: sourceStage.PHASE ?? '',
+        };
+        await api.createStage(id, selectedStructureSeasonNum, payload);
+        nextNum += 1;
+      }
+      setSnackbar({ open: true, message: `Imported ${sourceStages.length} stage(s)`, severity: 'success' });
+      loadStagesAndPhases(selectedStructureSeasonNum);
+      handleCloseCreateGenerateDialog();
+    } catch (err) {
+      setSnackbar({ open: true, message: err.message || 'Import failed', severity: 'error' });
+    }
+  };
+
+  const handleCreateGeneratedStages = async () => {
+    if (!id || selectedStructureSeasonNum == null) return;
+    const names = {
+      leagueCycle: 'League Cycle',
+      groupStage: 'Group Stage',
+      bracketStage: 'Bracket Stage',
+    };
+    const types = { leagueCycle: 1, groupStage: 1, bracketStage: 2 };
+    const currentStages = stagesBySeason[selectedStructureSeasonNum] || [];
+    const maxNum = currentStages.length ? Math.max(...currentStages.map((s) => Number(s.STAGE_NUM))) : 0;
+    let nextNum = maxNum + 1;
+    try {
+      for (const key of ['leagueCycle', 'groupStage', 'bracketStage']) {
+        if (!generateStagesTypes[key]) continue;
+        const term = await api.createTerm({
+          category: 'Stages Names',
+          values: [{ languageId: 1, value: names[key], isDefault: true, status: 'Approved' }],
+        });
+        await api.createStage(id, selectedStructureSeasonNum, {
+          STAGE_NUM: nextNum,
+          NAME_ID: term?.id ?? term,
+          STAGE_TYPE: types[key],
+          NUM_OF_GAMES: -1,
+          HAS_TABLE: key === 'groupStage' || key === 'leagueCycle',
+          INCLUDE_IN_BRACKET: key === 'bracketStage',
+          PRE_VISUAL_BRACKETS: false,
+          IS_SERIES: false,
+          CONNECTED_TO_PREVIOUS_STAGE: false,
+          FILTER_DIVISION: false,
+          CONNECTED_IN_BRACKETS: false,
+          PHASE: '',
+        });
+        nextNum += 1;
+      }
+      setSnackbar({ open: true, message: 'Stages created', severity: 'success' });
+      loadStagesAndPhases(selectedStructureSeasonNum);
+      handleCloseCreateGenerateDialog();
+    } catch (err) {
+      setSnackbar({ open: true, message: err.message || 'Create failed', severity: 'error' });
+    }
   };
 
   const handleEditStage = (seasonNum, stage) => {
@@ -3191,6 +3317,17 @@ function CompetitionDetails() {
     setImageUrlValue('');
   };
 
+  const handleImageDialogTypeChange = (newType) => {
+    setEditingImageType(newType);
+    if (newType === 'competition') {
+      setImageUrlValue(formData.COMPETITION_IMAGE_URL || competition?.COMPETITION_IMAGE_URL || '');
+    } else if (newType === 'dark') {
+      setImageUrlValue(formData.COMPETITION_DARK_IMAGE_URL || competition?.COMPETITION_DARK_IMAGE_URL || '');
+    } else {
+      setImageUrlValue(formData.TROPHY_IMAGE_URL || competition?.TROPHY_IMAGE_URL || '');
+    }
+  };
+
   const handleSaveImageUrl = async () => {
     if (!id) return;
     try {
@@ -3213,6 +3350,26 @@ function CompetitionDetails() {
     } catch (err) {
       setSnackbar({ open: true, message: err.message || 'Failed to save image URL', severity: 'error' });
     }
+  };
+
+  const handleCloseCreateBracketFinalDialog = () => {
+    setCreateBracketFinalDialogOpen(false);
+    setCreateBracketFinalName('');
+    setBracketFinalInputValue('');
+  };
+
+  const handleCloseCreateRoundNameDialog = () => {
+    setCreateRoundNameDialogOpen(false);
+    setCreateRoundNameName('');
+    setRoundNameInputValue('');
+  };
+
+  const handleCloseParticipantAddDialog = () => {
+    if (participantAddSaving) return;
+    setParticipantAddDialogOpen(false);
+    setParticipantAddContext(null);
+    setNewParticipantName('');
+    setParticipantSelectedTermId(null);
   };
 
 
@@ -5195,207 +5352,44 @@ function CompetitionDetails() {
             </TableContainer>
           )}
 
-          {/* Delete confirmation dialog */}
-          <Dialog open={winnersDeleteConfirm != null} onClose={() => setWinnersDeleteConfirm(null)} maxWidth="xs" fullWidth>
-            <DialogTitle>Remove Winner</DialogTitle>
-            <DialogContent>
-              <Typography variant="body2">
-                Are you sure you want to remove this winner? The competitor will remain in the season but will no longer be marked as winner.
-              </Typography>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={() => setWinnersDeleteConfirm(null)} sx={{ textTransform: 'none' }}>Cancel</Button>
-              <Button onClick={handleWinnersDeleteConfirm} variant="contained" color="error" sx={{ textTransform: 'none' }}>Remove</Button>
-            </DialogActions>
-          </Dialog>
+          <WinnerDeleteConfirmDialog
+            open={winnersDeleteConfirm != null}
+            onClose={() => setWinnersDeleteConfirm(null)}
+            onConfirm={handleWinnersDeleteConfirm}
+          />
         </Box>
       )}
 
       {activeTab === 3 && (
-        <Box>
-          <Typography variant="h6" sx={{ mb: 2, fontWeight: 700, color: '#000000' }}>
-            Table Settings
-          </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-            Points and table rules for this competition. Changes are saved to this competition only (competitions.json).
-          </Typography>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6} sx={{ width: 'fit-content', maxWidth: '100%' }}>
-              {Number(formData.SPORT_TYPE_ID) === 2 && (
-                <Box sx={{ mb: 2 }}>
-                  <FormControl size="small" sx={{ minWidth: 200, '& .MuiOutlinedInput-input': { py: 1, fontSize: '0.8rem' }, '& .MuiInputLabel-root': { fontSize: '0.75rem' } }}>
-                    <InputLabel>{FIELD_LABELS.STANDING_TYPE}</InputLabel>
-                    <Select
-                      value={formData.STANDING_TYPE ?? competition?.STANDING_TYPE ?? ''}
-                      label={FIELD_LABELS.STANDING_TYPE}
-                      onChange={(e) => handleFormChange('STANDING_TYPE', e.target.value)}
-                    >
-                      <MenuItem value="">—</MenuItem>
-                      {standingTypes.map((st) => (
-                        <MenuItem key={st.STANDING_TYPE_ID} value={st.STANDING_TYPE}>{st.STANDING_TYPE}</MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Box>
-              )}
-              <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1.5 }}>Point configuration</Typography>
-              <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4, 18ch)', columnGap: 2, rowGap: 3.5, mb: 2, width: 'fit-content' }}>
-                {TABLE_POINT_KEYS.map((key) => (
-                  <TextField
-                    key={key}
-                    size="small"
-                    label={formatTableSettingKeyAsLabel(key)}
-                    type="number"
-                    value={formData[key] ?? competition?.[key] ?? ''}
-                    onChange={(e) => handleFormChange(key, e.target.value === '' ? null : Number(e.target.value))}
-                    sx={{
-                      width: '18ch',
-                      maxWidth: '100%',
-                      '& .MuiOutlinedInput-input': { py: 1, fontSize: '0.8rem' },
-                      '& .MuiInputLabel-root': { fontSize: '0.75rem' },
-                    }}
-                  />
-                ))}
-              </Box>
-              <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1.5 }}>Scoring rules</Typography>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, width: 'fit-content' }}>
-                {TABLE_CHECKBOX_KEYS.map((key) => (
-                  <FormControlLabel
-                    key={key}
-                    control={
-                      <Checkbox
-                        size="small"
-                        checked={!!(formData[key] ?? competition?.[key])}
-                        onChange={(e) => handleFormChange(key, e.target.checked)}
-                      />
-                    }
-                    label={<Typography variant="body2">{TABLE_SETTINGS_LABELS[key] ?? formatTableSettingKeyAsLabel(key)}</Typography>}
-                    sx={{ '& .MuiFormControlLabel-label': { fontSize: '0.8rem' } }}
-                  />
-                ))}
-              </Box>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 0.5 }}>Table order parameters</Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5, fontSize: '0.8rem' }}>
-                Current order (priority from top to bottom):
-              </Typography>
-              <List dense sx={{ border: '1px solid #e0e0e0', borderRadius: 1, mb: 2, bgcolor: '#fafafa' }}>
-                {orderByList.map((item, index) => (
-                  <ListItem
-                    key={`${item.field}-${index}`}
-                    data-index={index}
-                    onDragOver={(e) => handleOrderDragOver(e, index)}
-                    onDragLeave={handleOrderDragLeave}
-                    onDrop={(e) => handleOrderDrop(e, index)}
-                    sx={{
-                      py: 0.5,
-                      cursor: dragOrderIndex != null ? (dragOrderIndex === index ? 'grabbing' : 'default') : 'default',
-                      transition: 'all 0.2s ease',
-                      ...(dragOrderIndex === index && {
-                        opacity: 0.9,
-                        transform: 'scale(1.02)',
-                        boxShadow: 2,
-                        borderRadius: 1,
-                        bgcolor: 'background.paper',
-                        zIndex: 1,
-                      }),
-                      ...(dragOverOrderIndex === index && dragOrderIndex !== index && {
-                        borderTop: '2px solid',
-                        borderColor: 'primary.main',
-                        bgcolor: 'action.hover',
-                        borderRadius: 0,
-                      }),
-                    }}
-                    secondaryAction={
-                      <IconButton edge="end" size="small" onClick={() => handleRemoveOrderByItem(index)} aria-label="Remove" sx={{ color: '#d32f2f' }}>
-                        <DeleteOutlineIcon fontSize="small" />
-                      </IconButton>
-                    }
-                  >
-                    <Box
-                      component="span"
-                      draggable
-                      onDragStart={(e) => handleOrderDragStart(e, index)}
-                      onDragEnd={handleOrderDragEnd}
-                      sx={{ display: 'flex', alignItems: 'center', mr: 1, cursor: 'grab', color: 'action.active', '&:active': { cursor: 'grabbing' } }}
-                      aria-label="Drag to reorder"
-                    >
-                      <DragIndicatorIcon fontSize="small" />
-                    </Box>
-                    <ListItemText
-                      primary={`${index + 1}. ${tableSettingsFieldOptions.find((o) => o.value === item.field)?.label ?? item.field}`}
-                      secondary={item.direction === 'desc' ? 'Descending' : 'Ascending'}
-                      primaryTypographyProps={{ fontSize: '0.875rem' }}
-                      secondaryTypographyProps={{ fontSize: '0.75rem' }}
-                    />
-                  </ListItem>
-                ))}
-                {orderByList.length === 0 && (
-                  <ListItem>
-                    <ListItemText primary="No order parameters defined" primaryTypographyProps={{ fontSize: '0.875rem', color: 'text.secondary' }} />
-                  </ListItem>
-                )}
-              </List>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 2 }}>
-                <FormControl size="small" sx={{ minWidth: 180 }}>
-                  <InputLabel id="table-order-field-label">Select field</InputLabel>
-                  <Select
-                    labelId="table-order-field-label"
-                    label="Select field"
-                    value={tableOrderByNewField}
-                    onChange={(e) => setTableOrderByNewField(e.target.value)}
-                  >
-                    <MenuItem value="">Select field</MenuItem>
-                    {tableSettingsFieldOptions.filter((o) => !orderByList.some((item) => item.field === o.value)).map((opt) => (
-                      <MenuItem key={opt.value} value={opt.value}>{opt.label}</MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-                <FormControl size="small" sx={{ minWidth: 140 }}>
-                  <InputLabel id="table-order-dir-label">Direction</InputLabel>
-                  <Select
-                    labelId="table-order-dir-label"
-                    label="Direction"
-                    value={tableOrderByNewDirection}
-                    onChange={(e) => setTableOrderByNewDirection(e.target.value)}
-                  >
-                    <MenuItem value="desc">Descending</MenuItem>
-                    <MenuItem value="asc">Ascending</MenuItem>
-                  </Select>
-                </FormControl>
-                <Button
-                  variant="contained"
-                  size="small"
-                  onClick={handleAddOrderByItem}
-                  disabled={!tableOrderByNewField || orderByList.some((item) => item.field === tableOrderByNewField)}
-                  sx={{ backgroundColor: '#1976d2', textTransform: 'none' }}
-                >
-                  Add
-                </Button>
-              </Box>
-            </Grid>
-          </Grid>
-        </Box>
+        <CompetitionTableSettingsTab
+          formData={formData}
+          competition={competition}
+          standingTypes={standingTypes}
+          tablePointKeys={TABLE_POINT_KEYS}
+          tableCheckboxKeys={TABLE_CHECKBOX_KEYS}
+          tableSettingsLabels={TABLE_SETTINGS_LABELS}
+          orderByList={orderByList}
+          tableSettingsFieldOptions={tableSettingsFieldOptions}
+          tableOrderByNewField={tableOrderByNewField}
+          tableOrderByNewDirection={tableOrderByNewDirection}
+          dragOrderIndex={dragOrderIndex}
+          dragOverOrderIndex={dragOverOrderIndex}
+          standingTypeLabel={FIELD_LABELS.STANDING_TYPE}
+          onFormChange={handleFormChange}
+          onTableOrderByNewFieldChange={setTableOrderByNewField}
+          onTableOrderByNewDirectionChange={setTableOrderByNewDirection}
+          onAddOrderByItem={handleAddOrderByItem}
+          onRemoveOrderByItem={handleRemoveOrderByItem}
+          onOrderDragStart={handleOrderDragStart}
+          onOrderDragEnd={handleOrderDragEnd}
+          onOrderDragOver={handleOrderDragOver}
+          onOrderDragLeave={handleOrderDragLeave}
+          onOrderDrop={handleOrderDrop}
+          formatTableSettingKeyAsLabel={formatTableSettingKeyAsLabel}
+        />
       )}
 
-      {activeTab === 4 && (
-        <Box>
-          <Typography variant="h6" sx={{ fontWeight: 700, color: '#000000', mb: 2 }}>
-            Extra Tools & Screens
-          </Typography>
-          <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', alignItems: 'center' }}>
-            <Button variant="outlined" size="small" sx={{ textTransform: 'none' }}>Reports</Button>
-            <Button variant="outlined" size="small" sx={{ textTransform: 'none' }}>Info Card</Button>
-            <Button variant="outlined" size="small" sx={{ textTransform: 'none' }}>Priorities</Button>
-            <Button variant="outlined" size="small" sx={{ textTransform: 'none' }}>Bet Lines</Button>
-            <Button variant="outlined" size="small" sx={{ textTransform: 'none' }}>Team of The Week</Button>
-            <Button variant="outlined" size="small" sx={{ textTransform: 'none' }}>Cards Order</Button>
-            <Button variant="outlined" size="small" sx={{ textTransform: 'none' }}>Featured Match</Button>
-            <Button variant="outlined" size="small" sx={{ textTransform: 'none' }}>Draw</Button>
-          </Box>
-        </Box>
-      )}
+      {activeTab === 4 && <ExtraToolsTab />}
 
       {activeTab === 0 && (
         <Box>
@@ -5440,610 +5434,56 @@ function CompetitionDetails() {
               </Box>
             ) : (
               <>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap', mb: 2 }}>
-                  <Box sx={{ width: { xs: '100%', sm: 'calc((100% - 48px) / 6)' }, minWidth: { xs: 0, sm: 120 } }}>
-                    <Autocomplete
-                      size="small"
-                      options={structureSeasons}
-                      getOptionLabel={(s) => {
-                        const isCurrent = competition?.CURRENT_SEASON === s.SEASON_NUM;
-                        return `#${s.SEASON_NUM} - ${s.name || `Season ${s.SEASON_NUM}`}${isCurrent ? ' (Current)' : ''}`;
-                      }}
-                      value={structureSeasons.find((s) => s.SEASON_NUM === selectedStructureSeasonNum) ?? null}
-                      onChange={(_, newValue) => setSelectedStructureSeasonNum(newValue?.SEASON_NUM ?? null)}
-                      isOptionEqualToValue={(opt, val) => opt?.SEASON_NUM === val?.SEASON_NUM}
-                      renderInput={(params) => (
-                        <TextField {...params} label="Season Name" placeholder="Type to search..." />
-                      )}
-                      filterSelectedOptions={false}
-                    />
-                  </Box>
-                  <Button
-                    variant="outlined"
-                    size="small"
-                    sx={{ textTransform: 'none' }}
-                    onClick={() => {
-                      const s = structureSeasons.find((se) => se.SEASON_NUM === selectedStructureSeasonNum);
-                      if (s?.NAME_ID) handleSeasonNameClick(null, s);
-                    }}
-                    disabled={!selectedStructureSeasonNum}
-                  >
-                    Edit Name
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    size="small"
-                    onClick={() => handleSetCurrentSeason(selectedStructureSeasonNum)}
-                    disabled={!selectedStructureSeasonNum || competition?.CURRENT_SEASON === selectedStructureSeasonNum}
-                    sx={{ textTransform: 'none' }}
-                  >
-                    SET CURRENT
-                  </Button>
-                  <Button variant="contained" size="small" onClick={handleAddSeason} sx={{ textTransform: 'none' }}>CREATE</Button>
-                  <Button
-                    variant="contained"
-                    size="small"
-                    onClick={() => {
-                      const s = structureSeasons.find((se) => se.SEASON_NUM === selectedStructureSeasonNum);
-                      if (s) handleDeleteSeason(s);
-                    }}
-                    disabled={!selectedStructureSeasonNum || competition?.CURRENT_SEASON === selectedStructureSeasonNum}
-                    sx={{
-                      textTransform: 'none',
-                      fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
-                      backgroundColor: '#d32f2f',
-                      color: '#ffffff',
-                      '&:hover': {
-                        backgroundColor: '#c62828',
-                      },
-                      '&.Mui-disabled': {
-                        backgroundColor: '#cccccc',
-                        color: '#ffffff',
-                      },
-                    }}
-                  >
-                    DELETE
-                  </Button>
-                </Box>
+                <SeasonToolbar
+                  seasons={structureSeasons}
+                  competition={competition}
+                  selectedSeasonNum={selectedStructureSeasonNum}
+                  onSelectedSeasonNumChange={setSelectedStructureSeasonNum}
+                  onEditSeasonName={(season) => handleSeasonNameClick(null, season)}
+                  onSetCurrentSeason={handleSetCurrentSeason}
+                  onAddSeason={handleAddSeason}
+                  onDeleteSeason={handleDeleteSeason}
+                />
 
                 {structureSeasonForm && (
                   <>
-                    <Typography variant="subtitle2" sx={{ fontWeight: 600, mt: 2, mb: 1 }}>Season Details</Typography>
-                    <Grid container spacing={2} sx={{ mb: 2 }} alignItems="center">
-                      <Grid item xs={12} sm={2}>
-                        <TextField
-                          fullWidth
-                          size="small"
-                          label="Season Key"
-                          placeholder="<Default>YYYY/YYYY"
-                          value={structureSeasonForm.SEASON_KEY ?? ''}
-                          onChange={(e) => setStructureSeasonForm((f) => ({ ...f, SEASON_KEY: e.target.value || null }))}
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={2}>
-                        <DateTimePicker
-                          label="Start Date"
-                          value={structureSeasonForm.START_DATE ? dayjs(structureSeasonForm.START_DATE) : null}
-                          onChange={(v) => setStructureSeasonForm((f) => ({ ...f, START_DATE: v ? v.toISOString() : null }))}
-                          slotProps={{ textField: { size: 'small', fullWidth: true } }}
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={2}>
-                        <DateTimePicker
-                          label="End Date"
-                          value={structureSeasonForm.END_DATE ? dayjs(structureSeasonForm.END_DATE) : null}
-                          onChange={(v) => setStructureSeasonForm((f) => ({ ...f, END_DATE: v ? v.toISOString() : null }))}
-                          slotProps={{ textField: { size: 'small', fullWidth: true } }}
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <Button variant="contained" size="small" sx={{ textTransform: 'none' }}>CONNECT GAMES & COMPETITORS</Button>
-                      </Grid>
-                    </Grid>
+                    <SeasonDetailsForm
+                      seasonForm={structureSeasonForm}
+                      onSeasonFormChange={setStructureSeasonForm}
+                    />
 
-                    <Typography variant="subtitle2" sx={{ fontWeight: 600, mt: 2, mb: 1 }}>Season Configuration</Typography>
-                    <Grid container spacing={1} sx={{ mb: 2 }}>
-                      {[
-                        { key: 'USE_NAME', label: 'Use Name' },
-                        { key: 'SHOW_TOP_ATHLETES', label: 'Show Top Athletes' },
-                        { key: 'HAS_BRACKETS', label: 'Has Brackets' },
-                        { key: 'HAS_TABLE', label: 'Has Table' },
-                        { key: 'SHOW_INFO_CARD', label: 'Has Info Card' },
-                        { key: 'HAS_SEED', label: 'Has Seed' },
-                        { key: 'SHOW_TOP_TEAMS_TAB', label: 'Show Top Teams Tab' },
-                        { key: 'SHOW_OUTRIGHTS_TAB', label: 'Show Outrights Tab' },
-                        { key: 'PRESENT_COMPETITION_RULES', label: 'Present Competition Rules' },
-                        { key: 'SHOW_MATCHES', label: 'Show Matches' },
-                      ].map(({ key, label }) => (
-                        <Grid item xs={6} sm={4} md={3} key={key}>
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                size="small"
-                                checked={!!structureSeasonForm[key]}
-                                onChange={(e) => setStructureSeasonForm((f) => ({ ...f, [key]: e.target.checked }))}
-                              />
-                            }
-                            label={label}
-                          />
-                        </Grid>
-                      ))}
-                    </Grid>
-
-                    {/* Season Competitors - merged into Seasons section */}
-                    <Typography variant="subtitle2" sx={{ fontWeight: 600, mt: 2, mb: 1 }}>
-                      Season Competitors
-                    </Typography>
-              {competitorsLoading ? (
-                <Box sx={{ py: 3, display: 'flex', justifyContent: 'center' }}>
-                  <LoadingSpinner />
-                </Box>
-              ) : (
-                <Box
-                  sx={{
-                    display: 'flex',
-                    flexDirection: { xs: 'column', md: 'row' },
-                    gap: 2,
-                    alignItems: { xs: 'stretch', md: 'stretch' },
-                  }}
-                >
-                  {/* Left: Competitors In Season - 55% width */}
-                  <Box sx={{ flex: { xs: '1 1 100%', md: '55 1 0%' }, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
-                    <Box sx={{ flex: 1, minHeight: 52, display: 'flex', flexDirection: 'column' }}>
-                      <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: '#000' }}>
-                        Competitors In Season {competitorsInSeason.length > 0 && (
-                          <Typography component="span" sx={{ fontWeight: 400, color: 'text.secondary', ml: 0.5 }}>
-                            (Total: {competitorsInSeason.length})
-                          </Typography>
-                        )}
-                      </Typography>
-                      <Box sx={{ minHeight: 52, display: { xs: 'none', md: 'block' }, mb: 1 }} />
-                    </Box>
-                    <Paper variant="outlined" sx={{ height: 530, minHeight: 530, flexShrink: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                      <TableContainer sx={{ flex: 1, overflow: 'auto' }}>
-                      <Table size="small" stickyHeader sx={{ '& .MuiTableCell-root': { py: 0.25 }, '& .MuiTableRow-root': { '& td': { verticalAlign: 'middle' } } }}>
-                        <TableHead>
-                          <TableRow>
-                            <TableCell padding="checkbox">
-                              <Checkbox
-                                checked={
-                                  competitorsInSeason.length > 0 &&
-                                  selectedInSeason.length === competitorsInSeason.length
-                                }
-                                indeterminate={
-                                  selectedInSeason.length > 0 &&
-                                  selectedInSeason.length < competitorsInSeason.length
-                                }
-                                onChange={(e) => {
-                                  if (e.target.checked) {
-                                    setSelectedInSeason(competitorsInSeason.map((r) => r.COMPETITOR_ID));
-                                  } else {
-                                    setSelectedInSeason([]);
-                                  }
-                                }}
-                                inputProps={{ 'aria-label': 'select all in season' }}
-                              />
-                            </TableCell>
-                            <TableCell sx={{ fontWeight: 600 }}>ID</TableCell>
-                            <TableCell sx={{ fontWeight: 600 }}>Name</TableCell>
-                            <TableCell sx={{ fontWeight: 600 }}>Country</TableCell>
-                            <TableCell sx={{ fontWeight: 600 }}>Status</TableCell>
-                            {!!structureSeasonForm.HAS_SEED && (
-                              <TableCell sx={{ fontWeight: 600 }}>Seed</TableCell>
-                            )}
-                            <TableCell sx={{ fontWeight: 600 }} padding="checkbox">Not In Season</TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {(rowsPerPageInSeason > 0
-                            ? competitorsInSeason.slice(
-                                pageInSeason * rowsPerPageInSeason,
-                                pageInSeason * rowsPerPageInSeason + rowsPerPageInSeason
-                              )
-                            : competitorsInSeason
-                          ).map((r) => {
-                            const cid = r.COMPETITOR_ID;
-                            const countryName =
-                              r.countryName ||
-                              (r.COUNTRY_ID && countries.find((c) => Number(c.COUNTRY_ID) === Number(r.COUNTRY_ID))?.name) ||
-                              '—';
-                            return (
-                              <TableRow
-                                key={cid}
-                                hover
-                                selected={selectedInSeason.includes(cid)}
-                                onClick={() => {
-                                  setSelectedInSeason((prev) =>
-                                    prev.includes(cid) ? prev.filter((x) => x !== cid) : [...prev, cid]
-                                  );
-                                }}
-                                sx={{ cursor: 'pointer' }}
-                              >
-                                <TableCell padding="checkbox" onClick={(ev) => ev.stopPropagation()}>
-                                  <Checkbox
-                                    checked={selectedInSeason.includes(cid)}
-                                    onChange={(e) => {
-                                      if (e.target.checked) {
-                                        setSelectedInSeason((prev) => [...prev, cid]);
-                                      } else {
-                                        setSelectedInSeason((prev) => prev.filter((x) => x !== cid));
-                                      }
-                                    }}
-                                  />
-                                </TableCell>
-                                <TableCell>{cid}</TableCell>
-                                <TableCell>
-                                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                    {r.logoUrl ? (
-                                      <Avatar
-                                        src={r.logoUrl}
-                                        alt={r.name || ''}
-                                        variant="rounded"
-                                        sx={{ width: 28, height: 28 }}
-                                        imgProps={{ onError: (e) => { e.target.style.display = 'none'; } }}
-                                      />
-                                    ) : (
-                                      <Avatar
-                                        variant="rounded"
-                                        sx={{ width: 28, height: 28, bgcolor: 'action.hover', fontSize: '0.75rem' }}
-                                      >
-                                        {(r.name || `C`).charAt(0).toUpperCase()}
-                                      </Avatar>
-                                    )}
-                                    <span>{r.name || `Competitor ${cid}`}</span>
-                                  </Box>
-                                </TableCell>
-                                <TableCell>{countryName}</TableCell>
-                                <TableCell onClick={(ev) => ev.stopPropagation()}>
-                                  <Tooltip
-                                    title={
-                                      (r.JOIN_TYPE === 1 || r.JOIN_TYPE === 2) && r.ORIGIN_COMPETITION_ID
-                                        ? `from ${allCompetitions.find((c) => Number(c.COMPETITION_ID) === Number(r.ORIGIN_COMPETITION_ID))?.name || `Competition ${r.ORIGIN_COMPETITION_ID}`}`
-                                        : ''
-                                    }
-                                    placement="top"
-                                  >
-                                    <span style={{ display: 'inline-block' }}>
-                                      <Select
-                                        size="small"
-                                        displayEmpty
-                                        value={
-                                          r.HOST ? 'host' : r.JOIN_TYPE === 1 ? 'promoted' : r.JOIN_TYPE === 2 ? 'relegated' : ''
-                                        }
-                                        onChange={(e) => handleSeasonCompetitorStatusChange(cid, e.target.value)}
-                                        renderValue={(v) =>
-                                          v === 'host' ? 'Host' : v === 'promoted' ? 'Promoted' : v === 'relegated' ? 'Relegated' : 'Select status'
-                                        }
-                                        sx={{
-                                          minWidth: 130,
-                                          height: 32,
-                                          fontSize: '0.875rem',
-                                          '& .MuiSelect-select': { py: 0.5 },
-                                        }}
-                                      >
-                                        <MenuItem value="">
-                                          <em>Select status</em>
-                                        </MenuItem>
-                                        <MenuItem value="host">Host</MenuItem>
-                                        <MenuItem value="promoted">Promoted</MenuItem>
-                                        <MenuItem value="relegated">Relegated</MenuItem>
-                                      </Select>
-                                    </span>
-                                  </Tooltip>
-                                </TableCell>
-                                {!!structureSeasonForm.HAS_SEED && (
-                                  <TableCell>
-                                    <TextField
-                                      variant="outlined"
-                                      size="small"
-                                      type="number"
-                                      value={r.SEED ?? ''}
-                                      onBlur={(e) => {
-                                        const val = e.target.value;
-                                        handleSeasonCompetitorStatusSeedBlur(cid, 'SEED', val);
-                                      }}
-                                      onChange={(e) => {
-                                        setCompetitorsInSeason((prev) =>
-                                          prev.map((x) =>
-                                            x.COMPETITOR_ID === cid ? { ...x, SEED: e.target.value === '' ? null : Number(e.target.value) } : x
-                                          )
-                                        );
-                                      }}
-                                      inputProps={{ min: 0, style: { width: 56, textAlign: 'center' } }}
-                                      onClick={(ev) => ev.stopPropagation()}
-                                      sx={{
-                                        width: 72,
-                                        '& .MuiOutlinedInput-root': {
-                                          backgroundColor: 'background.paper',
-                                          '& fieldset': { borderColor: 'divider' },
-                                          '&:hover fieldset': { borderColor: 'action.hover' },
-                                          '&.Mui-focused fieldset': { borderColor: 'primary.main', borderWidth: 1 },
-                                        },
-                                        '& .MuiOutlinedInput-input': { py: 0.5, fontSize: '0.875rem' },
-                                      }}
-                                    />
-                                  </TableCell>
-                                )}
-                                <TableCell padding="checkbox" onClick={(ev) => ev.stopPropagation()}>
-                                  <Checkbox
-                                    size="small"
-                                    checked={!!r.NOT_IN_SEASON}
-                                    onChange={(e) => handleSeasonCompetitorNotInSeasonChange(cid, e.target.checked)}
-                                  />
-                                </TableCell>
-                              </TableRow>
-                            );
-                          })}
-                          {competitorsInSeason.length === 0 && (
-                            <TableRow>
-                              <TableCell colSpan={structureSeasonForm.HAS_SEED ? 7 : 6} align="center" sx={{ py: 3 }}>
-                                No competitors in this season.
-                              </TableCell>
-                            </TableRow>
-                          )}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                      <Box sx={{ flexShrink: 0, borderTop: 1, borderColor: 'divider' }}>
-                        <TablePagination
-                          component="div"
-                          rowsPerPageOptions={[25, 50, 100, 200]}
-                          count={competitorsInSeason.length}
-                          rowsPerPage={rowsPerPageInSeason}
-                          page={pageInSeason}
-                          onPageChange={(_, newPage) => setPageInSeason(newPage)}
-                          onRowsPerPageChange={(e) => {
-                            setRowsPerPageInSeason(parseInt(e.target.value, 10));
-                            setPageInSeason(0);
-                          }}
-                          labelRowsPerPage="Rows:"
-                        />
-                      </Box>
-                    </Paper>
-                  </Box>
-
-                  {/* Middle: Action buttons - vertically centered with tables */}
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      flexDirection: { xs: 'row', md: 'column' },
-                      justifyContent: 'center',
-                      alignSelf: { md: 'center' },
-                      gap: 1,
-                      order: { xs: 3, md: 2 },
-                    }}
-                  >
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      onClick={handleAddToSeason}
-                      disabled={selectedNotInSeason.length === 0}
-                      sx={{ textTransform: 'none' }}
-                    >
-                      &lt;&lt; ADD COMPETITORS
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      onClick={handleRemoveSelectedFromSeason}
-                      disabled={selectedInSeason.length === 0}
-                      sx={{ textTransform: 'none' }}
-                    >
-                      REMOVE COMPETITORS &gt;&gt;
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      onClick={handleRemoveFromAllSeasonsClick}
-                      disabled={selectedInSeason.length === 0 && selectedNotInSeason.length === 0}
-                      sx={{
-                        textTransform: 'none',
-                        borderColor: '#d32f2f',
-                        color: '#d32f2f',
-                        '&:hover': { borderColor: '#b71c1c', backgroundColor: 'rgba(211, 47, 47, 0.04)' },
-                      }}
-                    >
-                      REMOVE FROM ALL SEASONS
-                    </Button>
-                  </Box>
-
-                  {/* Right: Competitors Not In Season - 45% width */}
-                  <Box sx={{ flex: { xs: '1 1 100%', md: '45 1 0%' }, minWidth: 0, order: { xs: 2, md: 3 }, display: 'flex', flexDirection: 'column' }}>
-                    <Box sx={{ flex: 1, minHeight: 52, display: 'flex', flexDirection: 'column' }}>
-                      <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: '#000' }}>
-                        Competitors Not In Season {competitorsNotInSeason.length > 0 && (
-                          <Typography component="span" sx={{ fontWeight: 400, color: 'text.secondary', ml: 0.5 }}>
-                            (Total: {competitorsNotInSeason.length})
-                          </Typography>
-                        )}
-                      </Typography>
-                      <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 1, minHeight: 52, alignItems: 'center' }}>
-                      <FormControl size="small" sx={{ minWidth: 140 }}>
-                        <InputLabel>Country</InputLabel>
-                        <Select
-                          value={competitorsNotInSeasonFilters.countryId || ''}
-                          label="Country"
-                          onChange={(e) => {
-                            const newCountry = e.target.value === '' ? '' : e.target.value;
-                            setCompetitorsNotInSeasonFilters((f) => {
-                              let newComp = '';
-                              if (newCountry) {
-                                const curComp = allCompetitions.find((c) => Number(c.COMPETITION_ID) === Number(id));
-                                newComp = curComp && Number(curComp.COUNTRY_ID) === Number(newCountry) ? String(id) : '';
-                              }
-                              return { ...f, countryId: newCountry, competitionId: newComp };
-                            });
-                          }}
-                        >
-                          <MenuItem value="">All</MenuItem>
-                          {countries.map((c) => (
-                            <MenuItem key={c.COUNTRY_ID} value={c.COUNTRY_ID}>
-                              {c.name || `Country ${c.COUNTRY_ID}`}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                      {competitorsNotInSeasonFilters.countryId && (
-                        <FormControl size="small" sx={{ minWidth: 180 }}>
-                          <InputLabel>Competition</InputLabel>
-                          <Select
-                            value={competitorsNotInSeasonFilters.competitionId || ''}
-                            label="Competition"
-                            onChange={(e) =>
-                              setCompetitorsNotInSeasonFilters((f) => ({
-                                ...f,
-                                competitionId: e.target.value === '' ? '' : e.target.value,
-                              }))
-                            }
-                          >
-                            <MenuItem value="">All</MenuItem>
-                            {(allCompetitions || [])
-                              .filter(
-                                (c) =>
-                                  Number(c.SPORT_TYPE_ID) === Number(competition?.SPORT_TYPE_ID) &&
-                                  Number(c.COUNTRY_ID) === Number(competitorsNotInSeasonFilters.countryId)
-                              )
-                              .map((c) => (
-                                <MenuItem key={c.COMPETITION_ID} value={c.COMPETITION_ID}>
-                                  {c.name || `Competition ${c.COMPETITION_ID}`}
-                                </MenuItem>
-                              ))}
-                          </Select>
-                        </FormControl>
-                      )}
-                      <TextField
-                        size="small"
-                        label="Competitor Name"
-                        placeholder="Search by name"
-                        value={competitorsNotInSeasonFilters.name || ''}
-                        onChange={(e) =>
-                          setCompetitorsNotInSeasonFilters((f) => ({ ...f, name: e.target.value }))
-                        }
-                        sx={{ minWidth: 160 }}
-                      />
-                      <Button variant="contained" size="small" onClick={loadCompetitorsTab} sx={{ textTransform: 'none' }}>
-                        SEARCH
-                      </Button>
-                    </Box>
-                    </Box>
-                    <Paper variant="outlined" sx={{ height: 530, minHeight: 530, flexShrink: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                      <TableContainer sx={{ flex: 1, overflow: 'auto' }}>
-                      <Table size="small" stickyHeader sx={{ '& .MuiTableCell-root': { py: 0.25 } }}>
-                        <TableHead>
-                          <TableRow>
-                            <TableCell padding="checkbox">
-                              <Checkbox
-                                checked={
-                                  competitorsNotInSeason.length > 0 &&
-                                  selectedNotInSeason.length === competitorsNotInSeason.length
-                                }
-                                indeterminate={
-                                  selectedNotInSeason.length > 0 &&
-                                  selectedNotInSeason.length < competitorsNotInSeason.length
-                                }
-                                onChange={(e) => {
-                                  if (e.target.checked) {
-                                    setSelectedNotInSeason(competitorsNotInSeason.map((r) => r.COMPETITOR_ID));
-                                  } else {
-                                    setSelectedNotInSeason([]);
-                                  }
-                                }}
-                                inputProps={{ 'aria-label': 'select all not in season' }}
-                              />
-                            </TableCell>
-                            <TableCell sx={{ fontWeight: 600 }}>ID</TableCell>
-                            <TableCell sx={{ fontWeight: 600 }}>Name</TableCell>
-                            <TableCell sx={{ fontWeight: 600 }}>Country</TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {(rowsPerPageNotInSeason > 0
-                            ? competitorsNotInSeason.slice(
-                                pageNotInSeason * rowsPerPageNotInSeason,
-                                pageNotInSeason * rowsPerPageNotInSeason + rowsPerPageNotInSeason
-                              )
-                            : competitorsNotInSeason
-                          ).map((r) => {
-                            const cid = r.COMPETITOR_ID;
-                            return (
-                              <TableRow
-                                key={cid}
-                                hover
-                                selected={selectedNotInSeason.includes(cid)}
-                                onClick={() => {
-                                  setSelectedNotInSeason((prev) =>
-                                    prev.includes(cid) ? prev.filter((x) => x !== cid) : [...prev, cid]
-                                  );
-                                }}
-                                sx={{ cursor: 'pointer' }}
-                              >
-                                <TableCell padding="checkbox" onClick={(ev) => ev.stopPropagation()}>
-                                  <Checkbox
-                                    checked={selectedNotInSeason.includes(cid)}
-                                    onChange={(e) => {
-                                      if (e.target.checked) {
-                                        setSelectedNotInSeason((prev) => [...prev, cid]);
-                                      } else {
-                                        setSelectedNotInSeason((prev) => prev.filter((x) => x !== cid));
-                                      }
-                                    }}
-                                  />
-                                </TableCell>
-                                <TableCell>{cid}</TableCell>
-                                <TableCell>
-                                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                    {r.logoUrl ? (
-                                      <Avatar
-                                        src={r.logoUrl}
-                                        alt={r.name || ''}
-                                        variant="rounded"
-                                        sx={{ width: 28, height: 28 }}
-                                        imgProps={{ onError: (e) => { e.target.style.display = 'none'; } }}
-                                      />
-                                    ) : (
-                                      <Avatar
-                                        variant="rounded"
-                                        sx={{ width: 28, height: 28, bgcolor: 'action.hover', fontSize: '0.75rem' }}
-                                      >
-                                        {(r.name || `C`).charAt(0).toUpperCase()}
-                                      </Avatar>
-                                    )}
-                                    <span>{r.name || `Competitor ${cid}`}</span>
-                                  </Box>
-                                </TableCell>
-                                <TableCell>{r.countryName || '—'}</TableCell>
-                              </TableRow>
-                            );
-                          })}
-                          {competitorsNotInSeason.length === 0 && (
-                            <TableRow>
-                              <TableCell colSpan={4} align="center" sx={{ py: 3 }}>
-                                No competitors found. Use filters and search.
-                              </TableCell>
-                            </TableRow>
-                          )}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                      <Box sx={{ flexShrink: 0, borderTop: 1, borderColor: 'divider' }}>
-                        <TablePagination
-                          component="div"
-                          rowsPerPageOptions={[25, 50, 100, 200]}
-                          count={competitorsNotInSeason.length}
-                          rowsPerPage={rowsPerPageNotInSeason}
-                          page={pageNotInSeason}
-                          onPageChange={(_, newPage) => setPageNotInSeason(newPage)}
-                          onRowsPerPageChange={(e) => {
-                            setRowsPerPageNotInSeason(parseInt(e.target.value, 10));
-                            setPageNotInSeason(0);
-                          }}
-                          labelRowsPerPage="Rows:"
-                        />
-                      </Box>
-                    </Paper>
-                  </Box>
-                </Box>
-              )}
+                    <SeasonCompetitorsSection
+                      competitionId={id}
+                      competition={competition}
+                      seasonForm={structureSeasonForm}
+                      competitorsLoading={competitorsLoading}
+                      competitorsInSeason={competitorsInSeason}
+                      competitorsNotInSeason={competitorsNotInSeason}
+                      selectedInSeason={selectedInSeason}
+                      selectedNotInSeason={selectedNotInSeason}
+                      rowsPerPageInSeason={rowsPerPageInSeason}
+                      pageInSeason={pageInSeason}
+                      rowsPerPageNotInSeason={rowsPerPageNotInSeason}
+                      pageNotInSeason={pageNotInSeason}
+                      competitorsNotInSeasonFilters={competitorsNotInSeasonFilters}
+                      countries={countries}
+                      allCompetitions={allCompetitions}
+                      onSelectedInSeasonChange={setSelectedInSeason}
+                      onSelectedNotInSeasonChange={setSelectedNotInSeason}
+                      onCompetitorsInSeasonChange={setCompetitorsInSeason}
+                      onPageInSeasonChange={setPageInSeason}
+                      onRowsPerPageInSeasonChange={setRowsPerPageInSeason}
+                      onPageNotInSeasonChange={setPageNotInSeason}
+                      onRowsPerPageNotInSeasonChange={setRowsPerPageNotInSeason}
+                      onCompetitorsNotInSeasonFiltersChange={setCompetitorsNotInSeasonFilters}
+                      onSeasonCompetitorStatusChange={handleSeasonCompetitorStatusChange}
+                      onSeasonCompetitorStatusSeedBlur={handleSeasonCompetitorStatusSeedBlur}
+                      onSeasonCompetitorNotInSeasonChange={handleSeasonCompetitorNotInSeasonChange}
+                      onAddToSeason={handleAddToSeason}
+                      onRemoveSelectedFromSeason={handleRemoveSelectedFromSeason}
+                      onRemoveFromAllSeasonsClick={handleRemoveFromAllSeasonsClick}
+                      onLoadCompetitors={loadCompetitorsTab}
+                    />
 
                   </>
                 )}
@@ -6052,2263 +5492,225 @@ function CompetitionDetails() {
             </AccordionDetails>
           </Accordion>
 
-          {/* Phases section: only when a season is selected; above Stages, below Season; collapsed by default */}
-          {structureSeasons.length > 0 && selectedStructureSeasonNum != null && (
-            <Accordion
-              expanded={expandedStructureSection === 'phases'}
-              onChange={() => setExpandedStructureSection((prev) => prev === 'phases' ? null : 'phases')}
-              sx={{
-                '&:before': { display: 'none' },
-                boxShadow: 'none',
-                border: '1px solid',
-                borderColor: 'divider',
-                borderRadius: 1,
-                mb: 2,
-              }}
-            >
-              <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ '& .MuiAccordionSummary-expandIconWrapper.Mui-expanded': { transform: 'rotate(180deg)' } }}>
-                <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-                  Phases ({(phasesBySeason[selectedStructureSeasonNum] || []).length})
-                </Typography>
-              </AccordionSummary>
-              <AccordionDetails sx={{ pt: 0 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap', mb: 2 }}>
-                <Button
-                  variant="contained"
-                  size="small"
-                  onClick={() => handleAddPhase(selectedStructureSeasonNum)}
-                  sx={{ textTransform: 'none' }}
-                >
-                  CREATE NEW
-                </Button>
-                <Button
-                  variant={isPhaseEditMode ? 'contained' : 'outlined'}
-                  size="small"
-                  startIcon={isPhaseEditMode ? <CancelIcon /> : <EditIcon />}
-                  onClick={handleTogglePhaseEditMode}
-                  sx={{
-                    textTransform: 'none',
-                    borderColor: '#E0E0E0',
-                    bgcolor: isPhaseEditMode ? '#1976d2' : '#fff',
-                    color: isPhaseEditMode ? '#fff' : '#000',
-                    '&:hover': { bgcolor: isPhaseEditMode ? '#1565c0' : '#f5f5f5' },
-                  }}
-                >
-                  {isPhaseEditMode ? 'Cancel Edit' : 'Edit Mode'}
-                </Button>
-                {isPhaseEditMode && (
-                  <Button
-                    variant="contained"
-                    size="small"
-                    startIcon={<SaveIcon />}
-                    onClick={handleSaveStructurePhase}
-                    disabled={Object.keys(pendingPhaseChanges).length === 0}
-                    sx={{
-                      textTransform: 'none',
-                      backgroundColor: '#15803d',
-                      color: '#fff',
-                      '&:hover': { backgroundColor: '#166534' },
-                      '&.Mui-disabled': { backgroundColor: '#ccc', color: '#fff' },
-                    }}
-                  >
-                    Save Changes
-                  </Button>
-                )}
-                <Button
-                  variant="contained"
-                  size="small"
-                  startIcon={<DeleteIcon />}
-                  onClick={handleDeleteSelectedPhases}
-                  disabled={selectedPhaseRows.length === 0}
-                  sx={{
-                    textTransform: 'none',
-                    backgroundColor: '#d32f2f',
-                    color: '#fff',
-                    '&:hover': { backgroundColor: '#c62828' },
-                    '&.Mui-disabled': { backgroundColor: '#ccc', color: '#fff' },
-                  }}
-                >
-                  Delete ({selectedPhaseRows.length})
-                </Button>
-              </Box>
+          <PhasesSection
+            structureSeasons={structureSeasons}
+            selectedSeasonNum={selectedStructureSeasonNum}
+            expandedStructureSection={expandedStructureSection}
+            phasesBySeason={phasesBySeason}
+            isPhaseEditMode={isPhaseEditMode}
+            pendingPhaseChanges={pendingPhaseChanges}
+            selectedPhaseRows={selectedPhaseRows}
+            onExpandedStructureSectionChange={setExpandedStructureSection}
+            onAddPhase={handleAddPhase}
+            onTogglePhaseEditMode={handleTogglePhaseEditMode}
+            onSaveStructurePhase={handleSaveStructurePhase}
+            onDeleteSelectedPhases={handleDeleteSelectedPhases}
+            onSelectedPhaseRowsChange={setSelectedPhaseRows}
+            onPhaseNameClick={handlePhaseNameClick}
+            onPhaseFieldChange={handlePhaseFieldChange}
+          />
 
-              {(() => {
-                const phasesList = phasesBySeason[selectedStructureSeasonNum] || [];
-                if (phasesList.length === 0) {
-                  return (
-                    <Typography color="text.secondary" sx={{ py: 2 }}>
-                      No phases for this season. Create one to get started.
-                    </Typography>
-                  );
-                }
-                return (
-                  <TableContainer sx={{ mb: 2 }}>
-                    <Table size="small" stickyHeader sx={{ tableLayout: 'fixed' }}>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell padding="checkbox" sx={{ fontWeight: 600, width: 48 }}>
-                            <Checkbox
-                              size="small"
-                              indeterminate={selectedPhaseRows.length > 0 && selectedPhaseRows.length < phasesList.length}
-                              checked={phasesList.length > 0 && selectedPhaseRows.length === phasesList.length}
-                              onChange={(e) => setSelectedPhaseRows(e.target.checked ? phasesList.map((p) => p.PHASE_NUM) : [])}
-                            />
-                          </TableCell>
-                          <TableCell sx={{ fontWeight: 600, width: '14%' }}>Number</TableCell>
-                          <TableCell sx={{ fontWeight: 600, width: '20%' }}>Name</TableCell>
-                          <TableCell sx={{ fontWeight: 600, width: '20%' }}>Parent Phase</TableCell>
-                          <TableCell sx={{ fontWeight: 600, width: '14%' }} padding="checkbox">Show Stats</TableCell>
-                          <TableCell sx={{ fontWeight: 600, width: '14%' }} padding="checkbox">Use Name</TableCell>
-                          <TableCell sx={{ fontWeight: 600, width: '18%' }}>Top Athletes %</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {phasesList.map((ph, idx) => {
-                          const phNum = ph.PHASE_NUM;
-                          const pending = pendingPhaseChanges[phNum] || {};
-                          const parentVal = pending.PARENT_PHASE_NUM !== undefined ? pending.PARENT_PHASE_NUM : ph.PARENT_PHASE_NUM;
-                          const showStatsVal = pending.SHOW_STATS !== undefined ? pending.SHOW_STATS : !!ph.SHOW_STATS;
-                          const useNameVal = pending.USE_NAME !== undefined ? pending.USE_NAME : !!ph.USE_NAME;
-                          const topAthVal = pending.TOP_ATHLETES_MIN_APPEARANCES_PERCENTAGE !== undefined ? pending.TOP_ATHLETES_MIN_APPEARANCES_PERCENTAGE : ph.TOP_ATHLETES_MIN_APPEARANCES_PERCENTAGE;
-                          return (
-                            <TableRow key={phNum} hover>
-                              <TableCell padding="checkbox" onClick={(e) => e.stopPropagation()}>
-                                <Checkbox
-                                  size="small"
-                                  checked={selectedPhaseRows.includes(phNum)}
-                                  onChange={(e) => {
-                                    e.stopPropagation();
-                                    setSelectedPhaseRows((s) => e.target.checked ? [...s, phNum] : s.filter((id) => id !== phNum));
-                                  }}
-                                />
-                              </TableCell>
-                              <TableCell>{ph.PHASE_NUM}</TableCell>
-                              <TableCell>
-                                <Box
-                                  component="span"
-                                  sx={{ color: 'primary.main', textDecoration: 'underline', cursor: 'pointer' }}
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handlePhaseNameClick(e, selectedStructureSeasonNum, ph);
-                                  }}
-                                >
-                                  {ph.name || `Phase ${ph.PHASE_NUM}`}
-                                </Box>
-                              </TableCell>
-                              <TableCell onClick={(e) => isPhaseEditMode && e.stopPropagation()}>
-                                {isPhaseEditMode ? (
-                                  <FormControl size="small" fullWidth sx={{ minWidth: 120 }}>
-                                    <Select
-                                      value={parentVal != null && parentVal !== '' ? Number(parentVal) : ''}
-                                      onChange={(e) => handlePhaseFieldChange(phNum, 'PARENT_PHASE_NUM', e.target.value === '' ? null : Number(e.target.value))}
-                                      sx={{ height: 32, fontSize: '0.8125rem' }}
-                                    >
-                                      <MenuItem value="">—</MenuItem>
-                                      {phasesList
-                                        .filter((p) => Number(p.PHASE_NUM) !== Number(phNum))
-                                        .map((p) => (
-                                          <MenuItem key={p.PHASE_NUM} value={p.PHASE_NUM}>
-                                            {p.name || `Phase ${p.PHASE_NUM}`}
-                                          </MenuItem>
-                                        ))}
-                                    </Select>
-                                  </FormControl>
-                                ) : (
-                                  parentVal != null
-                                    ? (phasesList.find((p) => Number(p.PHASE_NUM) === Number(parentVal))?.name || `Phase ${parentVal}`)
-                                    : '—'
-                                )}
-                              </TableCell>
-                              <TableCell padding="checkbox" onClick={(e) => isPhaseEditMode && e.stopPropagation()}>
-                                <Checkbox
-                                  size="small"
-                                  checked={showStatsVal}
-                                  disabled={!isPhaseEditMode}
-                                  onChange={(e) => handlePhaseFieldChange(phNum, 'SHOW_STATS', e.target.checked)}
-                                />
-                              </TableCell>
-                              <TableCell padding="checkbox" onClick={(e) => isPhaseEditMode && e.stopPropagation()}>
-                                <Checkbox
-                                  size="small"
-                                  checked={useNameVal}
-                                  disabled={!isPhaseEditMode}
-                                  onChange={(e) => handlePhaseFieldChange(phNum, 'USE_NAME', e.target.checked)}
-                                />
-                              </TableCell>
-                              <TableCell onClick={(e) => isPhaseEditMode && e.stopPropagation()}>
-                                {isPhaseEditMode ? (
-                                  <TextField
-                                    size="small"
-                                    type="number"
-                                    value={topAthVal ?? ''}
-                                    onChange={(e) => handlePhaseFieldChange(phNum, 'TOP_ATHLETES_MIN_APPEARANCES_PERCENTAGE', e.target.value === '' ? null : Number(e.target.value))}
-                                    inputProps={{ min: 0, max: 100, step: 0.01 }}
-                                    sx={{ width: 100, '& .MuiInputBase-root': { height: 32, fontSize: '0.8125rem' } }}
-                                  />
-                                ) : (
-                                  topAthVal ?? '—'
-                                )}
-                              </TableCell>
-                            </TableRow>
-                          );
-                        })}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                );
-              })()}
-              </AccordionDetails>
-            </Accordion>
-          )}
+          <StagesSection
+            structureSeasons={structureSeasons}
+            selectedSeasonNum={selectedStructureSeasonNum}
+            expandedStructureSection={expandedStructureSection}
+            stagesBySeason={stagesBySeason}
+            phasesBySeason={phasesBySeason}
+            stagesTypes={stagesTypes}
+            competition={competition}
+            selectedStageNum={selectedStructureStageNum}
+            isStageEditMode={isStageEditMode}
+            pendingStageChanges={pendingStageChanges}
+            pendingCurrentStage={pendingCurrentStage}
+            selectedStagesForDelete={selectedStagesForDelete}
+            stagesDraggingStageNum={stagesDraggingStageNum}
+            stagesDropTargetIndex={stagesDropTargetIndex}
+            structureStageForm={structureStageForm}
+            allTerms={allTerms}
+            positionTableNamesTermOptions={positionTableNamesTermOptions}
+            allCompetitions={allCompetitions}
+            tableTypes={tableTypes}
+            onExpandedStructureSectionChange={setExpandedStructureSection}
+            onOpenCreateGenerate={() => handleOpenCreateGenerateDialog(0)}
+            onDeleteSelectedStages={handleDeleteSelectedStages}
+            onToggleStageEditMode={handleToggleStageEditMode}
+            onSaveStageEdits={handleSaveStageEdits}
+            onSelectedStageNumChange={setSelectedStructureStageNum}
+            onSelectedStagesForDeleteChange={setSelectedStagesForDelete}
+            onStagesDraggingStageNumChange={setStagesDraggingStageNum}
+            onStagesDropTargetIndexChange={setStagesDropTargetIndex}
+            onStagesReorderDrop={handleStagesReorderDrop}
+            onStageNameClick={handleStageNameClick}
+            onStageFieldChange={handleStageFieldChange}
+            onPendingCurrentStageChange={setPendingCurrentStage}
+            onStageFormChange={setStructureStageForm}
+            onOpenManageStandingsDialog={handleOpenManageStandingsDialog}
+          />
 
-          {/* Stages section: only when a season is selected */}
-          {structureSeasons.length > 0 && selectedStructureSeasonNum != null && (
-            <Accordion
-              expanded={expandedStructureSection === 'stages'}
-              onChange={() => setExpandedStructureSection((prev) => prev === 'stages' ? null : 'stages')}
-              sx={{
-                '&:before': { display: 'none' },
-                boxShadow: 'none',
-                border: '1px solid',
-                borderColor: 'divider',
-                borderRadius: 1,
-                mb: 2,
-              }}
-            >
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-                  Stages ({(stagesBySeason[selectedStructureSeasonNum] || []).length})
-                  {(() => {
-                    if (competition?.CURRENT_SEASON === selectedStructureSeasonNum && competition?.CURRENT_STAGE != null) {
-                      const stages = stagesBySeason[selectedStructureSeasonNum] || [];
-                      const cs = stages.find((s) => s.STAGE_NUM === competition.CURRENT_STAGE);
-                      if (cs) return <Typography component="span" sx={{ fontWeight: 400, color: 'text.secondary', ml: 1 }}>— Current Stage: {cs.name || `Stage ${cs.STAGE_NUM}`} ({cs.STAGE_NUM})</Typography>;
-                    }
-                    return null;
-                  })()}
-                </Typography>
-              </AccordionSummary>
-              <AccordionDetails sx={{ pt: 0 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap', mb: 2 }}>
-                <Button
-                  variant="contained"
-                  size="small"
-                  onClick={() => handleOpenCreateGenerateDialog(0)}
-                  sx={{ textTransform: 'none' }}
-                >
-                  Create/Generate
-                </Button>
-                <Button
-                  variant="contained"
-                  size="small"
-                  onClick={handleDeleteSelectedStages}
-                  disabled={selectedStagesForDelete.length === 0}
-                  sx={{
-                    textTransform: 'none',
-                    backgroundColor: '#d32f2f',
-                    color: '#fff',
-                    '&:hover': { backgroundColor: '#c62828' },
-                    '&.Mui-disabled': { backgroundColor: '#ccc', color: '#fff' },
-                  }}
-                >
-                  {selectedStagesForDelete.length > 0 ? `DELETE (${selectedStagesForDelete.length})` : 'DELETE'}
-                </Button>
-                <Button
-                  variant={isStageEditMode ? 'contained' : 'outlined'}
-                  size="small"
-                  startIcon={isStageEditMode ? <CancelIcon /> : <EditIcon />}
-                  onClick={handleToggleStageEditMode}
-                  sx={{
-                    textTransform: 'none',
-                    borderColor: '#E0E0E0',
-                    bgcolor: isStageEditMode ? '#1976d2' : '#fff',
-                    color: isStageEditMode ? '#fff' : '#000',
-                    '&:hover': { bgcolor: isStageEditMode ? '#1565c0' : '#f5f5f5' },
-                  }}
-                >
-                  {isStageEditMode ? 'Cancel Edit' : 'Edit Mode'}
-                </Button>
-                {isStageEditMode && (
-                  <Button
-                    variant="contained"
-                    size="small"
-                    startIcon={<SaveIcon />}
-                    onClick={handleSaveStageEdits}
-                    disabled={Object.keys(pendingStageChanges).length === 0 && pendingCurrentStage == null}
-                    sx={{
-                      textTransform: 'none',
-                      backgroundColor: '#15803d',
-                      color: '#fff',
-                      '&:hover': { backgroundColor: '#166534' },
-                      '&.Mui-disabled': { backgroundColor: '#ccc', color: '#fff' },
-                    }}
-                  >
-                    Save Changes
-                  </Button>
-                )}
-              </Box>
+          <GroupsSection
+            structureSeasons={structureSeasons}
+            selectedSeasonNum={selectedStructureSeasonNum}
+            selectedStageNum={selectedStructureStageNum}
+            expandedStructureSection={expandedStructureSection}
+            groupsByStage={groupsByStage}
+            selectedGroupNum={selectedStructureGroupNum}
+            groupCompetitorCounts={groupCompetitorCounts}
+            groupCompetitorsInGroup={groupCompetitorsInGroup}
+            groupCompetitorsNotInGroups={groupCompetitorsNotInGroups}
+            groupGames={groupGames}
+            groupParticipants={groupParticipants}
+            selectedInGroup={selectedInGroup}
+            selectedNotInGroups={selectedNotInGroups}
+            loadingGroupCompetitors={loadingGroupCompetitors}
+            loadingGroupGames={loadingGroupGames}
+            loadingGroupParticipants={loadingGroupParticipants}
+            editingGroupGameIndex={editingGroupGameIndex}
+            editingGroupGameOriginalNum={editingGroupGameOriginalNum}
+            editingGroupParticipantIndex={editingGroupParticipantIndex}
+            onExpandedStructureSectionChange={setExpandedStructureSection}
+            onSelectedGroupNumChange={setSelectedStructureGroupNum}
+            onSelectedInGroupChange={setSelectedInGroup}
+            onSelectedNotInGroupsChange={setSelectedNotInGroups}
+            onGroupCompetitorsInGroupChange={setGroupCompetitorsInGroup}
+            onGroupGamesChange={setGroupGames}
+            onGroupParticipantsChange={setGroupParticipants}
+            onEditingGroupGameIndexChange={setEditingGroupGameIndex}
+            onEditingGroupGameOriginalNumChange={setEditingGroupGameOriginalNum}
+            onEditingGroupParticipantIndexChange={setEditingGroupParticipantIndex}
+            onAddGroup={handleAddGroup}
+            onGroupNameClick={handleGroupNameClick}
+            onOpenGroupEditDialog={handleOpenGroupEditDialog}
+            onDeleteGroup={handleDeleteGroup}
+            onParticipantNumChange={handleParticipantNumChange}
+            onAddGroupGame={handleAddGroupGame}
+            onDeleteGroupGame={handleDeleteGroupGame}
+            onSaveGroupGame={handleSaveGroupGame}
+            onAddGroupParticipant={handleAddGroupParticipant}
+            onDeleteGroupParticipant={handleDeleteGroupParticipant}
+            onSaveGroupParticipant={handleSaveGroupParticipant}
+            onParticipantNameClick={handleParticipantNameClick}
+            onAddToGroup={handleAddToGroup}
+            onRemoveFromGroup={handleRemoveSelectedFromGroup}
+          />
 
-              {(() => {
-                const stagesList = stagesBySeason[selectedStructureSeasonNum] || [];
-                if (stagesList.length === 0) {
-                  return (
-                    <Typography color="text.secondary" sx={{ py: 2 }}>
-                      No stages for this season. Use Create/Generate to add stages.
-                    </Typography>
-                  );
-                }
-                const sortedStages = [...stagesList].sort((a, b) => {
-                  const pa = a.PRESENTATION_ORDER != null && a.PRESENTATION_ORDER !== '' ? Number(a.PRESENTATION_ORDER) : Number(a.STAGE_NUM);
-                  const pb = b.PRESENTATION_ORDER != null && b.PRESENTATION_ORDER !== '' ? Number(b.PRESENTATION_ORDER) : Number(b.STAGE_NUM);
-                  return pa - pb;
-                });
-                const stageTypeLabel = (type) => stagesTypes.find((t) => Number(t.STAGE_TYPE_ID) === Number(type))?.STAGE_TYPE ?? `Type ${type}`;
-                return (
-                  <>
-                    <TableContainer sx={{ mb: 2, overflowX: 'auto' }}>
-                      <Table size="small" stickyHeader>
-                        <TableHead>
-                          <TableRow>
-                            <TableCell sx={{ fontWeight: 600, whiteSpace: 'nowrap', width: 40 }} padding="checkbox">
-                              <Checkbox
-                                size="small"
-                                indeterminate={selectedStagesForDelete.length > 0 && selectedStagesForDelete.length < sortedStages.length}
-                                checked={selectedStagesForDelete.length === sortedStages.length && sortedStages.length > 0}
-                                onChange={(e) => {
-                                  if (e.target.checked) {
-                                    setSelectedStagesForDelete(sortedStages.map((s) => s.STAGE_NUM));
-                                  } else {
-                                    setSelectedStagesForDelete([]);
-                                  }
-                                }}
-                              />
-                            </TableCell>
-                            <TableCell sx={{ fontWeight: 600, whiteSpace: 'nowrap', width: 50 }}>Order</TableCell>
-                            <TableCell sx={{ fontWeight: 600, whiteSpace: 'nowrap', width: 40 }}>Num</TableCell>
-                            <TableCell sx={{ fontWeight: 600, whiteSpace: 'nowrap' }}>Name</TableCell>
-                            <TableCell sx={{ fontWeight: 600, whiteSpace: 'nowrap' }}>Type</TableCell>
-                            <TableCell sx={{ fontWeight: 600, whiteSpace: 'nowrap' }} padding="checkbox">Current</TableCell>
-                            <TableCell sx={{ fontWeight: 600 }} padding="checkbox">Has Table</TableCell>
-                            <TableCell sx={{ fontWeight: 600 }}>Num Of Games</TableCell>
-                            <TableCell sx={{ fontWeight: 600 }} padding="checkbox">Is Series</TableCell>
-                            <TableCell sx={{ fontWeight: 600 }} padding="checkbox">Connected To Previous</TableCell>
-                            <TableCell sx={{ fontWeight: 600 }} padding="checkbox">Filter Division</TableCell>
-                            <TableCell sx={{ fontWeight: 600 }} padding="checkbox">Include in bracket</TableCell>
-                            <TableCell sx={{ fontWeight: 600 }} padding="checkbox">Pre Visual Brackets</TableCell>
-                            <TableCell sx={{ fontWeight: 600 }} padding="checkbox">Connected In Brackets</TableCell>
-                            <TableCell sx={{ fontWeight: 600, whiteSpace: 'nowrap' }}>Phase</TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {sortedStages.map((stage, idx) => {
-                            const sn = stage.STAGE_NUM;
-                            const pending = pendingStageChanges[sn] || {};
-                            const isSelected = Number(sn) === Number(selectedStructureStageNum);
-                            const isDragging = Number(sn) === Number(stagesDraggingStageNum);
-                            const isDropTarget = stagesDropTargetIndex === idx;
-                            const cellSx = { whiteSpace: 'nowrap' };
-                            const getVal = (field) => pending[field] !== undefined ? pending[field] : stage[field];
-                            const dbCurrent = competition?.CURRENT_SEASON === selectedStructureSeasonNum && competition?.CURRENT_STAGE === sn;
-                            const isCurrent = pendingCurrentStage != null ? Number(pendingCurrentStage) === Number(sn) : dbCurrent;
-                            const isCheckedForDelete = selectedStagesForDelete.includes(sn);
-                            return (
-                              <TableRow
-                                key={sn}
-                                hover={!stagesDraggingStageNum}
-                                selected={isSelected}
-                                onClick={() => setSelectedStructureStageNum(sn)}
-                                draggable={isStageEditMode}
-                                onDragStart={(e) => {
-                                  if (!isStageEditMode) { e.preventDefault(); return; }
-                                  e.dataTransfer.setData('text/plain', String(sn));
-                                  e.dataTransfer.effectAllowed = 'move';
-                                  e.dataTransfer.setDragImage(e.currentTarget, 0, 0);
-                                  setStagesDraggingStageNum(sn);
-                                }}
-                                onDragEnd={() => {
-                                  setStagesDraggingStageNum(null);
-                                  setStagesDropTargetIndex(null);
-                                }}
-                                onDragOver={(e) => {
-                                  if (!isStageEditMode) return;
-                                  e.preventDefault();
-                                  e.dataTransfer.dropEffect = 'move';
-                                  setStagesDropTargetIndex(idx);
-                                }}
-                                onDragLeave={() => setStagesDropTargetIndex(null)}
-                                onDrop={(e) => {
-                                  if (!isStageEditMode) return;
-                                  e.preventDefault();
-                                  setStagesDraggingStageNum(null);
-                                  setStagesDropTargetIndex(null);
-                                  const dragged = e.dataTransfer.getData('text/plain');
-                                  if (dragged) handleStagesReorderDrop(selectedStructureSeasonNum, dragged, idx);
-                                }}
-                                sx={{
-                                  cursor: isDragging ? 'grabbing' : 'pointer',
-                                  backgroundColor: isSelected ? 'action.selected' : undefined,
-                                  transition: 'opacity 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease',
-                                  opacity: isDragging ? 0.7 : 1,
-                                  transform: isDragging ? 'scale(0.99)' : 'scale(1)',
-                                  boxShadow: isDragging ? '0 4px 14px rgba(0,0,0,0.12)' : 'none',
-                                  ...(isDropTarget && {
-                                    borderTop: '2px solid',
-                                    borderTopColor: 'primary.main',
-                                    backgroundColor: 'action.hover',
-                                  }),
-                                  '&:hover': { '& .drag-handle': { opacity: 1 } },
-                                }}
-                              >
-                                <TableCell padding="checkbox" onClick={(e) => e.stopPropagation()}>
-                                  <Checkbox
-                                    size="small"
-                                    checked={isCheckedForDelete}
-                                    onChange={(e) => {
-                                      if (e.target.checked) {
-                                        setSelectedStagesForDelete((prev) => [...prev, sn]);
-                                      } else {
-                                        setSelectedStagesForDelete((prev) => prev.filter((s) => s !== sn));
-                                      }
-                                    }}
-                                  />
-                                </TableCell>
-                                <TableCell sx={{ width: 50, maxWidth: 50 }}>
-                                  {isStageEditMode && (
-                                    <Box
-                                      className="drag-handle"
-                                      component="span"
-                                      draggable
-                                      onDragStart={(e) => {
-                                        e.stopPropagation();
-                                        e.dataTransfer.setData('text/plain', String(sn));
-                                        e.dataTransfer.effectAllowed = 'move';
-                                        setStagesDraggingStageNum(sn);
-                                      }}
-                                      sx={{ display: 'inline-flex', alignItems: 'center', cursor: 'grab', color: 'primary.main', opacity: 0.7, transition: 'opacity 0.15s ease', '&:active': { cursor: 'grabbing' }, '&:hover': { opacity: 1 } }}
-                                      aria-label="Drag to reorder"
-                                    >
-                                      <DragIndicatorIcon fontSize="small" />
-                                    </Box>
-                                  )}
-                                  {' '}{idx + 1}
-                                </TableCell>
-                                <TableCell sx={{ width: 40, maxWidth: 40 }}>{sn}</TableCell>
-                                <TableCell sx={cellSx}>
-                                  <Box
-                                    component="span"
-                                    sx={{ color: 'primary.main', textDecoration: 'underline', cursor: 'pointer' }}
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      handleStageNameClick(e, selectedStructureSeasonNum, stage);
-                                    }}
-                                  >
-                                    {stage.name || `Stage ${sn}`}
-                                  </Box>
-                                </TableCell>
-                                <TableCell sx={cellSx} onClick={(e) => isStageEditMode && e.stopPropagation()}>
-                                  {isStageEditMode ? (
-                                    <FormControl size="small" sx={{ minWidth: 110 }}>
-                                      <Select
-                                        value={getVal('STAGE_TYPE') ?? 1}
-                                        onChange={(e) => handleStageFieldChange(sn, 'STAGE_TYPE', Number(e.target.value))}
-                                        sx={{ height: 32, fontSize: '0.8125rem' }}
-                                      >
-                                        {stagesTypes.map((t) => (
-                                          <MenuItem key={t.STAGE_TYPE_ID} value={t.STAGE_TYPE_ID}>{t.STAGE_TYPE}</MenuItem>
-                                        ))}
-                                      </Select>
-                                    </FormControl>
-                                  ) : stageTypeLabel(stage.STAGE_TYPE)}
-                                </TableCell>
-                                <TableCell sx={cellSx} padding="checkbox" onClick={(e) => isStageEditMode && e.stopPropagation()}>
-                                  <Checkbox
-                                    size="small"
-                                    checked={isCurrent}
-                                    disabled={!isStageEditMode}
-                                    onChange={() => {
-                                      if (!isCurrent) setPendingCurrentStage(sn);
-                                    }}
-                                  />
-                                </TableCell>
-                                <TableCell sx={cellSx} padding="checkbox" onClick={(e) => isStageEditMode && e.stopPropagation()}>
-                                  <Checkbox
-                                    size="small"
-                                    checked={!!getVal('HAS_TABLE')}
-                                    disabled={!isStageEditMode}
-                                    onChange={(e) => handleStageFieldChange(sn, 'HAS_TABLE', e.target.checked)}
-                                  />
-                                </TableCell>
-                                <TableCell sx={cellSx} onClick={(e) => isStageEditMode && e.stopPropagation()}>
-                                  {isStageEditMode ? (
-                                    <TextField
-                                      size="small"
-                                      type="number"
-                                      value={getVal('NUM_OF_GAMES') ?? ''}
-                                      onChange={(e) => handleStageFieldChange(sn, 'NUM_OF_GAMES', e.target.value === '' ? null : Number(e.target.value))}
-                                      sx={{ width: 70, '& .MuiInputBase-root': { height: 32, fontSize: '0.8125rem' } }}
-                                    />
-                                  ) : (stage.NUM_OF_GAMES ?? '-')}
-                                </TableCell>
-                                <TableCell sx={cellSx} padding="checkbox" onClick={(e) => isStageEditMode && e.stopPropagation()}>
-                                  <Checkbox
-                                    size="small"
-                                    checked={!!getVal('IS_SERIES')}
-                                    disabled={!isStageEditMode}
-                                    onChange={(e) => handleStageFieldChange(sn, 'IS_SERIES', e.target.checked)}
-                                  />
-                                </TableCell>
-                                <TableCell sx={cellSx} padding="checkbox" onClick={(e) => isStageEditMode && e.stopPropagation()}>
-                                  <Checkbox
-                                    size="small"
-                                    checked={!!getVal('CONNECTED_TO_PREVIOUS_STAGE')}
-                                    disabled={!isStageEditMode}
-                                    onChange={(e) => handleStageFieldChange(sn, 'CONNECTED_TO_PREVIOUS_STAGE', e.target.checked)}
-                                  />
-                                </TableCell>
-                                <TableCell sx={cellSx} padding="checkbox" onClick={(e) => isStageEditMode && e.stopPropagation()}>
-                                  <Checkbox
-                                    size="small"
-                                    checked={!!getVal('FILTER_DIVISION')}
-                                    disabled={!isStageEditMode}
-                                    onChange={(e) => handleStageFieldChange(sn, 'FILTER_DIVISION', e.target.checked)}
-                                  />
-                                </TableCell>
-                                <TableCell sx={cellSx} padding="checkbox" onClick={(e) => isStageEditMode && e.stopPropagation()}>
-                                  <Checkbox
-                                    size="small"
-                                    checked={!!getVal('INCLUDE_IN_BRACKET')}
-                                    disabled={!isStageEditMode}
-                                    onChange={(e) => handleStageFieldChange(sn, 'INCLUDE_IN_BRACKET', e.target.checked)}
-                                  />
-                                </TableCell>
-                                <TableCell sx={cellSx} padding="checkbox" onClick={(e) => isStageEditMode && e.stopPropagation()}>
-                                  <Checkbox
-                                    size="small"
-                                    checked={!!getVal('PRE_VISUAL_BRACKETS')}
-                                    disabled={!isStageEditMode}
-                                    onChange={(e) => handleStageFieldChange(sn, 'PRE_VISUAL_BRACKETS', e.target.checked)}
-                                  />
-                                </TableCell>
-                                <TableCell sx={cellSx} padding="checkbox" onClick={(e) => isStageEditMode && e.stopPropagation()}>
-                                  <Checkbox
-                                    size="small"
-                                    checked={!!getVal('CONNECTED_IN_BRACKETS')}
-                                    disabled={!isStageEditMode}
-                                    onChange={(e) => handleStageFieldChange(sn, 'CONNECTED_IN_BRACKETS', e.target.checked)}
-                                  />
-                                </TableCell>
-                                <TableCell sx={cellSx} onClick={(e) => isStageEditMode && e.stopPropagation()}>
-                                  {isStageEditMode ? (
-                                    <FormControl size="small" sx={{ minWidth: 120 }}>
-                                      <Select
-                                        value={getVal('PHASE') ?? ''}
-                                        onChange={(e) => handleStageFieldChange(sn, 'PHASE', e.target.value || '')}
-                                        sx={{ height: 32, fontSize: '0.8125rem' }}
-                                      >
-                                        <MenuItem value="">Not Selected</MenuItem>
-                                        {(phasesBySeason[selectedStructureSeasonNum] || []).map((ph) => (
-                                          <MenuItem key={ph.PHASE_NUM} value={ph.name || `Phase ${ph.PHASE_NUM}`}>
-                                            {ph.name || `Phase ${ph.PHASE_NUM}`}
-                                          </MenuItem>
-                                        ))}
-                                      </Select>
-                                    </FormControl>
-                                  ) : (stage.PHASE || 'Not Selected')}
-                                </TableCell>
-                              </TableRow>
-                            );
-                          })}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
+          <GroupEditDialog
+            open={groupEditDialogOpen}
+            form={groupEditDialogForm}
+            context={groupEditDialogContext}
+            groupsByStage={groupsByStage}
+            saving={structureGroupSaving}
+            onClose={handleCloseGroupEditDialog}
+            onSave={handleSaveGroupEditDialog}
+            onFormChange={setGroupEditDialogForm}
+          />
 
-                    {structureStageForm && (
-                      <>
-                        <Typography variant="subtitle2" sx={{ fontWeight: 600, mt: 2, mb: 1 }}>
-                          Stage Details: {structureStageForm.name || `Stage ${structureStageForm.STAGE_NUM}`}
-                        </Typography>
-                        <Grid container spacing={2} sx={{ mb: 2 }} alignItems="center">
-                          <Grid item xs={12} sm={2}>
-                            <DateTimePicker
-                              label="Start Date"
-                              value={structureStageForm.START_DATE ? dayjs(structureStageForm.START_DATE) : null}
-                              onChange={(v) => setStructureStageForm((f) => ({ ...f, START_DATE: v ? v.toISOString() : null }))}
-                              slotProps={{ textField: { size: 'small', fullWidth: true } }}
-                            />
-                          </Grid>
-                          <Grid item xs={12} sm={2}>
-                            <DateTimePicker
-                              label="End Date"
-                              value={structureStageForm.END_DATE ? dayjs(structureStageForm.END_DATE) : null}
-                              onChange={(v) => setStructureStageForm((f) => ({ ...f, END_DATE: v ? v.toISOString() : null }))}
-                              slotProps={{ textField: { size: 'small', fullWidth: true } }}
-                            />
-                          </Grid>
-                          <Grid item xs={12} sm={6}>
-                            <Button variant="contained" size="small" sx={{ textTransform: 'none' }}>CONNECT GAMES & COMPETITORS</Button>
-                          </Grid>
-                        </Grid>
-
-                        {!isStageEditMode && !!structureStageForm.HAS_TABLE && (
-                          <>
-                            <Typography variant="subtitle2" sx={{ fontWeight: 600, mt: 2, mb: 1 }}>Table Options</Typography>
-                            <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 1, mb: 2 }}>
-                              <FormControlLabel
-                                control={
-                                  <Checkbox
-                                    size="small"
-                                    checked={!!structureStageForm.HAS_HOME_TABLE || !!structureStageForm.HAS_AWAY_TABLE}
-                                    onChange={(e) => {
-                                      const v = e.target.checked;
-                                      setStructureStageForm((f) => ({ ...f, HAS_HOME_TABLE: v, HAS_AWAY_TABLE: v }));
-                                    }}
-                                  />
-                                }
-                                label="Has Home/Away Table"
-                              />
-                              <FormControlLabel
-                                control={<Checkbox size="small" checked={!!structureStageForm.HIDE_HOME_AWAY_TABLES} onChange={(e) => setStructureStageForm((f) => ({ ...f, HIDE_HOME_AWAY_TABLES: e.target.checked }))} />}
-                                label="Hide Home/Away Table"
-                              />
-                              <FormControlLabel
-                                control={<Checkbox size="small" checked={!!structureStageForm.HIDE_MAIN_TABLE} onChange={(e) => setStructureStageForm((f) => ({ ...f, HIDE_MAIN_TABLE: e.target.checked }))} />}
-                                label="Hide Main Table"
-                              />
-                              <FormControlLabel
-                                control={<Checkbox size="small" checked={!!structureStageForm.HAS_POSITION_TABLE} onChange={(e) => {
-                                  const checked = e.target.checked;
-                                  setStructureStageForm((f) => ({
-                                    ...f,
-                                    HAS_POSITION_TABLE: checked,
-                                    ...(!checked && { POSITION_PARAMETER: null, POSITION_TABLE_NAME: null, POSITION_TABLE_NAME_ID: null }),
-                                  }));
-                                }} />}
-                                label="Has Position Table"
-                              />
-                              <FormControlLabel
-                                control={<Checkbox size="small" checked={!!structureStageForm.HAS_AGGREGATION_TABLE} onChange={(e) => {
-                                  const checked = e.target.checked;
-                                  setStructureStageForm((f) => ({
-                                    ...f,
-                                    HAS_AGGREGATION_TABLE: checked,
-                                    ...(!checked && { AGGREGATED_TABLE_SETTINGS: null }),
-                                  }));
-                                }} />}
-                                label="Has Aggregation Table"
-                              />
-                              <FormControlLabel
-                                control={<Checkbox size="small" checked={!!structureStageForm.HAS_RELEGATION_TABLE} onChange={(e) => {
-                                  const checked = e.target.checked;
-                                  setStructureStageForm((f) => ({
-                                    ...f,
-                                    HAS_RELEGATION_TABLE: checked,
-                                    ...(!checked && { RELEGATION_TABLE_SETTINGS: null }),
-                                  }));
-                                }} />}
-                                label="Has Relegation Table"
-                              />
-                            </Box>
-                            {!!structureStageForm.HAS_POSITION_TABLE && (
-                              <Paper variant="outlined" sx={{ p: 2, mt: 1 }}>
-                                <Typography variant="subtitle2" sx={{ mb: 1.5, fontWeight: 600 }}>
-                                  Position Table Settings
-                                </Typography>
-                                <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center', flexWrap: 'wrap' }}>
-                                  <TextField
-                                    size="small"
-                                    type="number"
-                                    label="Position"
-                                    placeholder="Position"
-                                    value={structureStageForm.POSITION_PARAMETER ?? ''}
-                                    onChange={(e) => setStructureStageForm((f) => ({
-                                      ...f,
-                                      POSITION_PARAMETER: e.target.value === '' ? null : Number(e.target.value),
-                                    }))}
-                                    inputProps={{ min: 1, step: 1 }}
-                                    sx={{ width: 120 }}
-                                  />
-                                  <Autocomplete
-                                    size="small"
-                                    sx={{ minWidth: 220 }}
-                                    options={positionTableNamesTermOptions}
-                                    getOptionLabel={(opt) => (opt?.engValue || opt?.values?.[0]?.value || `Term ${opt?.id}` || '')}
-                                    value={
-                                      (() => {
-                                        const termId = structureStageForm.POSITION_TABLE_NAME_ID ?? structureStageForm.POSITION_TABLE_NAME;
-                                        return termId != null && termId !== 0 ? ((allTerms || []).find((t) => t.id === termId) || null) : null;
-                                      })()
-                                    }
-                                    isOptionEqualToValue={(opt, val) => opt && val && opt.id === val.id}
-                                    onChange={(_, v) => {
-                                      const termId = v?.id ?? null;
-                                      setStructureStageForm((f) => ({ ...f, POSITION_TABLE_NAME_ID: termId, POSITION_TABLE_NAME: termId }));
-                                    }}
-                                    renderInput={(params) => (
-                                      <TextField {...params} size="small" label="Position Table Name" />
-                                    )}
-                                  />
-                                </Box>
-                              </Paper>
-                            )}
-                            {(!!structureStageForm.HAS_AGGREGATION_TABLE || !!structureStageForm.HAS_RELEGATION_TABLE) && (
-                              <Box sx={{ display: 'flex', gap: 2, mt: 1, flexWrap: 'wrap' }}>
-                                {!!structureStageForm.HAS_AGGREGATION_TABLE && (
-                                  <Box sx={{ flex: '1 1 0', minWidth: 300 }}>
-                                    <TableSettingsEditor
-                                      label="Aggregation Table Settings"
-                                      value={structureStageForm.AGGREGATED_TABLE_SETTINGS ?? ''}
-                                      onChange={(val) => setStructureStageForm((f) => ({ ...f, AGGREGATED_TABLE_SETTINGS: val }))}
-                                      competitions={allCompetitions}
-                                      tableTypes={tableTypes}
-                                      competitionSportTypeId={competition?.SPORT_TYPE_ID}
-                                      competitionCountryId={competition?.COUNTRY_ID}
-                                    />
-                                  </Box>
-                                )}
-                                {!!structureStageForm.HAS_RELEGATION_TABLE && (
-                                  <Box sx={{ flex: '1 1 0', minWidth: 300 }}>
-                                    <TableSettingsEditor
-                                      label="Relegation Table Settings"
-                                      value={structureStageForm.RELEGATION_TABLE_SETTINGS ?? ''}
-                                      onChange={(val) => setStructureStageForm((f) => ({ ...f, RELEGATION_TABLE_SETTINGS: val }))}
-                                      competitions={allCompetitions}
-                                      tableTypes={tableTypes}
-                                      competitionSportTypeId={competition?.SPORT_TYPE_ID}
-                                      competitionCountryId={competition?.COUNTRY_ID}
-                                    />
-                                  </Box>
-                                )}
-                              </Box>
-                            )}
-                            <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mt: 2 }}>
-                              <Button variant="outlined" size="small" onClick={handleOpenManageStandingsDialog} sx={{ textTransform: 'none' }}>MANAGE STANDINGS</Button>
-                            </Box>
-                          </>
-                        )}
-                      </>
-                    )}
-                  </>
-                );
-              })()}
-              </AccordionDetails>
-            </Accordion>
-          )}
-
-          {/* Groups section: accordion left, Competitors Not In Groups always on right */}
-          {structureSeasons.length > 0 && selectedStructureSeasonNum != null && selectedStructureStageNum != null && (
-            <Accordion
-              expanded={expandedStructureSection === 'groups'}
-              onChange={() => setExpandedStructureSection((prev) => prev === 'groups' ? null : 'groups')}
-              sx={{
-                '&:before': { display: 'none' },
-                boxShadow: 'none',
-                border: '1px solid',
-                borderColor: 'divider',
-                borderRadius: 1,
-                mb: 2,
-              }}
-            >
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-                  Groups ({(groupsByStage[`${selectedStructureSeasonNum}-${selectedStructureStageNum}`] || []).length})
-                </Typography>
-              </AccordionSummary>
-              <AccordionDetails sx={{ pt: 0 }}>
-              <Box sx={{ display: 'flex', flexDirection: { xs: 'column', lg: 'row' }, gap: 2, alignItems: 'stretch' }}>
-                {/* Left: Groups + CREATE NEW, then Accordion — 55% width */}
-                <Box sx={{ flex: { xs: '1 1 100%', lg: '55 55 55%' }, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 2 }}>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 0.5 }}>
-                    <Button
-                      variant="contained"
-                      size="small"
-                      onClick={() => handleAddGroup(selectedStructureSeasonNum, selectedStructureStageNum)}
-                      sx={{ textTransform: 'none' }}
-                    >
-                      CREATE NEW
-                    </Button>
-                  </Box>
-              {(() => {
-                const key = `${selectedStructureSeasonNum}-${selectedStructureStageNum}`;
-                const groupsList = groupsByStage[key] || [];
-                if (groupsList.length === 0 && groupsByStage[key] === undefined) {
-                  return (
-                    <Typography color="text.secondary" sx={{ py: 2 }}>
-                      Loading groups…
-                    </Typography>
-                  );
-                }
-                if (groupsList.length === 0) {
-                  return (
-                    <Typography color="text.secondary" sx={{ py: 2 }}>
-                      No groups for this stage. Create one to get started.
-                    </Typography>
-                  );
-                }
-                const sortedGroups = [...groupsList].sort((a, b) => Number(a.GROUP_NUM) - Number(b.GROUP_NUM));
-
-                return (
-                  <Box sx={{ '& .MuiAccordion-root': { '&:before': { display: 'none' }, boxShadow: 'none', border: '1px solid #e0e0e0', borderRadius: 1, '& + .MuiAccordion-root': { mt: 1 } } }}>
-                    {sortedGroups.map((group) => {
-                      const isExpanded = Number(group.GROUP_NUM) === Number(selectedStructureGroupNum);
-                      const count = groupCompetitorCounts[group.GROUP_NUM] ?? (isExpanded ? groupCompetitorsInGroup.length : null);
-                      const countLabel = count != null ? `${count} competitor${count !== 1 ? 's' : ''}` : '—';
-
-                      return (
-                        <Accordion
-                          key={group.GROUP_NUM}
-                          expanded={isExpanded}
-                          onChange={() => {
-                            const next = isExpanded ? null : group.GROUP_NUM;
-                            setSelectedStructureGroupNum(next);
-                            if (next == null) {
-                              setSelectedInGroup([]);
-                              setSelectedNotInGroups([]);
-                            }
-                          }}
-                          sx={{ '&.Mui-expanded': { margin: 0 } }}
-                        >
-                          <AccordionSummary
-                            expandIcon={null}
-                            sx={{
-                              minHeight: 48,
-                              '& .MuiAccordionSummary-content': { margin: 0, alignItems: 'center', flex: 1 },
-                              flexDirection: 'row-reverse',
-                            }}
-                          >
-                            <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', gap: 0.5 }}>
-                              <Box sx={{ display: 'flex', alignItems: 'center', flex: 1, minWidth: 0 }}>
-                                {isExpanded ? (
-                                  <ExpandLessIcon sx={{ color: 'action.active', mr: 0.5 }} />
-                                ) : (
-                                  <ChevronRightIcon sx={{ color: 'action.active', mr: 0.5 }} />
-                                )}
-                                <Typography
-                                  component="span"
-                                  sx={{
-                                    fontWeight: 500,
-                                    ...(group.NAME_ID ? { color: 'primary.main', textDecoration: 'underline', cursor: 'pointer', '&:hover': { color: 'primary.dark' } } : {}),
-                                  }}
-                                  onClick={group.NAME_ID ? (e) => { e.stopPropagation(); handleGroupNameClick(e, selectedStructureSeasonNum, selectedStructureStageNum, group); } : undefined}
-                                >
-                                  {group.name || `Group ${group.GROUP_NUM}`}
-                                </Typography>
-                                <Typography component="span" sx={{ fontWeight: 500, ml: 0.5 }}> ({countLabel})</Typography>
-                              </Box>
-                              <IconButton
-                                size="small"
-                                sx={{ color: '#1976d2' }}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleOpenGroupEditDialog(group, selectedStructureSeasonNum, selectedStructureStageNum);
-                                }}
-                                title="Edit group"
-                              >
-                                <EditIcon fontSize="small" />
-                              </IconButton>
-                              <IconButton
-                                size="small"
-                                sx={{ color: '#d32f2f' }}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleDeleteGroup(selectedStructureSeasonNum, selectedStructureStageNum, group);
-                                }}
-                                title="Delete group"
-                              >
-                                <DeleteIcon fontSize="small" />
-                              </IconButton>
-                              <IconButton
-                                size="small"
-                                onClick={() => {
-                                  const next = isExpanded ? null : group.GROUP_NUM;
-                                  setSelectedStructureGroupNum(next);
-                                  if (next == null) {
-                                    setSelectedInGroup([]);
-                                    setSelectedNotInGroups([]);
-                                  }
-                                }}
-                              >
-                                {isExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                              </IconButton>
-                            </Box>
-                          </AccordionSummary>
-                          <AccordionDetails sx={{ pt: 0, pb: 2, px: 2 }}>
-                            <Typography variant="caption" sx={{ fontWeight: 600, color: 'text.secondary', display: 'block', mb: 1 }}>Competitors In Group (stage_competitors)</Typography>
-                            <TableContainer component={Paper} variant="outlined" sx={{ height: 320, minHeight: 320, overflow: 'auto' }}>
-                                  <Table size="small" stickyHeader sx={{ '& .MuiTableCell-root': { py: 0.25 } }}>
-                                    <TableHead>
-                                      <TableRow>
-                                        <TableCell padding="checkbox">
-                                          <Checkbox
-                                            checked={groupCompetitorsInGroup.length > 0 && selectedInGroup.length === groupCompetitorsInGroup.length}
-                                            indeterminate={selectedInGroup.length > 0 && selectedInGroup.length < groupCompetitorsInGroup.length}
-                                            onChange={(e) => {
-                                              if (e.target.checked) {
-                                                setSelectedInGroup(groupCompetitorsInGroup.map((r) => r.COMPETITOR_ID ?? r.COMPETITOR_NUM));
-                                              } else {
-                                                setSelectedInGroup([]);
-                                              }
-                                            }}
-                                            inputProps={{ 'aria-label': 'select all in group' }}
-                                          />
-                                        </TableCell>
-                                        <TableCell sx={{ fontWeight: 600 }}>Competitor ID</TableCell>
-                                        <TableCell sx={{ fontWeight: 600 }}>Competitor Name</TableCell>
-                                        <TableCell sx={{ fontWeight: 600 }}>Competitor Country</TableCell>
-                                        <TableCell sx={{ fontWeight: 600 }}>Participant Number</TableCell>
-                                      </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                      {groupCompetitorsInGroup.map((r) => {
-                                        const cid = r.COMPETITOR_ID ?? r.COMPETITOR_NUM;
-                                        return (
-                                          <TableRow
-                                            key={cid}
-                                            hover
-                                            selected={selectedInGroup.includes(cid)}
-                                            onClick={() => {
-                                              setSelectedInGroup((prev) =>
-                                                prev.includes(cid) ? prev.filter((x) => x !== cid) : [...prev, cid]
-                                              );
-                                            }}
-                                            sx={{ cursor: 'pointer' }}
-                                          >
-                                            <TableCell padding="checkbox" onClick={(ev) => ev.stopPropagation()}>
-                                              <Checkbox
-                                                checked={selectedInGroup.includes(cid)}
-                                                onChange={(e) => {
-                                                  if (e.target.checked) {
-                                                    setSelectedInGroup((prev) => [...prev, cid]);
-                                                  } else {
-                                                    setSelectedInGroup((prev) => prev.filter((x) => x !== cid));
-                                                  }
-                                                }}
-                                              />
-                                            </TableCell>
-                                            <TableCell>{cid}</TableCell>
-                                            <TableCell>
-                                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                                {r.logoUrl ? (
-                                                  <Avatar src={r.logoUrl} alt={r.name || ''} variant="rounded" sx={{ width: 28, height: 28 }} />
-                                                ) : (
-                                                  <Avatar variant="rounded" sx={{ width: 28, height: 28, bgcolor: 'action.hover', fontSize: '0.75rem' }}>
-                                                    {(r.name || 'C').charAt(0).toUpperCase()}
-                                                  </Avatar>
-                                                )}
-                                                <span>{r.name || `Competitor ${cid}`}</span>
-                                              </Box>
-                                            </TableCell>
-                                            <TableCell>{r.countryName || '—'}</TableCell>
-                                            <TableCell onClick={(ev) => ev.stopPropagation()}>
-                                              <TextField
-                                                variant="outlined"
-                                                size="small"
-                                                type="number"
-                                                value={r.PARTICIPANT_NUM ?? ''}
-                                                onBlur={(e) => {
-                                                  const val = e.target.value;
-                                                  handleParticipantNumChange(selectedStructureSeasonNum, selectedStructureStageNum, group.GROUP_NUM, cid, val);
-                                                }}
-                                                onChange={(e) => {
-                                                  setGroupCompetitorsInGroup((prev) =>
-                                                    prev.map((x) =>
-                                                      (x.COMPETITOR_ID ?? x.COMPETITOR_NUM) === cid
-                                                        ? { ...x, PARTICIPANT_NUM: e.target.value === '' ? null : Number(e.target.value) }
-                                                        : x
-                                                    )
-                                                  );
-                                                }}
-                                                inputProps={{ min: 0, style: { width: 56, textAlign: 'center' } }}
-                                                sx={{
-                                                  width: 72,
-                                                  '& .MuiOutlinedInput-root': { backgroundColor: 'background.paper' },
-                                                  '& .MuiOutlinedInput-input': { py: 0.5, fontSize: '0.875rem' },
-                                                }}
-                                              />
-                                            </TableCell>
-                                          </TableRow>
-                                        );
-                                      })}
-                                      {groupCompetitorsInGroup.length === 0 && !loadingGroupCompetitors && (
-                                        <TableRow>
-                                          <TableCell colSpan={5} align="center" sx={{ py: 3 }}>
-                                            No competitors in this group.
-                                          </TableCell>
-                                        </TableRow>
-                                      )}
-                                      {loadingGroupCompetitors && (
-                                        <TableRow>
-                                          <TableCell colSpan={5} align="center" sx={{ py: 3 }}>
-                                            Loading…
-                                          </TableCell>
-                                        </TableRow>
-                                      )}
-                                    </TableBody>
-                                  </Table>
-                                </TableContainer>
-                            {/* Group Games & Participants — side by side, below Competitors In Group */}
-                            <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 2, mt: 2 }}>
-                              <Paper variant="outlined" sx={{ flex: 1, minWidth: 0, p: 1 }}>
-                                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
-                                  <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>Group Games</Typography>
-                                  <IconButton size="small" onClick={() => handleAddGroupGame(selectedStructureSeasonNum, selectedStructureStageNum, group.GROUP_NUM)} title="Add game">
-                                    <AddIcon fontSize="small" />
-                                  </IconButton>
-                                </Box>
-                                <TableContainer sx={{ maxHeight: 200, overflow: 'auto', overflowX: 'auto' }}>
-                                  <Table size="small" stickyHeader sx={{ '& .MuiTableCell-root': { py: 0.25 }, minWidth: 520 }}>
-                                    <TableHead>
-                                      <TableRow>
-                                        <TableCell sx={{ fontWeight: 600, width: 80 }}>Actions</TableCell>
-                                        <TableCell sx={{ fontWeight: 600 }}>#</TableCell>
-                                        <TableCell sx={{ fontWeight: 600 }}>Game Id</TableCell>
-                                        <TableCell sx={{ fontWeight: 600 }} padding="checkbox">Use Name</TableCell>
-                                        <TableCell sx={{ fontWeight: 600 }}>Start Time</TableCell>
-                                        <TableCell sx={{ fontWeight: 600 }}>Venue</TableCell>
-                                      </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                      {loadingGroupGames ? (
-                                        <TableRow><TableCell colSpan={6} align="center">Loading…</TableCell></TableRow>
-                                      ) : (
-                                        groupGames.map((g, idx) => (
-                                          <TableRow key={idx} hover>
-                                            <TableCell padding="none" sx={{ width: 80 }}>
-                                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                                                <IconButton size="small" onClick={() => handleDeleteGroupGame(selectedStructureSeasonNum, selectedStructureStageNum, group.GROUP_NUM, g.GAME_NUM)} sx={{ color: '#d32f2f' }} title="Delete">
-                                                  <DeleteIcon fontSize="small" />
-                                                </IconButton>
-                                                {editingGroupGameIndex === idx ? (
-                                                  <IconButton size="small" onClick={() => handleSaveGroupGame(selectedStructureSeasonNum, selectedStructureStageNum, group.GROUP_NUM, editingGroupGameOriginalNum ?? g.GAME_NUM, { GAME_NUM: g.GAME_NUM ?? 0, USE_NAME: !!g.USE_NAME, START_TIME: g.START_TIME || null, VENUE_ID: g.VENUE_ID || 0, GAME_ID: g.GAME_ID ?? 0 }, idx)} title="Save">
-                                                    <SaveIcon fontSize="small" />
-                                                  </IconButton>
-                                                ) : (
-                                                  <IconButton size="small" onClick={() => { setEditingGroupGameIndex(idx); setEditingGroupGameOriginalNum(g.GAME_NUM); }} title="Edit">
-                                                    <EditIcon fontSize="small" />
-                                                  </IconButton>
-                                                )}
-                                              </Box>
-                                            </TableCell>
-                                            <TableCell onClick={(ev) => editingGroupGameIndex !== idx && ev.stopPropagation()} sx={{ whiteSpace: 'nowrap' }}>
-                                              {editingGroupGameIndex === idx ? (
-                                                <TextField
-                                                  size="small"
-                                                  type="number"
-                                                  value={g.GAME_NUM ?? ''}
-                                                  onChange={(e) => setGroupGames((prev) => prev.map((x, i) => i === idx ? { ...x, GAME_NUM: e.target.value === '' ? 0 : Number(e.target.value) } : x))}
-                                                  placeholder="#"
-                                                  inputProps={{ min: 1, style: { width: 56 } }}
-                                                  sx={{ '& .MuiOutlinedInput-root': { minHeight: 32 }, '& .MuiOutlinedInput-input': { py: 0.5, fontSize: '0.875rem' } }}
-                                                />
-                                              ) : (
-                                                `#${g.GAME_NUM}`
-                                              )}
-                                            </TableCell>
-                                            <TableCell onClick={(ev) => editingGroupGameIndex !== idx && ev.stopPropagation()}>
-                                              {editingGroupGameIndex === idx ? (
-                                                <TextField
-                                                  size="small"
-                                                  type="number"
-                                                  value={g.GAME_ID && g.GAME_ID !== 0 ? g.GAME_ID : ''}
-                                                  onChange={(e) => setGroupGames((prev) => prev.map((x, i) => i === idx ? { ...x, GAME_ID: e.target.value === '' ? 0 : Number(e.target.value) } : x))}
-                                                  placeholder="—"
-                                                  inputProps={{ min: 0, style: { width: 80 } }}
-                                                  sx={{ '& .MuiOutlinedInput-root': { minHeight: 32 }, '& .MuiOutlinedInput-input': { py: 0.5, fontSize: '0.875rem' } }}
-                                                />
-                                              ) : (
-                                                g.GAME_ID && g.GAME_ID !== 0 ? g.GAME_ID : '—'
-                                              )}
-                                            </TableCell>
-                                            <TableCell padding="checkbox" onClick={(ev) => editingGroupGameIndex !== idx && ev.stopPropagation()}>
-                                              {editingGroupGameIndex === idx ? (
-                                                <Checkbox size="small" checked={!!g.USE_NAME} onChange={(e) => setGroupGames((prev) => prev.map((x, i) => i === idx ? { ...x, USE_NAME: e.target.checked } : x))} />
-                                              ) : (
-                                                !!g.USE_NAME ? '✓' : '—'
-                                              )}
-                                            </TableCell>
-                                            <TableCell onClick={(ev) => editingGroupGameIndex !== idx && ev.stopPropagation()} sx={{ whiteSpace: 'nowrap' }}>
-                                              {editingGroupGameIndex === idx ? (
-                                                <DateTimePicker
-                                                  value={g.START_TIME ? dayjs(g.START_TIME) : null}
-                                                  onChange={(v) => setGroupGames((prev) => prev.map((x, i) => i === idx ? { ...x, START_TIME: v ? v.toISOString() : null } : x))}
-                                                  slotProps={{ textField: { size: 'small', sx: { minWidth: 140, '& .MuiOutlinedInput-root': { minHeight: 32 } } } }}
-                                                />
-                                              ) : (
-                                                g.START_TIME ? dayjs(g.START_TIME).format('DD/MM/YYYY HH:mm') : '—'
-                                              )}
-                                            </TableCell>
-                                            <TableCell onClick={(ev) => editingGroupGameIndex !== idx && ev.stopPropagation()}>
-                                              {editingGroupGameIndex === idx ? (
-                                                <TextField
-                                                  size="small"
-                                                  type="number"
-                                                  value={g.VENUE_ID && g.VENUE_ID !== 0 ? g.VENUE_ID : ''}
-                                                  onChange={(e) => setGroupGames((prev) => prev.map((x, i) => i === idx ? { ...x, VENUE_ID: e.target.value === '' ? 0 : Number(e.target.value) } : x))}
-                                                  placeholder="VENUE_ID"
-                                                  inputProps={{ min: 0, style: { width: 80 } }}
-                                                  sx={{ '& .MuiOutlinedInput-root': { minHeight: 32 }, '& .MuiOutlinedInput-input': { py: 0.5, fontSize: '0.875rem' } }}
-                                                />
-                                              ) : (
-                                                g.venueName || '—'
-                                              )}
-                                            </TableCell>
-                                          </TableRow>
-                                        ))
-                                      )}
-                                      {!loadingGroupGames && groupGames.length === 0 && (
-                                        <TableRow><TableCell colSpan={6} align="center" sx={{ py: 2 }}>No games</TableCell></TableRow>
-                                      )}
-                                    </TableBody>
-                                  </Table>
-                                </TableContainer>
-                              </Paper>
-                              <Paper variant="outlined" sx={{ flex: 1, minWidth: 0, p: 1 }}>
-                                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
-                                  <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>Participants</Typography>
-                                  <IconButton size="small" onClick={() => handleAddGroupParticipant(selectedStructureSeasonNum, selectedStructureStageNum, group.GROUP_NUM)} title="Add participant">
-                                    <AddIcon fontSize="small" />
-                                  </IconButton>
-                                </Box>
-                                <TableContainer sx={{ maxHeight: 200, overflow: 'auto' }}>
-                                  <Table size="small" stickyHeader sx={{ '& .MuiTableCell-root': { py: 0.25 } }}>
-                                    <TableHead>
-                                      <TableRow>
-                                        <TableCell sx={{ fontWeight: 600, width: 80 }}>Actions</TableCell>
-                                        <TableCell sx={{ fontWeight: 600 }}>Part. #</TableCell>
-                                        <TableCell sx={{ fontWeight: 600 }}>Name</TableCell>
-                                        <TableCell sx={{ fontWeight: 600 }}>Origin Group</TableCell>
-                                        <TableCell sx={{ fontWeight: 600 }}>Origin Pos.</TableCell>
-                                        <TableCell sx={{ fontWeight: 600 }}>Origin Stage</TableCell>
-                                        <TableCell sx={{ fontWeight: 600 }} padding="checkbox">Use Name</TableCell>
-                                      </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                      {loadingGroupParticipants ? (
-                                        <TableRow><TableCell colSpan={7} align="center">Loading…</TableCell></TableRow>
-                                      ) : (
-                                        groupParticipants.map((p, idx) => {
-                                          const partNum = p.PARTICIPANT_NUM ?? 0;
-                                          const hasName = !!(p.NAME_ID && p.NAME_ID !== 0);
-                                          const isEditing = editingGroupParticipantIndex === idx;
-                                          return (
-                                            <TableRow key={`${partNum}-${idx}`} hover>
-                                              <TableCell padding="none" sx={{ width: 80 }}>
-                                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                                                  <IconButton size="small" onClick={() => handleDeleteGroupParticipant(selectedStructureSeasonNum, selectedStructureStageNum, group.GROUP_NUM, partNum)} sx={{ color: '#d32f2f' }} title="Delete">
-                                                    <DeleteIcon fontSize="small" />
-                                                  </IconButton>
-                                                  {isEditing ? (
-                                                    <IconButton size="small" onClick={() => handleSaveGroupParticipant(selectedStructureSeasonNum, selectedStructureStageNum, group.GROUP_NUM, partNum, { USE_NAME: !!p.USE_NAME, ORIGIN_GROUP_NUM: p.ORIGIN_GROUP_NUM ?? null, ORIGIN_GROUP_POSITION: p.ORIGIN_GROUP_POSITION ?? null, ORIGIN_STAGE_NUM: p.ORIGIN_STAGE_NUM ?? null })} title="Save">
-                                                      <SaveIcon fontSize="small" />
-                                                    </IconButton>
-                                                  ) : (
-                                                    <IconButton size="small" onClick={() => setEditingGroupParticipantIndex(idx)} title="Edit">
-                                                      <EditIcon fontSize="small" />
-                                                    </IconButton>
-                                                  )}
-                                                </Box>
-                                              </TableCell>
-                                              <TableCell>{p.PARTICIPANT_NUM}</TableCell>
-                                              <TableCell
-                                                onClick={hasName ? (e) => handleParticipantNameClick(e, p, selectedStructureSeasonNum, selectedStructureStageNum, group.GROUP_NUM) : undefined}
-                                                sx={{ cursor: hasName ? 'pointer' : 'default', textDecoration: hasName ? 'underline' : 'none', '&:hover': hasName ? { color: 'primary.main' } : {} }}
-                                              >
-                                                {p.name || `Participant ${p.PARTICIPANT_NUM}`}
-                                              </TableCell>
-                                              <TableCell onClick={(ev) => !isEditing && ev.stopPropagation()} sx={{ whiteSpace: 'nowrap' }}>
-                                                {isEditing ? (
-                                                  <TextField
-                                                    size="small"
-                                                    type="number"
-                                                    value={p.ORIGIN_GROUP_NUM ?? ''}
-                                                    onChange={(e) => setGroupParticipants((prev) => prev.map((x, i) => i === idx ? { ...x, ORIGIN_GROUP_NUM: e.target.value === '' ? null : Number(e.target.value) } : x))}
-                                                    placeholder="—"
-                                                    inputProps={{ min: 0, style: { width: 56 } }}
-                                                    sx={{ '& .MuiOutlinedInput-root': { minHeight: 32 }, '& .MuiOutlinedInput-input': { py: 0.5, fontSize: '0.875rem' } }}
-                                                  />
-                                                ) : (
-                                                  p.ORIGIN_GROUP_NUM ?? '—'
-                                                )}
-                                              </TableCell>
-                                              <TableCell onClick={(ev) => !isEditing && ev.stopPropagation()} sx={{ whiteSpace: 'nowrap' }}>
-                                                {isEditing ? (
-                                                  <TextField
-                                                    size="small"
-                                                    type="number"
-                                                    value={p.ORIGIN_GROUP_POSITION ?? ''}
-                                                    onChange={(e) => setGroupParticipants((prev) => prev.map((x, i) => i === idx ? { ...x, ORIGIN_GROUP_POSITION: e.target.value === '' ? null : Number(e.target.value) } : x))}
-                                                    placeholder="—"
-                                                    inputProps={{ min: 0, style: { width: 56 } }}
-                                                    sx={{ '& .MuiOutlinedInput-root': { minHeight: 32 }, '& .MuiOutlinedInput-input': { py: 0.5, fontSize: '0.875rem' } }}
-                                                  />
-                                                ) : (
-                                                  p.ORIGIN_GROUP_POSITION ?? '—'
-                                                )}
-                                              </TableCell>
-                                              <TableCell onClick={(ev) => !isEditing && ev.stopPropagation()} sx={{ whiteSpace: 'nowrap' }}>
-                                                {isEditing ? (
-                                                  <TextField
-                                                    size="small"
-                                                    type="number"
-                                                    value={p.ORIGIN_STAGE_NUM ?? ''}
-                                                    onChange={(e) => setGroupParticipants((prev) => prev.map((x, i) => i === idx ? { ...x, ORIGIN_STAGE_NUM: e.target.value === '' ? null : Number(e.target.value) } : x))}
-                                                    placeholder="—"
-                                                    inputProps={{ min: 0, style: { width: 56 } }}
-                                                    sx={{ '& .MuiOutlinedInput-root': { minHeight: 32 }, '& .MuiOutlinedInput-input': { py: 0.5, fontSize: '0.875rem' } }}
-                                                  />
-                                                ) : (
-                                                  p.ORIGIN_STAGE_NUM ?? '—'
-                                                )}
-                                              </TableCell>
-                                              <TableCell padding="checkbox" onClick={(ev) => !isEditing && ev.stopPropagation()}>
-                                                {isEditing ? (
-                                                  <Checkbox size="small" checked={!!p.USE_NAME} onChange={(e) => setGroupParticipants((prev) => prev.map((x, i) => i === idx ? { ...x, USE_NAME: e.target.checked } : x))} />
-                                                ) : (
-                                                  !!p.USE_NAME ? '✓' : '—'
-                                                )}
-                                              </TableCell>
-                                            </TableRow>
-                                          );
-                                        })
-                                      )}
-                                      {!loadingGroupParticipants && groupParticipants.length === 0 && (
-                                        <TableRow><TableCell colSpan={7} align="center" sx={{ py: 2 }}>No participants</TableCell></TableRow>
-                                      )}
-                                    </TableBody>
-                                  </Table>
-                                </TableContainer>
-                              </Paper>
-                            </Box>
-                          </AccordionDetails>
-                        </Accordion>
-                      );
-                    })}
-                  </Box>
-                );
-              })()}
-                </Box>
-
-                {/* Right: ADD TO GROUP + REMOVE, then Competitors Not In Groups — 45% width */}
-                <Box sx={{ flex: { xs: '1 1 100%', lg: '45 45 45%' }, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 1 }}>
-                  <Box sx={{ display: 'flex', gap: 1 }}>
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      onClick={() => handleAddToGroup(selectedStructureSeasonNum, selectedStructureStageNum, selectedStructureGroupNum)}
-                      disabled={selectedNotInGroups.length === 0 || selectedStructureGroupNum == null}
-                      sx={{ textTransform: 'none' }}
-                    >
-                      &lt;&lt; ADD TO GROUP
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      onClick={() => handleRemoveSelectedFromGroup(selectedStructureSeasonNum, selectedStructureStageNum, selectedStructureGroupNum)}
-                      disabled={selectedInGroup.length === 0 || selectedStructureGroupNum == null}
-                      sx={{ textTransform: 'none' }}
-                    >
-                      REMOVE &gt;&gt;
-                    </Button>
-                  </Box>
-                  <Typography variant="caption" sx={{ fontWeight: 600, color: '#000', display: 'block' }}>
-                    Competitors Not In Groups
-                    {selectedStructureGroupNum != null && (
-                      <Typography component="span" variant="caption" sx={{ fontWeight: 400, color: 'text.secondary', ml: 1 }}>
-                        (adds to selected group)
-                      </Typography>
-                    )}
-                  </Typography>
-                  <TableContainer component={Paper} variant="outlined" sx={{ flex: 1, minHeight: 320, overflow: 'auto' }}>
-                    <Table size="small" stickyHeader sx={{ '& .MuiTableCell-root': { py: 0.25 } }}>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell padding="checkbox">
-                            <Checkbox
-                              checked={groupCompetitorsNotInGroups.length > 0 && selectedNotInGroups.length === groupCompetitorsNotInGroups.length}
-                              indeterminate={selectedNotInGroups.length > 0 && selectedNotInGroups.length < groupCompetitorsNotInGroups.length}
-                              onChange={(e) => {
-                                if (e.target.checked) {
-                                  setSelectedNotInGroups(groupCompetitorsNotInGroups.map((r) => r.COMPETITOR_ID));
-                                } else {
-                                  setSelectedNotInGroups([]);
-                                }
-                              }}
-                              inputProps={{ 'aria-label': 'select all not in groups' }}
-                            />
-                          </TableCell>
-                          <TableCell sx={{ fontWeight: 600 }}>ID</TableCell>
-                          <TableCell sx={{ fontWeight: 600 }}>Name</TableCell>
-                          <TableCell sx={{ fontWeight: 600 }}>Country</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {groupCompetitorsNotInGroups.map((r) => {
-                          const cid = r.COMPETITOR_ID;
-                          return (
-                            <TableRow
-                              key={cid}
-                              hover
-                              selected={selectedNotInGroups.includes(cid)}
-                              onClick={() => {
-                                setSelectedNotInGroups((prev) =>
-                                  prev.includes(cid) ? prev.filter((x) => x !== cid) : [...prev, cid]
-                                );
-                              }}
-                              sx={{ cursor: 'pointer' }}
-                            >
-                              <TableCell padding="checkbox" onClick={(ev) => ev.stopPropagation()}>
-                                <Checkbox
-                                  checked={selectedNotInGroups.includes(cid)}
-                                  onChange={(e) => {
-                                    if (e.target.checked) {
-                                      setSelectedNotInGroups((prev) => [...prev, cid]);
-                                    } else {
-                                      setSelectedNotInGroups((prev) => prev.filter((x) => x !== cid));
-                                    }
-                                  }}
-                                />
-                              </TableCell>
-                              <TableCell>{cid}</TableCell>
-                              <TableCell>
-                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                  {r.logoUrl ? (
-                                    <Avatar src={r.logoUrl} alt={r.name || ''} variant="rounded" sx={{ width: 28, height: 28 }} />
-                                  ) : (
-                                    <Avatar variant="rounded" sx={{ width: 28, height: 28, bgcolor: 'action.hover', fontSize: '0.75rem' }}>
-                                      {(r.name || 'C').charAt(0).toUpperCase()}
-                                    </Avatar>
-                                  )}
-                                  <span>{r.name || `Competitor ${cid}`}</span>
-                                </Box>
-                              </TableCell>
-                              <TableCell>{r.countryName || '—'}</TableCell>
-                            </TableRow>
-                          );
-                        })}
-                        {groupCompetitorsNotInGroups.length === 0 && !loadingGroupCompetitors && (
-                          <TableRow>
-                            <TableCell colSpan={4} align="center" sx={{ py: 3 }}>
-                              No competitors available (all in groups or not in season).
-                            </TableCell>
-                          </TableRow>
-                        )}
-                        {loadingGroupCompetitors && groupCompetitorsNotInGroups.length === 0 && (
-                          <TableRow>
-                            <TableCell colSpan={4} align="center" sx={{ py: 3 }}>
-                              Loading…
-                            </TableCell>
-                          </TableRow>
-                        )}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                </Box>
-              </Box>
-              </AccordionDetails>
-            </Accordion>
-          )}
-
-          {/* Group Edit Dialog */}
-          <Dialog open={groupEditDialogOpen} onClose={handleCloseGroupEditDialog} maxWidth="sm" fullWidth>
-            <DialogTitle>Edit Group</DialogTitle>
-            <DialogContent>
-              {groupEditDialogForm && groupEditDialogContext && (
-                <Box sx={{ pt: 1 }}>
-                  <Grid container spacing={2} sx={{ mb: 2 }} alignItems="center">
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        fullWidth
-                        size="small"
-                        type="number"
-                        label="Group Hierarchy (Category)"
-                        value={groupEditDialogForm.GROUP_CATEGORY_NUM ?? ''}
-                        onChange={(e) => setGroupEditDialogForm((f) => ({ ...f, GROUP_CATEGORY_NUM: e.target.value === '' ? null : Number(e.target.value) }))}
-                        placeholder="—"
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <FormControl fullWidth size="small">
-                        <InputLabel>Parent Group</InputLabel>
-                        <Select
-                          label="Parent Group"
-                          value={groupEditDialogForm.FATHER_GROUP ?? ''}
-                          onChange={(e) => setGroupEditDialogForm((f) => ({ ...f, FATHER_GROUP: e.target.value === '' ? null : Number(e.target.value) }))}
-                          renderValue={(v) => {
-                            if (v == null || v === '') return '—';
-                            const gr = (groupsByStage[`${groupEditDialogContext.seasonNum}-${groupEditDialogContext.stageNum}`] || []).find((g) => Number(g.GROUP_NUM) === Number(v));
-                            return gr ? (gr.name || `Group ${gr.GROUP_NUM}`) : `Group ${v}`;
-                          }}
-                        >
-                          <MenuItem value="">—</MenuItem>
-                          {(groupsByStage[`${groupEditDialogContext.seasonNum}-${groupEditDialogContext.stageNum}`] || [])
-                            .filter((g) => {
-                              if (Number(g.GROUP_NUM) === Number(groupEditDialogForm.GROUP_NUM)) return false;
-                              const currentCat = groupEditDialogForm.GROUP_CATEGORY_NUM;
-                              if (currentCat == null || currentCat === '') return false;
-                              const currentCatNum = Number(currentCat);
-                              if (isNaN(currentCatNum)) return false;
-                              const gCat = g.GROUP_CATEGORY_NUM;
-                              if (gCat == null || gCat === '') return true;
-                              return Number(gCat) < currentCatNum;
-                            })
-                            .sort((a, b) => Number(a.GROUP_NUM) - Number(b.GROUP_NUM))
-                            .map((g) => (
-                              <MenuItem key={g.GROUP_NUM} value={g.GROUP_NUM}>
-                                {g.name || `Group ${g.GROUP_NUM}`}
-                              </MenuItem>
-                            ))}
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                  </Grid>
-                  <Typography variant="subtitle2" sx={{ fontWeight: 600, mt: 2, mb: 1 }}>Group Configuration</Typography>
-                  <Grid container spacing={1} sx={{ mb: 2 }}>
-                    {[
-                      { key: 'HAS_TABLE', label: 'Has Table' },
-                      { key: 'IS_SERIES', label: 'Is Series' },
-                      { key: 'USE_NAME', label: 'Use Name' },
-                      { key: 'GROUP_BY', label: 'Group By' },
-                      { key: 'AUTONOMOUS', label: 'Autonomous' },
-                      { key: 'IS_FINAL', label: 'Is Final' },
-                    ].map(({ key, label }) => (
-                      <Grid item xs={6} sm={4} md={3} key={key}>
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              size="small"
-                              checked={!!groupEditDialogForm[key]}
-                              onChange={(e) => setGroupEditDialogForm((f) => ({ ...f, [key]: e.target.checked }))}
-                            />
-                          }
-                          label={label}
-                        />
-                      </Grid>
-                    ))}
-                  </Grid>
-                </Box>
-              )}
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleCloseGroupEditDialog} color="inherit">
-                Cancel
-              </Button>
-              <Button
-                onClick={handleSaveGroupEditDialog}
-                variant="contained"
-                disabled={structureGroupSaving}
-                sx={{ textTransform: 'none', backgroundColor: '#15803d', '&:hover': { backgroundColor: '#166534' } }}
-              >
-                {structureGroupSaving ? 'Saving…' : 'Save & Update In Service'}
-              </Button>
-            </DialogActions>
-          </Dialog>
-
-          {/* Manage Standings Dialog – edit table for Stage */}
-          <Dialog open={manageStandingsDialogOpen} onClose={handleCloseManageStandingsDialog} maxWidth="lg" fullWidth PaperProps={{ sx: { minHeight: '70vh' } }}>
-            <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              Standings for Stage: {structureStageForm?.name || `Stage ${selectedStructureStageNum}`}
-              <IconButton size="small" onClick={handleCloseManageStandingsDialog} aria-label="Close">
-                <CloseIcon />
-              </IconButton>
-            </DialogTitle>
-            <DialogContent sx={{ pt: 0 }}>
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, minHeight: 400 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
-                  {manageStandingsData.some((r) => r.GROUP_NUM != null && Number(r.GROUP_NUM) !== -1) && (() => {
-                    const groupsList = groupsByStage[`${selectedStructureSeasonNum}-${selectedStructureStageNum}`] || [];
-                    const getGroupName = (gn) => {
-                      if (gn === -1) return 'No Group';
-                      const gr = groupsList.find((g) => Number(g.GROUP_NUM) === Number(gn));
-                      return gr?.name || `Group ${gn}`;
-                    };
-                    return (
-                      <FormControl size="small" sx={{ minWidth: 200 }}>
-                        <InputLabel>Stage Group</InputLabel>
-                        <Select
-                          label="Stage Group"
-                          value={manageStandingsGroupFilter === null ? '__all__' : manageStandingsGroupFilter}
-                          onChange={(e) => setManageStandingsGroupFilter(e.target.value === '__all__' ? null : e.target.value)}
-                          renderValue={(v) => (v === '__all__' ? 'All' : getGroupName(v))}
-                        >
-                          <MenuItem value="__all__">All</MenuItem>
-                          {[...new Set(manageStandingsData.map((r) => r.GROUP_NUM))].sort((a, b) => a - b).map((gn) => (
-                            <MenuItem key={gn} value={gn}>{getGroupName(gn)}</MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    );
-                  })()}
-                  <FormControlLabel
-                    control={<Switch size="small" checked={manageStandingsEditMode} onChange={(e) => setManageStandingsEditMode(e.target.checked)} />}
-                    label={manageStandingsEditMode ? 'Edit' : 'View'}
-                  />
-                  <Button variant="contained" size="small" sx={{ textTransform: 'none', color: 'white', backgroundColor: '#dc2626', '&:hover': { backgroundColor: '#b91c1c' }, ml: 'auto' }} onClick={() => {}}>Delete Standings</Button>
-                </Box>
-                {manageStandingsLoading ? (
-                  <Box sx={{ py: 4, display: 'flex', justifyContent: 'center' }}>
-                    <LoadingSpinner />
-                  </Box>
-                ) : (
-                  <TableContainer sx={{ flex: 1, overflow: 'auto', border: 1, borderColor: 'divider', borderRadius: 1 }}>
-                    <Table size="small" stickyHeader>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell sx={{ fontWeight: 600 }}>Id</TableCell>
-                          <TableCell sx={{ fontWeight: 600 }}>Name</TableCell>
-                          <TableCell sx={{ fontWeight: 600 }}>Group</TableCell>
-                          <TableCell sx={{ fontWeight: 600 }} align="center">Pos.</TableCell>
-                          <TableCell sx={{ fontWeight: 600 }} align="center">Played</TableCell>
-                          <TableCell sx={{ fontWeight: 600 }} align="center">W</TableCell>
-                          <TableCell sx={{ fontWeight: 600 }} align="center">D</TableCell>
-                          <TableCell sx={{ fontWeight: 600 }} align="center">L</TableCell>
-                          <TableCell sx={{ fontWeight: 600 }} align="center">For</TableCell>
-                          <TableCell sx={{ fontWeight: 600 }} align="center">Against</TableCell>
-                          <TableCell sx={{ fontWeight: 600 }} align="center">GD</TableCell>
-                          <TableCell sx={{ fontWeight: 600 }} align="center">Pts</TableCell>
-                          <TableCell sx={{ fontWeight: 600 }} align="center">%</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {(manageStandingsGroupFilter != null
-                          ? manageStandingsData.filter((r) => Number(r.GROUP_NUM) === Number(manageStandingsGroupFilter))
-                          : manageStandingsData
-                        )
-                          .sort((a, b) => (Number(a.POSITION) || 0) - (Number(b.POSITION) || 0))
-                          .map((r) => {
-                            const played = Number(r.GAMES_PLAYED) || 0;
-                            const pts = Number(r.POINTS) || 0;
-                            const pct = played > 0 && pts >= 0 ? Math.round((pts / (played * 3)) * 100) : 0;
-                            const gd = (Number(r.TOTAL_FOR) || 0) - (Number(r.TOTAL_AGAINST) || 0);
-                            const EditableCell = ({ field, val }) =>
-                              manageStandingsEditMode ? (
-                                <TextField
-                                  size="small"
-                                  type="number"
-                                  value={r[field] ?? ''}
-                                  onChange={(e) => updateManageStandingsRow(r.COMPETITOR_NUM, r.GROUP_NUM, field, e.target.value)}
-                                  inputProps={{ style: { width: 48, textAlign: 'center', padding: '4px 8px' } }}
-                                  sx={{ '& .MuiOutlinedInput-root': { '& fieldset': { borderColor: 'divider' } } }}
-                                />
-                              ) : (
-                                <span>{val}</span>
-                              );
-                            return (
-                              <TableRow key={`${r.COMPETITOR_NUM}-${r.GROUP_NUM}`} hover>
-                                <TableCell>{r.COMPETITOR_NUM}</TableCell>
-                                <TableCell>{r.competitorName || `Competitor ${r.COMPETITOR_NUM}`}</TableCell>
-                                <TableCell>{r.GROUP_NUM === -1 ? '—' : r.GROUP_NUM}</TableCell>
-                                <TableCell align="center"><EditableCell field="POSITION" val={r.POSITION ?? 0} /></TableCell>
-                                <TableCell align="center"><EditableCell field="GAMES_PLAYED" val={r.GAMES_PLAYED ?? 0} /></TableCell>
-                                <TableCell align="center"><EditableCell field="GAMES_WON" val={r.GAMES_WON ?? 0} /></TableCell>
-                                <TableCell align="center"><EditableCell field="GAMES_EVEN" val={r.GAMES_EVEN ?? 0} /></TableCell>
-                                <TableCell align="center"><EditableCell field="GAMES_LOST" val={r.GAMES_LOST ?? 0} /></TableCell>
-                                <TableCell align="center"><EditableCell field="TOTAL_FOR" val={r.TOTAL_FOR ?? 0} /></TableCell>
-                                <TableCell align="center"><EditableCell field="TOTAL_AGAINST" val={r.TOTAL_AGAINST ?? 0} /></TableCell>
-                                <TableCell align="center">{gd}</TableCell>
-                                <TableCell align="center"><EditableCell field="POINTS" val={r.POINTS ?? 0} /></TableCell>
-                                <TableCell align="center">{pct}</TableCell>
-                              </TableRow>
-                            );
-                          })}
-                        {manageStandingsData.length === 0 && !manageStandingsLoading && (
-                          <TableRow>
-                            <TableCell colSpan={13} align="center" sx={{ py: 3 }} color="text.secondary">
-                              No standings data. Enable Has Table on this stage and save to generate.
-                            </TableCell>
-                          </TableRow>
-                        )}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                )}
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, alignItems: 'center', justifyContent: 'flex-start', mt: 2, pt: 2, borderTop: 1, borderColor: 'divider' }}>
-                  <Button variant="outlined" size="small" sx={{ textTransform: 'none' }} onClick={() => {}}>Reload Missing Competitors</Button>
-                  <Button variant="outlined" size="small" sx={{ textTransform: 'none' }} onClick={() => {}}>Reorder</Button>
-                  <Button variant="outlined" size="small" sx={{ textTransform: 'none' }} onClick={() => {}}>Clear</Button>
-                  <Button variant="outlined" size="small" sx={{ textTransform: 'none' }} onClick={() => {}} disabled>Reset</Button>
-                  <Button variant="outlined" size="small" sx={{ textTransform: 'none' }} onClick={() => {}}>Recalculate By Games</Button>
-                  <Button variant="outlined" size="small" sx={{ textTransform: 'none' }} onClick={() => {}}>Send Update</Button>
-                  <FormControlLabel
-                    control={<Checkbox size="small" checked={manageStandingsRecalculateLive} onChange={(e) => setManageStandingsRecalculateLive(e.target.checked)} />}
-                    label="Recalculate live upon save"
-                    sx={{ ml: 0.5 }}
-                  />
-                </Box>
-
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5, alignItems: 'center', mt: 1.5, pt: 1.5, borderTop: 1, borderColor: 'divider' }}>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        size="small"
-                        checked={manageStandingsMultiStageEnabled}
-                        onChange={(e) => {
-                          setManageStandingsMultiStageEnabled(e.target.checked);
-                          if (!e.target.checked) setManageStandingsSelectedStages([]);
-                        }}
-                      />
-                    }
-                    label="Recalculate Multiple Stages"
-                    sx={{ ml: 0, mr: 0 }}
-                  />
-                  <Autocomplete
-                    multiple
-                    size="small"
-                    disabled={!manageStandingsMultiStageEnabled}
-                    options={(stagesBySeason[selectedStructureSeasonNum] || []).map((s) => s.STAGE_NUM)}
-                    value={manageStandingsSelectedStages}
-                    onChange={(_, val) => setManageStandingsSelectedStages(val)}
-                    getOptionLabel={(opt) => {
-                      const s = (stagesBySeason[selectedStructureSeasonNum] || []).find((st) => st.STAGE_NUM === opt);
-                      return s?.name || `Stage ${opt}`;
-                    }}
-                    renderTags={(value, getTagProps) =>
-                      value.map((opt, index) => {
-                        const s = (stagesBySeason[selectedStructureSeasonNum] || []).find((st) => st.STAGE_NUM === opt);
-                        return <Chip variant="outlined" size="small" label={s?.name || `Stage ${opt}`} {...getTagProps({ index })} />;
-                      })
-                    }
-                    renderInput={(params) => <TextField {...params} label="Stages" placeholder={manageStandingsMultiStageEnabled ? 'Select stages...' : ''} />}
-                    sx={{ minWidth: 280, flex: 1, maxWidth: 480 }}
-                  />
-                  <Button
-                    variant="outlined"
-                    size="small"
-                    sx={{ textTransform: 'none' }}
-                    disabled={!manageStandingsMultiStageEnabled || manageStandingsSelectedStages.length === 0}
-                    onClick={() => {}}
-                  >
-                    Recalculate Multiple Stages
-                  </Button>
-                </Box>
-
-                {/* Destinations section – collapsible */}
-                <Accordion
-                  expanded={manageStandingsDestinationsExpanded}
-                  onChange={(_, exp) => setManageStandingsDestinationsExpanded(exp)}
-                  sx={{ mt: 3, '&:before': { display: 'none' }, boxShadow: 'none', border: 1, borderColor: 'divider', borderRadius: 1 }}
-                >
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ minHeight: 48, '& .MuiAccordionSummary-content': { my: 1 } }}>
-                    <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
-                      Destinations ({manageStandingsDestinations.length})
-                    </Typography>
-                  </AccordionSummary>
-                  <AccordionDetails sx={{ pt: 0 }}>
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5, alignItems: 'center', mb: 1.5 }}>
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            size="small"
-                            checked={manageStandingsLoadPrevEnabled}
-                            onChange={(e) => {
-                              setManageStandingsLoadPrevEnabled(e.target.checked);
-                              if (!e.target.checked) {
-                                setManageStandingsLoadPrevSeason(null);
-                                setManageStandingsLoadPrevStage(null);
-                              }
-                            }}
-                          />
-                        }
-                        label="Load From Previous Stage"
-                        sx={{ ml: 0, mr: 0 }}
-                      />
-                      <FormControl size="small" sx={{ minWidth: 180 }} disabled={!manageStandingsLoadPrevEnabled}>
-                        <InputLabel>Season</InputLabel>
-                        <Select
-                          value={manageStandingsLoadPrevSeason ?? ''}
-                          label="Season"
-                          onChange={(e) => {
-                            const val = e.target.value === '' ? null : e.target.value;
-                            setManageStandingsLoadPrevSeason(val);
-                            setManageStandingsLoadPrevStage(null);
-                            if (val != null && stagesBySeason[val] === undefined) {
-                              loadStagesAndPhases(val);
-                            }
-                          }}
-                        >
-                          <MenuItem value=""><em>None</em></MenuItem>
-                          {structureSeasons.map((s) => (
-                            <MenuItem key={s.SEASON_NUM} value={s.SEASON_NUM}>
-                              #{s.SEASON_NUM} - {s.name || `Season ${s.SEASON_NUM}`}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                      <FormControl size="small" sx={{ minWidth: 180 }} disabled={!manageStandingsLoadPrevEnabled || manageStandingsLoadPrevSeason == null}>
-                        <InputLabel>Stage</InputLabel>
-                        <Select
-                          value={manageStandingsLoadPrevStage ?? ''}
-                          label="Stage"
-                          onChange={(e) => setManageStandingsLoadPrevStage(e.target.value === '' ? null : e.target.value)}
-                        >
-                          <MenuItem value=""><em>None</em></MenuItem>
-                          {(stagesBySeason[manageStandingsLoadPrevSeason] || []).map((s) => (
-                            <MenuItem key={s.STAGE_NUM} value={s.STAGE_NUM}>
-                              {s.name || `Stage ${s.STAGE_NUM}`}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                      <Button
-                        variant="outlined"
-                        size="small"
-                        sx={{ textTransform: 'none' }}
-                        disabled={!manageStandingsLoadPrevEnabled || manageStandingsLoadPrevSeason == null || manageStandingsLoadPrevStage == null}
-                        onClick={() => {}}
-                      >
-                        Add Destinations
-                      </Button>
-                    </Box>
-                    <Box sx={{ mb: 1 }}>
-                      <Button variant="outlined" size="small" startIcon={<AddIcon />} onClick={handleAddDestination} sx={{ textTransform: 'none' }}>
-                        Add New Destination
-                      </Button>
-                    </Box>
-                    <TableContainer sx={{ maxHeight: 240, border: 1, borderColor: 'divider', borderRadius: 1 }}>
-                    <Table size="small" stickyHeader>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell sx={{ fontWeight: 600, width: 48 }}>Color</TableCell>
-                          <TableCell sx={{ fontWeight: 600, minWidth: 140 }}>Name</TableCell>
-                          <TableCell sx={{ fontWeight: 600, width: 70 }} align="center">D. Num</TableCell>
-                          <TableCell sx={{ fontWeight: 600, minWidth: 120 }}>D. Type</TableCell>
-                          <TableCell sx={{ fontWeight: 600, minWidth: 100 }}>Table Type</TableCell>
-                          <TableCell sx={{ fontWeight: 600, width: 80 }} align="center">Group Num</TableCell>
-                          <TableCell sx={{ fontWeight: 600, width: 90 }} align="center">From Pos.</TableCell>
-                          <TableCell sx={{ fontWeight: 600, width: 90 }} align="center">To Pos.</TableCell>
-                          <TableCell sx={{ fontWeight: 600, width: 48 }} align="center" padding="checkbox" />
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {manageStandingsDestinations.map((d, idx) => (
-                          <TableRow key={idx} hover>
-                            <TableCell sx={{ py: 0.5 }}>
-                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                                <Box sx={{ width: 20, height: 20, borderRadius: 0.5, bgcolor: (d.COLOR && /^#[0-9A-Fa-f]{6}$/.test(d.COLOR)) ? d.COLOR : '#e0e0e0', border: '1px solid #ccc', flexShrink: 0 }} />
-                                <TextField size="small" value={d.COLOR || ''} onChange={(e) => handleUpdateDestination(idx, 'COLOR', e.target.value)} placeholder="#hex" inputProps={{ style: { width: 56, fontSize: '0.75rem' } }} sx={{ '& .MuiInput-root': { fontSize: '0.75rem' } }} />
-                              </Box>
-                            </TableCell>
-                            <TableCell sx={{ py: 0.5 }}>
-                              <Autocomplete
-                                key={`dest-name-${idx}-${d.NAME_ID || 'empty'}`}
-                                size="small"
-                                freeSolo
-                                options={tableDestinationsTermOptions}
-                                getOptionLabel={(opt) => (typeof opt === 'string' ? opt : (opt?.engValue || opt?.values?.[0]?.value || `Term ${opt?.id}` || ''))}
-                                value={d.NAME_ID && d.NAME_ID !== 0 ? ((allTerms || []).find((t) => t.id === d.NAME_ID) || null) : null}
-                                isOptionEqualToValue={(opt, val) => (opt && val && (opt.id === val.id))}
-                                filterOptions={(options, { inputValue }) => {
-                                  const trim = (inputValue || '').trim();
-                                  if (trim.length < 3) return [];
-                                  const lower = trim.toLowerCase();
-                                  return options.filter((opt) => {
-                                    const label = (opt?.engValue || opt?.values?.[0]?.value || '').toLowerCase();
-                                    return String(label).includes(lower);
-                                  });
-                                }}
-                                onChange={async (_, v) => {
-                                  if (v == null) {
-                                    handleUpdateDestination(idx, 'NAME_ID', 0);
-                                    return;
-                                  }
-                                  if (typeof v === 'object' && v?.id) {
-                                    handleUpdateDestination(idx, 'NAME_ID', v.id);
-                                    return;
-                                  }
-                                  if (typeof v === 'string' && (v || '').trim()) {
-                                    const txt = String(v).trim();
-                                    setDestinationNameCreating(idx);
-                                    try {
-                                      const newTerm = await api.createTerm({
-                                        category: 'Table Destinations',
-                                        values: [{ languageId: 1, value: txt, isDefault: true, status: 'Approved' }],
-                                      });
-                                      const tid = newTerm?.id ?? newTerm;
-                                      handleUpdateDestination(idx, 'NAME_ID', tid);
-                                      await loadTermsAndCategories();
-                                      setSnackbar({ open: true, message: 'Destination term created', severity: 'success' });
-                                    } catch (err) {
-                                      setSnackbar({ open: true, message: err.message || 'Failed to create term', severity: 'error' });
-                                    } finally {
-                                      setDestinationNameCreating(null);
-                                    }
-                                  }
-                                }}
-                                disabled={destinationNameCreating === idx}
-                                renderInput={(params) => (
-                                  <TextField
-                                    {...params}
-                                    size="small"
-                                    placeholder="Type 3+ chars for suggestions or enter new"
-                                    InputProps={{
-                                      ...params.InputProps,
-                                      endAdornment: (
-                                        <>
-                                          {params.InputProps.endAdornment}
-                                          {d.NAME_ID && (
-                                            <InputAdornment position="end">
-                                              <IconButton
-                                                size="small"
-                                                onClick={(e) => handleDestinationNameClick(e, d.NAME_ID)}
-                                                aria-label="Edit term"
-                                                sx={{ mr: -0.5 }}
-                                              >
-                                                <EditIcon fontSize="small" />
-                                              </IconButton>
-                                            </InputAdornment>
-                                          )}
-                                        </>
-                                      ),
-                                    }}
-                                  />
-                                )}
-                                sx={{ minWidth: 160, '& .MuiInputBase-input': { py: 0.5, fontSize: '0.8rem' } }}
-                              />
-                            </TableCell>
-                            <TableCell align="center" sx={{ py: 0.5 }}>{d.DESTINATION_NUM ?? idx + 1}</TableCell>
-                            <TableCell sx={{ py: 0.5 }}>
-                              <Select
-                                size="small"
-                                value={d.DESTINATION_TYPE ?? 0}
-                                onChange={(e) => handleUpdateDestination(idx, 'DESTINATION_TYPE', Number(e.target.value))}
-                                sx={{ minWidth: 100, fontSize: '0.8rem', '& .MuiSelect-select': { py: 0.5 } }}
-                              >
-                                {DESTINATION_TYPE_OPTIONS.map((o) => (
-                                  <MenuItem key={o.value} value={o.value}>{o.label}</MenuItem>
-                                ))}
-                              </Select>
-                            </TableCell>
-                            <TableCell sx={{ py: 0.5 }}>
-                              <Select
-                                size="small"
-                                value={d.TABLE_TYPE ?? 0}
-                                onChange={(e) => handleUpdateDestination(idx, 'TABLE_TYPE', Number(e.target.value))}
-                                sx={{ minWidth: 90, fontSize: '0.8rem', '& .MuiSelect-select': { py: 0.5 } }}
-                              >
-                                {TABLE_TYPE_OPTIONS.map((o) => (
-                                  <MenuItem key={o.value} value={o.value}>{o.label}</MenuItem>
-                                ))}
-                              </Select>
-                            </TableCell>
-                            <TableCell sx={{ py: 0.5 }}>
-                              <TextField
-                                size="small"
-                                type="number"
-                                value={d.GROUP_NUM ?? ''}
-                                onChange={(e) => handleUpdateDestination(idx, 'GROUP_NUM', e.target.value === '' ? 0 : Number(e.target.value))}
-                                inputProps={{ min: 0, style: { width: 48, textAlign: 'center' } }}
-                                sx={{ '& .MuiInput-input': { py: 0.5 } }}
-                              />
-                            </TableCell>
-                            <TableCell sx={{ py: 0.5 }}>
-                              <TextField
-                                size="small"
-                                type="number"
-                                value={d.FROM_POSITION ?? ''}
-                                onChange={(e) => handleUpdateDestination(idx, 'FROM_POSITION', e.target.value === '' ? 0 : Number(e.target.value))}
-                                inputProps={{ min: 0, style: { width: 48, textAlign: 'center' } }}
-                                sx={{ '& .MuiInput-input': { py: 0.5 } }}
-                              />
-                            </TableCell>
-                            <TableCell sx={{ py: 0.5 }}>
-                              <TextField
-                                size="small"
-                                type="number"
-                                value={d.TO_POSITION ?? ''}
-                                onChange={(e) => handleUpdateDestination(idx, 'TO_POSITION', e.target.value === '' ? 0 : Number(e.target.value))}
-                                inputProps={{ min: 0, style: { width: 48, textAlign: 'center' } }}
-                                sx={{ '& .MuiInput-input': { py: 0.5 } }}
-                              />
-                            </TableCell>
-                            <TableCell sx={{ py: 0.5 }} padding="checkbox">
-                              <IconButton size="small" onClick={() => handleRemoveDestination(idx)} sx={{ color: '#dc2626' }} aria-label="Delete">
-                                <DeleteIcon fontSize="small" />
-                              </IconButton>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 1 }}>
-                      <Button variant="outlined" size="small" sx={{ textTransform: 'none', color: '#dc2626', borderColor: '#dc2626', '&:hover': { borderColor: '#b91c1c', bgcolor: 'rgba(220,38,38,0.04)' } }} onClick={handleRemoveAllDestinations} disabled={manageStandingsDestinations.length === 0}>
-                        Remove All Destinations
-                      </Button>
-                      <Typography variant="body2" color="text.secondary">Total Items: {manageStandingsDestinations.length}</Typography>
-                    </Box>
-                  </AccordionDetails>
-                </Accordion>
-
-                {/* Points Deductions section – collapsible, collapsed by default */}
-                <Accordion
-                  expanded={manageStandingsPointsDeductionsExpanded}
-                  onChange={(_, exp) => setManageStandingsPointsDeductionsExpanded(exp)}
-                  sx={{ mt: 3, '&:before': { display: 'none' }, boxShadow: 'none', border: 1, borderColor: 'divider', borderRadius: 1 }}
-                >
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ minHeight: 48, '& .MuiAccordionSummary-content': { my: 1 } }}>
-                    <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
-                      Points Deductions ({manageStandingsPointsDeductions.length})
-                    </Typography>
-                  </AccordionSummary>
-                  <AccordionDetails sx={{ pt: 0 }}>
-                    <Box sx={{ mb: 1 }}>
-                      <Button variant="outlined" size="small" startIcon={<AddIcon />} onClick={handleAddPointsDeduction} sx={{ textTransform: 'none' }}>
-                        Add Points Deduction
-                      </Button>
-                    </Box>
-                    <TableContainer sx={{ maxHeight: 240, border: 1, borderColor: 'divider', borderRadius: 1 }}>
-                      <Table size="small" stickyHeader>
-                        <TableHead>
-                          <TableRow>
-                            <TableCell sx={{ fontWeight: 600, width: 40 }} align="center">#</TableCell>
-                            <TableCell sx={{ fontWeight: 600, minWidth: 160 }}>Name</TableCell>
-                            <TableCell sx={{ fontWeight: 600, width: 70 }} align="center">Points</TableCell>
-                            <TableCell sx={{ fontWeight: 600, width: 80 }} align="center">Goals For</TableCell>
-                            <TableCell sx={{ fontWeight: 600, width: 90 }} align="center">Goals Against</TableCell>
-                            <TableCell sx={{ fontWeight: 600, minWidth: 140 }}>Reason</TableCell>
-                            <TableCell sx={{ fontWeight: 600, width: 110 }}>Date</TableCell>
-                            <TableCell sx={{ fontWeight: 600, width: 48 }} align="center" padding="checkbox" />
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {manageStandingsPointsDeductions.map((pd, idx) => (
-                            <TableRow key={idx} hover>
-                              <TableCell align="center" sx={{ py: 0.5 }}>{idx + 1}</TableCell>
-                              <TableCell sx={{ py: 0.5 }}>
-                                <Autocomplete
-                                  size="small"
-                                  options={manageStandingsData}
-                                  getOptionLabel={(opt) => opt?.competitorName || `Competitor ${opt?.COMPETITOR_NUM || ''}`}
-                                  value={manageStandingsData.find((c) => Number(c.COMPETITOR_NUM) === Number(pd.COMPETITOR_NUM)) || null}
-                                  onChange={(_, v) => handleUpdatePointsDeduction(idx, 'COMPETITOR_NUM', v ? Number(v.COMPETITOR_NUM) : 0)}
-                                  renderInput={(params) => (
-                                    <TextField {...params} size="small" placeholder="Select competitor" sx={{ '& .MuiInputBase-input': { py: 0.5, fontSize: '0.8rem' } }} />
-                                  )}
-                                  sx={{ minWidth: 140 }}
-                                />
-                              </TableCell>
-                              <TableCell sx={{ py: 0.5 }}>
-                                <TextField
-                                  size="small"
-                                  type="number"
-                                  value={pd.POINTS ?? ''}
-                                  onChange={(e) => handleUpdatePointsDeduction(idx, 'POINTS', e.target.value === '' ? 0 : Number(e.target.value))}
-                                  inputProps={{ min: -999, style: { width: 48, textAlign: 'center' } }}
-                                  sx={{ '& .MuiInput-input': { py: 0.5 } }}
-                                />
-                              </TableCell>
-                              <TableCell sx={{ py: 0.5 }}>
-                                <TextField
-                                  size="small"
-                                  type="number"
-                                  value={pd.GOALS_FOR ?? ''}
-                                  onChange={(e) => handleUpdatePointsDeduction(idx, 'GOALS_FOR', e.target.value === '' ? 0 : Number(e.target.value))}
-                                  inputProps={{ style: { width: 50, textAlign: 'center' } }}
-                                  sx={{ '& .MuiInput-input': { py: 0.5 } }}
-                                />
-                              </TableCell>
-                              <TableCell sx={{ py: 0.5 }}>
-                                <TextField
-                                  size="small"
-                                  type="number"
-                                  value={pd.GOALS_AGAINST ?? ''}
-                                  onChange={(e) => handleUpdatePointsDeduction(idx, 'GOALS_AGAINST', e.target.value === '' ? 0 : Number(e.target.value))}
-                                  inputProps={{ style: { width: 50, textAlign: 'center' } }}
-                                  sx={{ '& .MuiInput-input': { py: 0.5 } }}
-                                />
-                              </TableCell>
-                              <TableCell sx={{ py: 0.5 }}>
-                                <Autocomplete
-                                  size="small"
-                                  freeSolo
-                                  options={pointsDeductionReasonsTermOptions}
-                                  getOptionLabel={(opt) => {
-                                    if (typeof opt === 'string') return opt;
-                                    if (opt?._createValue) return opt.engValue || `Create "${opt._createValue}"`;
-                                    return opt?.engValue || opt?.values?.[0]?.value || `Term ${opt?.id}` || '';
-                                  }}
-                                  value={pd.REASON_TERM_ID && pd.REASON_TERM_ID !== 0 ? ((allTerms || []).find((t) => t.id === pd.REASON_TERM_ID) || null) : null}
-                                  isOptionEqualToValue={(opt, val) => {
-                                    if (!opt || !val) return opt === val;
-                                    if (opt.id === '__create__' || val.id === '__create__') return false;
-                                    return opt.id === val.id;
-                                  }}
-                                  filterOptions={(options, { inputValue }) => {
-                                    const trim = (inputValue || '').trim();
-                                    const lower = trim.toLowerCase();
-                                    let filtered = trim.length < 2 ? options : options.filter((opt) => {
-                                      const label = (opt?.engValue || opt?.values?.[0]?.value || '').toLowerCase();
-                                      return String(label).includes(lower);
-                                    });
-                                    const exactMatch = options.some((opt) =>
-                                      (opt?.engValue || opt?.values?.[0]?.value || '').toLowerCase() === lower
-                                    );
-                                    if (trim.length >= 1 && !exactMatch) {
-                                      filtered = [...filtered, { id: '__create__', engValue: `Create "${trim}"`, _createValue: trim }];
-                                    }
-                                    return filtered;
-                                  }}
-                                  onChange={async (_, v) => {
-                                    if (v == null) {
-                                      handleUpdatePointsDeduction(idx, 'REASON_TERM_ID', 0);
-                                      return;
-                                    }
-                                    if (typeof v === 'object' && v?.id === '__create__' && v?._createValue) {
-                                      const valueToCreate = String(v._createValue).trim();
-                                      if (!valueToCreate) return;
-                                      try {
-                                        const newTerm = await api.createTerm({
-                                          category: 'Points Deduction Reasons',
-                                          values: [{ languageId: 1, value: valueToCreate, isDefault: true, status: 'Approved' }],
-                                        });
-                                        const tid = newTerm?.id ?? newTerm;
-                                        handleUpdatePointsDeduction(idx, 'REASON_TERM_ID', tid);
-                                        await loadTermsAndCategories();
-                                        setSnackbar({ open: true, message: 'Reason term created', severity: 'success' });
-                                      } catch (err) {
-                                        setSnackbar({ open: true, message: err.message || 'Failed to create term', severity: 'error' });
-                                      }
-                                      return;
-                                    }
-                                    if (typeof v === 'object' && v?.id && v.id !== '__create__') {
-                                      handleUpdatePointsDeduction(idx, 'REASON_TERM_ID', v.id);
-                                      return;
-                                    }
-                                    if (typeof v === 'string' && (v || '').trim()) {
-                                      try {
-                                        const newTerm = await api.createTerm({
-                                          category: 'Points Deduction Reasons',
-                                          values: [{ languageId: 1, value: String(v).trim(), isDefault: true, status: 'Approved' }],
-                                        });
-                                        const tid = newTerm?.id ?? newTerm;
-                                        handleUpdatePointsDeduction(idx, 'REASON_TERM_ID', tid);
-                                        await loadTermsAndCategories();
-                                        setSnackbar({ open: true, message: 'Reason term created', severity: 'success' });
-                                      } catch (err) {
-                                        setSnackbar({ open: true, message: err.message || 'Failed to create term', severity: 'error' });
-                                      }
-                                    }
-                                  }}
-                                  renderInput={(params) => (
-                                    <TextField
-                                      {...params}
-                                      size="small"
-                                      placeholder="Type 2+ chars or enter new"
-                                      InputProps={{
-                                        ...params.InputProps,
-                                        endAdornment: (
-                                          <>
-                                            {params.InputProps.endAdornment}
-                                            {pd.REASON_TERM_ID && pd.REASON_TERM_ID !== 0 && (
-                                              <InputAdornment position="end">
-                                                <IconButton
-                                                  size="small"
-                                                  onClick={(e) => handleReasonTermClick(e, pd.REASON_TERM_ID)}
-                                                  aria-label="Edit term"
-                                                  sx={{ mr: -0.5 }}
-                                                >
-                                                  <EditIcon fontSize="small" />
-                                                </IconButton>
-                                              </InputAdornment>
-                                            )}
-                                          </>
-                                        ),
-                                      }}
-                                      sx={{ '& .MuiInputBase-input': { py: 0.5, fontSize: '0.8rem' } }}
-                                    />
-                                  )}
-                                  sx={{ minWidth: 130 }}
-                                />
-                              </TableCell>
-                              <TableCell sx={{ py: 0.5 }}>
-                                <TextField
-                                  size="small"
-                                  type="date"
-                                  value={(pd.DEDUCTION_DATE || '').toString().slice(0, 10) || ''}
-                                  onChange={(e) => handleUpdatePointsDeduction(idx, 'DEDUCTION_DATE', e.target.value || null)}
-                                  InputLabelProps={{ shrink: true }}
-                                  inputProps={{ style: { fontSize: '0.75rem' } }}
-                                  sx={{ '& .MuiInput-input': { py: 0.5 } }}
-                                />
-                              </TableCell>
-                              <TableCell sx={{ py: 0.5 }} padding="checkbox">
-                                <IconButton size="small" onClick={() => handleRemovePointsDeduction(idx)} sx={{ color: '#dc2626' }} aria-label="Delete">
-                                  <DeleteIcon fontSize="small" />
-                                </IconButton>
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 1 }}>
-                      <Button variant="outlined" size="small" sx={{ textTransform: 'none', color: '#dc2626', borderColor: '#dc2626', '&:hover': { borderColor: '#b91c1c', bgcolor: 'rgba(220,38,38,0.04)' } }} onClick={handleRemoveAllPointsDeductions} disabled={manageStandingsPointsDeductions.length === 0}>
-                        Remove All Points Deductions
-                      </Button>
-                      <Typography variant="body2" color="text.secondary">Total Items: {manageStandingsPointsDeductions.length}</Typography>
-                    </Box>
-                  </AccordionDetails>
-                </Accordion>
-              </Box>
-            </DialogContent>
-            <DialogActions sx={{ px: 3, pb: 2 }}>
-              <Button onClick={handleCloseManageStandingsDialog} color="inherit">Close</Button>
-              <Button
-                variant="contained"
-                onClick={handleSaveManageStandings}
-                disabled={manageStandingsSaving || (JSON.stringify(manageStandingsData) === JSON.stringify(manageStandingsOriginal) && JSON.stringify(manageStandingsDestinations) === JSON.stringify(manageStandingsDestinationsOriginal) && JSON.stringify(manageStandingsPointsDeductions) === JSON.stringify(manageStandingsPointsDeductionsOriginal))}
-                sx={{ textTransform: 'none', backgroundColor: '#15803d', '&:hover': { backgroundColor: '#166534' } }}
-              >
-                {manageStandingsSaving ? 'Saving…' : 'Save & Update In Service'}
-              </Button>
-            </DialogActions>
-          </Dialog>
+          <ManageStandingsDialog
+            open={manageStandingsDialogOpen}
+            stageName={structureStageForm?.name}
+            selectedStageNum={selectedStructureStageNum}
+            selectedSeasonNum={selectedStructureSeasonNum}
+            groupsByStage={groupsByStage}
+            stagesBySeason={stagesBySeason}
+            structureSeasons={structureSeasons}
+            manageStandingsData={manageStandingsData}
+            manageStandingsOriginal={manageStandingsOriginal}
+            manageStandingsLoading={manageStandingsLoading}
+            manageStandingsSaving={manageStandingsSaving}
+            manageStandingsGroupFilter={manageStandingsGroupFilter}
+            manageStandingsEditMode={manageStandingsEditMode}
+            manageStandingsRecalculateLive={manageStandingsRecalculateLive}
+            manageStandingsMultiStageEnabled={manageStandingsMultiStageEnabled}
+            manageStandingsSelectedStages={manageStandingsSelectedStages}
+            manageStandingsDestinationsExpanded={manageStandingsDestinationsExpanded}
+            manageStandingsDestinations={manageStandingsDestinations}
+            manageStandingsDestinationsOriginal={manageStandingsDestinationsOriginal}
+            manageStandingsLoadPrevEnabled={manageStandingsLoadPrevEnabled}
+            manageStandingsLoadPrevSeason={manageStandingsLoadPrevSeason}
+            manageStandingsLoadPrevStage={manageStandingsLoadPrevStage}
+            manageStandingsPointsDeductionsExpanded={manageStandingsPointsDeductionsExpanded}
+            manageStandingsPointsDeductions={manageStandingsPointsDeductions}
+            manageStandingsPointsDeductionsOriginal={manageStandingsPointsDeductionsOriginal}
+            tableDestinationsTermOptions={tableDestinationsTermOptions}
+            pointsDeductionReasonsTermOptions={pointsDeductionReasonsTermOptions}
+            allTerms={allTerms}
+            tableTypes={tableTypes}
+            destinationNameCreating={destinationNameCreating}
+            pointsDeductionReasonCreating={pointsDeductionReasonCreating}
+            api={api}
+            onClose={handleCloseManageStandingsDialog}
+            onSave={handleSaveManageStandings}
+            onGroupFilterChange={setManageStandingsGroupFilter}
+            onEditModeChange={setManageStandingsEditMode}
+            onRecalculateLiveChange={setManageStandingsRecalculateLive}
+            onMultiStageEnabledChange={setManageStandingsMultiStageEnabled}
+            onSelectedStagesChange={setManageStandingsSelectedStages}
+            onDestinationsExpandedChange={setManageStandingsDestinationsExpanded}
+            onLoadPrevEnabledChange={setManageStandingsLoadPrevEnabled}
+            onLoadPrevSeasonChange={setManageStandingsLoadPrevSeason}
+            onLoadPrevStageChange={setManageStandingsLoadPrevStage}
+            onPointsDeductionsExpandedChange={setManageStandingsPointsDeductionsExpanded}
+            updateManageStandingsRow={updateManageStandingsRow}
+            loadStagesAndPhases={loadStagesAndPhases}
+            loadTermsAndCategories={loadTermsAndCategories}
+            setSnackbar={setSnackbar}
+            setDestinationNameCreating={setDestinationNameCreating}
+            setPointsDeductionReasonCreating={setPointsDeductionReasonCreating}
+            destinationTypeOptions={DESTINATION_TYPE_OPTIONS}
+            tableTypeOptions={TABLE_TYPE_OPTIONS}
+            handleAddDestination={handleAddDestination}
+            handleUpdateDestination={handleUpdateDestination}
+            handleRemoveDestination={handleRemoveDestination}
+            handleRemoveAllDestinations={handleRemoveAllDestinations}
+            handleDestinationNameClick={handleDestinationNameClick}
+            handleAddPointsDeduction={handleAddPointsDeduction}
+            handleUpdatePointsDeduction={handleUpdatePointsDeduction}
+            handleRemovePointsDeduction={handleRemovePointsDeduction}
+            handleRemoveAllPointsDeductions={handleRemoveAllPointsDeductions}
+            handleReasonTermClick={handleReasonTermClick}
+          />
 
         </Box>
       )}
         </Box>
       </Paper>
 
-      {/* Image edit dialog – one dialog with tabs (Competition / Trophy) per UI-STANDARDS */}
-      <Dialog open={imageDialogOpen} onClose={handleCloseImageDialog} maxWidth="sm" fullWidth>
-        <DialogTitle>Upload / Edit Image</DialogTitle>
-        <DialogContent>
-          <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2, mt: 1 }}>
-            <Tabs
-              value={editingImageType === 'competition' ? 0 : editingImageType === 'dark' ? 1 : 2}
-              onChange={(e, newValue) => {
-                const typeMap = { 0: 'competition', 1: 'dark', 2: 'trophy' };
-                const newType = typeMap[newValue];
-                setEditingImageType(newType);
-                if (newType === 'competition') {
-                  setImageUrlValue(formData.COMPETITION_IMAGE_URL || competition?.COMPETITION_IMAGE_URL || '');
-                } else if (newType === 'dark') {
-                  setImageUrlValue(formData.COMPETITION_DARK_IMAGE_URL || competition?.COMPETITION_DARK_IMAGE_URL || '');
-                } else {
-                  setImageUrlValue(formData.TROPHY_IMAGE_URL || competition?.TROPHY_IMAGE_URL || '');
-                }
-              }}
-              sx={{
-                '& .MuiTab-root': { textTransform: 'none', fontWeight: 500 },
-                '& .Mui-selected': { color: '#1976d2' },
-              }}
-            >
-              <Tab label="Light Image" />
-              <Tab label="Dark Image" />
-              <Tab label="Trophy Image" />
-            </Tabs>
-          </Box>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Image URL"
-            type="url"
-            fullWidth
-            variant="outlined"
-            value={imageUrlValue}
-            onChange={(e) => setImageUrlValue(e.target.value)}
-            placeholder="https://example.com/image.jpg"
-            sx={{ mt: 1 }}
-            helperText="Enter the URL of the image"
-          />
-          {imageUrlValue && (
-            <Box sx={{ mt: 2, mb: 1 }}>
-              <Typography variant="body2" sx={{ mb: 1, fontWeight: 500 }}>Preview:</Typography>
-              <Box
-                sx={{
-                  width: '100%',
-                  height: 200,
-                  border: '1px solid #e0e0e0',
-                  borderRadius: 1,
-                  backgroundColor: '#f5f5f5',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  overflow: 'hidden',
-                  position: 'relative',
-                }}
-              >
-                <Box
-                  component="img"
-                  src={imageUrlValue}
-                  alt="Preview"
-                  onError={(e) => { e.target.style.display = 'none'; }}
-                  sx={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                />
-                <Box
-                  sx={{
-                    position: 'absolute',
-                    top: 0, left: 0, width: '100%', height: '100%',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    backgroundColor: '#f5f5f5', zIndex: -1,
-                  }}
-                >
-                  <Typography variant="body2" color="text.secondary">Invalid image URL</Typography>
-                </Box>
-              </Box>
-            </Box>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseImageDialog} color="inherit">Cancel</Button>
-          <Button onClick={handleSaveImageUrl} variant="contained" color="primary">Save</Button>
-        </DialogActions>
-      </Dialog>
+      <ImageUrlDialog
+        open={imageDialogOpen}
+        imageType={editingImageType}
+        imageUrl={imageUrlValue}
+        onClose={handleCloseImageDialog}
+        onTypeChange={handleImageDialogTypeChange}
+        onUrlChange={setImageUrlValue}
+        onSave={handleSaveImageUrl}
+      />
 
-      <Dialog open={createBracketFinalDialogOpen} onClose={() => { setCreateBracketFinalDialogOpen(false); setCreateBracketFinalName(''); setBracketFinalInputValue(''); }} maxWidth="xs" fullWidth>
-        <DialogTitle>New Bracket Final Name</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Bracket Final name"
-            fullWidth
-            variant="outlined"
-            value={createBracketFinalName}
-            onChange={(e) => setCreateBracketFinalName(e.target.value)}
-            placeholder="Enter Bracket Final name"
-            sx={{ mt: 1 }}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => { setCreateBracketFinalDialogOpen(false); setCreateBracketFinalName(''); setBracketFinalInputValue(''); }} color="inherit">Cancel</Button>
-          <Button onClick={handleCreateBracketFinalSave} variant="contained" color="primary">Create</Button>
-        </DialogActions>
-      </Dialog>
+      <CreateNameDialog
+        open={createBracketFinalDialogOpen}
+        title="New Bracket Final Name"
+        label="Bracket Final name"
+        value={createBracketFinalName}
+        placeholder="Enter Bracket Final name"
+        onChange={setCreateBracketFinalName}
+        onClose={handleCloseCreateBracketFinalDialog}
+        onSave={handleCreateBracketFinalSave}
+      />
 
-      <Dialog open={removeFromAllSeasonsDialogOpen} onClose={() => setRemoveFromAllSeasonsDialogOpen(false)} maxWidth="xs" fullWidth>
-        <DialogTitle>Remove From All Seasons</DialogTitle>
-        <DialogContent>
-          <Typography>
-            Remove the selected competitor(s) from all seasons of this competition?
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setRemoveFromAllSeasonsDialogOpen(false)}>Cancel</Button>
-          <Button onClick={handleRemoveFromAllSeasonsConfirm} color="error" variant="contained">
-            Remove
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <RemoveFromAllSeasonsDialog
+        open={removeFromAllSeasonsDialogOpen}
+        onClose={() => setRemoveFromAllSeasonsDialogOpen(false)}
+        onConfirm={handleRemoveFromAllSeasonsConfirm}
+      />
 
-      <Dialog open={createRoundNameDialogOpen} onClose={() => { setCreateRoundNameDialogOpen(false); setCreateRoundNameName(''); setRoundNameInputValue(''); }} maxWidth="xs" fullWidth>
-        <DialogTitle>New Round Name</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Round Name"
-            fullWidth
-            variant="outlined"
-            value={createRoundNameName}
-            onChange={(e) => setCreateRoundNameName(e.target.value)}
-            placeholder="Enter Round Name"
-            sx={{ mt: 1 }}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => { setCreateRoundNameDialogOpen(false); setCreateRoundNameName(''); setRoundNameInputValue(''); }} color="inherit">Cancel</Button>
-          <Button onClick={handleCreateRoundNameSave} variant="contained" color="primary">Create</Button>
-        </DialogActions>
-      </Dialog>
+      <CreateNameDialog
+        open={createRoundNameDialogOpen}
+        title="New Round Name"
+        label="Round Name"
+        value={createRoundNameName}
+        placeholder="Enter Round Name"
+        onChange={setCreateRoundNameName}
+        onClose={handleCloseCreateRoundNameDialog}
+        onSave={handleCreateRoundNameSave}
+      />
 
       <Snackbar open={snackbar.open} autoHideDuration={6000} onClose={() => setSnackbar((s) => ({ ...s, open: false }))} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
         <MuiAlert severity={snackbar.severity} onClose={() => setSnackbar((s) => ({ ...s, open: false }))}>
@@ -8328,1104 +5730,154 @@ function CompetitionDetails() {
         />
       )}
 
-      <Dialog open={participantAddDialogOpen} onClose={() => { if (!participantAddSaving) { setParticipantAddDialogOpen(false); setParticipantAddContext(null); setNewParticipantName(''); setParticipantSelectedTermId(null); } }} maxWidth="xs" fullWidth>
-        <DialogTitle>Add Participant</DialogTitle>
-        <DialogContent>
-          <Autocomplete
-            freeSolo
-            size="small"
-            fullWidth
-            options={participantTermOptions}
-            getOptionLabel={(opt) => (opt?.values && opt.values.find(v => v.languageId === 1)?.value) || opt?.engValue || (opt?.id ? `Term ${opt.id}` : '')}
-            value={participantSelectedTermId ? (participantTermOptions.find(t => t.id === participantSelectedTermId) || null) : null}
-            inputValue={newParticipantName}
-            onInputChange={(_, v) => {
-              setNewParticipantName(v);
-              if (participantSelectedTermId) setParticipantSelectedTermId(null);
-            }}
-            onChange={(_, v) => {
-              if (v && typeof v === 'object' && v.id) {
-                setParticipantSelectedTermId(v.id);
-                setNewParticipantName((v.values && v.values.find(x => x.languageId === 1)?.value) || v.engValue || `Term ${v.id}`);
-              } else if (typeof v === 'string') {
-                setParticipantSelectedTermId(null);
-                setNewParticipantName(v);
-              }
-            }}
-            filterOptions={(options, { inputValue }) => {
-              const trim = (inputValue || '').trim();
-              if (trim.length < 2) return [];
-              const lower = trim.toLowerCase();
-              return options.filter((opt) => {
-                const label = (opt.values && opt.values.find(v => v.languageId === 1)?.value) || opt.engValue || '';
-                return String(label).toLowerCase().includes(lower);
-              });
-            }}
-            onKeyDown={(e) => e.key === 'Enter' && handleAddParticipantConfirm()}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Participant Name"
-                placeholder="Start typing for suggestions or enter a new name"
-                autoFocus
-                sx={{ mt: 1 }}
-              />
-            )}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => { setParticipantAddDialogOpen(false); setParticipantAddContext(null); setNewParticipantName(''); setParticipantSelectedTermId(null); }} color="inherit" disabled={participantAddSaving}>Cancel</Button>
-          <Button onClick={handleAddParticipantConfirm} variant="contained" color="primary" disabled={participantAddSaving || (!(newParticipantName || '').trim() && !participantSelectedTermId)}>Add</Button>
-        </DialogActions>
-      </Dialog>
+      <ParticipantAddDialog
+        open={participantAddDialogOpen}
+        saving={participantAddSaving}
+        termOptions={participantTermOptions}
+        selectedTermId={participantSelectedTermId}
+        participantName={newParticipantName}
+        onParticipantNameChange={setNewParticipantName}
+        onSelectedTermIdChange={setParticipantSelectedTermId}
+        onClose={handleCloseParticipantAddDialog}
+        onConfirm={handleAddParticipantConfirm}
+      />
 
-      <Dialog open={seasonModalOpen} onClose={handleSeasonModalClose} maxWidth="sm" fullWidth>
-        <DialogTitle>{seasonModalMode === 'add' ? 'New Season :' : 'Edit Season'}</DialogTitle>
-        <DialogContent>
-          {seasonModalMode === 'add' ? (
-            <Grid container spacing={2} sx={{ mt: 0.5 }}>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  size="small"
-                  label="Season Name"
-                  placeholder="Enter Season Name"
-                  value={newSeasonName}
-                  onChange={(e) => setNewSeasonName(e.target.value)}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControl fullWidth size="small">
-                  <InputLabel>Language</InputLabel>
-                  <Select
-                    label="Language"
-                    value={newSeasonLanguageId}
-                    onChange={(e) => setNewSeasonLanguageId(Number(e.target.value))}
-                  >
-                    <MenuItem value={1}>English</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <DateTimePicker
-                  label="Start Date"
-                  value={newSeasonStartDate ? dayjs(newSeasonStartDate) : null}
-                  onChange={(v) => setNewSeasonStartDate(v ? v.toISOString() : '')}
-                  slotProps={{ textField: { size: 'small', fullWidth: true } }}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <DateTimePicker
-                  label="End Date"
-                  value={newSeasonEndDate ? dayjs(newSeasonEndDate) : null}
-                  onChange={(v) => setNewSeasonEndDate(v ? v.toISOString() : '')}
-                  slotProps={{ textField: { size: 'small', fullWidth: true } }}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel control={<Checkbox size="small" checked={newSeasonSetCurrent} onChange={(e) => setNewSeasonSetCurrent(e.target.checked)} />} label="Set Current Season" />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel control={<Checkbox size="small" checked={newSeasonBasedOnLast} onChange={(e) => setNewSeasonBasedOnLast(e.target.checked)} />} label="Based on last season" />
-              </Grid>
-            </Grid>
-          ) : (
-            <Grid container spacing={2} sx={{ mt: 0.5 }}>
-              <Grid item xs={12} sm={6}>
-                <TextField fullWidth size="small" type="number" label="Season number" value={seasonForm.SEASON_NUM} onChange={(e) => setSeasonForm((f) => ({ ...f, SEASON_NUM: e.target.value }))} disabled />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Autocomplete
-                  size="small"
-                  options={seasonTermOptions}
-                  getOptionLabel={(opt) => (opt.values && opt.values.find(v => v.languageId === 1)?.value) || opt.engValue || `Term ${opt.id}`}
-                  value={seasonForm.NAME_ID ? (seasonTermOptions.find(t => t.id === (seasonForm.NAME_ID?.id ?? seasonForm.NAME_ID)) || null) : null}
-                  onChange={(_, v) => setSeasonForm((f) => ({ ...f, NAME_ID: v }))}
-                  renderInput={(params) => <TextField {...params} label="Name (term)" />}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <DateTimePicker
-                  label="Start date"
-                  value={seasonForm.START_DATE ? dayjs(seasonForm.START_DATE) : null}
-                  onChange={(v) => setSeasonForm((f) => ({ ...f, START_DATE: v ? v.format('YYYY-MM-DD') : '' }))}
-                  slotProps={{ textField: { size: 'small', fullWidth: true } }}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <DateTimePicker
-                  label="End date"
-                  value={seasonForm.END_DATE ? dayjs(seasonForm.END_DATE) : null}
-                  onChange={(v) => setSeasonForm((f) => ({ ...f, END_DATE: v ? v.format('YYYY-MM-DD') : '' }))}
-                  slotProps={{ textField: { size: 'small', fullWidth: true } }}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <FormControlLabel control={<Checkbox size="small" checked={seasonForm.HAS_TABLE} onChange={(e) => setSeasonForm((f) => ({ ...f, HAS_TABLE: e.target.checked }))} />} label={<Typography variant="body2">HAS_TABLE</Typography>} />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <FormControlLabel control={<Checkbox size="small" checked={seasonForm.HAS_BRACKETS} onChange={(e) => setSeasonForm((f) => ({ ...f, HAS_BRACKETS: e.target.checked }))} />} label={<Typography variant="body2">HAS_BRACKETS</Typography>} />
-              </Grid>
-            </Grid>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleSeasonModalClose} sx={{ textTransform: 'uppercase' }}>CANCEL</Button>
-          <Button
-            variant="contained"
-            onClick={handleSeasonModalSave}
-            disabled={seasonSaving || (seasonModalMode === 'add' && !(newSeasonName || '').trim()) || (seasonModalMode === 'edit' && (seasonForm.SEASON_NUM === '' || isNaN(Number(seasonForm.SEASON_NUM))))}
-            sx={{ textTransform: 'uppercase' }}
-          >
-            {seasonSaving ? 'Saving…' : 'SAVE'}
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <SeasonModalDialog
+        open={seasonModalOpen}
+        mode={seasonModalMode}
+        newSeasonName={newSeasonName}
+        newSeasonLanguageId={newSeasonLanguageId}
+        newSeasonStartDate={newSeasonStartDate}
+        newSeasonEndDate={newSeasonEndDate}
+        newSeasonSetCurrent={newSeasonSetCurrent}
+        newSeasonBasedOnLast={newSeasonBasedOnLast}
+        seasonForm={seasonForm}
+        seasonTermOptions={seasonTermOptions}
+        saving={seasonSaving}
+        onClose={handleSeasonModalClose}
+        onSave={handleSeasonModalSave}
+        onNewSeasonNameChange={setNewSeasonName}
+        onNewSeasonLanguageIdChange={setNewSeasonLanguageId}
+        onNewSeasonStartDateChange={setNewSeasonStartDate}
+        onNewSeasonEndDateChange={setNewSeasonEndDate}
+        onNewSeasonSetCurrentChange={setNewSeasonSetCurrent}
+        onNewSeasonBasedOnLastChange={setNewSeasonBasedOnLast}
+        onSeasonFormChange={setSeasonForm}
+      />
 
-      <Dialog open={stageModalOpen} onClose={handleStageModalClose} maxWidth="sm" fullWidth>
-        <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          {stageModalMode === 'add' ? 'New Stage :' : 'Edit Stage'}
-          <IconButton size="small" onClick={handleStageModalClose} aria-label="Close">
-            <CloseIcon fontSize="small" />
-          </IconButton>
-        </DialogTitle>
-        <DialogContent>
-          <Grid container spacing={2} sx={{ mt: 0.5 }}>
-            {stageModalMode === 'add' ? (
-              <Grid item xs={12}>
-                <Autocomplete
-                  freeSolo
-                  size="small"
-                  options={stageTermOptions}
-                  getOptionLabel={(opt) => (opt?.values && opt.values.find(v => v.languageId === 1)?.value) || opt?.engValue || (opt?.id ? `Term ${opt.id}` : '')}
-                  value={stageForm.NAME_ID ? (stageTermOptions.find(t => t.id === (stageForm.NAME_ID?.id ?? stageForm.NAME_ID)) || null) : null}
-                  inputValue={newStageName}
-                  onInputChange={(_, v) => {
-                    setNewStageName(v);
-                    if (stageForm.NAME_ID) setStageForm((f) => ({ ...f, NAME_ID: null }));
-                  }}
-                  onChange={(_, v) => {
-                    if (v && typeof v === 'object' && v.id) {
-                      setStageForm((f) => ({ ...f, NAME_ID: v }));
-                      setNewStageName((v.values && v.values.find(x => x.languageId === 1)?.value) || v.engValue || `Term ${v.id}`);
-                    } else if (typeof v === 'string') {
-                      setStageForm((f) => ({ ...f, NAME_ID: null }));
-                      setNewStageName(v);
-                    }
-                  }}
-                  filterOptions={(options, { inputValue }) => {
-                    const trim = (inputValue || '').trim();
-                    if (trim.length < 3) return [];
-                    const lower = trim.toLowerCase();
-                    return options.filter((opt) => {
-                      const label = (opt.values && opt.values.find(v => v.languageId === 1)?.value) || opt.engValue || '';
-                      return String(label).toLowerCase().includes(lower);
-                    });
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Stage Name"
-                      placeholder="Enter 3+ letters for suggestions"
-                      required
-                    />
-                  )}
-                />
-              </Grid>
-            ) : (
-              <Grid item xs={12} sm={6}>
-                <Autocomplete
-                  size="small"
-                  options={stageTermOptions}
-                  getOptionLabel={(opt) => (opt.values && opt.values.find(v => v.languageId === 1)?.value) || opt.engValue || `Term ${opt.id}`}
-                  value={stageForm.NAME_ID ? (stageTermOptions.find(t => t.id === (stageForm.NAME_ID?.id ?? stageForm.NAME_ID)) || null) : null}
-                  onChange={(_, v) => setStageForm((f) => ({ ...f, NAME_ID: v }))}
-                  renderInput={(params) => <TextField {...params} label="Stage Name (term)" />}
-                />
-              </Grid>
-            )}
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth size="small">
-                <InputLabel>Stage Type</InputLabel>
-                <Select
-                  label="Stage Type"
-                  value={stageForm.STAGE_TYPE ?? 1}
-                  onChange={(e) => setStageForm((f) => ({ ...f, STAGE_TYPE: Number(e.target.value) }))}
-                  renderValue={(v) => stagesTypes.find((t) => Number(t.STAGE_TYPE_ID) === Number(v))?.STAGE_TYPE ?? String(v)}
-                >
-                  {stagesTypes.map((t) => (
-                    <MenuItem key={t.STAGE_TYPE_ID} value={t.STAGE_TYPE_ID}>
-                      {t.STAGE_TYPE}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                size="small"
-                type="number"
-                label="Num Of Games"
-                value={stageForm.NUM_OF_GAMES ?? -1}
-                onChange={(e) => setStageForm((f) => ({ ...f, NUM_OF_GAMES: e.target.value === '' ? -1 : Number(e.target.value) }))}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth size="small">
-                <InputLabel>Phase</InputLabel>
-                <Select
-                  label="Phase"
-                  value={stageForm.PHASE ?? ''}
-                  onChange={(e) => setStageForm((f) => ({ ...f, PHASE: e.target.value || '' }))}
-                  renderValue={(v) => v || 'Not Selected'}
-                >
-                  <MenuItem value="">Not Selected</MenuItem>
-                  {(phasesBySeason[stageFormContext?.seasonNum] || []).map((ph) => {
-                    const displayName = ph.name || `Phase ${ph.PHASE_NUM}`;
-                    return (
-                      <MenuItem key={ph.PHASE_NUM} value={displayName}>
-                        {displayName}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>Stage Parameters</Typography>
-              <Grid container spacing={1}>
-                {[
-                  { key: 'HAS_TABLE', label: 'Has Table' },
-                  { key: 'INCLUDE_IN_BRACKET', label: 'Include in bracket' },
-                  { key: 'FILTER_DIVISION', label: 'Filter Division' },
-                  { key: 'CONNECTED_IN_BRACKETS', label: 'Connected In Brackets' },
-                  { key: 'PRE_VISUAL_BRACKETS', label: 'Pre Visual Brackets' },
-                  { key: 'IS_SERIES', label: 'Is Series' },
-                  { key: 'CONNECTED_TO_PREVIOUS_STAGE', label: 'Connected To previous stage' },
-                ].map(({ key, label }) => (
-                  <Grid item xs={6} sm={4} key={key}>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          size="small"
-                          checked={!!stageForm[key]}
-                          onChange={(e) => setStageForm((f) => ({ ...f, [key]: e.target.checked }))}
-                        />
-                      }
-                      label={<Typography variant="body2">{label}</Typography>}
-                    />
-                  </Grid>
-                ))}
-              </Grid>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>Stage Dates</Typography>
-              <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
-                  <DateTimePicker
-                    label="Start Date"
-                    value={stageForm.START_DATE ? dayjs(stageForm.START_DATE) : null}
-                    onChange={(v) => setStageForm((f) => ({ ...f, START_DATE: v ? v.toISOString() : '' }))}
-                    slotProps={{ textField: { size: 'small', fullWidth: true } }}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <DateTimePicker
-                    label="End Date"
-                    value={stageForm.END_DATE ? dayjs(stageForm.END_DATE) : null}
-                    onChange={(v) => setStageForm((f) => ({ ...f, END_DATE: v ? v.toISOString() : '' }))}
-                    slotProps={{ textField: { size: 'small', fullWidth: true } }}
-                  />
-                </Grid>
-              </Grid>
-            </Grid>
-            {stageModalMode === 'add' && (
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      size="small"
-                      checked={newStageSetCurrent}
-                      onChange={(e) => setNewStageSetCurrent(e.target.checked)}
-                    />
-                  }
-                  label="Set Current Stage"
-                />
-              </Grid>
-            )}
-          </Grid>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleStageModalClose}>CANCEL</Button>
-          <Button
-            variant="contained"
-            onClick={handleStageModalSave}
-            disabled={stageSaving || (stageModalMode === 'add' && !(newStageName || '').trim() && !stageForm.NAME_ID)}
-            sx={{ textTransform: 'none' }}
-          >
-            {stageSaving ? 'Saving…' : 'SAVE'}
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <StageModalDialog
+        open={stageModalOpen}
+        mode={stageModalMode}
+        stageForm={stageForm}
+        stageTermOptions={stageTermOptions}
+        newStageName={newStageName}
+        stagesTypes={stagesTypes}
+        phasesBySeason={phasesBySeason}
+        stageFormContext={stageFormContext}
+        newStageSetCurrent={newStageSetCurrent}
+        saving={stageSaving}
+        onClose={handleStageModalClose}
+        onSave={handleStageModalSave}
+        onStageFormChange={setStageForm}
+        onNewStageNameChange={setNewStageName}
+        onNewStageSetCurrentChange={setNewStageSetCurrent}
+      />
 
-      {/* Create / Generate Stages unified dialog */}
-      <Dialog open={createGenerateDialogOpen} onClose={handleCloseCreateGenerateDialog} maxWidth="sm" fullWidth>
-        <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          Create / Generate Stages
-          <IconButton size="small" onClick={handleCloseCreateGenerateDialog} aria-label="Close">
-            <CloseIcon fontSize="small" />
-          </IconButton>
-        </DialogTitle>
-        <DialogContent sx={{ px: 0, pb: 0 }}>
-          <Box sx={{ borderBottom: 1, borderColor: 'divider', px: 3 }}>
-            <Tabs
-              value={createGenerateDialogTab}
-              onChange={(_, newVal) => {
-                setCreateGenerateDialogTab(newVal);
-                if (newVal === 1 && !stageFormContext) {
-                  setStageModalMode('add');
-                  setStageFormContext({ seasonNum: selectedStructureSeasonNum });
-                  setStageEditTarget(null);
-                  setNewStageName('');
-                  setNewStageSetCurrent(false);
-                  setStageForm({
-                    STAGE_NUM: '', NAME_ID: null, STAGE_TYPE: 1, NUM_OF_GAMES: -1,
-                    START_DATE: '', END_DATE: '', HAS_TABLE: false, INCLUDE_IN_BRACKET: false,
-                    FILTER_DIVISION: false, CONNECTED_IN_BRACKETS: false, PRE_VISUAL_BRACKETS: false,
-                    IS_SERIES: false, CONNECTED_TO_PREVIOUS_STAGE: false, PHASE: '',
-                  });
-                }
-              }}
-              sx={{ '& .MuiTab-root': { textTransform: 'none', fontWeight: 500 }, '& .Mui-selected': { color: '#1976d2' } }}
-            >
-              <Tab label="Generate Stages" />
-              <Tab label="Create Stage" />
-            </Tabs>
-          </Box>
+      <CreateGenerateStagesDialog
+        open={createGenerateDialogOpen}
+        tab={createGenerateDialogTab}
+        competitionId={id}
+        selectedSeasonNum={selectedStructureSeasonNum}
+        structureSeasons={structureSeasons}
+        importSeasonNum={generateStagesImportSeasonNum}
+        generateStagesTypes={generateStagesTypes}
+        stageForm={stageForm}
+        stageTermOptions={stageTermOptions}
+        stagesTypes={stagesTypes}
+        phasesBySeason={phasesBySeason}
+        stageFormContext={stageFormContext}
+        newStageName={newStageName}
+        newStageSetCurrent={newStageSetCurrent}
+        stageSaving={stageSaving}
+        onClose={handleCloseCreateGenerateDialog}
+        onTabChange={handleCreateGenerateDialogTabChange}
+        onImportSeasonNumChange={setGenerateStagesImportSeasonNum}
+        onGenerateStagesTypesChange={setGenerateStagesTypes}
+        onStageFormChange={setStageForm}
+        onNewStageNameChange={setNewStageName}
+        onNewStageSetCurrentChange={setNewStageSetCurrent}
+        onImportStages={handleImportStagesFromSeason}
+        onCreateGeneratedStages={handleCreateGeneratedStages}
+        onCreateStage={handleStageModalSave}
+      />
 
-          {createGenerateDialogTab === 0 && (
-            <Box sx={{ px: 3, pt: 2, pb: 2 }}>
-              <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>Import Stages from previous season</Typography>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-                <FormControl size="small" sx={{ minWidth: 200 }}>
-                  <InputLabel>Select Season</InputLabel>
-                  <Select
-                    label="Select Season"
-                    value={generateStagesImportSeasonNum ?? ''}
-                    onChange={(e) => setGenerateStagesImportSeasonNum(e.target.value === '' ? null : e.target.value)}
-                    displayEmpty
-                  >
-                    <MenuItem value="">Select Season</MenuItem>
-                    {(structureSeasons || [])
-                      .filter((s) => s.SEASON_NUM !== selectedStructureSeasonNum)
-                      .map((s) => (
-                        <MenuItem key={s.SEASON_NUM} value={s.SEASON_NUM}>
-                          #{s.SEASON_NUM} - {s.name || `Season ${s.SEASON_NUM}`}
-                        </MenuItem>
-                      ))}
-                  </Select>
-                </FormControl>
-                <Button
-                  variant="contained"
-                  size="small"
-                  disabled={!generateStagesImportSeasonNum || !id}
-                  sx={{ textTransform: 'none' }}
-                  onClick={async () => {
-                    if (!id || !generateStagesImportSeasonNum || selectedStructureSeasonNum == null) return;
-                    try {
-                      const sourceStages = await api.getStages(id, generateStagesImportSeasonNum);
-                      const currentStages = stagesBySeason[selectedStructureSeasonNum] || [];
-                      const maxNum = currentStages.length ? Math.max(...currentStages.map((s) => Number(s.STAGE_NUM))) : 0;
-                      let nextNum = maxNum + 1;
-                      for (const s of sourceStages) {
-                        const payload = {
-                          STAGE_NUM: nextNum,
-                          NAME_ID: s.NAME_ID,
-                          STAGE_TYPE: s.STAGE_TYPE ?? 1,
-                          NUM_OF_GAMES: s.NUM_OF_GAMES ?? -1,
-                          START_DATE: s.START_DATE,
-                          END_DATE: s.END_DATE,
-                          HAS_TABLE: !!s.HAS_TABLE,
-                          INCLUDE_IN_BRACKET: !!s.INCLUDE_IN_BRACKET,
-                          FILTER_DIVISION: !!s.FILTER_DIVISION,
-                          CONNECTED_IN_BRACKETS: !!s.CONNECTED_IN_BRACKETS,
-                          PRE_VISUAL_BRACKETS: !!s.PRE_VISUAL_BRACKETS,
-                          IS_SERIES: !!s.IS_SERIES,
-                          CONNECTED_TO_PREVIOUS_STAGE: !!s.CONNECTED_TO_PREVIOUS_STAGE,
-                          PHASE: s.PHASE ?? '',
-                        };
-                        await api.createStage(id, selectedStructureSeasonNum, payload);
-                        nextNum += 1;
-                      }
-                      setSnackbar({ open: true, message: `Imported ${sourceStages.length} stage(s)`, severity: 'success' });
-                      loadStagesAndPhases(selectedStructureSeasonNum);
-                      handleCloseCreateGenerateDialog();
-                    } catch (err) {
-                      setSnackbar({ open: true, message: err.message || 'Import failed', severity: 'error' });
-                    }
-                  }}
-                >
-                  IMPORT STAGES
-                </Button>
-              </Box>
-              <Typography variant="subtitle2" sx={{ fontWeight: 600, mt: 2, mb: 1 }}>Stages Types</Typography>
-              <Grid container spacing={1} sx={{ mb: 2 }}>
-                {[
-                  { key: 'leagueCycle', label: 'League Cycle' },
-                  { key: 'groupStage', label: 'Group Stage' },
-                  { key: 'bracketStage', label: 'Bracket Stage' },
-                ].map(({ key, label }) => (
-                  <Grid item xs={12} key={key}>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          size="small"
-                          checked={!!generateStagesTypes[key]}
-                          onChange={(e) => setGenerateStagesTypes((prev) => ({ ...prev, [key]: e.target.checked }))}
-                        />
-                      }
-                      label={label}
-                    />
-                  </Grid>
-                ))}
-              </Grid>
-            </Box>
-          )}
+      <StageDeleteConfirmDialog
+        open={stageDeleteConfirmOpen}
+        selectedStagesCount={selectedStagesForDelete.length}
+        onClose={() => setStageDeleteConfirmOpen(false)}
+        onConfirm={handleConfirmDeleteStages}
+      />
 
-          {createGenerateDialogTab === 1 && (
-            <Box sx={{ px: 3, pt: 2, pb: 2 }}>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <Autocomplete
-                    freeSolo
-                    size="small"
-                    options={stageTermOptions}
-                    getOptionLabel={(opt) => (opt?.values && opt.values.find(v => v.languageId === 1)?.value) || opt?.engValue || (opt?.id ? `Term ${opt.id}` : '')}
-                    value={stageForm.NAME_ID ? (stageTermOptions.find(t => t.id === (stageForm.NAME_ID?.id ?? stageForm.NAME_ID)) || null) : null}
-                    inputValue={newStageName}
-                    onInputChange={(_, v) => {
-                      setNewStageName(v);
-                      if (stageForm.NAME_ID) setStageForm((f) => ({ ...f, NAME_ID: null }));
-                    }}
-                    onChange={(_, v) => {
-                      if (v && typeof v === 'object' && v.id) {
-                        setStageForm((f) => ({ ...f, NAME_ID: v }));
-                        setNewStageName((v.values && v.values.find(x => x.languageId === 1)?.value) || v.engValue || `Term ${v.id}`);
-                      } else if (typeof v === 'string') {
-                        setStageForm((f) => ({ ...f, NAME_ID: null }));
-                        setNewStageName(v);
-                      }
-                    }}
-                    filterOptions={(options, { inputValue }) => {
-                      const trim = (inputValue || '').trim();
-                      if (trim.length < 3) return [];
-                      const lower = trim.toLowerCase();
-                      return options.filter((opt) => {
-                        const label = (opt.values && opt.values.find(v => v.languageId === 1)?.value) || opt.engValue || '';
-                        return String(label).toLowerCase().includes(lower);
-                      });
-                    }}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Stage Name"
-                        placeholder="Enter 3+ letters for suggestions"
-                        required
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <FormControl fullWidth size="small">
-                    <InputLabel>Stage Type</InputLabel>
-                    <Select
-                      label="Stage Type"
-                      value={stageForm.STAGE_TYPE ?? 1}
-                      onChange={(e) => setStageForm((f) => ({ ...f, STAGE_TYPE: Number(e.target.value) }))}
-                      renderValue={(v) => stagesTypes.find((t) => Number(t.STAGE_TYPE_ID) === Number(v))?.STAGE_TYPE ?? String(v)}
-                    >
-                      {stagesTypes.map((t) => (
-                        <MenuItem key={t.STAGE_TYPE_ID} value={t.STAGE_TYPE_ID}>
-                          {t.STAGE_TYPE}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    fullWidth
-                    size="small"
-                    type="number"
-                    label="Num Of Games"
-                    value={stageForm.NUM_OF_GAMES ?? -1}
-                    onChange={(e) => setStageForm((f) => ({ ...f, NUM_OF_GAMES: e.target.value === '' ? -1 : Number(e.target.value) }))}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <FormControl fullWidth size="small">
-                    <InputLabel>Phase</InputLabel>
-                    <Select
-                      label="Phase"
-                      value={stageForm.PHASE ?? ''}
-                      onChange={(e) => setStageForm((f) => ({ ...f, PHASE: e.target.value || '' }))}
-                      renderValue={(v) => v || 'Not Selected'}
-                    >
-                      <MenuItem value="">Not Selected</MenuItem>
-                      {(phasesBySeason[stageFormContext?.seasonNum] || []).map((ph) => {
-                        const displayName = ph.name || `Phase ${ph.PHASE_NUM}`;
-                        return (
-                          <MenuItem key={ph.PHASE_NUM} value={displayName}>
-                            {displayName}
-                          </MenuItem>
-                        );
-                      })}
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={12}>
-                  <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>Stage Parameters</Typography>
-                  <Grid container spacing={1}>
-                    {[
-                      { key: 'HAS_TABLE', label: 'Has Table' },
-                      { key: 'INCLUDE_IN_BRACKET', label: 'Include in bracket' },
-                      { key: 'FILTER_DIVISION', label: 'Filter Division' },
-                      { key: 'CONNECTED_IN_BRACKETS', label: 'Connected In Brackets' },
-                      { key: 'PRE_VISUAL_BRACKETS', label: 'Pre Visual Brackets' },
-                      { key: 'IS_SERIES', label: 'Is Series' },
-                      { key: 'CONNECTED_TO_PREVIOUS_STAGE', label: 'Connected To previous stage' },
-                    ].map(({ key, label }) => (
-                      <Grid item xs={6} sm={4} key={key}>
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              size="small"
-                              checked={!!stageForm[key]}
-                              onChange={(e) => setStageForm((f) => ({ ...f, [key]: e.target.checked }))}
-                            />
-                          }
-                          label={<Typography variant="body2">{label}</Typography>}
-                        />
-                      </Grid>
-                    ))}
-                  </Grid>
-                </Grid>
-                <Grid item xs={12}>
-                  <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>Stage Dates</Typography>
-                  <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6}>
-                      <DateTimePicker
-                        label="Start Date"
-                        value={stageForm.START_DATE ? dayjs(stageForm.START_DATE) : null}
-                        onChange={(v) => setStageForm((f) => ({ ...f, START_DATE: v ? v.toISOString() : '' }))}
-                        slotProps={{ textField: { size: 'small', fullWidth: true } }}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <DateTimePicker
-                        label="End Date"
-                        value={stageForm.END_DATE ? dayjs(stageForm.END_DATE) : null}
-                        onChange={(v) => setStageForm((f) => ({ ...f, END_DATE: v ? v.toISOString() : '' }))}
-                        slotProps={{ textField: { size: 'small', fullWidth: true } }}
-                      />
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid item xs={12}>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        size="small"
-                        checked={newStageSetCurrent}
-                        onChange={(e) => setNewStageSetCurrent(e.target.checked)}
-                      />
-                    }
-                    label="Set Current Stage"
-                  />
-                </Grid>
-              </Grid>
-            </Box>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseCreateGenerateDialog}>CANCEL</Button>
-          {createGenerateDialogTab === 0 && (
-            <Button
-              variant="contained"
-              disabled={!generateStagesTypes.leagueCycle && !generateStagesTypes.groupStage && !generateStagesTypes.bracketStage}
-              sx={{ textTransform: 'none' }}
-              onClick={async () => {
-                if (!id || selectedStructureSeasonNum == null) return;
-                const names = {
-                  leagueCycle: 'League Cycle',
-                  groupStage: 'Group Stage',
-                  bracketStage: 'Bracket Stage',
-                };
-                const types = { leagueCycle: 1, groupStage: 1, bracketStage: 2 };
-                const currentStages = stagesBySeason[selectedStructureSeasonNum] || [];
-                const maxNum = currentStages.length ? Math.max(...currentStages.map((s) => Number(s.STAGE_NUM))) : 0;
-                let nextNum = maxNum + 1;
-                try {
-                  for (const key of ['leagueCycle', 'groupStage', 'bracketStage']) {
-                    if (!generateStagesTypes[key]) continue;
-                    const term = await api.createTerm({
-                      category: 'Stages Names',
-                      values: [{ languageId: 1, value: names[key], isDefault: true, status: 'Approved' }],
-                    });
-                    await api.createStage(id, selectedStructureSeasonNum, {
-                      STAGE_NUM: nextNum,
-                      NAME_ID: term?.id ?? term,
-                      STAGE_TYPE: types[key],
-                      NUM_OF_GAMES: -1,
-                      HAS_TABLE: key === 'groupStage' || key === 'leagueCycle',
-                      INCLUDE_IN_BRACKET: key === 'bracketStage',
-                      PRE_VISUAL_BRACKETS: false,
-                      IS_SERIES: false,
-                      CONNECTED_TO_PREVIOUS_STAGE: false,
-                      FILTER_DIVISION: false,
-                      CONNECTED_IN_BRACKETS: false,
-                      PHASE: '',
-                    });
-                    nextNum += 1;
-                  }
-                  setSnackbar({ open: true, message: 'Stages created', severity: 'success' });
-                  loadStagesAndPhases(selectedStructureSeasonNum);
-                  handleCloseCreateGenerateDialog();
-                } catch (err) {
-                  setSnackbar({ open: true, message: err.message || 'Create failed', severity: 'error' });
-                }
-              }}
-            >
-              CREATE
-            </Button>
-          )}
-          {createGenerateDialogTab === 1 && (
-            <Button
-              variant="contained"
-              onClick={handleStageModalSave}
-              disabled={stageSaving || (!(newStageName || '').trim() && !stageForm.NAME_ID)}
-              sx={{ textTransform: 'none' }}
-            >
-              {stageSaving ? 'Saving…' : 'SAVE'}
-            </Button>
-          )}
-        </DialogActions>
-      </Dialog>
+      <GroupModalDialog
+        open={groupModalOpen}
+        mode={groupModalMode}
+        groupForm={groupForm}
+        groupTermOptions={groupTermOptions}
+        newGroupName={newGroupName}
+        saving={groupSaving}
+        onClose={handleGroupModalClose}
+        onSave={handleGroupModalSave}
+        onGroupFormChange={setGroupForm}
+        onNewGroupNameChange={setNewGroupName}
+      />
 
-      <Dialog open={stageDeleteConfirmOpen} onClose={() => setStageDeleteConfirmOpen(false)} maxWidth="xs" fullWidth>
-        <DialogTitle sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Box component="span" sx={{ color: '#d32f2f', display: 'inline-flex' }}>⚠️</Box>
-          Delete Stages
-        </DialogTitle>
-        <DialogContent>
-          <Typography variant="body2">
-            You are about to delete <strong>{selectedStagesForDelete.length}</strong> stage(s). This action is irreversible and will remove all associated data (games, competitors, groups) for the selected stages.
-          </Typography>
-          <Typography variant="body2" sx={{ mt: 1, color: 'text.secondary' }}>
-            Are you sure you want to proceed?
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setStageDeleteConfirmOpen(false)} sx={{ textTransform: 'none' }}>Cancel</Button>
-          <Button onClick={handleConfirmDeleteStages} variant="contained" color="error" sx={{ textTransform: 'none' }}>Delete</Button>
-        </DialogActions>
-      </Dialog>
+      <PhaseModalDialog
+        open={phaseModalOpen}
+        mode={phaseModalMode}
+        phaseForm={phaseForm}
+        phaseTermOptions={phaseTermOptions}
+        newPhaseName={newPhaseName}
+        phasesBySeason={phasesBySeason}
+        phaseFormContext={phaseFormContext}
+        phaseEditTarget={phaseEditTarget}
+        saving={phaseSaving}
+        onClose={handlePhaseModalClose}
+        onSave={handlePhaseModalSave}
+        onPhaseFormChange={setPhaseForm}
+        onNewPhaseNameChange={setNewPhaseName}
+      />
 
-      <Dialog open={groupModalOpen} onClose={handleGroupModalClose} maxWidth="sm" fullWidth>
-        <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          {groupModalMode === 'add' ? 'Add Group' : 'Edit Group'}
-          <IconButton size="small" onClick={handleGroupModalClose} aria-label="Close">
-            <CloseIcon fontSize="small" />
-          </IconButton>
-        </DialogTitle>
-        <DialogContent>
-          <Grid container spacing={2} sx={{ mt: 0.5 }}>
-            <Grid item xs={12}>
-              {groupModalMode === 'add' ? (
-                <Autocomplete
-                  freeSolo
-                  size="small"
-                  fullWidth
-                  options={groupTermOptions}
-                  getOptionLabel={(opt) => (opt?.values && opt.values.find(v => v.languageId === 1)?.value) || opt?.engValue || (opt?.id ? `Term ${opt.id}` : '')}
-                  value={groupForm.NAME_ID ? (groupTermOptions.find(t => t.id === (groupForm.NAME_ID?.id ?? groupForm.NAME_ID)) || null) : null}
-                  inputValue={newGroupName}
-                  onInputChange={(_, v) => {
-                    setNewGroupName(v);
-                    if (groupForm.NAME_ID) setGroupForm((f) => ({ ...f, NAME_ID: null }));
-                  }}
-                  onChange={(_, v) => {
-                    if (v && typeof v === 'object' && v.id) {
-                      setGroupForm((f) => ({ ...f, NAME_ID: v }));
-                      setNewGroupName((v.values && v.values.find(x => x.languageId === 1)?.value) || v.engValue || `Term ${v.id}`);
-                    } else if (typeof v === 'string') {
-                      setGroupForm((f) => ({ ...f, NAME_ID: null }));
-                      setNewGroupName(v);
-                    }
-                  }}
-                  filterOptions={(options, { inputValue }) => {
-                    const trim = (inputValue || '').trim();
-                    if (trim.length < 3) return [];
-                    const lower = trim.toLowerCase();
-                    return options.filter((opt) => {
-                      const label = (opt.values && opt.values.find(v => v.languageId === 1)?.value) || opt.engValue || '';
-                      return String(label).toLowerCase().includes(lower);
-                    });
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Group Name"
-                      placeholder="Enter 3+ letters for suggestions or type a new name"
-                      required={groupModalMode === 'add'}
-                    />
-                  )}
-                />
-              ) : (
-                <Autocomplete
-                  size="small"
-                  fullWidth
-                  options={groupTermOptions}
-                  getOptionLabel={(opt) => (opt.values && opt.values.find(v => v.languageId === 1)?.value) || opt.engValue || `Term ${opt.id}`}
-                  value={groupForm.NAME_ID ? (groupTermOptions.find(t => t.id === (groupForm.NAME_ID?.id ?? groupForm.NAME_ID)) || null) : null}
-                  onChange={(_, v) => setGroupForm((f) => ({ ...f, NAME_ID: v }))}
-                  renderInput={(params) => <TextField {...params} label="Group Name (term)" />}
-                />
-              )}
-            </Grid>
-            <Grid item xs={12}>
-              <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>Group Settings</Typography>
-              <Grid container spacing={1}>
-                {[
-                  { key: 'HAS_TABLE', label: 'Has Table' },
-                  { key: 'IS_SERIES', label: 'Is Series' },
-                  { key: 'USE_NAME', label: 'Use Name' },
-                  { key: 'GROUP_BY', label: 'Group By' },
-                  { key: 'AUTONOMOUS', label: 'Autonomous' },
-                  { key: 'IS_FINAL', label: 'Is Final' },
-                ].map(({ key, label }) => (
-                  <Grid item xs={6} sm={4} key={key}>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          size="small"
-                          checked={!!groupForm[key]}
-                          onChange={(e) => setGroupForm((f) => ({ ...f, [key]: e.target.checked }))}
-                        />
-                      }
-                      label={<Typography variant="body2">{label}</Typography>}
-                    />
-                  </Grid>
-                ))}
-              </Grid>
-            </Grid>
-          </Grid>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleGroupModalClose}>Cancel</Button>
-          <Button
-            variant="contained"
-            onClick={handleGroupModalSave}
-            disabled={groupSaving || (groupModalMode === 'add' && !(newGroupName || '').trim() && !groupForm.NAME_ID)}
-          >
-            {groupSaving ? 'Saving…' : 'Save'}
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      <Dialog open={phaseModalOpen} onClose={handlePhaseModalClose} maxWidth="sm" fullWidth>
-        <DialogTitle>{phaseModalMode === 'add' ? 'Add Phase' : 'Edit Phase'}</DialogTitle>
-        <DialogContent>
-          <Grid container spacing={2} sx={{ mt: 0.5 }}>
-            {phaseModalMode === 'add' ? (
-              <Grid item xs={12}>
-                <Autocomplete
-                  freeSolo
-                  size="small"
-                  options={phaseTermOptions}
-                  getOptionLabel={(opt) => (opt?.values && opt.values.find(v => v.languageId === 1)?.value) || opt?.engValue || (opt?.id ? `Term ${opt.id}` : '')}
-                  value={phaseForm.PHASE_NAME_ID ? (phaseTermOptions.find(t => t.id === (phaseForm.PHASE_NAME_ID?.id ?? phaseForm.PHASE_NAME_ID)) || null) : null}
-                  inputValue={newPhaseName}
-                  onInputChange={(_, v) => {
-                    setNewPhaseName(v);
-                    if (phaseForm.PHASE_NAME_ID) setPhaseForm((f) => ({ ...f, PHASE_NAME_ID: null }));
-                  }}
-                  onChange={(_, v) => {
-                    if (v && typeof v === 'object' && v.id) {
-                      setPhaseForm((f) => ({ ...f, PHASE_NAME_ID: v }));
-                      setNewPhaseName((v.values && v.values.find(x => x.languageId === 1)?.value) || v.engValue || `Term ${v.id}`);
-                    } else if (typeof v === 'string') {
-                      setPhaseForm((f) => ({ ...f, PHASE_NAME_ID: null }));
-                      setNewPhaseName(v);
-                    }
-                  }}
-                  filterOptions={(options, { inputValue }) => {
-                    const trim = (inputValue || '').trim();
-                    if (trim.length < 3) return [];
-                    const lower = trim.toLowerCase();
-                    return options.filter((opt) => {
-                      const label = (opt.values && opt.values.find(v => v.languageId === 1)?.value) || opt.engValue || '';
-                      return String(label).toLowerCase().includes(lower);
-                    });
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Phase Name"
-                      placeholder="Enter 3+ letters for suggestions"
-                      required
-                    />
-                  )}
-                />
-              </Grid>
-            ) : (
-              <>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    fullWidth
-                    size="small"
-                    type="number"
-                    label="Phase number"
-                    value={phaseForm.PHASE_NUM}
-                    disabled
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Autocomplete
-                    size="small"
-                    options={phaseTermOptions}
-                    getOptionLabel={(opt) => (opt.values && opt.values.find(v => v.languageId === 1)?.value) || opt.engValue || `Term ${opt.id}`}
-                    value={phaseForm.PHASE_NAME_ID ? (phaseTermOptions.find(t => t.id === (phaseForm.PHASE_NAME_ID?.id ?? phaseForm.PHASE_NAME_ID)) || null) : null}
-                    onChange={(_, v) => setPhaseForm((f) => ({ ...f, PHASE_NAME_ID: v }))}
-                    renderInput={(params) => <TextField {...params} label="Phase Name (term)" />}
-                  />
-                </Grid>
-              </>
-            )}
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth size="small">
-                <InputLabel>Parent Phase</InputLabel>
-                <Select
-                  label="Parent Phase"
-                  value={phaseForm.PARENT_PHASE_NUM != null && phaseForm.PARENT_PHASE_NUM !== '' ? Number(phaseForm.PARENT_PHASE_NUM) : ''}
-                  onChange={(e) => setPhaseForm((f) => ({ ...f, PARENT_PHASE_NUM: e.target.value === '' ? '' : Number(e.target.value) }))}
-                  renderValue={(v) => {
-                    if (v === '' || v == null) return '—';
-                    const list = phasesBySeason[phaseFormContext?.seasonNum] || [];
-                    const p = list.find((ph) => Number(ph.PHASE_NUM) === Number(v));
-                    return p ? (p.name || `Phase ${p.PHASE_NUM}`) : `Phase ${v}`;
-                  }}
-                >
-                  <MenuItem value="">—</MenuItem>
-                  {(phasesBySeason[phaseFormContext?.seasonNum] || [])
-                    .filter((ph) => phaseModalMode !== 'edit' || Number(ph.PHASE_NUM) !== Number(phaseEditTarget?.PHASE_NUM))
-                    .map((ph) => (
-                      <MenuItem key={ph.PHASE_NUM} value={ph.PHASE_NUM}>
-                        {ph.name || `Phase ${ph.PHASE_NUM}`}
-                      </MenuItem>
-                    ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <FormControlLabel control={<Checkbox size="small" checked={phaseForm.SHOW_STATS} onChange={(e) => setPhaseForm((f) => ({ ...f, SHOW_STATS: e.target.checked }))} />} label={<Typography variant="body2">Show Statistics</Typography>} />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <FormControlLabel control={<Checkbox size="small" checked={phaseForm.USE_NAME} onChange={(e) => setPhaseForm((f) => ({ ...f, USE_NAME: e.target.checked }))} />} label={<Typography variant="body2">Use Phase Name</Typography>} />
-            </Grid>
-          </Grid>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handlePhaseModalClose}>Cancel</Button>
-          <Button variant="contained" onClick={handlePhaseModalSave} disabled={phaseSaving || (phaseModalMode === 'add' && !(newPhaseName || '').trim() && !phaseForm.PHASE_NAME_ID)}>
-            {phaseSaving ? 'Saving…' : 'Save'}
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      <Dialog open={seasonTableSettingsDialogOpen} onClose={handleCloseSeasonTableSettingsDialog} maxWidth="sm" fullWidth PaperProps={{ sx: { minHeight: '75vh' } }}>
-        <DialogTitle>
-          Table Settings — Season {structureSeasons.find((s) => s.SEASON_NUM === selectedStructureSeasonNum)?.name || selectedStructureSeasonNum}
-        </DialogTitle>
-        <DialogContent sx={{ minHeight: '60vh' }}>
-          {seasonTableSettingsForm && (
-            <Grid container spacing={3} sx={{ mt: 0.5 }}>
-              <Grid item xs={12}>
-                {Number(competition?.SPORT_TYPE_ID) === 2 && (
-                  <Box sx={{ mb: 2 }}>
-                    <FormControl size="small" sx={{ minWidth: 200, '& .MuiOutlinedInput-input': { py: 1, fontSize: '0.8rem' }, '& .MuiInputLabel-root': { fontSize: '0.75rem' } }}>
-                      <InputLabel>{FIELD_LABELS.STANDING_TYPE}</InputLabel>
-                      <Select
-                        value={seasonTableSettingsForm.STANDING_TYPE ?? ''}
-                        label={FIELD_LABELS.STANDING_TYPE}
-                        onChange={(e) => handleSeasonTableSettingsFormChange('STANDING_TYPE', e.target.value)}
-                      >
-                        <MenuItem value="">—</MenuItem>
-                        {standingTypes.map((st) => (
-                          <MenuItem key={st.STANDING_TYPE_ID} value={st.STANDING_TYPE}>{st.STANDING_TYPE}</MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Box>
-                )}
-                <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1.5 }}>Point configuration</Typography>
-                <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', columnGap: 2, rowGap: 2, mb: 2, maxWidth: 400 }}>
-                  {TABLE_POINT_KEYS.map((key) => (
-                    <TextField
-                      key={key}
-                      size="small"
-                      label={formatTableSettingKeyAsLabel(key)}
-                      type="number"
-                      value={seasonTableSettingsForm[key] ?? ''}
-                      onChange={(e) => handleSeasonTableSettingsFormChange(key, e.target.value === '' ? null : Number(e.target.value))}
-                      fullWidth
-                      sx={{
-                        '& .MuiOutlinedInput-input': { py: 1, fontSize: '0.8rem' },
-                        '& .MuiInputLabel-root': { fontSize: '0.75rem' },
-                      }}
-                    />
-                  ))}
-                </Box>
-                <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1.5 }}>Scoring rules</Typography>
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, width: 'fit-content' }}>
-                  {TABLE_CHECKBOX_KEYS.map((key) => (
-                    <FormControlLabel
-                      key={key}
-                      control={
-                        <Checkbox
-                          size="small"
-                          checked={!!seasonTableSettingsForm[key]}
-                          onChange={(e) => handleSeasonTableSettingsFormChange(key, e.target.checked)}
-                        />
-                      }
-                      label={<Typography variant="body2">{TABLE_SETTINGS_LABELS[key] ?? formatTableSettingKeyAsLabel(key)}</Typography>}
-                      sx={{ '& .MuiFormControlLabel-label': { fontSize: '0.8rem' } }}
-                    />
-                  ))}
-                </Box>
-              </Grid>
-              <Grid item xs={12}>
-                <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 0.5 }}>Table order parameters</Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5, fontSize: '0.8rem' }}>
-                  Current order (priority from top to bottom):
-                </Typography>
-                <List dense sx={{ border: '1px solid #e0e0e0', borderRadius: 1, mb: 2, bgcolor: '#fafafa' }}>
-                  {seasonTableSettingsOrderByList.map((item, index) => (
-                    <ListItem
-                      key={`${item.field}-${index}`}
-                      data-index={index}
-                      onDragOver={(e) => handleSeasonTableSettingsOrderDragOver(e, index)}
-                      onDragLeave={() => setSeasonTableSettingsDragOverOrderIndex(null)}
-                      onDrop={(e) => handleSeasonTableSettingsOrderDrop(e, index)}
-                      sx={{
-                        py: 0.5,
-                        cursor: seasonTableSettingsDragOrderIndex != null ? (seasonTableSettingsDragOrderIndex === index ? 'grabbing' : 'default') : 'default',
-                        transition: 'all 0.2s ease',
-                        ...(seasonTableSettingsDragOrderIndex === index && {
-                          opacity: 0.9,
-                          transform: 'scale(1.02)',
-                          boxShadow: 2,
-                          borderRadius: 1,
-                          bgcolor: 'background.paper',
-                          zIndex: 1,
-                        }),
-                        ...(seasonTableSettingsDragOverOrderIndex === index && seasonTableSettingsDragOrderIndex !== index && {
-                          borderTop: '2px solid',
-                          borderColor: 'primary.main',
-                          bgcolor: 'action.hover',
-                          borderRadius: 0,
-                        }),
-                      }}
-                      secondaryAction={
-                        <IconButton edge="end" size="small" onClick={() => handleSeasonTableSettingsRemoveOrderBy(index)} aria-label="Remove" sx={{ color: '#d32f2f' }}>
-                          <DeleteOutlineIcon fontSize="small" />
-                        </IconButton>
-                      }
-                    >
-                      <Box
-                        component="span"
-                        draggable
-                        onDragStart={(e) => handleSeasonTableSettingsOrderDragStart(e, index)}
-                        onDragEnd={handleSeasonTableSettingsOrderDragEnd}
-                        sx={{ display: 'flex', alignItems: 'center', mr: 1, cursor: 'grab', color: 'action.active', '&:active': { cursor: 'grabbing' } }}
-                        aria-label="Drag to reorder"
-                      >
-                        <DragIndicatorIcon fontSize="small" />
-                      </Box>
-                      <ListItemText
-                        primary={`${index + 1}. ${tableSettingsFieldOptions.find((o) => o.value === item.field)?.label ?? item.field}`}
-                        secondary={item.direction === 'desc' ? 'Descending' : 'Ascending'}
-                        primaryTypographyProps={{ fontSize: '0.875rem' }}
-                        secondaryTypographyProps={{ fontSize: '0.75rem' }}
-                      />
-                    </ListItem>
-                  ))}
-                  {seasonTableSettingsOrderByList.length === 0 && (
-                    <ListItem>
-                      <ListItemText primary="No order parameters defined" primaryTypographyProps={{ fontSize: '0.875rem', color: 'text.secondary' }} />
-                    </ListItem>
-                  )}
-                </List>
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 2 }}>
-                  <FormControl size="small" sx={{ minWidth: 180 }}>
-                    <InputLabel id="season-table-order-field-label">Select field</InputLabel>
-                    <Select
-                      labelId="season-table-order-field-label"
-                      label="Select field"
-                      value={seasonTableSettingsOrderByNewField}
-                      onChange={(e) => setSeasonTableSettingsOrderByNewField(e.target.value)}
-                    >
-                      <MenuItem value="">Select field</MenuItem>
-                      {tableSettingsFieldOptions.filter((o) => !seasonTableSettingsOrderByList.some((item) => item.field === o.value)).map((opt) => (
-                        <MenuItem key={opt.value} value={opt.value}>{opt.label}</MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                  <FormControl size="small" sx={{ minWidth: 140 }}>
-                    <InputLabel id="season-table-order-dir-label">Direction</InputLabel>
-                    <Select
-                      labelId="season-table-order-dir-label"
-                      label="Direction"
-                      value={seasonTableSettingsOrderByNewDirection}
-                      onChange={(e) => setSeasonTableSettingsOrderByNewDirection(e.target.value)}
-                    >
-                      <MenuItem value="desc">Descending</MenuItem>
-                      <MenuItem value="asc">Ascending</MenuItem>
-                    </Select>
-                  </FormControl>
-                  <Button
-                    variant="contained"
-                    size="small"
-                    onClick={handleSeasonTableSettingsAddOrderBy}
-                    disabled={!seasonTableSettingsOrderByNewField || seasonTableSettingsOrderByList.some((item) => item.field === seasonTableSettingsOrderByNewField)}
-                    sx={{ backgroundColor: '#1976d2', textTransform: 'none' }}
-                  >
-                    Add
-                  </Button>
-                </Box>
-              </Grid>
-            </Grid>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseSeasonTableSettingsDialog}>Cancel</Button>
-          <Button
-            variant="contained"
-            onClick={handleSaveSeasonTableSettings}
-            disabled={seasonTableSettingsSaving}
-            sx={{
-              textTransform: 'none',
-              backgroundColor: '#15803d',
-              color: 'white',
-              px: 4,
-              '&:hover': { backgroundColor: '#166534' },
-            }}
-          >
-            {seasonTableSettingsSaving ? 'Saving…' : 'Save & Update In Service'}
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <SeasonTableSettingsDialog
+        open={seasonTableSettingsDialogOpen}
+        seasonName={structureSeasons.find((season) => season.SEASON_NUM === selectedStructureSeasonNum)?.name || selectedStructureSeasonNum}
+        competition={competition}
+        form={seasonTableSettingsForm}
+        standingTypes={standingTypes}
+        tablePointKeys={TABLE_POINT_KEYS}
+        tableCheckboxKeys={TABLE_CHECKBOX_KEYS}
+        tableSettingsLabels={TABLE_SETTINGS_LABELS}
+        fieldLabels={FIELD_LABELS}
+        orderByList={seasonTableSettingsOrderByList}
+        dragOrderIndex={seasonTableSettingsDragOrderIndex}
+        dragOverOrderIndex={seasonTableSettingsDragOverOrderIndex}
+        fieldOptions={tableSettingsFieldOptions}
+        newField={seasonTableSettingsOrderByNewField}
+        newDirection={seasonTableSettingsOrderByNewDirection}
+        saving={seasonTableSettingsSaving}
+        formatLabel={formatTableSettingKeyAsLabel}
+        onClose={handleCloseSeasonTableSettingsDialog}
+        onSave={handleSaveSeasonTableSettings}
+        onFormChange={handleSeasonTableSettingsFormChange}
+        onOrderDragOver={handleSeasonTableSettingsOrderDragOver}
+        onOrderDragLeave={() => setSeasonTableSettingsDragOverOrderIndex(null)}
+        onOrderDrop={handleSeasonTableSettingsOrderDrop}
+        onRemoveOrderBy={handleSeasonTableSettingsRemoveOrderBy}
+        onOrderDragStart={handleSeasonTableSettingsOrderDragStart}
+        onOrderDragEnd={handleSeasonTableSettingsOrderDragEnd}
+        onNewFieldChange={setSeasonTableSettingsOrderByNewField}
+        onNewDirectionChange={setSeasonTableSettingsOrderByNewDirection}
+        onAddOrderBy={handleSeasonTableSettingsAddOrderBy}
+      />
     </Box>
   );
 }

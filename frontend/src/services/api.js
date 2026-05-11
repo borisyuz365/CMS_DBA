@@ -2007,6 +2007,7 @@ class ApiService {
     const params = new URLSearchParams();
     if (filters.activeOnly === true || filters.activeOnly === 'true') params.append('activeOnly', 'true');
     if (filters.filterId) params.append('filterId', filters.filterId);
+    if (filters.filterName) params.append('filterName', filters.filterName);
     const qs = params.toString();
     const response = await this.fetch(`/filters${qs ? `?${qs}` : ''}`);
     return response.data || [];
@@ -2045,6 +2046,14 @@ class ApiService {
     const response = await this.fetch(`/filters/${filterId}/entities`, {
       method: 'DELETE',
       body: JSON.stringify({ entityIds }),
+    });
+    return response.data;
+  }
+
+  async updateFilterEntities(filterId, updates) {
+    const response = await this.fetch(`/filters/${filterId}/entities`, {
+      method: 'PUT',
+      body: JSON.stringify({ updates }),
     });
     return response.data;
   }

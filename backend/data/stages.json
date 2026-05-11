@@ -270,7 +270,7 @@
     "HIDE_HOME_AWAY_TABLES": false,
     "HIDE_MAIN_TABLE": false,
     "AGGREGATED_TABLE_SETTINGS": null,
-    "RELEGATION_TABLE_SETTINGS": "2|3|2.3,2|3|2.5"
+    "RELEGATION_TABLE_SETTINGS": "2|3|2.3,2|3|2.2"
   },
   {
     "COMPETITION_ID": 2,
@@ -336,5 +336,31 @@
     "HIDE_MAIN_TABLE": false,
     "AGGREGATED_TABLE_SETTINGS": null,
     "RELEGATION_TABLE_SETTINGS": null
+  },
+  {
+    "COMPETITION_ID": 10,
+    "SEASON_NUM": 1,
+    "STAGE_NUM": 1,
+    "NAME_ID": 77877780,
+    "NUM_OF_GAMES": 38,
+    "STAGE_TYPE": 1,
+    "HAS_TABLE": true,
+    "START_DATE": "2026-05-10T21:00:00.000Z",
+    "END_DATE": "2026-08-30T21:00:00.000Z",
+    "PHASE": "Regular Season",
+    "PRE_VISUAL_BRACKETS": false,
+    "INCLUDE_IN_BRACKET": false,
+    "IS_SERIES": false,
+    "FILTER_DIVISION": false,
+    "CONNECTED_IN_BRACKETS": false,
+    "CONNECTED_TO_PREVIOUS_STAGE": false,
+    "HAS_HOME_TABLE": false,
+    "HAS_AWAY_TABLE": false,
+    "POSITION_PARAMETER": null,
+    "POSITION_TABLE_NAME": null,
+    "HIDE_HOME_AWAY_TABLES": false,
+    "HIDE_MAIN_TABLE": false,
+    "AGGREGATED_TABLE_SETTINGS": "10|1|1.1",
+    "RELEGATION_TABLE_SETTINGS": "10|1|1.4"
   }
 ]
