@@ -16,5 +16,23 @@
     "COMPETITION_ID": 2,
     "SEASON_NUM": 4,
     "STAGE_NUM": 1
+  },
+  {
+    "COLOR": "#00CED1",
+    "DESTINATION_COMPETITION": 0,
+    "DESTINATION_GROUP": 0,
+    "DESTINATION_NUM": 1,
+    "DESTINATION_SEASON": 0,
+    "DESTINATION_STAGE": 0,
+    "DESTINATION_TYPE": 2,
+    "FROM_POSITION": 1,
+    "GROUP_NUM": 1,
+    "GUARANTEED_TEXT": "",
+    "NAME_ID": 0,
+    "TABLE_TYPE": 0,
+    "TO_POSITION": 1,
+    "COMPETITION_ID": 10,
+    "SEASON_NUM": 1,
+    "STAGE_NUM": 1
   }
 ]

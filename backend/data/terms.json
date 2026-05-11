@@ -62600,5 +62600,100 @@
     ],
     "valsCount": 1,
     "engValue": "Portugal U19"
+  },
+  {
+    "id": 77877776,
+    "categoryId": 66,
+    "aliasName": null,
+    "fatherTerm": null,
+    "createTime": "2026-05-10T12:56:57.682Z",
+    "description": null,
+    "category": "Filters Names",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "sdtgsdgsdg",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "sdtgsdgsdg"
+  },
+  {
+    "id": 77877777,
+    "categoryId": 66,
+    "aliasName": null,
+    "fatherTerm": null,
+    "createTime": "2026-05-10T13:00:04.872Z",
+    "description": null,
+    "category": "Filters Names",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "New Test",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "New Test"
+  },
+  {
+    "id": 77877778,
+    "categoryId": 4,
+    "aliasName": null,
+    "fatherTerm": null,
+    "createTime": "2026-05-11T07:04:37.517Z",
+    "description": null,
+    "category": "Competitions Names",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Liga MX",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "Liga MX"
+  },
+  {
+    "id": 77877779,
+    "categoryId": 47,
+    "aliasName": null,
+    "fatherTerm": null,
+    "createTime": "2026-05-11T07:05:05.439Z",
+    "description": null,
+    "category": "Seasons Names",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "2026 - Apertura",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "2026 - Apertura"
+  },
+  {
+    "id": 77877780,
+    "categoryId": 48,
+    "aliasName": null,
+    "fatherTerm": null,
+    "createTime": "2026-05-11T07:07:06.563Z",
+    "description": null,
+    "category": "Stages Names",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Apertura",
+        "isDefault": true,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 1,
+    "engValue": "Apertura"
   }
 ]

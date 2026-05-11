@@ -1,7 +1,42 @@
 [
   {
+    "FILTER_TARGET_ID": 10,
+    "FILTER_TARGET_TYPE": 1,
+    "FILTER_ID": 22467
+  },
+  {
+    "FILTER_TARGET_ID": 9,
+    "FILTER_TARGET_TYPE": 1,
+    "FILTER_ID": 22467
+  },
+  {
+    "FILTER_TARGET_ID": 8,
+    "FILTER_TARGET_TYPE": 1,
+    "FILTER_ID": 22467
+  },
+  {
+    "FILTER_TARGET_ID": 7,
+    "FILTER_TARGET_TYPE": 1,
+    "FILTER_ID": 22467
+  },
+  {
+    "FILTER_TARGET_ID": 6,
+    "FILTER_TARGET_TYPE": 1,
+    "FILTER_ID": 22467
+  },
+  {
+    "FILTER_TARGET_ID": 5,
+    "FILTER_TARGET_TYPE": 1,
+    "FILTER_ID": 22467
+  },
+  {
     "FILTER_TARGET_ID": 4,
-    "FILTER_TARGET_TYPE": 2,
+    "FILTER_TARGET_TYPE": 1,
+    "FILTER_ID": 22467
+  },
+  {
+    "FILTER_TARGET_ID": 3,
+    "FILTER_TARGET_TYPE": 1,
     "FILTER_ID": 22467
   },
   {
@@ -10,12 +45,7 @@
     "FILTER_ID": 22467
   },
   {
-    "FILTER_TARGET_ID": 4,
-    "FILTER_TARGET_TYPE": 2,
-    "FILTER_ID": 22467
-  },
-  {
-    "FILTER_TARGET_ID": 3,
+    "FILTER_TARGET_ID": 1,
     "FILTER_TARGET_TYPE": 1,
     "FILTER_ID": 22467
   },

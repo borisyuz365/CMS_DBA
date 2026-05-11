@@ -203,6 +203,63 @@ class FilterController {
     }
   }
 
+  async updateEntities(req, res, next) {
+    try {
+      const filterId = parseInt(req.params.id, 10);
+      if (isNaN(filterId)) {
+        return res.status(400).json({ success: false, error: { message: 'Invalid filter ID' } });
+      }
+
+      const { updates } = req.body;
+      if (!Array.isArray(updates) || updates.length === 0) {
+        return res.status(400).json({ success: false, error: { message: 'updates array is required' } });
+      }
+
+      const entities = await dataLoader.loadData('filter_entities.json');
+      const arr = Array.isArray(entities) ? entities : [];
+      const now = formatDateTime(new Date());
+      let updatedCount = 0;
+      const errors = [];
+
+      for (const update of updates) {
+        const entityId = parseInt(update.entityId, 10);
+        const entityType = update.entityType != null ? parseInt(update.entityType, 10) : null;
+        const changes = update.changes || {};
+
+        if (isNaN(entityId)) {
+          errors.push({ entityId: update.entityId, message: 'Invalid ENTITY_ID' });
+          continue;
+        }
+
+        const idx = arr.findIndex((entity) => (
+          entity.FILTER_ID === filterId
+          && entity.ENTITY_ID === entityId
+          && (entityType == null || entity.ENTITY_TYPE === entityType)
+        ));
+
+        if (idx === -1) {
+          errors.push({ entityId, entityType, message: 'Filter entity not found' });
+          continue;
+        }
+
+        if (Object.prototype.hasOwnProperty.call(changes, 'CAPTION')) {
+          arr[idx].CAPTION = changes.CAPTION == null ? '' : String(changes.CAPTION);
+        }
+        if (Object.prototype.hasOwnProperty.call(changes, 'FILTER_ORDER')) {
+          const nextOrder = changes.FILTER_ORDER;
+          arr[idx].FILTER_ORDER = nextOrder === '' || nextOrder == null ? null : parseInt(nextOrder, 10);
+        }
+        arr[idx].UPDATE_TIME = now;
+        updatedCount += 1;
+      }
+
+      await dataLoader.saveData('filter_entities.json', arr);
+      res.json({ success: true, data: { updated: updatedCount, errors } });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async addTarget(req, res, next) {
     try {
       const filterId = parseInt(req.params.id, 10);
@@ -276,6 +333,16 @@ class FilterController {
         const id = parseInt(req.query.filterId, 10);
         if (!isNaN(id)) {
           filters = filters.filter((f) => f.FILTER_ID === id);
+        }
+      }
+      if (req.query.filterName) {
+        const searchName = String(req.query.filterName).trim().toLowerCase();
+        if (searchName) {
+          filters = filters.filter((f) => {
+            const term = termMap.get(f.NAME_ID);
+            const englishName = getEnglishValue(term);
+            return englishName ? englishName.toLowerCase().includes(searchName) : false;
+          });
         }
       }
 

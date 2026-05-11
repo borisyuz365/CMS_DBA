@@ -31,7 +31,7 @@ import {
   Chip,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import DeleteIcon from '@mui/icons-material/Delete';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
@@ -46,13 +46,21 @@ import AddIcon from '@mui/icons-material/Add';
 import LoadingSpinner from '../../reuse/LoadingSpinner';
 import Alert from '../../reuse/Alert';
 import TermEditModal from '../../reuse/TermEditModal';
+import DatePicker from '../../reuse/DatePicker';
 import api from '../services/api';
 import useUrlFilters from '../hooks/useUrlFilters';
+import {
+  formatFilterDate,
+  getDefaultCreateFilterDates,
+  parseFilterDate,
+  validateFilterDateRange,
+} from '../utils/filterDates';
 
 function FiltersList() {
   const navigate = useNavigate();
   const [urlState, setUrlState] = useUrlFilters({
     filterId: { type: 'string', default: '' },
+    filterName: { type: 'string', default: '' },
     activeOnly: { type: 'boolean', default: true },
     page: { type: 'number', default: 0 },
     rowsPerPage: { type: 'number', default: 25 },
@@ -63,7 +71,11 @@ function FiltersList() {
 
   const [totalRows, setTotalRows] = useState(0);
 
-  const searchFilters = { filterId: urlState.filterId, activeOnly: urlState.activeOnly };
+  const searchFilters = { filterId: urlState.filterId, filterName: urlState.filterName, activeOnly: urlState.activeOnly };
+  const [filterInputs, setFilterInputs] = useState({
+    filterId: urlState.filterId,
+    filterName: urlState.filterName,
+  });
   const pagination = { page: urlState.page, rowsPerPage: urlState.rowsPerPage, totalRows };
   const sortConfig = { field: urlState.sortField || null, direction: urlState.sortDir };
   const groupByField = urlState.groupBy || null;
@@ -82,9 +94,8 @@ function FiltersList() {
   const [createFormData, setCreateFormData] = useState({
     name: '',
     active: true,
-    editorsChoice: false,
-    startDate: '',
-    endDate: '',
+    editorsChoice: true,
+    ...getDefaultCreateFilterDates(),
   });
   const [createFormErrors, setCreateFormErrors] = useState({});
 
@@ -108,12 +119,11 @@ function FiltersList() {
 
   useEffect(() => {
     loadTermsAndCategories();
-    loadFilters();
   }, []);
 
   useEffect(() => {
     loadFilters();
-  }, [searchFilters.filterId, searchFilters.activeOnly]);
+  }, [searchFilters.activeOnly]);
 
   const loadTermsAndCategories = async () => {
     try {
@@ -125,13 +135,14 @@ function FiltersList() {
     }
   };
 
-  const loadFilters = async () => {
+  const loadFilters = async (filtersToApply = searchFilters) => {
     try {
       setLoading(true);
       setError(null);
       const data = await api.getFiltersList({
-        activeOnly: searchFilters.activeOnly,
-        filterId: searchFilters.filterId || undefined,
+        activeOnly: filtersToApply.activeOnly,
+        filterId: filtersToApply.filterId || undefined,
+        filterName: filtersToApply.filterName || undefined,
       });
       setFilters(Array.isArray(data) ? data : []);
       setTotalRows((data || []).length);
@@ -234,18 +245,32 @@ function FiltersList() {
   }, [dataForTable, pagination.page, pagination.rowsPerPage]);
 
   const handleSearchFilterChange = (field, value) => {
-    setUrlState({ [field]: value });
+    if (field === 'activeOnly') {
+      setUrlState({ activeOnly: value });
+      return;
+    }
+    setFilterInputs((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleSearch = () => {
+    const nextFilters = {
+      ...searchFilters,
+      filterId: filterInputs.filterId.trim(),
+      filterName: filterInputs.filterName.trim(),
+    };
     setHasSearched(true);
-    loadFilters();
+    setUrlState({ filterId: nextFilters.filterId, filterName: nextFilters.filterName, page: 0 });
+    loadFilters(nextFilters);
   };
 
   const handleClearFilters = () => {
-    setUrlState({ filterId: '', activeOnly: true });
+    const nextFilters = { filterId: '', filterName: '', activeOnly: true };
+    const shouldLoadImmediately = searchFilters.activeOnly === true;
+    setFilterInputs({ filterId: '', filterName: '' });
+    setUrlState(nextFilters);
     setColumnFilters({});
     setSelectedRows([]);
+    if (shouldLoadImmediately) loadFilters(nextFilters);
   };
 
   const handleSort = (field) => {
@@ -330,6 +355,29 @@ function FiltersList() {
     });
   };
 
+  const getRowDateValidationErrors = (row) => validateFilterDateRange(
+    pendingChanges[row.FILTER_ID]?.START_DATE ?? row.START_DATE,
+    pendingChanges[row.FILTER_ID]?.END_DATE ?? row.END_DATE
+  );
+
+  const pendingDateValidationErrors = useMemo(() => {
+    const errorsByFilterId = {};
+    Object.entries(pendingChanges).forEach(([filterId, changes]) => {
+      const row = filters.find((item) => String(item.FILTER_ID) === String(filterId));
+      if (!row) return;
+      const errors = validateFilterDateRange(
+        changes.START_DATE ?? row.START_DATE,
+        changes.END_DATE ?? row.END_DATE
+      );
+      if (Object.keys(errors).length > 0) {
+        errorsByFilterId[filterId] = errors;
+      }
+    });
+    return errorsByFilterId;
+  }, [filters, pendingChanges]);
+
+  const hasPendingDateValidationErrors = Object.keys(pendingDateValidationErrors).length > 0;
+
   const handleToggleEditMode = () => {
     if (isEditMode && Object.keys(pendingChanges).length > 0) {
       if (window.confirm('You have unsaved changes. Are you sure you want to cancel?')) {
@@ -344,6 +392,10 @@ function FiltersList() {
   const handleSaveChanges = async () => {
     if (Object.keys(pendingChanges).length === 0) {
       setSnackbar({ open: true, message: 'No changes to save', severity: 'warning' });
+      return;
+    }
+    if (hasPendingDateValidationErrors) {
+      setSnackbar({ open: true, message: 'Please fix invalid date ranges before saving', severity: 'error' });
       return;
     }
     try {
@@ -373,9 +425,8 @@ function FiltersList() {
     setCreateFormData({
       name: '',
       active: true,
-      editorsChoice: false,
-      startDate: '',
-      endDate: '',
+      editorsChoice: true,
+      ...getDefaultCreateFilterDates(),
     });
     setCreateFormErrors({});
     setCreateDialogOpen(true);
@@ -388,20 +439,33 @@ function FiltersList() {
 
   const handleCreateFormChange = (field, value) => {
     setCreateFormData((prev) => ({ ...prev, [field]: value }));
-    if (createFormErrors[field]) {
+    if (createFormErrors[field] || field === 'startDate' || field === 'endDate') {
       setCreateFormErrors((prev) => {
         const next = { ...prev };
         delete next[field];
+        if (field === 'startDate' || field === 'endDate') {
+          delete next.startDate;
+          delete next.endDate;
+        }
         return next;
       });
     }
   };
+
+  const createDateValidationErrors = useMemo(
+    () => validateFilterDateRange(createFormData.startDate, createFormData.endDate),
+    [createFormData.startDate, createFormData.endDate]
+  );
+  const hasCreateDateValidationErrors = Object.keys(createDateValidationErrors).length > 0;
 
   const validateCreateForm = () => {
     const errors = {};
     if (!createFormData.name || !createFormData.name.trim()) {
       errors.name = 'Filter name is required';
     }
+    const dateErrors = validateFilterDateRange(createFormData.startDate, createFormData.endDate);
+    if (dateErrors.start) errors.startDate = dateErrors.start;
+    if (dateErrors.end) errors.endDate = dateErrors.end;
     setCreateFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -418,7 +482,7 @@ function FiltersList() {
           { languageId: 1, value: nameTrimmed, isDefault: true, status: 'Approved' },
         ],
       });
-      await api.createFilter({
+      const createdFilter = await api.createFilter({
         NAME_ID: newTerm.id,
         ACTIVE: !!createFormData.active,
         EDITORS_CHOICE: !!createFormData.editorsChoice,
@@ -429,7 +493,11 @@ function FiltersList() {
       });
       handleCloseCreateDialog();
       setSnackbar({ open: true, message: 'Filter created successfully', severity: 'success' });
-      await loadFilters();
+      if (createdFilter && createdFilter.FILTER_ID) {
+        navigate(`/filters/${createdFilter.FILTER_ID}`);
+      } else {
+        await loadFilters();
+      }
     } catch (err) {
       console.error('Failed to create filter:', err);
       setSnackbar({ open: true, message: err.message || 'Failed to create filter', severity: 'error' });
@@ -438,23 +506,37 @@ function FiltersList() {
     }
   };
 
-  const handleDelete = () => {
+  const handleDeactivate = async () => {
     if (selectedRows.length === 0) {
       setSnackbar({ open: true, message: 'Please select filters', severity: 'warning' });
       return;
     }
     setConfirmDialog({
       open: true,
-      title: 'Delete Filters',
-      message: `Are you sure you want to delete ${selectedRows.length} filter(s)?`,
-      onConfirm: () => {
-        setSnackbar({
-          open: true,
-          message: `Successfully deleted ${selectedRows.length} filter(s)`,
-          severity: 'success',
-        });
-        setSelectedRows([]);
-        setConfirmDialog((prev) => ({ ...prev, open: false }));
+      title: 'Deactivate Filters',
+      message: `Are you sure you want to deactivate ${selectedRows.length} filter(s)?`,
+      onConfirm: async () => {
+        try {
+          setLoading(true);
+          const updates = selectedRows.map((filterId) => ({
+            filterId,
+            changes: { ACTIVE: false },
+          }));
+          await api.updateFiltersBulk(updates);
+          setSnackbar({
+            open: true,
+            message: `Successfully deactivated ${selectedRows.length} filter(s)`,
+            severity: 'success',
+          });
+          setSelectedRows([]);
+          setConfirmDialog((prev) => ({ ...prev, open: false }));
+          await loadFilters();
+        } catch (err) {
+          console.error('Failed to deactivate filters:', err);
+          setSnackbar({ open: true, message: err.message || 'Failed to deactivate filters', severity: 'error' });
+        } finally {
+          setLoading(false);
+        }
       },
     });
   };
@@ -597,11 +679,13 @@ function FiltersList() {
         render: (value, row) => {
           if (isEditMode) {
             const v = pendingChanges[row.FILTER_ID]?.START_DATE ?? value;
+            const dateErrors = getRowDateValidationErrors(row);
             return (
-              <TextField
-                size="small"
-                value={v || ''}
-                onChange={(e) => handleFieldChange(row.FILTER_ID, 'START_DATE', e.target.value)}
+              <DatePicker
+                label=""
+                value={parseFilterDate(v)}
+                onChange={(date) => handleFieldChange(row.FILTER_ID, 'START_DATE', formatFilterDate(date))}
+                error={dateErrors.start}
                 sx={{ width: '100%', '& .MuiInputBase-root': { fontSize: '0.8125rem' } }}
               />
             );
@@ -616,11 +700,13 @@ function FiltersList() {
         render: (value, row) => {
           if (isEditMode) {
             const v = pendingChanges[row.FILTER_ID]?.END_DATE ?? value;
+            const dateErrors = getRowDateValidationErrors(row);
             return (
-              <TextField
-                size="small"
-                value={v || ''}
-                onChange={(e) => handleFieldChange(row.FILTER_ID, 'END_DATE', e.target.value)}
+              <DatePicker
+                label=""
+                value={parseFilterDate(v)}
+                onChange={(date) => handleFieldChange(row.FILTER_ID, 'END_DATE', formatFilterDate(date))}
+                error={dateErrors.end}
                 sx={{ width: '100%', '& .MuiInputBase-root': { fontSize: '0.8125rem' } }}
               />
             );
@@ -677,8 +763,25 @@ function FiltersList() {
             <TextField
               fullWidth
               size="small"
+              label="Filter Name"
+              value={filterInputs.filterName}
+              onChange={(e) => handleSearchFilterChange('filterName', e.target.value)}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  backgroundColor: '#ffffff',
+                  '& fieldset': { borderColor: '#E0E0E0' },
+                  '&:hover fieldset': { borderColor: '#BDBDBD' },
+                  '&.Mui-focused fieldset': { borderColor: '#1976d2' },
+                },
+              }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={2.4}>
+            <TextField
+              fullWidth
+              size="small"
               label="Filter ID"
-              value={searchFilters.filterId}
+              value={filterInputs.filterId}
               onChange={(e) => handleSearchFilterChange('filterId', e.target.value)}
               sx={{
                 '& .MuiOutlinedInput-root': {
@@ -843,9 +946,11 @@ function FiltersList() {
                         key={row.FILTER_ID}
                         hover
                         selected={selectedRows.includes(row.FILTER_ID)}
-                        onClick={() => navigate(`/filters/${row.FILTER_ID}`)}
+                        onClick={() => {
+                          if (!isEditMode) navigate(`/filters/${row.FILTER_ID}`);
+                        }}
                         sx={{
-                          cursor: 'pointer',
+                          cursor: isEditMode ? 'default' : 'pointer',
                           '&:hover': { backgroundColor: '#F9FAFB' },
                           '&.Mui-selected': {
                             backgroundColor: '#E3F2FD',
@@ -900,7 +1005,7 @@ function FiltersList() {
                 variant="contained"
                 startIcon={<SaveIcon />}
                 onClick={handleSaveChanges}
-                disabled={Object.keys(pendingChanges).length === 0}
+                disabled={Object.keys(pendingChanges).length === 0 || hasPendingDateValidationErrors}
                 sx={{ backgroundColor: '#4caf50', textTransform: 'none', fontWeight: 500, '&:hover': { backgroundColor: '#45a049' }, '&.Mui-disabled': { backgroundColor: '#cccccc' } }}
               >
                 Save Changes ({Object.keys(pendingChanges).length})
@@ -908,19 +1013,19 @@ function FiltersList() {
             )}
             <Button
               variant="contained"
-              startIcon={<DeleteIcon />}
-              onClick={handleDelete}
+              startIcon={<VisibilityOffIcon />}
+              onClick={handleDeactivate}
               disabled={selectedRows.length === 0}
               sx={{
-                backgroundColor: '#d32f2f',
+                backgroundColor: '#ed6c02',
                 color: '#fff',
                 textTransform: 'none',
                 fontWeight: 500,
-                '&:hover': { backgroundColor: '#c62828' },
+                '&:hover': { backgroundColor: '#e65100' },
                 '&.Mui-disabled': { backgroundColor: '#cccccc', color: '#fff' },
               }}
             >
-              Delete Filters ({selectedRows.length})
+              Deactivate Filters ({selectedRows.length})
             </Button>
             <Button variant="outlined" onClick={handleExportCsv} sx={{ borderColor: '#E0E0E0', color: '#000', textTransform: 'none', fontWeight: 500 }}>
               Export to CSV ({selectedRows.length})
@@ -978,22 +1083,20 @@ function FiltersList() {
               />
             </Grid>
             <Grid item xs={6}>
-              <TextField
-                fullWidth
+              <DatePicker
                 label="Start Date"
-                placeholder="DD/MM/YY HH:mm"
-                value={createFormData.startDate}
-                onChange={(e) => handleCreateFormChange('startDate', e.target.value)}
+                value={parseFilterDate(createFormData.startDate)}
+                onChange={(date) => handleCreateFormChange('startDate', formatFilterDate(date))}
+                error={createFormErrors.startDate || createDateValidationErrors.start}
                 sx={{ '& .MuiOutlinedInput-root': { fontSize: '0.875rem' } }}
               />
             </Grid>
             <Grid item xs={6}>
-              <TextField
-                fullWidth
+              <DatePicker
                 label="End Date"
-                placeholder="DD/MM/YY HH:mm"
-                value={createFormData.endDate}
-                onChange={(e) => handleCreateFormChange('endDate', e.target.value)}
+                value={parseFilterDate(createFormData.endDate)}
+                onChange={(date) => handleCreateFormChange('endDate', formatFilterDate(date))}
+                error={createFormErrors.endDate || createDateValidationErrors.end}
                 sx={{ '& .MuiOutlinedInput-root': { fontSize: '0.875rem' } }}
               />
             </Grid>
@@ -1001,7 +1104,7 @@ function FiltersList() {
         </DialogContent>
         <DialogActions sx={{ p: 2, borderTop: '1px solid #EAECF0' }}>
           <Button onClick={handleCloseCreateDialog} color="inherit" sx={{ textTransform: 'none' }}>Cancel</Button>
-          <Button onClick={handleCreateFilter} variant="contained" color="primary" disabled={loading} sx={{ textTransform: 'none' }}>Create</Button>
+          <Button onClick={handleCreateFilter} variant="contained" color="primary" disabled={loading || hasCreateDateValidationErrors} sx={{ textTransform: 'none' }}>Create</Button>
         </DialogActions>
       </Dialog>
 

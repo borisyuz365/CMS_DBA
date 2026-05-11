@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Suspense, useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Box } from '@mui/material';
 import Sidebar from '../reuse/Sidebar';
@@ -8,7 +8,6 @@ import AthleteDetails from './pages/AthleteDetails';
 import CompetitorsList from './pages/CompetitorsList';
 import CompetitorDetails from './pages/CompetitorDetails';
 import CompetitionsList from './pages/CompetitionsList';
-import CompetitionDetails from './pages/CompetitionDetails';
 import PartnerCompetitions from './pages/PartnerCompetitions';
 import VenuesList from './pages/VenuesList';
 import VenueDetails from './pages/VenueDetails';
@@ -68,6 +67,8 @@ import MonitorHeartIcon from '@mui/icons-material/MonitorHeart';
 import BugReportIcon from '@mui/icons-material/BugReport';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import SettingsIcon from '@mui/icons-material/Settings';
+
+const CompetitionDetails = React.lazy(() => import('./pages/CompetitionDetails'));
 
 const menuItems = [
   {
@@ -166,7 +167,14 @@ function App() {
             <Route path="athletes" element={<AthletesList />} />
             <Route path="athletes/:id" element={<AthleteDetails />} />
             <Route path="competitions" element={<CompetitionsList />} />
-            <Route path="competitions/:id" element={<CompetitionDetails />} />
+            <Route
+              path="competitions/:id"
+              element={(
+                <Suspense fallback={<Box sx={{ p: 3 }}>Loading competition...</Box>}>
+                  <CompetitionDetails />
+                </Suspense>
+              )}
+            />
             <Route path="competitions/:id/partner-ids" element={<PartnerCompetitions />} />
             <Route path="competitors" element={<CompetitorsList />} />
             <Route path="competitors/:id" element={<CompetitorDetails />} />
