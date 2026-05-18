@@ -34,6 +34,10 @@ import CitiesList from './pages/CitiesList';
 import ScannersPage from './pages/ScannersPage';
 import ScannersListV2 from './pages/ScannersListV2';
 import ScannerDetailsV2 from './pages/ScannerDetailsV2';
+import DbaBookmakers from './pages/dba/DbaBookmakers';
+import DbaTemplates from './pages/dba/DbaTemplates';
+import DbaTemplateEditor from './pages/dba/DbaTemplateEditor';
+import DbaService from './pages/dba/DbaService';
 import PersonIcon from '@mui/icons-material/Person';
 import GroupsIcon from '@mui/icons-material/Groups';
 import StadiumIcon from '@mui/icons-material/Stadium';
@@ -67,6 +71,9 @@ import MonitorHeartIcon from '@mui/icons-material/MonitorHeart';
 import BugReportIcon from '@mui/icons-material/BugReport';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import SettingsIcon from '@mui/icons-material/Settings';
+import StorefrontIcon from '@mui/icons-material/Storefront';
+import ViewQuiltIcon from '@mui/icons-material/ViewQuilt';
+import DnsIcon from '@mui/icons-material/Dns';
 
 const CompetitionDetails = React.lazy(() => import('./pages/CompetitionDetails'));
 
@@ -123,6 +130,15 @@ const menuItems = [
           { label: 'Priorities', path: '/priorities', icon: <BuildIcon /> },
           { label: 'Scanners (v1)', path: '/scanners', icon: <RadarIcon /> },
           { label: 'Scanners', path: '/scanners-v2', icon: <RadarIcon /> },
+        ],
+      },
+      {
+        label: 'DBA Management',
+        icon: <CampaignIcon />,
+        subItems: [
+          { label: 'Bookmakers',  path: '/dba/bookmakers', icon: <StorefrontIcon /> },
+          { label: 'Ad Formats',  path: '/dba/templates',  icon: <ViewQuiltIcon /> },
+          { label: 'Service',     path: '/dba/service',    icon: <DnsIcon /> },
         ],
       },
       { label: 'News', icon: <ArticleIcon /> },
@@ -203,6 +219,11 @@ function App() {
             <Route path="scanners" element={<ScannersPage />} />
             <Route path="scanners-v2" element={<ScannersListV2 />} />
             <Route path="scanners-v2/:id" element={<ScannerDetailsV2 />} />
+            <Route path="dba/bookmakers" element={<DbaBookmakers />} />
+            <Route path="dba/templates" element={<DbaTemplates />} />
+            <Route path="dba/templates/new" element={<DbaTemplateEditor />} />
+            <Route path="dba/templates/:id/edit" element={<DbaTemplateEditor />} />
+            <Route path="dba/service" element={<DbaService />} />
           </Route>
         </Routes>
       </Box>

@@ -23,6 +23,7 @@ const filtersRoutes = require('./routes/filters');
 const citiesRoutes = require('./routes/cities');
 const tempRoutes = require('./routes/temp');
 const scannersRoutes = require('./routes/scanners');
+const dbaBookmakerPoolRoutes = require('./routes/dbaBookmakerPool');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -60,6 +61,7 @@ app.use('/api/filters', filtersRoutes);
 app.use('/api/cities', citiesRoutes);
 app.use('/api/temp', tempRoutes);
 app.use('/api/scanners', scannersRoutes);
+app.use('/api/dba/bookmaker-pool', dbaBookmakerPoolRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
