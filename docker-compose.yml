@@ -1,0 +1,32 @@
+# Local MySQL for DBA management data.
+# Bring up:   docker compose up -d mysql
+# Stop:       docker compose down
+# Reset all:  docker compose down -v   (drops the volume)
+#
+# Credentials default to the values below; override by setting MYSQL_* env vars
+# in your shell or a project .env file before running `docker compose up`.
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: cms_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpass}
+      MYSQL_DATABASE:      ${MYSQL_DATABASE:-dba_cms}
+      MYSQL_USER:          ${MYSQL_USER:-cms}
+      MYSQL_PASSWORD:      ${MYSQL_PASSWORD:-cmspass}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${MYSQL_ROOT_PASSWORD:-rootpass}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  mysql_data:

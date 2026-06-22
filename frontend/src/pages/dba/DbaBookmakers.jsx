@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Box, Typography, Button, IconButton, TextField, Select, MenuItem, FormControl,
   Table, TableHead, TableBody, TableRow, TableCell, TableContainer, Paper, TableSortLabel,
@@ -17,12 +17,23 @@ import UploadIcon from '@mui/icons-material/Upload';
 import ImageIcon from '@mui/icons-material/Image';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 
-import { DBA_BOOKMAKERS, DBA_BOOKMAKER_POOL, DBA_COUNTRIES } from '../../data/dbaData';
+import { DBA_BOOKMAKER_POOL, DBA_COUNTRIES } from '../../data/dbaData';
+import apiService from '../../services/api';
 import { StatusPill, LogoThumb, Toggle } from '../../components/dba/DbaPrimitives';
 import { relTime, truncateMiddle, bookmakerLogoUrl } from '../../components/dba/dbaUtils';
 
 export default function DbaBookmakers() {
-  const [bookmakers, setBookmakers] = useState(DBA_BOOKMAKERS);
+  const [bookmakers, setBookmakers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    apiService.getDbaBookmakers()
+      .then((list) => { if (!cancelled) { setBookmakers(Array.isArray(list) ? list : []); setLoading(false); } })
+      .catch((err) => { if (!cancelled) { setLoadError(err.message); setLoading(false); } });
+    return () => { cancelled = true; };
+  }, []);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [countryFilter, setCountryFilter] = useState('all');
@@ -76,51 +87,68 @@ export default function DbaBookmakers() {
   const handleAdd = () => { setFormMode('add'); setFormInitial(null); setFormDefaultCountry(countryFilter === 'all' ? 'US' : countryFilter); setFormOpen(true); };
   const handleEdit = (bm, cc) => { setFormMode('edit'); setFormInitial(bm); setFormDefaultCountry(cc); setFormOpen(true); };
 
-  const handleSave = (bm) => {
-    setBookmakers((bs) => {
-      const existing = bs.find((b) => b.id === bm.id);
-      if (existing) return bs.map((b) => b.id === bm.id ? bm : b);
-      return [bm, ...bs];
-    });
-    setShowBanner(true);
-  };
-
-  const handleDelete = (id, cc) => {
-    setBookmakers((bs) => bs.flatMap((b) => {
-      if (b.id !== id) return [b];
-      const v = { ...b.variants }; delete v[cc];
-      if (Object.keys(v).length === 0) return [];
-      return [{ ...b, variants: v }];
-    }));
-    setShowBanner(true);
-  };
-
-  const handleStatusToggle = (bm, cc, currentStatus) => {
-    if (currentStatus === 'draft') setConfirmPublish({ bm, cc });
-    else {
-      setBookmakers((bs) => bs.map((b) => b.id === bm.id
-        ? { ...b, variants: { ...b.variants, [cc]: { ...b.variants[cc], status: 'draft', modified: new Date().toISOString(), modifiedBy: 'D. Benvelgy' } } }
-        : b));
+  const handleSave = async (bm) => {
+    try {
+      const saved = await apiService.upsertDbaBookmaker(bm);
+      setBookmakers((bs) => {
+        const idx = bs.findIndex((b) => b.id === saved.id);
+        if (idx === -1) return [saved, ...bs];
+        const next = [...bs]; next[idx] = saved; return next;
+      });
       setShowBanner(true);
-      setToast({ kind: 'success', msg: `${bm.name} (${cc}) moved to Draft` });
+    } catch (err) {
+      setToast({ kind: 'error', msg: `Save failed: ${err.message}` });
     }
   };
 
-  const confirmPublishYes = () => {
-    const { bm, cc } = confirmPublish;
-    setBookmakers((bs) => bs.map((b) => b.id === bm.id
-      ? { ...b, variants: { ...b.variants, [cc]: { ...b.variants[cc], status: 'live', modified: new Date().toISOString(), modifiedBy: 'D. Benvelgy' } } }
-      : b));
-    setShowBanner(true);
-    setToast({ kind: 'success', msg: `${bm.name} is now Live in ${DBA_COUNTRIES.find(c => c.code === cc)?.name}` });
-    setConfirmPublish(null);
+  const handleDelete = async (id, cc) => {
+    try {
+      await apiService.deleteDbaBookmakerVariant(id, cc);
+      setBookmakers((bs) => bs.flatMap((b) => {
+        if (b.id !== id) return [b];
+        const v = { ...b.variants }; delete v[cc];
+        if (Object.keys(v).length === 0) return [];
+        return [{ ...b, variants: v }];
+      }));
+      setShowBanner(true);
+    } catch (err) {
+      setToast({ kind: 'error', msg: `Delete failed: ${err.message}` });
+    }
   };
 
-  const confirmDeleteYes = () => {
+  const patchVariant = async (bm, cc, patch) => {
+    const next = { ...patch, modified: new Date().toISOString(), modifiedBy: 'D. Benvelgy' };
+    try {
+      const updated = await apiService.patchDbaBookmakerVariant(bm.id, cc, next);
+      setBookmakers((bs) => bs.map((b) => b.id === bm.id ? updated : b));
+      setShowBanner(true);
+      return true;
+    } catch (err) {
+      setToast({ kind: 'error', msg: `Update failed: ${err.message}` });
+      return false;
+    }
+  };
+
+  const handleStatusToggle = async (bm, cc, currentStatus) => {
+    if (currentStatus === 'draft') setConfirmPublish({ bm, cc });
+    else {
+      const ok = await patchVariant(bm, cc, { status: 'draft' });
+      if (ok) setToast({ kind: 'success', msg: `${bm.name} (${cc}) moved to Draft` });
+    }
+  };
+
+  const confirmPublishYes = async () => {
+    const { bm, cc } = confirmPublish;
+    setConfirmPublish(null);
+    const ok = await patchVariant(bm, cc, { status: 'live' });
+    if (ok) setToast({ kind: 'success', msg: `${bm.name} is now Live in ${DBA_COUNTRIES.find(c => c.code === cc)?.name}` });
+  };
+
+  const confirmDeleteYes = async () => {
     const { bm, cc } = confirmDelete;
-    handleDelete(bm.id, cc);
-    setToast({ kind: 'success', msg: `${bm.name} removed from ${DBA_COUNTRIES.find(c => c.code === cc)?.name}` });
     setConfirmDelete(null);
+    await handleDelete(bm.id, cc);
+    setToast({ kind: 'success', msg: `${bm.name} removed from ${DBA_COUNTRIES.find(c => c.code === cc)?.name}` });
   };
 
   const clearFilters = () => { setSearch(''); setStatusFilter('all'); setCountryFilter('all'); };
@@ -139,12 +167,16 @@ export default function DbaBookmakers() {
         </Button>
       </Stack>
 
+      {loadError && (
+        <Alert severity="error" sx={{ mb: 2 }}>Failed to load bookmakers: {loadError}</Alert>
+      )}
+
       {showBanner && (
         <Alert severity="info" sx={{ mb: 2 }}
           action={<IconButton size="small" onClick={() => setShowBanner(false)}><CloseIcon fontSize="small" /></IconButton>}>
           <strong>Bookmaker configuration changed.</strong>{' '}
           <Typography component="span" color="text.secondary" sx={{ fontSize: 'inherit' }}>
-            Restart the service to apply changes immediately, or wait for the next automatic cache refresh.
+            Reload the service to apply changes immediately, or wait for the next automatic cache refresh.
           </Typography>
         </Alert>
       )}
@@ -231,14 +263,23 @@ export default function DbaBookmakers() {
                         </Box>
                       </TableCell>
                       <TableCell>
-                        <Tooltip title={r.affiliate}>
-                          <Box component="a" href={r.affiliate} target="_blank" rel="noopener noreferrer"
-                            onClick={(e) => e.preventDefault()}
-                            sx={{ color: 'primary.main', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 0.75, fontSize: 13, fontFamily: 'ui-monospace, monospace' }}>
-                            <LinkIcon sx={{ fontSize: 13 }} />
-                            <Box component="span" sx={{ maxWidth: 260 }}>{truncateMiddle(r.affiliate, 42)}</Box>
-                          </Box>
-                        </Tooltip>
+                        {r.bm.id === 'bk_14' ? (
+                          <Tooltip title="Bet365 links are resolved at click time against an external monthly table. The ad serves a redirect via /api/dba/links/click.">
+                            <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.75, fontSize: 12, color: 'text.secondary', fontStyle: 'italic' }}>
+                              <LinkIcon sx={{ fontSize: 13 }} />
+                              <Box component="span">managed externally</Box>
+                            </Box>
+                          </Tooltip>
+                        ) : (
+                          <Tooltip title={r.affiliate}>
+                            <Box component="a" href={r.affiliate} target="_blank" rel="noopener noreferrer"
+                              onClick={(e) => e.preventDefault()}
+                              sx={{ color: 'primary.main', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 0.75, fontSize: 13, fontFamily: 'ui-monospace, monospace' }}>
+                              <LinkIcon sx={{ fontSize: 13 }} />
+                              <Box component="span" sx={{ maxWidth: 260 }}>{truncateMiddle(r.affiliate, 42)}</Box>
+                            </Box>
+                          </Tooltip>
+                        )}
                       </TableCell>
                       <TableCell>
                         <Stack direction="row" alignItems="center" spacing={1.25}>
@@ -271,6 +312,7 @@ export default function DbaBookmakers() {
         mode={formMode}
         initial={formInitial}
         defaultCountry={formDefaultCountry}
+        configuredBookmakers={bookmakers}
         onClose={() => setFormOpen(false)}
         onSave={(bm) => { handleSave(bm); setToast({ kind: 'success', msg: `${bm.name} saved` }); }}
       />
@@ -324,7 +366,7 @@ export default function DbaBookmakers() {
 // =========================================================
 // Bookmaker Form (slide-in Drawer with per-country tabs)
 // =========================================================
-function BookmakerForm({ open, mode, initial, defaultCountry, onClose, onSave }) {
+function BookmakerForm({ open, mode, initial, defaultCountry, configuredBookmakers = [], onClose, onSave }) {
   // In add mode the user picks from the pool; in edit mode the bookmaker is fixed.
   const [selectedBookmaker, setSelectedBookmaker] = useState(null);
   const [defaultLogo, setDefaultLogo] = useState(null);    // from the pool (read-only)
@@ -361,7 +403,10 @@ function BookmakerForm({ open, mode, initial, defaultCountry, onClose, onSave })
   const sourcePool = poolFromDb || DBA_BOOKMAKER_POOL;
 
   // Already-configured bookmaker IDs — filter them out of the pool in add mode.
-  const configuredIds = React.useMemo(() => new Set(DBA_BOOKMAKERS.map((b) => b.id)), []);
+  const configuredIds = React.useMemo(
+    () => new Set(configuredBookmakers.map((b) => b.id)),
+    [configuredBookmakers]
+  );
   const poolOptions = React.useMemo(
     () => (mode === 'edit')
       ? sourcePool
@@ -442,6 +487,13 @@ function BookmakerForm({ open, mode, initial, defaultCountry, onClose, onSave })
     setTouched(true);
   };
 
+  // Bookmakers whose affiliate URLs are not entered by hand — they're resolved
+  // at click time against an external link table (see backend/services/bet365Links.js
+  // and backend/routes/dbaLinks.js). For these, the per-country URL field in
+  // the editor is read-only and validation is skipped.
+  const CONTEXT_LINKED_BOOKMAKER_IDS = new Set(['bk_14']); // Bet365
+  const isContextLinked = !!(selectedBookmaker && CONTEXT_LINKED_BOOKMAKER_IDS.has(selectedBookmaker.id));
+
   const validate = () => {
     const e = {};
     if (!selectedBookmaker) e.bookmaker = 'Pick a bookmaker from the pool';
@@ -449,8 +501,10 @@ function BookmakerForm({ open, mode, initial, defaultCountry, onClose, onSave })
     const perCountry = {};
     Object.entries(variants).forEach(([cc, v]) => {
       const ce = {};
-      if (!v.affiliate.trim()) ce.affiliate = 'Affiliate link required';
-      else if (!/^https?:\/\/.+/i.test(v.affiliate)) ce.affiliate = 'Must start with http:// or https://';
+      if (!isContextLinked) {
+        if (!v.affiliate.trim()) ce.affiliate = 'Affiliate link required';
+        else if (!/^https?:\/\/.+/i.test(v.affiliate)) ce.affiliate = 'Must start with http:// or https://';
+      }
       if (Object.keys(ce).length) perCountry[cc] = ce;
     });
     if (Object.keys(perCountry).length) e.variants = perCountry;
@@ -782,13 +836,19 @@ function BookmakerForm({ open, mode, initial, defaultCountry, onClose, onSave })
               </Stack>
 
               <TextField
-                label={`Affiliate Link · ${activeCC} *`}
+                label={`Affiliate Link · ${activeCC}${isContextLinked ? ' · managed externally' : ' *'}`}
                 size="small" fullWidth
                 value={activeV?.affiliate || ''}
                 onChange={(e) => setVariantField(activeCC, 'affiliate', e.target.value)}
                 error={!!variantErrors.affiliate}
-                helperText={variantErrors.affiliate || `Used when the user's market is ${activeCC}.`}
-                placeholder={`https://… (specific to ${activeCC})`}
+                disabled={isContextLinked}
+                helperText={
+                  variantErrors.affiliate
+                  || (isContextLinked
+                    ? `Bet365 links are written monthly by an external system (context: country × platform × language × month). The ad serves a redirect via /api/dba/links/click that resolves to the live URL at click time.`
+                    : `Used when the user's market is ${activeCC}.`)
+                }
+                placeholder={isContextLinked ? 'Resolved at click time — not edited here' : `https://… (specific to ${activeCC})`}
                 InputProps={{
                   startAdornment: <InputAdornment position="start"><LinkIcon fontSize="small" /></InputAdornment>,
                   sx: { fontFamily: 'ui-monospace, monospace', fontSize: 13 },

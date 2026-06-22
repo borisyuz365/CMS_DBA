@@ -12,17 +12,48 @@ import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import FlashOnIcon from '@mui/icons-material/FlashOn';
 
-import { DBA_INITIAL_SERVICE_STATE, DBA_AUDIT_LOG } from '../../data/dbaData';
+import apiService from '../../services/api';
 import { StatusPill } from '../../components/dba/DbaPrimitives';
 import { fmtBytes, fmtDateTime, fmtUptime, relTime } from '../../components/dba/dbaUtils';
 
+const EMPTY_STATE = {
+  status: 'down',
+  lastRestartAt: null,
+  lastRestartBy: null,
+  cacheSizeBytes: 0,
+  uptimeSec: 0,
+  cooldownRemainingSec: 0,
+  services: null,
+};
+
 export default function DbaService() {
-  const [state, setState] = useState(DBA_INITIAL_SERVICE_STATE);
+  const [state, setState] = useState(EMPTY_STATE);
+  const [auditLog, setAuditLog] = useState([]);
   const [confirmRestart, setConfirmRestart] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [toast, setToast] = useState(null);
 
-  // Tick uptime + cooldown every second.
+  const fetchStatus = async () => {
+    try {
+      const [status, log] = await Promise.all([
+        apiService.getDbaServiceStatus(),
+        apiService.getDbaAuditLog(50),
+      ]);
+      setState({ ...EMPTY_STATE, ...status });
+      setAuditLog(Array.isArray(log) ? log : []);
+    } catch (err) {
+      setToast({ kind: 'error', msg: `Failed to load status: ${err.message}` });
+    }
+  };
+
+  useEffect(() => { fetchStatus(); }, []);
+
+  // Auto-refresh status every 10s; tick uptime + cooldown locally every second
+  // so the UI feels live between fetches.
+  useEffect(() => {
+    const poll = setInterval(fetchStatus, 10000);
+    return () => clearInterval(poll);
+  }, []);
   useEffect(() => {
     const t = setInterval(() => {
       setState((s) => ({
@@ -34,29 +65,39 @@ export default function DbaService() {
     return () => clearInterval(t);
   }, []);
 
-  const handleRefresh = () => {
+  const handleRefresh = async () => {
     setRefreshing(true);
-    setTimeout(() => { setRefreshing(false); setToast({ kind: 'success', msg: 'Status refreshed' }); }, 600);
+    await fetchStatus();
+    setRefreshing(false);
+    setToast({ kind: 'success', msg: 'Status refreshed' });
   };
 
-  const handleRestart = () => {
+  const handleRestart = async () => {
     setConfirmRestart(false);
     setState((s) => ({ ...s, status: 'restarting', cooldownRemainingSec: 0 }));
-    setTimeout(() => {
-      setState({
-        status: 'running',
-        lastRestartAt: new Date().toISOString(),
-        lastRestartBy: 'D. Benvelgy',
-        cacheSizeBytes: 0,
-        uptimeSec: 0,
-        cooldownRemainingSec: 120,
-      });
-      setToast({ kind: 'success', msg: 'Service restarted' });
-    }, 4000);
+    try {
+      const result = await apiService.reloadDbaService('D. Benvelgy');
+      await fetchStatus();
+      if (result.success) {
+        setToast({ kind: 'success', msg: `Reloaded ${result.reloadedCount}/${result.totalCount} configs` });
+      } else {
+        setToast({ kind: 'error', msg: 'Reload failed — BettingAdsService unreachable' });
+      }
+    } catch (err) {
+      setToast({ kind: 'error', msg: `Reload failed: ${err.message}` });
+      await fetchStatus();
+    }
   };
 
   const { status, lastRestartAt, lastRestartBy, cacheSizeBytes, uptimeSec, cooldownRemainingSec } = state;
   const restartDisabled = status === 'restarting' || cooldownRemainingSec > 0;
+  // The status pill collapses 'down' / 'degraded' to the same colour but with
+  // a distinct label so it's obvious when only one of the two services is up.
+  const pillKind  = status === 'running' ? 'running' : status === 'restarting' ? 'restarting' : 'down';
+  const pillLabel = status === 'running'   ? 'Running'
+                  : status === 'restarting' ? 'Restarting…'
+                  : status === 'degraded'  ? 'Degraded'
+                  :                          'Down';
 
   return (
     <Box sx={{ p: 4, maxWidth: 1440, mx: 'auto', width: '100%' }}>
@@ -76,10 +117,7 @@ export default function DbaService() {
                 Service Status
               </Typography>
               <Stack direction="row" alignItems="center" spacing={1.5}>
-                <StatusPill
-                  kind={status === 'running' ? 'running' : status === 'restarting' ? 'restarting' : 'down'}
-                  label={status === 'running' ? 'Running' : status === 'restarting' ? 'Restarting…' : 'Down'}
-                />
+                <StatusPill kind={pillKind} label={pillLabel} />
                 {status === 'restarting' && <CircularProgress size={16} thickness={5} sx={{ color: '#FFA726' }} />}
               </Stack>
             </Box>
@@ -104,7 +142,7 @@ export default function DbaService() {
                 <span>
                   <Button color="error" variant="contained" size="large" startIcon={<PowerSettingsNewIcon />}
                     disabled={restartDisabled} onClick={() => setConfirmRestart(true)}>
-                    {status === 'restarting' ? 'Restarting…' : 'Restart Service'}
+                    {status === 'restarting' ? 'Reloading…' : 'Reload Service'}
                   </Button>
                 </span>
               </Tooltip>
@@ -115,11 +153,13 @@ export default function DbaService() {
                 </Stack>
               )}
               <Typography sx={{ ml: 'auto', fontSize: 13, color: 'text.secondary' }}>
-                Last restart: <Box component="strong" sx={{ color: 'text.primary', fontWeight: 500 }}>{fmtDateTime(lastRestartAt)}</Box> · by {lastRestartBy}
+                {lastRestartAt
+                  ? (<>Last reload: <Box component="strong" sx={{ color: 'text.primary', fontWeight: 500 }}>{fmtDateTime(lastRestartAt)}</Box>{lastRestartBy ? <> · by {lastRestartBy}</> : null}</>)
+                  : 'No reload recorded'}
               </Typography>
             </Stack>
             <Typography sx={{ mt: 1.5, fontSize: 13, color: 'text.secondary' }}>
-              Restarting clears the ad cache, releases memory, and refreshes affiliate links. Service will be unavailable for 30–60 seconds.
+              Reload triggers ConfigurationService to re-pull dbaConfiguration, TopSelections, and GamesConfiguration from Google Sheets and republish to Redis. No downtime.
             </Typography>
           </Box>
         </Paper>
@@ -130,7 +170,10 @@ export default function DbaService() {
             Recent activity
           </Box>
           <Box sx={{ py: 1, maxHeight: 400, overflow: 'auto' }}>
-            {DBA_AUDIT_LOG.map((e, i) => {
+            {auditLog.length === 0 && (
+              <Box sx={{ px: 2.5, py: 2, fontSize: 13, color: 'text.secondary' }}>No activity yet.</Box>
+            )}
+            {auditLog.map((e, i) => {
               const palette =
                 e.kind === 'restart' ? { bg: '#FFF3E0', fg: '#F57C00', icon: <PowerSettingsNewIcon sx={{ fontSize: 14 }} /> }
               : e.kind === 'publish' ? { bg: '#EFF6FF', fg: '#1976D2', icon: <FlashOnIcon sx={{ fontSize: 14 }} /> }
@@ -155,15 +198,15 @@ export default function DbaService() {
       </Box>
 
       <Dialog open={confirmRestart} onClose={() => setConfirmRestart(false)}>
-        <DialogTitle>Restart DBA service?</DialogTitle>
+        <DialogTitle>Reload DBA configurations?</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Restarting will <strong>temporarily interrupt ad serving for 30–60 seconds</strong>. Active campaigns may briefly stop delivering. Continue?
+            Triggers ConfigurationService to re-pull <strong>dbaConfiguration</strong>, <strong>TopSelections</strong>, and <strong>GamesConfiguration</strong> from Google Sheets and republish to Redis. No service downtime. Continue?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setConfirmRestart(false)}>Cancel</Button>
-          <Button color="error" variant="contained" onClick={handleRestart}>Restart now</Button>
+          <Button color="error" variant="contained" onClick={handleRestart}>Reload now</Button>
         </DialogActions>
       </Dialog>
 

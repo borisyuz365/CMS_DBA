@@ -11,6 +11,14 @@ export const DBA_COUNTRIES = [
   { code: 'BR',     name: 'Brazil',          flag: '🇧🇷' },
   { code: 'AU',     name: 'Australia',       flag: '🇦🇺' },
   { code: 'CA',     name: 'Canada',          flag: '🇨🇦' },
+  // LATAM + Poland — countries the Sheets-derived variants reference.
+  { code: 'AR',     name: 'Argentina',       flag: '🇦🇷' },
+  { code: 'MX',     name: 'Mexico',          flag: '🇲🇽' },
+  { code: 'CL',     name: 'Chile',           flag: '🇨🇱' },
+  { code: 'CO',     name: 'Colombia',        flag: '🇨🇴' },
+  { code: 'EC',     name: 'Ecuador',         flag: '🇪🇨' },
+  { code: 'PE',     name: 'Peru',            flag: '🇵🇪' },
+  { code: 'PL',     name: 'Poland',          flag: '🇵🇱' },
 ];
 
 const mkv = (affiliate, status, modified, modifiedBy) => ({ affiliate, status, modified, modifiedBy });
@@ -195,15 +203,19 @@ export const DBA_TEMPLATES = [
       affiliate: { enabled: true, url: 'https://promo.bookmaker.com/welcome?aff=365_INTER_v2' } } },
 ];
 
+// Team `id`s match 365scores competitor IDs (verified via the public standings
+// endpoint + Cloudinary 200 responses). Used by competitorLogoUrl() in dbaUtils
+// to pull the real club crest; the colored circle + initials stay as a fallback
+// when the image fails to load.
 export const DBA_SAMPLE_MATCHES = [
-  { date: '22/05 · 03:30', home: { name: 'Peñarol',       short: 'PEÑ', bg: '#F2C200', fg: '#1A1A1A' }, away: { name: 'Corinthians',   short: 'COR', bg: '#111111', fg: '#FFFFFF' }, odds: ['2.62', '3.30', '2.62'] },
-  { date: '24/05 · 01:00', home: { name: 'Mirassol',      short: 'MIR', bg: '#FFC107', fg: '#1F4D2B' }, away: { name: 'Fluminense',    short: 'FLU', bg: '#7A1F2F', fg: '#FFFFFF' }, odds: ['2.65', '3.10', '2.55'] },
-  { date: '18/05 · 00:30', home: { name: 'RB Bragantino', short: 'BRA', bg: '#E60023', fg: '#FFFFFF' }, away: { name: 'Vitória',       short: 'VIT', bg: '#0F0F0F', fg: '#E60023' }, odds: ['1.62', '3.80', '5.25'] },
-  { date: '17/05 · 17:00', home: { name: 'Santos',        short: 'SAN', bg: '#FFFFFF', fg: '#111111' }, away: { name: 'Coritiba',      short: 'CFC', bg: '#1B5E20', fg: '#FFFFFF' }, odds: ['1.66', '3.60', '5.25'] },
-  { date: '21/05 · 03:30', home: { name: 'Flamengo',      short: 'FLA', bg: '#C8102E', fg: '#FFFFFF' }, away: { name: 'Estudiantes',   short: 'EDLP',bg: '#E10600', fg: '#FFFFFF' }, odds: ['1.42', '4.50', '7.50'] },
-  { date: '17/05 · 22:00', home: { name: 'Bahia',         short: 'BAH', bg: '#1565C0', fg: '#FFFFFF' }, away: { name: 'Grêmio',        short: 'GRE', bg: '#0C4A8C', fg: '#FFFFFF' }, odds: ['1.66', '3.90', '4.75'] },
-  { date: '19/05 · 21:30', home: { name: 'Palmeiras',     short: 'PAL', bg: '#0E5C2F', fg: '#FFFFFF' }, away: { name: 'São Paulo',     short: 'SAO', bg: '#E60023', fg: '#FFFFFF' }, odds: ['1.95', '3.40', '3.60'] },
-  { date: '20/05 · 19:00', home: { name: 'Atl. Mineiro',  short: 'CAM', bg: '#0B0B0B', fg: '#FFFFFF' }, away: { name: 'Botafogo',      short: 'BOT', bg: '#101010', fg: '#FFFFFF' }, odds: ['2.10', '3.20', '3.30'] },
+  { date: '22/05 · 03:30', home: { id: 7766, name: 'Peñarol',       short: 'PEÑ', bg: '#F2C200', fg: '#1A1A1A' }, away: { id: 1267, name: 'Corinthians',   short: 'COR', bg: '#111111', fg: '#FFFFFF' }, odds: ['2.62', '3.30', '2.62'] },
+  { date: '24/05 · 01:00', home: { id: 1269, name: 'Mirassol',      short: 'MIR', bg: '#FFC107', fg: '#1F4D2B' }, away: { id: 1216, name: 'Fluminense',    short: 'FLU', bg: '#7A1F2F', fg: '#FFFFFF' }, odds: ['2.65', '3.10', '2.55'] },
+  { date: '18/05 · 00:30', home: { id: 1273, name: 'RB Bragantino', short: 'BRA', bg: '#E60023', fg: '#FFFFFF' }, away: { id: 1228, name: 'Vitória',       short: 'VIT', bg: '#0F0F0F', fg: '#E60023' }, odds: ['1.62', '3.80', '5.25'] },
+  { date: '17/05 · 17:00', home: { id: 1224, name: 'Santos',        short: 'SAN', bg: '#FFFFFF', fg: '#111111' }, away: { id: 1212, name: 'Coritiba',      short: 'CFC', bg: '#1B5E20', fg: '#FFFFFF' }, odds: ['1.66', '3.60', '5.25'] },
+  { date: '21/05 · 03:30', home: { id: 1215, name: 'Flamengo',      short: 'FLA', bg: '#C8102E', fg: '#FFFFFF' }, away: { id: 867,  name: 'Estudiantes',   short: 'EDLP',bg: '#E10600', fg: '#FFFFFF' }, odds: ['1.42', '4.50', '7.50'] },
+  { date: '17/05 · 22:00', home: { id: 1767, name: 'Bahia',         short: 'BAH', bg: '#1565C0', fg: '#FFFFFF' }, away: { id: 1218, name: 'Grêmio',        short: 'GRE', bg: '#0C4A8C', fg: '#FFFFFF' }, odds: ['1.66', '3.90', '4.75'] },
+  { date: '19/05 · 21:30', home: { id: 1222, name: 'Palmeiras',     short: 'PAL', bg: '#0E5C2F', fg: '#FFFFFF' }, away: { id: 1225, name: 'São Paulo',     short: 'SAO', bg: '#E60023', fg: '#FFFFFF' }, odds: ['1.95', '3.40', '3.60'] },
+  { date: '20/05 · 19:00', home: { id: 1209, name: 'Atl. Mineiro',  short: 'CAM', bg: '#0B0B0B', fg: '#FFFFFF' }, away: { id: 1211, name: 'Botafogo',      short: 'BOT', bg: '#101010', fg: '#FFFFFF' }, odds: ['2.10', '3.20', '3.30'] },
 ];
 
 export const DBA_INITIAL_SERVICE_STATE = {

@@ -125,3 +125,14 @@ export function bookmakerLogoUrl(id, { noBg = false, transforms = LOGO_TRANSFORM
   const segment = noBg ? `BookMakers/NoBG/${numId}` : `BookMakers/${numId}`;
   return `https://res.cloudinary.com/scores365/image/upload/${transforms}/${segment}`;
 }
+
+// Returns the Cloudinary CDN URL for a competitor (team) logo. Same transform
+// budget as bookmakers. Accepts an int id (e.g. 1215) or a string ending in
+// digits. Returns null when the id is missing — caller falls back to the
+// colored-circle crest.
+export function competitorLogoUrl(id, { transforms = LOGO_TRANSFORMS } = {}) {
+  if (id == null) return null;
+  const m = String(id).match(/(\d+)$/);
+  if (!m) return null;
+  return `https://res.cloudinary.com/scores365/image/upload/${transforms}/Competitors/${parseInt(m[1], 10)}`;
+}

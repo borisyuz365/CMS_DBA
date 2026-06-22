@@ -8,6 +8,7 @@ import {
 import SaveIcon from '@mui/icons-material/Save';
 import CheckIcon from '@mui/icons-material/Check';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import CodeIcon from '@mui/icons-material/Code';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import UploadIcon from '@mui/icons-material/Upload';
 import CloseIcon from '@mui/icons-material/Close';
@@ -16,7 +17,14 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
 
-import { DBA_TEMPLATES, DBA_BOOKMAKERS, DBA_SAMPLE_MATCHES } from '../../data/dbaData';
+import { DBA_SAMPLE_MATCHES, DBA_COUNTRIES } from '../../data/dbaData';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import Checkbox from '@mui/material/Checkbox';
+import ListItemText from '@mui/material/ListItemText';
+import Chip from '@mui/material/Chip';
+import TranslationPopover from '../../components/dba/TranslationPopover';
+import CreativeTemplateCodeDialog from '../../components/dba/CreativeTemplateCodeDialog';
+import apiService from '../../services/api';
 import AdPreview, { CarouselDots } from '../../components/dba/AdPreview';
 import { StatusPill, LogoThumb, Toggle } from '../../components/dba/DbaPrimitives';
 import { invertText, SIZE_DIMS, resolveLogoUrl, bookmakerLogoUrl, autoLogoReason } from '../../components/dba/dbaUtils';
@@ -46,11 +54,39 @@ function colorsFromBookmaker(bm) {
   return { bg: brand, text, cta, ctaTextColor };
 }
 
+// Wrapper: fetches the template (if editing) and the bookmaker list, then mounts
+// the inner editor with resolved props. Avoids reading from static seed data.
 export default function DbaTemplateEditor() {
   const { id } = useParams();
-  const navigate = useNavigate();
   const isNew = !id || id === 'new';
-  const initial = isNew ? null : DBA_TEMPLATES.find((t) => t.id === id);
+  const [initial, setInitial] = useState(null);
+  const [allBookmakers, setAllBookmakers] = useState(null); // null = still loading
+  const [loadError, setLoadError] = useState(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    const tplPromise = isNew ? Promise.resolve(null) : apiService.getDbaTemplate(id);
+    Promise.all([tplPromise, apiService.getDbaBookmakers()])
+      .then(([tpl, bms]) => {
+        if (cancelled) return;
+        setInitial(tpl);
+        setAllBookmakers(Array.isArray(bms) ? bms : []);
+      })
+      .catch((err) => { if (!cancelled) setLoadError(err.message); });
+    return () => { cancelled = true; };
+  }, [id, isNew]);
+
+  if (loadError) {
+    return <Box sx={{ p: 4 }}><Alert severity="error">Failed to load editor: {loadError}</Alert></Box>;
+  }
+  if (allBookmakers === null) {
+    return <Box sx={{ p: 4 }}><Typography color="text.secondary">Loading editor…</Typography></Box>;
+  }
+  return <DbaTemplateEditorInner key={id || 'new'} initial={initial} allBookmakers={allBookmakers} isNew={isNew} />;
+}
+
+function DbaTemplateEditorInner({ initial, allBookmakers, isNew }) {
+  const navigate = useNavigate();
 
   const [name, setName] = useState(initial?.name || 'New Format');
   const [previewSize, setPreviewSize] = useState(initial?.sizeId || '300x250');
@@ -62,26 +98,33 @@ export default function DbaTemplateEditor() {
     if (initial?.bookmakerId) return initial.bookmakerId;
     // Back-compat: legacy templates used bookmakerIds (array or 'all'); pick first.
     if (Array.isArray(initial?.bookmakerIds) && initial.bookmakerIds[0]) return initial.bookmakerIds[0];
-    const anyLive = (b) => Object.values(b.variants).some((v) => v.status === 'live');
-    return (DBA_BOOKMAKERS.find(anyLive) || DBA_BOOKMAKERS[0]).id;
+    const anyLive = (b) => Object.values(b.variants || {}).some((v) => v.status === 'live');
+    return (allBookmakers.find(anyLive) || allBookmakers[0])?.id || null;
   });
   // For new templates seed the color palette from the initial bookmaker's brand
   // color (DB-sourced). Existing templates keep their saved config.
   const [config, setConfig] = useState(() => {
     if (initial?.config) return initial.config;
-    const seedBm = DBA_BOOKMAKERS.find((b) => b.id === bookmakerId) || DBA_BOOKMAKERS[0];
+    const seedBm = allBookmakers.find((b) => b.id === bookmakerId) || allBookmakers[0];
     const seed = colorsFromBookmaker(seedBm);
     return seed ? { ...DEFAULT_CONFIG, ...seed } : DEFAULT_CONFIG;
   });
+  const [countries, setCountries] = useState(() => Array.isArray(initial?.countries) ? initial.countries : []);
+  // Pending translations to ship with the next save. Backend pre-fills these on
+  // GET via the `translations` decoration. Shape: { <fieldPath>: { <langId>: value } }.
+  const [translations, setTranslations] = useState(() => initial?.translations || {});
+  const setFieldTranslations = (path, value) =>
+    setTranslations((prev) => ({ ...prev, [path]: value }));
   const [confirmPublish, setConfirmPublish] = useState(false);
   const [confirmReset, setConfirmReset] = useState(false);
   const [toast, setToast] = useState(null);
+  const [showGamCode, setShowGamCode] = useState(false);
 
   // When the user picks a different bookmaker, repaint the colour fields with
   // its brand colour. The user is free to override any colour after.
   const handleBookmakerChange = (newId) => {
     setBookmakerId(newId);
-    const bm = DBA_BOOKMAKERS.find((b) => b.id === newId);
+    const bm = allBookmakers.find((b) => b.id === newId);
     const next = colorsFromBookmaker(bm);
     if (next) {
       setConfig((c) => ({ ...c, ...next }));
@@ -95,14 +138,51 @@ export default function DbaTemplateEditor() {
   const totalSlides = (hasWelcome ? 1 : 0) + matchSlideCount;
   const safeSlideIdx = totalSlides ? ((slideIdx % totalSlides) + totalSlides) % totalSlides : 0;
 
-  useEffect(() => { setSlideIdx((i) => totalSlides ? ((i % totalSlides) + totalSlides) % totalSlides : 0); }, [totalSlides]);
-  useEffect(() => { if (hasWelcome) setSlideIdx(0); }, [hasWelcome]);
+  // Infinite forward carousel: render `totalSlides + 1` slides where the last
+  // is a clone of slide 0. `displayPos` is the *visual* position [0..totalSlides];
+  // it can briefly equal totalSlides (sitting on the clone) before snapping
+  // back to 0 without a transition. The dot indicator uses safeSlideIdx (the
+  // logical slide), which advances independently.
+  //
+  // NB: we deliberately do NOT auto-sync displayPos with safeSlideIdx — when
+  // the tick wraps slideIdx from N-1 → 0, such an effect would override the
+  // displayPos increment and animate backward to slide 0 instead of forward
+  // onto the clone.
+  const SLIDE_DURATION_MS = 720;
+  const [displayPos, setDisplayPos] = useState(0);
+  const [transitionOn, setTransitionOn] = useState(true);
+
+  useEffect(() => { setDisplayPos(0); setSlideIdx(0); }, [totalSlides]);
+  useEffect(() => { if (hasWelcome) { setDisplayPos(0); setSlideIdx(0); } }, [hasWelcome]);
+
   useEffect(() => {
     if (!playing) return;
     const interval = previewSize === '640x1280' ? 3500 : 3000;
-    const tid = setInterval(() => setSlideIdx((i) => (i + 1) % totalSlides), interval);
+    const tid = setInterval(() => {
+      // Advance the visual position past the last real slide onto the clone,
+      // and bump the logical slideIdx straight to its wrapped successor so
+      // the dot indicator updates immediately.
+      setDisplayPos((p) => p + 1);
+      setSlideIdx((i) => (i + 1) % totalSlides);
+    }, interval);
     return () => clearInterval(tid);
   }, [playing, totalSlides, previewSize]);
+
+  // When displayPos lands on the clone (== totalSlides), wait for the
+  // animation to finish, then snap back to 0 with no transition. Two RAFs
+  // are needed so the browser commits the transition: none + transform: 0
+  // before transitions get turned back on for the next user advance.
+  useEffect(() => {
+    if (displayPos !== totalSlides) return undefined;
+    const tid = setTimeout(() => {
+      setTransitionOn(false);
+      setDisplayPos(0);
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => setTransitionOn(true));
+      });
+    }, SLIDE_DURATION_MS);
+    return () => clearTimeout(tid);
+  }, [displayPos, totalSlides]);
 
   // Auto-scale the preview to fit available space
   const previewBoxRef = useRef(null);
@@ -126,28 +206,49 @@ export default function DbaTemplateEditor() {
   }, [previewSize]);
 
   const set = (key, val) => setConfig((c) => ({ ...c, [key]: val }));
-  const previewBm = DBA_BOOKMAKERS.find((b) => b.id === bookmakerId) || DBA_BOOKMAKERS[0];
+  const previewBm = allBookmakers.find((b) => b.id === bookmakerId) || allBookmakers[0];
   // "DBA-enabled" = a bookmaker that's been configured in the Bookmaker Management
   // screen with at least one live country variant.
   const dbaEnabledBookmakers = useMemo(
-    () => DBA_BOOKMAKERS.filter((b) => Object.values(b.variants).some((v) => v.status === 'live')),
-    []
+    () => allBookmakers.filter((b) => Object.values(b.variants || {}).some((v) => v.status === 'live')),
+    [allBookmakers]
   );
 
   const buildSavedTemplate = (status) => ({
     ...(initial || {}),
     name, config, sizeId: previewSize, status, bookmakerId,
-    modified: new Date().toISOString(), modifiedBy: 'D. Benvelgy',
+    countries,
+    translations,
+    // size label kept for display compatibility on the list screen
+    size: previewSize === '300x250' ? 'MPU · 300×250'
+        : previewSize === '640x1280' ? 'Interstitial · 640×1280'
+        : 'Banner · 320×50',
+    modifiedBy: 'D. Benvelgy',
   });
-  const handleSaveDraft = () => {
-    // (In a wired-up backend: POST/PUT buildSavedTemplate('draft'))
-    setToast({ kind: 'success', msg: 'Saved as Draft' });
+
+  const saveTemplate = async (status) => {
+    const tpl = buildSavedTemplate(status);
+    if (isNew) return apiService.createDbaTemplate(tpl);
+    return apiService.updateDbaTemplate(initial.id, tpl);
   };
-  const handlePublish = () => {
+
+  const handleSaveDraft = async () => {
+    try {
+      await saveTemplate('draft');
+      setToast({ kind: 'success', msg: 'Saved as Draft' });
+    } catch (err) {
+      setToast({ kind: 'error', msg: `Save failed: ${err.message}` });
+    }
+  };
+  const handlePublish = async () => {
     setConfirmPublish(false);
-    // (In a wired-up backend: POST/PUT buildSavedTemplate('live'))
-    setToast({ kind: 'success', msg: `${name} published as Live` });
-    setTimeout(() => navigate('/dba/templates'), 800);
+    try {
+      await saveTemplate('live');
+      setToast({ kind: 'success', msg: `${name} published as Live` });
+      setTimeout(() => navigate('/dba/templates'), 800);
+    } catch (err) {
+      setToast({ kind: 'error', msg: `Publish failed: ${err.message}` });
+    }
   };
   const handleReset = () => { setConfig(DEFAULT_CONFIG); setConfirmReset(false); setToast({ kind: 'success', msg: 'Reset to defaults' }); };
 
@@ -177,6 +278,14 @@ export default function DbaTemplateEditor() {
           <StatusPill kind={initial?.status === 'live' ? 'live' : 'draft'} label={initial?.status === 'live' ? 'Live' : 'Draft'} />
         </Box>
         <Button startIcon={<RestartAltIcon />} onClick={() => setConfirmReset(true)}>Reset</Button>
+        <Button
+          startIcon={<CodeIcon />}
+          onClick={() => setShowGamCode(true)}
+          disabled={isNew}
+          title={isNew ? 'Save the template first to view its GAM code' : 'View the CreativeTemplate that would be uploaded to Google Ad Manager'}
+        >
+          View GAM code
+        </Button>
         <Button variant="outlined" startIcon={<SaveIcon />} onClick={handleSaveDraft}>Save as Draft</Button>
         <Button variant="contained" startIcon={<CheckIcon />} onClick={() => setConfirmPublish(true)}>Save & Publish</Button>
       </Box>
@@ -185,10 +294,21 @@ export default function DbaTemplateEditor() {
       <Box sx={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
         {/* Form sidebar */}
         <Box sx={{ width: 380, borderRight: '1px solid #E5E5E5', overflow: 'auto', flexShrink: 0, bgcolor: '#fff' }}>
-          <Box sx={{ p: 3, display: 'flex', flexDirection: 'column', gap: 2.5 }}>
+          {/* Section-level separators come from a top border on each Section
+              after the first — see the Section component below. The gap is the
+              spacing between the divider line and the section content above/below. */}
+          <Box sx={{ p: 3, display: 'flex', flexDirection: 'column', gap: 3 }}>
             <Section title="Identity">
               <Field label="Template name">
-                <TextField size="small" fullWidth value={name} onChange={(e) => setName(e.target.value)} />
+                <Stack direction="row" spacing={0} alignItems="center">
+                  <TextField size="small" fullWidth value={name} onChange={(e) => setName(e.target.value)} />
+                  <TranslationPopover
+                    fieldLabel="Template name"
+                    canonical={name}
+                    translations={translations['name']}
+                    onChange={(v) => setFieldTranslations('name', v)}
+                  />
+                </Stack>
               </Field>
               <Field
                 label="Bookmaker"
@@ -199,7 +319,7 @@ export default function DbaTemplateEditor() {
                 <FormControl size="small" fullWidth>
                   <Select value={bookmakerId} onChange={(e) => handleBookmakerChange(e.target.value)}
                     renderValue={(val) => {
-                      const b = DBA_BOOKMAKERS.find((x) => x.id === val);
+                      const b = allBookmakers.find((x) => x.id === val);
                       if (!b) return val;
                       return (
                         <Stack direction="row" alignItems="center" spacing={1}>
@@ -228,6 +348,34 @@ export default function DbaTemplateEditor() {
                             </Typography>
                           </Box>
                         </Stack>
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Field>
+              <Field
+                label="Countries"
+                help="The countries this format is targeted at. Multiple allowed; leave empty for none. Drives which markets serve the ad and which language the text is resolved in."
+              >
+                <FormControl size="small" fullWidth>
+                  <Select
+                    multiple
+                    value={countries}
+                    onChange={(e) => setCountries(typeof e.target.value === 'string' ? e.target.value.split(',') : e.target.value)}
+                    input={<OutlinedInput />}
+                    renderValue={(selected) => (
+                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                        {selected.map((cc) => {
+                          const c = DBA_COUNTRIES.find((x) => x.code === cc);
+                          return <Chip key={cc} size="small" label={`${c?.flag || ''} ${c?.name || cc}`} />;
+                        })}
+                      </Box>
+                    )}
+                  >
+                    {DBA_COUNTRIES.map((c) => (
+                      <MenuItem key={c.code} value={c.code}>
+                        <Checkbox size="small" checked={countries.indexOf(c.code) > -1} />
+                        <ListItemText primary={`${c.flag} ${c.name}`} />
                       </MenuItem>
                     ))}
                   </Select>
@@ -363,7 +511,15 @@ export default function DbaTemplateEditor() {
 
             <Section title="Call to Action">
               <Field label="Button text" help={`${(config.ctaText || '').length}/24 characters`}>
-                <TextField size="small" fullWidth value={config.ctaText} inputProps={{ maxLength: 24 }} onChange={(e) => set('ctaText', e.target.value)} />
+                <Stack direction="row" alignItems="center">
+                  <TextField size="small" fullWidth value={config.ctaText} inputProps={{ maxLength: 24 }} onChange={(e) => set('ctaText', e.target.value)} />
+                  <TranslationPopover
+                    fieldLabel="CTA button text"
+                    canonical={config.ctaText}
+                    translations={translations['config.ctaText']}
+                    onChange={(v) => setFieldTranslations('config.ctaText', v)}
+                  />
+                </Stack>
               </Field>
             </Section>
 
@@ -434,25 +590,140 @@ export default function DbaTemplateEditor() {
               </Stack>
               {config.welcomeOffer?.enabled && (
                 <>
+                  <Field label="Pill text" help="The badge at the top of the welcome slide">
+                    <Stack direction="row" alignItems="center">
+                      <TextField size="small" fullWidth value={config.welcomeOffer?.pillText || ''} inputProps={{ maxLength: 40 }} placeholder="Welcome offer"
+                        onChange={(e) => set('welcomeOffer', { ...(config.welcomeOffer || {}), pillText: e.target.value })} />
+                      <TranslationPopover
+                        fieldLabel="Welcome offer · Pill text"
+                        canonical={config.welcomeOffer?.pillText || ''}
+                        translations={translations['config.welcomeOffer.pillText']}
+                        onChange={(v) => setFieldTranslations('config.welcomeOffer.pillText', v)}
+                      />
+                    </Stack>
+                  </Field>
+                  <Field label="Pill color"><ColorField value={config.welcomeOffer?.pillColor || '#FFC107'} onChange={(v) => set('welcomeOffer', { ...(config.welcomeOffer || {}), pillColor: v })} /></Field>
+                  <Field label="Pill text color"><ColorField value={config.welcomeOffer?.pillTextColor || invertText(config.welcomeOffer?.pillColor || '#FFC107')} onChange={(v) => set('welcomeOffer', { ...(config.welcomeOffer || {}), pillTextColor: v })} /></Field>
                   <Field label="Headline">
-                    <TextField size="small" fullWidth value={config.welcomeOffer?.headline || ''} inputProps={{ maxLength: 60 }} placeholder="Get £30 in Free Bets"
-                      onChange={(e) => set('welcomeOffer', { ...(config.welcomeOffer || {}), headline: e.target.value })} />
+                    <Stack direction="row" alignItems="center">
+                      <TextField size="small" fullWidth value={config.welcomeOffer?.headline || ''} inputProps={{ maxLength: 60 }} placeholder="Get £30 in Free Bets"
+                        onChange={(e) => set('welcomeOffer', { ...(config.welcomeOffer || {}), headline: e.target.value })} />
+                      <TranslationPopover
+                        fieldLabel="Welcome offer · Headline"
+                        canonical={config.welcomeOffer?.headline || ''}
+                        translations={translations['config.welcomeOffer.headline']}
+                        onChange={(v) => setFieldTranslations('config.welcomeOffer.headline', v)}
+                      />
+                    </Stack>
                   </Field>
                   <Field label="Subtext">
-                    <TextField size="small" fullWidth value={config.welcomeOffer?.subtext || ''} inputProps={{ maxLength: 120 }} placeholder="Bet £10, get £30 when you sign up"
-                      onChange={(e) => set('welcomeOffer', { ...(config.welcomeOffer || {}), subtext: e.target.value })} />
+                    <Stack direction="row" alignItems="center">
+                      <TextField size="small" fullWidth value={config.welcomeOffer?.subtext || ''} inputProps={{ maxLength: 120 }} placeholder="Bet £10, get £30 when you sign up"
+                        onChange={(e) => set('welcomeOffer', { ...(config.welcomeOffer || {}), subtext: e.target.value })} />
+                      <TranslationPopover
+                        fieldLabel="Welcome offer · Subtext"
+                        canonical={config.welcomeOffer?.subtext || ''}
+                        translations={translations['config.welcomeOffer.subtext']}
+                        onChange={(v) => setFieldTranslations('config.welcomeOffer.subtext', v)}
+                      />
+                    </Stack>
                   </Field>
                   <Field label="Terms / small print">
-                    <TextField size="small" fullWidth value={config.welcomeOffer?.terms || ''} inputProps={{ maxLength: 180 }} placeholder="New customers only · 18+ · T&Cs apply"
-                      onChange={(e) => set('welcomeOffer', { ...(config.welcomeOffer || {}), terms: e.target.value })} />
+                    <Stack direction="row" alignItems="flex-start">
+                      <TextField size="small" fullWidth multiline minRows={2}
+                        value={config.welcomeOffer?.terms || ''} inputProps={{ maxLength: 180 }}
+                        placeholder="New customers only · 18+ · T&Cs apply"
+                        onChange={(e) => set('welcomeOffer', { ...(config.welcomeOffer || {}), terms: e.target.value })} />
+                      <TranslationPopover
+                        fieldLabel="Welcome offer · Terms"
+                        canonical={config.welcomeOffer?.terms || ''}
+                        translations={translations['config.welcomeOffer.terms']}
+                        onChange={(v) => setFieldTranslations('config.welcomeOffer.terms', v)}
+                        multiline
+                      />
+                    </Stack>
                   </Field>
                   <Field label="CTA text override" help="Leave blank to use the main CTA text">
-                    <TextField size="small" fullWidth value={config.welcomeOffer?.ctaText || ''} inputProps={{ maxLength: 24 }} placeholder={config.ctaText}
-                      onChange={(e) => set('welcomeOffer', { ...(config.welcomeOffer || {}), ctaText: e.target.value })} />
+                    <Stack direction="row" alignItems="center">
+                      <TextField size="small" fullWidth value={config.welcomeOffer?.ctaText || ''} inputProps={{ maxLength: 24 }} placeholder={config.ctaText}
+                        onChange={(e) => set('welcomeOffer', { ...(config.welcomeOffer || {}), ctaText: e.target.value })} />
+                      <TranslationPopover
+                        fieldLabel="Welcome offer · CTA text override"
+                        canonical={config.welcomeOffer?.ctaText || ''}
+                        translations={translations['config.welcomeOffer.ctaText']}
+                        onChange={(v) => setFieldTranslations('config.welcomeOffer.ctaText', v)}
+                      />
+                    </Stack>
                   </Field>
                   <Field label="CTA button color"><ColorField value={config.welcomeOffer?.ctaColor || config.cta} onChange={(v) => set('welcomeOffer', { ...(config.welcomeOffer || {}), ctaColor: v })} /></Field>
                   <Field label="CTA text color"><ColorField value={config.welcomeOffer?.ctaTextColor || invertText(config.welcomeOffer?.ctaColor || config.cta)} onChange={(v) => set('welcomeOffer', { ...(config.welcomeOffer || {}), ctaTextColor: v })} /></Field>
                   <Field label="Hero image (optional)"><ImageUploadField value={config.welcomeOffer?.image || null} onChange={(v) => set('welcomeOffer', { ...(config.welcomeOffer || {}), image: v })} /></Field>
+
+                  {/* Background override for the welcome slide. When disabled, the
+                      welcome slide inherits the main background (config.bg*). When
+                      enabled, mirror the main Background section's solid / gradient /
+                      image controls but write to config.welcomeOffer.bg* instead. */}
+                  <Field label="Background override" help="Off: inherit the main background. On: give the welcome slide its own solid colour, gradient, or image.">
+                    <Stack direction="row" alignItems="center" spacing={1.25}>
+                      <Toggle
+                        on={!!config.welcomeOffer?.bgEnabled}
+                        onChange={(on) => set('welcomeOffer', { ...(config.welcomeOffer || {}), bgEnabled: on })}
+                        ariaLabel="Toggle welcome background override"
+                      />
+                      <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>
+                        {config.welcomeOffer?.bgEnabled ? 'Using a custom background' : 'Inheriting the main background'}
+                      </Typography>
+                    </Stack>
+                  </Field>
+
+                  {config.welcomeOffer?.bgEnabled && (
+                    <>
+                      <Field label="Background type">
+                        <ToggleButtonGroup
+                          value={config.welcomeOffer?.bgType || 'solid'} exclusive size="small"
+                          onChange={(_, v) => v && set('welcomeOffer', { ...(config.welcomeOffer || {}), bgType: v })} fullWidth
+                        >
+                          <ToggleButton value="solid">Solid</ToggleButton>
+                          <ToggleButton value="gradient">Gradient</ToggleButton>
+                          <ToggleButton value="image">Image</ToggleButton>
+                        </ToggleButtonGroup>
+                      </Field>
+
+                      {(config.welcomeOffer?.bgType || 'solid') === 'solid' && (
+                        <Field label="Background color">
+                          <ColorField value={config.welcomeOffer?.bg || config.bg} onChange={(v) => set('welcomeOffer', { ...(config.welcomeOffer || {}), bg: v })} />
+                        </Field>
+                      )}
+
+                      {config.welcomeOffer?.bgType === 'gradient' && (
+                        <>
+                          <Field label="From color">
+                            <ColorField value={config.welcomeOffer?.bg || config.bg} onChange={(v) => set('welcomeOffer', { ...(config.welcomeOffer || {}), bg: v })} />
+                          </Field>
+                          <Field label="To color">
+                            <ColorField value={config.welcomeOffer?.bg2 || config.welcomeOffer?.bg || config.bg} onChange={(v) => set('welcomeOffer', { ...(config.welcomeOffer || {}), bg2: v })} />
+                          </Field>
+                          <Field label={`Angle · ${config.welcomeOffer?.bgAngle ?? 135}°`}>
+                            <Slider min={0} max={360} value={config.welcomeOffer?.bgAngle ?? 135} onChange={(_, v) => set('welcomeOffer', { ...(config.welcomeOffer || {}), bgAngle: v })} />
+                          </Field>
+                        </>
+                      )}
+
+                      {config.welcomeOffer?.bgType === 'image' && (
+                        <>
+                          <Field label="Image">
+                            <ImageUploadField value={config.welcomeOffer?.bgImage} onChange={(v) => set('welcomeOffer', { ...(config.welcomeOffer || {}), bgImage: v })} />
+                          </Field>
+                          <Field label="Overlay tint">
+                            <ColorField value={config.welcomeOffer?.bg || '#000000'} onChange={(v) => set('welcomeOffer', { ...(config.welcomeOffer || {}), bg: v })} />
+                          </Field>
+                          <Field label={`Overlay opacity · ${Math.round((config.welcomeOffer?.bgOverlay ?? 0.35) * 100)}%`}>
+                            <Slider min={0} max={100} value={Math.round((config.welcomeOffer?.bgOverlay ?? 0.35) * 100)} onChange={(_, v) => set('welcomeOffer', { ...(config.welcomeOffer || {}), bgOverlay: v / 100 })} />
+                          </Field>
+                        </>
+                      )}
+                    </>
+                  )}
                 </>
               )}
             </Section>
@@ -542,36 +813,35 @@ export default function DbaTemplateEditor() {
               </Stack>
             </Box>
 
-            <Box sx={{ position: 'relative' }}>
+            <Box sx={{ position: 'relative', display: 'inline-block' }}>
               <Box sx={{
                 width: w * displayScale, height: h * displayScale,
                 position: 'relative', overflow: 'hidden',
                 borderRadius: `${(config.radius || 8) * displayScale}px`,
               }}>
+                {/* Render totalSlides + 1 boxes — the last is a clone of slide
+                    0 so the carousel can scroll forward off the end and snap
+                    seamlessly back to the real slide 0. */}
                 <Box sx={{
                   display: 'flex',
-                  width: w * displayScale * totalSlides,
+                  width: w * displayScale * (totalSlides + 1),
                   height: h * displayScale,
-                  transform: `translateX(-${safeSlideIdx * w * displayScale}px)`,
-                  transition: 'transform 720ms cubic-bezier(0.32, 0.72, 0.24, 1)',
+                  transform: `translateX(-${displayPos * w * displayScale}px)`,
+                  transition: transitionOn ? `transform ${SLIDE_DURATION_MS}ms cubic-bezier(0.32, 0.72, 0.24, 1)` : 'none',
                 }}>
-                  {Array.from({ length: totalSlides }).map((_, i) => (
+                  {Array.from({ length: totalSlides + 1 }).map((_, i) => (
                     <Box key={i} sx={{ width: w * displayScale, height: h * displayScale, flexShrink: 0, position: 'relative', overflow: 'hidden' }}>
-                      <AdPreview config={config} sizeId={previewSize} bookmaker={previewBm} scale={displayScale} slideIdx={i} />
+                      <AdPreview config={config} sizeId={previewSize} bookmaker={previewBm} scale={displayScale} slideIdx={i % totalSlides} />
                     </Box>
                   ))}
                 </Box>
-
-                {previewSize !== '320x50' && (
-                  <Box sx={{
-                    position: 'absolute', left: 0, right: 0,
-                    bottom: (previewSize === '640x1280' ? 50 : 12) * displayScale,
-                    display: 'flex', justifyContent: 'center', pointerEvents: 'none',
-                  }}>
-                    <CarouselDots count={totalSlides} active={safeSlideIdx} color={config.text} dotSize={previewSize === '640x1280' ? Math.max(5, 10 * displayScale) : 4} />
-                  </Box>
-                )}
               </Box>
+
+              {/* Carousel page indicator now lives INSIDE the ad render via
+                  renderInAdDots() in AdPreview.jsx — matches production's
+                  carousel behaviour (carousel.css: .dots { position: absolute;
+                  bottom: 0 }) and is what the served ad's end viewer will see. */}
+
               <Box sx={{ position: 'absolute', top: -22, left: 0, fontSize: 11, fontFamily: 'ui-monospace, monospace', color: 'text.secondary' }}>
                 {w} × {h}{displayScale !== 1 ? ` · ${Math.round(displayScale * 100)}%` : ''}
               </Box>
@@ -601,13 +871,27 @@ export default function DbaTemplateEditor() {
       <Snackbar open={!!toast} autoHideDuration={3500} onClose={() => setToast(null)} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
         <Alert severity={toast?.kind === 'error' ? 'error' : 'success'} onClose={() => setToast(null)}>{toast?.msg}</Alert>
       </Snackbar>
+
+      <CreativeTemplateCodeDialog
+        open={showGamCode}
+        templateId={initial?.id || null}
+        onClose={() => setShowGamCode(false)}
+      />
     </Box>
   );
 }
 
 function Section({ title, children }) {
+  // Sibling selector adds a divider line above every Section *after the first*
+  // in the form sidebar, so the editor reads as a clear sequence of grouped
+  // sub-sections without the first one having a leading line.
   return (
-    <Box>
+    <Box sx={{
+      '&:not(:first-of-type)': {
+        borderTop: '1px solid #E5E5E5',
+        pt: 3,
+      },
+    }}>
       <Typography sx={{ fontSize: 11, fontWeight: 600, color: 'text.secondary', textTransform: 'uppercase', letterSpacing: '0.06em', mb: 1.25 }}>
         {title}
       </Typography>

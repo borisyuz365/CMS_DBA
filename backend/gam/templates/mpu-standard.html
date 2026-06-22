@@ -1,0 +1,86 @@
+<!--
+  GAM Creative Template — MPU Standard (300×250).
+  Variables use GAM's `[%variable_name%]` macro syntax (per CreativeTemplate
+  spec). Those are replaced when the per-market Creative is built; they are
+  NOT GAM ad-serving macros like %%CLICK_URL%% (which would also be valid
+  here but serve a different purpose).
+
+  Layout-specific config (size, fonts, gaps) is baked into this HTML. Branding
+  and copy come from variables so one template serves N (bookmaker, country)
+  pairs.
+
+  Per-impression match data (teams, odds, dates) is fetched at runtime by the
+  embedded JS via AdsGeneratorService — same pattern as the existing DBA flow.
+-->
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<style>
+  html, body { margin: 0; padding: 0; }
+  .ad {
+    width: 300px; height: 250px;
+    background: [%brand_color_1%];
+    color: [%brand_color_2_or_white%];
+    border-radius: 8px;
+    overflow: hidden;
+    font-family: '365 Sans', Inter, sans-serif;
+    box-sizing: border-box;
+    padding: 10px 14px 22px;
+    display: flex; flex-direction: column;
+    position: relative;
+  }
+  .ad .logo {
+    width: 22px; height: 22px;
+    background-image: url('[%bookmaker_logo_url%]');
+    background-size: contain; background-repeat: no-repeat;
+    background-position: left center;
+  }
+  .ad .matches { flex: 1; display: flex; flex-direction: column; gap: 14px; margin-top: 10px; }
+  .ad .cta {
+    background: [%cta_bg_color%];
+    color: [%cta_text_color%];
+    border: none; height: 30px; margin-top: 8px;
+    border-radius: 6px;
+    font-size: 12px; font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    letter-spacing: 0.01em;
+  }
+  .ad .legal {
+    position: absolute; left: 6px; right: 6px; bottom: 2px;
+    display: flex; justify-content: space-between;
+    font-size: 7px; opacity: 0.85;
+  }
+  .ad .legal a { color: inherit; text-decoration: underline; }
+</style>
+</head>
+<body>
+  <a class="ad" href="[%cta_url%]" target="_blank">
+    <div class="logo" aria-label="[%bookmaker_name%]"></div>
+    <div class="matches" data-feed="[%feed_url%]">
+      <!-- Populated at runtime by the AdsGenerator feed in feed_url -->
+    </div>
+    <button class="cta" type="button">[%cta_text%]</button>
+    <div class="legal">
+      <span>18+</span>
+      <a href="[%disclaimer_url%]">[%disclaimer_text%]</a>
+    </div>
+  </a>
+  <script>
+    // Lazy fetch of match data; the feed URL is per-(country, bookmaker)
+    // and resolves to 3 games at the AdsGeneratorService endpoint.
+    (function () {
+      var node = document.querySelector('.matches');
+      if (!node || !node.dataset.feed) return;
+      fetch(node.dataset.feed).then(function (r) { return r.json(); })
+        .then(function (data) {
+          // Defer match rendering to the runtime script — same shape as the
+          // existing /GetPayload response. See: AdsGeneratorService /GetPayload.
+          if (window.DbaRenderMatches) window.DbaRenderMatches(node, data);
+        })
+        .catch(function () { /* silent: leave the empty matches block */ });
+    }());
+  </script>
+</body>
+</html>

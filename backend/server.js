@@ -24,6 +24,11 @@ const citiesRoutes = require('./routes/cities');
 const tempRoutes = require('./routes/temp');
 const scannersRoutes = require('./routes/scanners');
 const dbaBookmakerPoolRoutes = require('./routes/dbaBookmakerPool');
+const dbaBookmakersRoutes = require('./routes/dbaBookmakers');
+const dbaTemplatesRoutes = require('./routes/dbaTemplates');
+const dbaServiceRoutes = require('./routes/dbaService');
+const dbaGamRoutes = require('./routes/dbaGam');
+const dbaLinksRoutes = require('./routes/dbaLinks');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -62,6 +67,11 @@ app.use('/api/cities', citiesRoutes);
 app.use('/api/temp', tempRoutes);
 app.use('/api/scanners', scannersRoutes);
 app.use('/api/dba/bookmaker-pool', dbaBookmakerPoolRoutes);
+app.use('/api/dba/bookmakers', dbaBookmakersRoutes);
+app.use('/api/dba/templates', dbaTemplatesRoutes);
+app.use('/api/dba/service', dbaServiceRoutes);
+app.use('/api/dba/gam', dbaGamRoutes);
+app.use('/api/dba/links', dbaLinksRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Box, Typography, Button, IconButton, TextField, Select, MenuItem, FormControl,
@@ -14,15 +14,58 @@ import SearchIcon from '@mui/icons-material/Search';
 import GridViewIcon from '@mui/icons-material/GridView';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import CloseIcon from '@mui/icons-material/Close';
+import CodeIcon from '@mui/icons-material/Code';
+import CreativeTemplateCodeDialog from '../../components/dba/CreativeTemplateCodeDialog';
 
-import { DBA_TEMPLATES, DBA_BOOKMAKERS } from '../../data/dbaData';
+import apiService from '../../services/api';
+import { DBA_COUNTRIES } from '../../data/dbaData';
 import { StatusPill, LogoThumb } from '../../components/dba/DbaPrimitives';
 import { relTime, bgCss, SIZE_DIMS, bookmakerLogoUrl } from '../../components/dba/dbaUtils';
 import AdPreview from '../../components/dba/AdPreview';
 
+// Compact list of country flags + names, with overflow "+N" tail.
+function CountryChips({ codes = [], max = 4 }) {
+  if (!codes.length) {
+    return <Typography component="span" sx={{ fontSize: 11, color: 'text.disabled', fontStyle: 'italic' }}>no countries</Typography>;
+  }
+  const shown = codes.slice(0, max);
+  const rest = codes.length - shown.length;
+  return (
+    <Stack direction="row" spacing={0.5} alignItems="center" sx={{ flexWrap: 'wrap', rowGap: 0.5 }}>
+      {shown.map((cc) => {
+        const c = DBA_COUNTRIES.find((x) => x.code === cc);
+        return (
+          <Box key={cc} sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.5, px: 0.75, py: 0.25,
+            bgcolor: '#F5F5F5', borderRadius: 999, fontSize: 11 }}>
+            <Box component="span" sx={{ fontSize: 12, lineHeight: 1 }}>{c?.flag || '🏳️'}</Box>
+            <Box component="span" sx={{ fontWeight: 500 }}>{cc}</Box>
+          </Box>
+        );
+      })}
+      {rest > 0 && (
+        <Box component="span" sx={{ fontSize: 11, color: 'text.secondary' }}>+{rest}</Box>
+      )}
+    </Stack>
+  );
+}
+
 export default function DbaTemplates() {
   const navigate = useNavigate();
-  const [templates, setTemplates] = useState(DBA_TEMPLATES);
+  const [templates, setTemplates] = useState([]);
+  const [bookmakers, setBookmakers] = useState([]);
+  const [loadError, setLoadError] = useState(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    Promise.all([apiService.getDbaTemplates(), apiService.getDbaBookmakers()])
+      .then(([t, b]) => {
+        if (cancelled) return;
+        setTemplates(Array.isArray(t) ? t : []);
+        setBookmakers(Array.isArray(b) ? b : []);
+      })
+      .catch((err) => { if (!cancelled) setLoadError(err.message); });
+    return () => { cancelled = true; };
+  }, []);
   const [view, setView] = useState('grid');
   const [search, setSearch] = useState('');
   const [sizeFilter, setSizeFilter] = useState('all');
@@ -31,13 +74,14 @@ export default function DbaTemplates() {
   const [featureFilter, setFeatureFilter] = useState('all');
   const [confirmDelete, setConfirmDelete] = useState(null);
   const [toast, setToast] = useState(null);
+  const [codeDialogTemplateId, setCodeDialogTemplateId] = useState(null);
 
   const isAnyLive = (b) => b.variants ? Object.values(b.variants).some((v) => v.status === 'live') : b.status === 'live';
-  const dbaEnabledBookmakers = useMemo(() => DBA_BOOKMAKERS.filter(isAnyLive), []);
+  const dbaEnabledBookmakers = useMemo(() => bookmakers.filter(isAnyLive), [bookmakers]);
   const bmForTemplate = (t) =>
-    DBA_BOOKMAKERS.find((b) => b.id === t.bookmakerId) ||
-    DBA_BOOKMAKERS.find((b) => b.id === (Array.isArray(t.bookmakerIds) ? t.bookmakerIds[0] : null)) ||
-    DBA_BOOKMAKERS[0];
+    bookmakers.find((b) => b.id === t.bookmakerId) ||
+    bookmakers.find((b) => b.id === (Array.isArray(t.bookmakerIds) ? t.bookmakerIds[0] : null)) ||
+    bookmakers[0];
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -66,23 +110,28 @@ export default function DbaTemplates() {
     setSearch(''); setSizeFilter('all'); setStatusFilter('all'); setBookmakerFilter('all'); setFeatureFilter('all');
   };
 
-  const handleDuplicate = (tpl) => {
-    const copy = {
-      ...tpl,
-      id: `tpl_${Math.random().toString(36).slice(2, 8)}`,
-      name: `${tpl.name} (Copy)`,
-      status: 'draft',
-      modified: new Date().toISOString(),
-      modifiedBy: 'D. Benvelgy',
-    };
-    setTemplates((ts) => [copy, ...ts]);
-    setToast({ kind: 'success', msg: 'Template duplicated as Draft' });
+  const handleDuplicate = async (tpl) => {
+    const { id: _drop, ...rest } = tpl;
+    const copy = { ...rest, name: `${tpl.name} (Copy)`, status: 'draft', modifiedBy: 'D. Benvelgy' };
+    try {
+      const created = await apiService.createDbaTemplate(copy);
+      setTemplates((ts) => [created, ...ts]);
+      setToast({ kind: 'success', msg: 'Template duplicated as Draft' });
+    } catch (err) {
+      setToast({ kind: 'error', msg: `Duplicate failed: ${err.message}` });
+    }
   };
 
-  const handleDelete = () => {
-    setTemplates((ts) => ts.filter((t) => t.id !== confirmDelete.id));
-    setToast({ kind: 'success', msg: `${confirmDelete.name} deleted` });
+  const handleDelete = async () => {
+    const target = confirmDelete;
     setConfirmDelete(null);
+    try {
+      await apiService.deleteDbaTemplate(target.id);
+      setTemplates((ts) => ts.filter((t) => t.id !== target.id));
+      setToast({ kind: 'success', msg: `${target.name} deleted` });
+    } catch (err) {
+      setToast({ kind: 'error', msg: `Delete failed: ${err.message}` });
+    }
   };
 
   return (
@@ -98,6 +147,10 @@ export default function DbaTemplates() {
           Create New Format
         </Button>
       </Stack>
+
+      {loadError && (
+        <Alert severity="error" sx={{ mb: 2 }}>Failed to load templates: {loadError}</Alert>
+      )}
 
       <Stack direction="row" sx={{ mb: 2, gap: 1.5, alignItems: 'center', flexWrap: 'wrap' }}>
         <TextField
@@ -178,9 +231,10 @@ export default function DbaTemplates() {
                           size={16} radius={3} />
                         <Typography sx={{ fontSize: 12, fontWeight: 500, color: 'text.primary' }}>{bm.name}</Typography>
                       </Stack>
-                      <Typography sx={{ fontSize: 12, color: 'text.secondary' }}>
+                      <Typography sx={{ fontSize: 12, color: 'text.secondary', mb: 0.5 }}>
                         {relTime(tpl.modified)} · {tpl.modifiedBy}
                       </Typography>
+                      <CountryChips codes={tpl.countries} max={4} />
                     </Box>
                     <StatusPill kind={tpl.status === 'live' ? 'live' : 'draft'} label={tpl.status === 'live' ? 'Live' : 'Draft'} />
                   </Stack>
@@ -188,6 +242,9 @@ export default function DbaTemplates() {
                     <Button variant="outlined" size="small" startIcon={<EditIcon fontSize="small" />} onClick={() => navigate(`/dba/templates/${tpl.id}/edit`)} sx={{ flex: 1 }}>
                       Edit
                     </Button>
+                    <Tooltip title="View GAM template code">
+                      <IconButton size="small" onClick={() => setCodeDialogTemplateId(tpl.id)}><CodeIcon fontSize="small" /></IconButton>
+                    </Tooltip>
                     <Tooltip title="Duplicate">
                       <IconButton size="small" onClick={() => handleDuplicate(tpl)}><ContentCopyIcon fontSize="small" /></IconButton>
                     </Tooltip>
@@ -212,6 +269,7 @@ export default function DbaTemplates() {
                 <TableRow>
                   <TableCell>Template</TableCell>
                   <TableCell sx={{ width: 180 }}>Bookmaker</TableCell>
+                  <TableCell sx={{ width: 220 }}>Countries</TableCell>
                   <TableCell sx={{ width: 140 }}>Size</TableCell>
                   <TableCell sx={{ width: 120 }}>Status</TableCell>
                   <TableCell sx={{ width: 200 }}>Last Modified</TableCell>
@@ -237,6 +295,7 @@ export default function DbaTemplates() {
                         <Typography sx={{ fontSize: 14 }}>{bm.name}</Typography>
                       </Stack>
                     </TableCell>
+                    <TableCell><CountryChips codes={tpl.countries} max={5} /></TableCell>
                     <TableCell><Box component="span" sx={{ fontFamily: 'ui-monospace, monospace', fontSize: 13 }}>{tpl.size}</Box></TableCell>
                     <TableCell><StatusPill kind={tpl.status === 'live' ? 'live' : 'draft'} label={tpl.status === 'live' ? 'Live' : 'Draft'} /></TableCell>
                     <TableCell>
@@ -244,9 +303,10 @@ export default function DbaTemplates() {
                       <Typography sx={{ fontSize: 12, color: 'text.secondary' }}>by {tpl.modifiedBy}</Typography>
                     </TableCell>
                     <TableCell sx={{ textAlign: 'right' }}>
-                      <IconButton size="small" onClick={() => navigate(`/dba/templates/${tpl.id}/edit`)}><EditIcon fontSize="small" /></IconButton>
-                      <IconButton size="small" onClick={() => handleDuplicate(tpl)}><ContentCopyIcon fontSize="small" /></IconButton>
-                      <IconButton size="small" disabled={tpl.status === 'live'} onClick={() => setConfirmDelete(tpl)}><DeleteIcon fontSize="small" /></IconButton>
+                      <Tooltip title="Edit"><IconButton size="small" onClick={() => navigate(`/dba/templates/${tpl.id}/edit`)}><EditIcon fontSize="small" /></IconButton></Tooltip>
+                      <Tooltip title="View GAM template code"><IconButton size="small" onClick={() => setCodeDialogTemplateId(tpl.id)}><CodeIcon fontSize="small" /></IconButton></Tooltip>
+                      <Tooltip title="Duplicate"><IconButton size="small" onClick={() => handleDuplicate(tpl)}><ContentCopyIcon fontSize="small" /></IconButton></Tooltip>
+                      <Tooltip title={tpl.status === 'live' ? 'Move to Draft first' : 'Delete'}><span><IconButton size="small" disabled={tpl.status === 'live'} onClick={() => setConfirmDelete(tpl)}><DeleteIcon fontSize="small" /></IconButton></span></Tooltip>
                     </TableCell>
                   </TableRow>
                 );
@@ -271,6 +331,12 @@ export default function DbaTemplates() {
       <Snackbar open={!!toast} autoHideDuration={3500} onClose={() => setToast(null)} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
         <Alert severity={toast?.kind === 'error' ? 'error' : 'success'} onClose={() => setToast(null)}>{toast?.msg}</Alert>
       </Snackbar>
+
+      <CreativeTemplateCodeDialog
+        open={!!codeDialogTemplateId}
+        templateId={codeDialogTemplateId}
+        onClose={() => setCodeDialogTemplateId(null)}
+      />
     </Box>
   );
 }

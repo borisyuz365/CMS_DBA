@@ -62695,5 +62695,95 @@
     ],
     "valsCount": 1,
     "engValue": "Apertura"
+  },
+  {
+    "id": 77877781,
+    "categoryId": null,
+    "aliasName": "dba_template:tpl_mpu_v3:config.ctaText",
+    "fatherTerm": null,
+    "createTime": "2026-05-31T10:03:05.244Z",
+    "description": null,
+    "category": "DBA Templates",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Bet Now",
+        "isDefault": true,
+        "status": "Approved"
+      },
+      {
+        "languageId": 5,
+        "value": "Apuesta ahora",
+        "isDefault": false,
+        "status": "Approved"
+      },
+      {
+        "languageId": 9,
+        "value": "Aposte Agora",
+        "isDefault": false,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 3
+  },
+  {
+    "id": 77877782,
+    "categoryId": null,
+    "aliasName": "dba_template:tpl_mpu_dark:config.welcomeOffer.headline",
+    "fatherTerm": null,
+    "createTime": "2026-05-31T10:09:45.795Z",
+    "description": null,
+    "category": "DBA Templates",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Claim £30 Bonus",
+        "isDefault": true,
+        "status": "Approved"
+      },
+      {
+        "languageId": 5,
+        "value": "Reclama tu bono de $200",
+        "isDefault": false,
+        "status": "Approved"
+      },
+      {
+        "languageId": 9,
+        "value": "Receba R$50 Bônus",
+        "isDefault": false,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 3
+  },
+  {
+    "id": 77877783,
+    "categoryId": null,
+    "aliasName": "dba_template:tpl_mpu_dark:config.welcomeOffer.subtext",
+    "fatherTerm": null,
+    "createTime": "2026-05-31T10:09:45.808Z",
+    "description": null,
+    "category": "DBA Templates",
+    "values": [
+      {
+        "languageId": 1,
+        "value": "Bet £10, get £30",
+        "isDefault": true,
+        "status": "Approved"
+      },
+      {
+        "languageId": 5,
+        "value": "Apuesta $30, obten $200",
+        "isDefault": false,
+        "status": "Approved"
+      },
+      {
+        "languageId": 9,
+        "value": "Aposte R$10, receba R$50",
+        "isDefault": false,
+        "status": "Approved"
+      }
+    ],
+    "valsCount": 3
   }
 ]

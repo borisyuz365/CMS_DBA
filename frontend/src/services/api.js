@@ -2282,6 +2282,77 @@ class ApiService {
     const response = await this.fetch(`/scanners/${id}/logs-summary?range=${encodeURIComponent(range)}`);
     return response.data || null;
   }
+
+  // ---------- DBA Management ----------
+  // Backend returns the raw list (not wrapped in { data }), so call this.fetch
+  // directly and pass through.
+  async getDbaBookmakers() {
+    return this.fetch('/dba/bookmakers');
+  }
+
+  async upsertDbaBookmaker(bookmaker) {
+    return this.fetch(`/dba/bookmakers/${encodeURIComponent(bookmaker.id)}`, {
+      method: 'PUT',
+      body: JSON.stringify(bookmaker),
+    });
+  }
+
+  async patchDbaBookmakerVariant(id, cc, patch) {
+    return this.fetch(`/dba/bookmakers/${encodeURIComponent(id)}/variants/${encodeURIComponent(cc)}`, {
+      method: 'PATCH',
+      body: JSON.stringify(patch),
+    });
+  }
+
+  async deleteDbaBookmakerVariant(id, cc) {
+    return this.fetch(`/dba/bookmakers/${encodeURIComponent(id)}/variants/${encodeURIComponent(cc)}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async getDbaTemplates() {
+    return this.fetch('/dba/templates');
+  }
+
+  async getDbaTemplate(id) {
+    return this.fetch(`/dba/templates/${encodeURIComponent(id)}`);
+  }
+
+  async createDbaTemplate(tpl) {
+    return this.fetch('/dba/templates', { method: 'POST', body: JSON.stringify(tpl) });
+  }
+
+  async updateDbaTemplate(id, tpl) {
+    return this.fetch(`/dba/templates/${encodeURIComponent(id)}`, {
+      method: 'PUT',
+      body: JSON.stringify(tpl),
+    });
+  }
+
+  async deleteDbaTemplate(id) {
+    return this.fetch(`/dba/templates/${encodeURIComponent(id)}`, { method: 'DELETE' });
+  }
+
+  async getDbaServiceStatus() {
+    return this.fetch('/dba/service/status');
+  }
+
+  async reloadDbaService(actor) {
+    return this.fetch('/dba/service/reload', {
+      method: 'POST',
+      body: JSON.stringify({ actor }),
+    });
+  }
+
+  async getDbaAuditLog(limit = 50) {
+    return this.fetch(`/dba/service/audit-log?limit=${limit}`);
+  }
+
+  // Dry-run of what we'd push to Google Ad Manager. Returns
+  // { dbaTemplate, creativeTemplate, creatives, validation }.
+  async getDbaGamPreview(id) {
+    return this.fetch(`/dba/gam/templates/${encodeURIComponent(id)}/preview`);
+  }
 }
 
 export default new ApiService();
