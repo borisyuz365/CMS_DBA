@@ -42,7 +42,7 @@ function Age18PlusBadge({ size = 14, bg = '#0A0A0A', color = '#FFFFFF' }) {
 // glyph's centre via offsetLeft/offsetWidth after layout and absolutely-position
 // each odd onto that x-coordinate. Re-runs when team names change or the banner
 // resizes (ResizeObserver).
-function BannerMatchSection({ match }) {
+function BannerMatchSection({ match, config }) {
   const teamRowRef  = useRef(null);
   const homeNameRef = useRef(null);
   const xRef        = useRef(null);
@@ -96,7 +96,8 @@ function BannerMatchSection({ match }) {
       <Box sx={{
         alignSelf: 'center',
         height: 13, px: '6px', borderRadius: 999,
-        bgcolor: 'rgba(0,0,0,0.55)',
+        bgcolor: config.datePillColor || 'rgba(0,0,0,0.55)',
+        color: config.datePillTextColor || config.text,
         fontSize: 8, fontWeight: 600, letterSpacing: '0.02em',
         display: 'inline-flex', alignItems: 'center',
         whiteSpace: 'nowrap', flexShrink: 0, lineHeight: 1,
@@ -268,8 +269,8 @@ function MatchRow({ match, config, d }) {
         position: 'absolute', top: -d.pillH / 2, left: '50%', transform: 'translateX(-50%)',
         height: d.pillH, px: `${d.pillH * 0.7}px`,
         borderRadius: 999,
-        bgcolor: 'rgba(0,0,0,0.55)',
-        color: config.text,
+        bgcolor: config.datePillColor || 'rgba(0,0,0,0.55)',
+        color: config.datePillTextColor || config.text,
         fontSize: d.pillFont, fontWeight: 600,
         display: 'inline-flex', alignItems: 'center', whiteSpace: 'nowrap',
         letterSpacing: '0.02em',
@@ -405,7 +406,7 @@ export default function AdPreview({ config, sizeId, bookmaker, scale = 1, slideI
       }}>
         {/* Banner logo: 14.84% of 320 ≈ 48px — matches production frame-container.css */}
         <LogoThumb bg={bookmaker.logoBg} fg={bookmaker.logoFg} initials={bookmaker.initials} imageUrl={resolveLogoUrl(bookmaker, config)} size={48} radius={4} bare />
-        <BannerMatchSection match={m} />
+        <BannerMatchSection match={m} config={config} />
         <Box component="button" sx={{
           background: config.cta, color: config.ctaTextColor || invertText(config.cta),
           border: 'none', height: 30, px: '8px',
