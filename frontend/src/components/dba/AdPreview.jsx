@@ -379,6 +379,15 @@ export default function AdPreview({ config, sizeId, bookmaker, scale = 1, slideI
   // BANNER · 320×50
   const renderBanner = () => {
     const m = slideMatches[0] || DBA_SAMPLE_MATCHES[0];
+    // A point (x, y) measured from a rounded corner is clipped if it falls
+    // inside the corner square but outside the curve. The diagonal safe
+    // inset — where the curve passes through — is radius * (1 - 1/√2). Use
+    // that to inset the bottom legal strip so it never gets clipped, no
+    // matter how aggressive the border-radius is. Clamp to the visual
+    // minimums we already use when the radius is small.
+    const cornerInset = radius * (1 - 1 / Math.SQRT2);
+    const legalSideInset = Math.max(4, cornerInset);
+    const legalBottomInset = Math.max(1, cornerInset);
     return (
       <Box sx={{
         width: w, height: h,
@@ -404,9 +413,13 @@ export default function AdPreview({ config, sizeId, bookmaker, scale = 1, slideI
           fontSize: 10, fontWeight: 700, cursor: 'pointer',
           fontFamily: 'inherit', whiteSpace: 'nowrap', letterSpacing: '0.01em',
         }}>{config.ctaText}</Box>
-        {config.legal && config.legal.enabled && (config.legal.text || config.legal.logo) && (
+        {/* Bottom regulatory strip — both the 18+ badge and the legal text
+            are gated on config.legal.enabled. pointerEvents: none keeps the
+            CTA clickable through it. Inset by the diagonal safe distance so
+            nothing gets clipped by the rounded corners. */}
+        {config.legal && config.legal.enabled && (
           <Box sx={{
-            position: 'absolute', left: 4, right: 4, bottom: 1,
+            position: 'absolute', left: legalSideInset, right: legalSideInset, bottom: legalBottomInset,
             display: 'flex', justifyContent: 'space-between', alignItems: 'center',
             fontSize: 6, color: config.legal.color || config.text, opacity: 0.85,
             pointerEvents: 'none',
@@ -415,7 +428,11 @@ export default function AdPreview({ config, sizeId, bookmaker, scale = 1, slideI
               {config.legal.logo && <Box component="img" src={config.legal.logo} alt="" sx={{ height: 7, width: 'auto' }} />}
               <Age18PlusBadge size={10} />
             </Box>
-            <Box component="span" sx={{ maxWidth: '60%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{config.legal.text}</Box>
+            {config.legal.text && (
+              <Box component="span" sx={{ maxWidth: '60%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                {config.legal.text}
+              </Box>
+            )}
           </Box>
         )}
       </Box>
