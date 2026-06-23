@@ -508,21 +508,25 @@ export default function AdPreview({ config, sizeId, bookmaker, scale = 1, slideI
                 oddsGap: 32, oddsFont: 30, oddsDot: 12, rowGap: 24 };
     return wrap(
       <>
-        {/* Interstitial logo: 28.28% of 640 ≈ 181px; production also nudges
-            it down via margin-top 8.6% (≈110px). The wrap padding already
-            gives ~64px from the top, so add the rest as an extra mt.
-            Horizontally centered to match production's
-            `.dynamic-banner-widget-container { align-items: center }`. */}
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: '46px', mb: '40px' }}>
+        {/* Interstitial logo: 28.28% of 640 ≈ 181px. The whole top zone
+            (wrap top padding + logo mt + logo mb) is kept tight here so
+            three 215+ px cards plus their 56 px gaps fit above the CTA
+            without the bottom card overflowing into it. Horizontally
+            centered to match production's flex `align-items: center`. */}
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: '8px', mb: '24px' }}>
           <LogoThumb bg={bookmaker.logoBg} fg={bookmaker.logoFg} initials={bookmaker.initials} imageUrl={resolveLogoUrl(bookmaker, config)} size={181} radius={24} bare />
         </Box>
         {/* minHeight: 0 — see renderMPU note. */}
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: '56px', flex: 1, minHeight: 0 }}>
           {visible.map((m, i) => <MatchRow key={i} match={m} config={config} d={d} />)}
         </Box>
+        {/* position: relative puts the CTA in the same positioned-stacking
+            context as the cards (which need it for their date pills), so the
+            CTA paints on top in document order rather than being covered. */}
         <Box component="button" sx={{
           background: config.cta, color: config.ctaTextColor || invertText(config.cta),
           border: 'none', height: 96, mt: '40px',
+          position: 'relative',
           borderRadius: `${Math.min(radius * 1.5, 20)}px`,
           fontSize: 32, fontWeight: 700, cursor: 'pointer',
           fontFamily: 'inherit', letterSpacing: '0.01em',
@@ -539,7 +543,7 @@ export default function AdPreview({ config, sizeId, bookmaker, scale = 1, slideI
           </Box>
         </Box>
       </>,
-      '64px 56px 80px'
+      '24px 56px 80px'
     );
   };
 

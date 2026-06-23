@@ -795,11 +795,32 @@ function DbaTemplateEditorInner({ initial, allBookmakers, isNew }) {
               </Box>
               <Stack direction="row" spacing={1} alignItems="center">
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.25, p: 0.5, bgcolor: 'rgba(255,255,255,0.95)', borderRadius: 1, boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
-                  <IconButton size="small" onClick={() => { setPlaying(false); setSlideIdx((i) => (i - 1 + totalSlides) % totalSlides); }}>
+                  {/* Arrow clicks drive `displayPos` (the visual transform) as
+                      well as `slideIdx`. Forward reuses the autoplay mechanism
+                      (advance + clone-snap-back when the increment lands on
+                      the clone). Backward at index 0 jumps without transition
+                      to the last real slide, since there's no clone before
+                      slide 0 to animate into. */}
+                  <IconButton size="small" onClick={() => {
+                    setPlaying(false);
+                    if (displayPos === 0) {
+                      setTransitionOn(false);
+                      setDisplayPos(totalSlides - 1);
+                      setSlideIdx(totalSlides - 1);
+                      requestAnimationFrame(() => requestAnimationFrame(() => setTransitionOn(true)));
+                    } else {
+                      setDisplayPos((p) => p - 1);
+                      setSlideIdx((i) => (i - 1 + totalSlides) % totalSlides);
+                    }
+                  }}>
                     <ChevronLeftIcon fontSize="small" />
                   </IconButton>
                   <Box sx={{ minWidth: 96, px: 0.75, fontSize: 11, fontWeight: 600, textAlign: 'center', whiteSpace: 'nowrap' }}>{slideLabel}</Box>
-                  <IconButton size="small" onClick={() => { setPlaying(false); setSlideIdx((i) => (i + 1) % totalSlides); }}>
+                  <IconButton size="small" onClick={() => {
+                    setPlaying(false);
+                    setDisplayPos((p) => p + 1);
+                    setSlideIdx((i) => (i + 1) % totalSlides);
+                  }}>
                     <ChevronRightIcon fontSize="small" />
                   </IconButton>
                   <Divider orientation="vertical" flexItem sx={{ mx: 0.5 }} />
