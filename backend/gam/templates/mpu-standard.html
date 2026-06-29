@@ -2,20 +2,24 @@
   GAM Creative Template — MPU Standard (300×250).
   Variables use GAM's `[%variable_name%]` macro syntax (per CreativeTemplate
   spec). Those are replaced when the per-market Creative is built; they are
-  NOT GAM ad-serving macros like %%CLICK_URL%% (which would also be valid
-  here but serve a different purpose).
+  NOT GAM ad-serving macros like %%CLICK_URL_UNESC%% (which would also be
+  valid here but serve a different purpose — wrapping cta_url with the click
+  tracker happens in this template's <a href>).
 
-  Layout-specific config (size, fonts, gaps) is baked into this HTML. Branding
-  and copy come from variables so one template serves N (bookmaker, country)
-  pairs.
+  Layout-specific config (size, fonts, gaps) is baked into this HTML.
+  Branding and copy come from variables so one template serves N
+  (bookmaker, country) pairs.
 
-  Per-impression match data (teams, odds, dates) is fetched at runtime by the
-  embedded JS via AdsGeneratorService — same pattern as the existing DBA flow.
+  Per-impression match data is fetched at runtime by the embedded
+  `dba-runtime.js` script (loaded from `[%runtime_url%]`). The runtime finds
+  every `.matches[data-feed]` node, fetches the feed JSON, and renders a
+  rotating carousel inside.
 -->
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8" />
+<script src="[%runtime_url%]" defer></script>
 <style>
   html, body { margin: 0; padding: 0; }
   .ad {
@@ -26,61 +30,81 @@
     overflow: hidden;
     font-family: '365 Sans', Inter, sans-serif;
     box-sizing: border-box;
-    padding: 10px 14px 22px;
+    padding: 8px 14px 22px;
     display: flex; flex-direction: column;
     position: relative;
+    text-decoration: none;
   }
   .ad .logo {
-    width: 22px; height: 22px;
+    width: 28px; height: 28px;
     background-image: url('[%bookmaker_logo_url%]');
     background-size: contain; background-repeat: no-repeat;
     background-position: left center;
   }
-  .ad .matches { flex: 1; display: flex; flex-direction: column; gap: 14px; margin-top: 10px; }
+  /* Carousel viewport. overflow:hidden clips the horizontal slide track that
+     dba-runtime.js mounts inside. padding-top:8 gives the top card's date
+     pill room to protrude upward without being clipped. */
+  .ad .matches {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    margin-top: 8px;
+    padding-top: 8px;
+    box-sizing: border-box;
+  }
+  /* position:relative on the CTA puts it in the same stacking context as the
+     positioned date pills inside the cards — without this, an overflowing
+     card edge can paint over the static CTA. */
   .ad .cta {
     background: [%cta_bg_color%];
     color: [%cta_text_color%];
     border: none; height: 30px; margin-top: 8px;
+    position: relative;
     border-radius: 6px;
     font-size: 12px; font-weight: 700;
     cursor: pointer;
     font-family: inherit;
     letter-spacing: 0.01em;
   }
+  /* Legal footer — mirrors AdPreview.jsx renderMPU: position absolute on
+     6/6/2 insets, 12 px circular `18+` badge on the left, truncated text on
+     the right. pointer-events:none lets clicks pass through to the wrapping
+     <a class="ad">; the disclaimer link itself re-enables pointer-events. */
   .ad .legal {
     position: absolute; left: 6px; right: 6px; bottom: 2px;
-    display: flex; justify-content: space-between;
+    display: flex; justify-content: space-between; align-items: center;
     font-size: 7px; opacity: 0.85;
+    pointer-events: none;
   }
-  .ad .legal a { color: inherit; text-decoration: underline; }
+  .ad .legal .marks { display: inline-flex; align-items: center; gap: 3px; }
+  .ad .legal .age18 {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: #0A0A0A; color: #FFFFFF;
+    font-size: 6px; font-weight: 800; line-height: 1;
+    letter-spacing: -0.06em; padding-left: 0.5px;
+    flex-shrink: 0;
+  }
+  .ad .legal .text {
+    color: inherit; text-decoration: underline;
+    pointer-events: auto;
+    max-width: 70%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
 </style>
 </head>
 <body>
-  <a class="ad" href="[%cta_url%]" target="_blank">
+  <a class="ad" href="%%CLICK_URL_UNESC%%[%cta_url%]" target="_blank">
     <div class="logo" aria-label="[%bookmaker_name%]"></div>
-    <div class="matches" data-feed="[%feed_url%]">
-      <!-- Populated at runtime by the AdsGenerator feed in feed_url -->
-    </div>
+    <!-- Populated at runtime by dba-runtime.js. Tunables:
+           data-per-slide  games per slide (default 2)
+           data-interval   ms between slides (default 3500)
+           data-transition ms slide animation (default 700) -->
+    <div class="matches" data-feed="[%feed_url%]" data-per-slide="2" data-interval="3500" data-transition="700"></div>
     <button class="cta" type="button">[%cta_text%]</button>
     <div class="legal">
-      <span>18+</span>
-      <a href="[%disclaimer_url%]">[%disclaimer_text%]</a>
+      <span class="marks"><span class="age18">18+</span></span>
+      <a class="text" href="[%disclaimer_url%]" target="_blank">[%disclaimer_text%]</a>
     </div>
   </a>
-  <script>
-    // Lazy fetch of match data; the feed URL is per-(country, bookmaker)
-    // and resolves to 3 games at the AdsGeneratorService endpoint.
-    (function () {
-      var node = document.querySelector('.matches');
-      if (!node || !node.dataset.feed) return;
-      fetch(node.dataset.feed).then(function (r) { return r.json(); })
-        .then(function (data) {
-          // Defer match rendering to the runtime script — same shape as the
-          // existing /GetPayload response. See: AdsGeneratorService /GetPayload.
-          if (window.DbaRenderMatches) window.DbaRenderMatches(node, data);
-        })
-        .catch(function () { /* silent: leave the empty matches block */ });
-    }());
-  </script>
 </body>
 </html>

@@ -82,6 +82,18 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// GAM creatives load this via `<script src="/dba-runtime.js">` to render
+// match cards inside the ad iframe. Permissive CORS so any publisher domain
+// can pull it; short cache so a redeploy reaches in-flight ads without a
+// GAM re-publish. Mirrors the same route in DBAManagementService.
+const dbaRuntimePath = path.join(__dirname, 'gam', 'templates', 'dba-runtime.js');
+app.get('/dba-runtime.js', (req, res) => {
+  res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Cache-Control', 'public, max-age=300');
+  res.sendFile(dbaRuntimePath);
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error('Error:', err);

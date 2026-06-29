@@ -58,6 +58,18 @@ function buildRedirectUrl({ baseUrl, bmid, country, languageId, sizeId }) {
   return `${baseUrl}/api/dba/links/click?${params.toString()}`;
 }
 
+// Rewrite a Cloudinary BookMakers/<id> URL to its NoBG sibling.
+//   /BookMakers/14            → /BookMakers/NoBG/14
+//   /BookMakers/NoBG/14       → unchanged (idempotent)
+//   anything else             → returned as-is
+// The match is anchored to a Cloudinary host so we don't accidentally rewrite
+// a brand-supplied direct URL.
+function toNoBgBookmakerLogo(url) {
+  if (!url || typeof url !== 'string') return url;
+  if (url.indexOf('res.cloudinary.com') === -1) return url;
+  return url.replace(/(\/BookMakers\/)(?!NoBG\/)/, '$1NoBG/');
+}
+
 // Convert a CMS size id ("300x250") into GAM's Size shape.
 function sizeFor(sizeId) {
   if (!sizeId) return null;
@@ -74,7 +86,7 @@ function sizeFor(sizeId) {
 // variant        from dba_bookmaker_variants (affiliate URL, status, modified, …) or null
 // bookieSettings from dba_bookie_settings keyed by bmid (cta_bg_color, …) or null
 // previousId     existing gam_creative_id, when known (for UPDATE-vs-CREATE hint)
-function buildCreative({ dbaTemplate, bookmaker, country, variant, bookieSettings, previousId, feedBaseUrl, linkBaseUrl }) {
+function buildCreative({ dbaTemplate, bookmaker, country, variant, bookieSettings, previousId, feedBaseUrl, linkBaseUrl, runtimeUrl }) {
   if (!dbaTemplate) throw new Error('dbaTemplate required');
   if (!bookmaker)   throw new Error('bookmaker required');
   if (!country)     throw new Error('country required');
@@ -94,7 +106,12 @@ function buildCreative({ dbaTemplate, bookmaker, country, variant, bookieSetting
   const brandColor2 = (bookieSettings && bookieSettings.color2) || bookmaker.secondaryColor || '#FFFFFF';
   const ctaBg       = (bookieSettings && bookieSettings.cta_bg_color)    || dbaTemplate.config?.cta || brandColor2;
   const ctaText     = (bookieSettings && bookieSettings.cta_text_color)  || dbaTemplate.config?.ctaTextColor || '#FFFFFF';
-  const logoUrl     = bookmaker.defaultLogoImageUrl;
+  // Prefer the NoBG variant of the bookmaker logo when the URL points at the
+  // standard Cloudinary BookMakers/<id> path — the templates render the logo
+  // over a coloured/gradient `.ad` background where a transparent crest reads
+  // significantly cleaner than the framed thumbnail. Non-standard URLs (e.g.
+  // brand-supplied direct asset hosts) pass through unchanged.
+  const logoUrl     = toNoBgBookmakerLogo(bookmaker.defaultLogoImageUrl);
 
   // bmid extracted from "bk_<N>" — needed below for both Bet365 dispatch and
   // the feed URL.
@@ -115,8 +132,31 @@ function buildCreative({ dbaTemplate, bookmaker, country, variant, bookieSetting
   // Feed URL: the live AdsGenerator endpoint for this (country, bookmaker).
   // Caller can supply the base; default to the public host. bmid was computed
   // above for the context-link dispatch.
-  const base = feedBaseUrl || 'https://ads.365scores.com';
-  const feedUrl = `${base}/GetPayload?cid=${encodeURIComponent(country)}&bmid=${bmid}&lang=${langId}&size=${dbaTemplate.sizeId}`;
+  //
+  // /GetPayload contract (AdsGeneratorService/app/main.py:createPayload):
+  //   - cid       NUMERIC country id (BR=21, not "BR"). Use CID_FOR_COUNTRY.
+  //   - bmid      numeric bookmaker id
+  //   - lang      numeric language id; OVERRIDDEN by the endpoint for BR (→31)
+  //               and Latin America (→29). We still send it so non-overridden
+  //               countries get the right language.
+  //   - placment  string label (typo intentional) — defaults to "Interstitial"
+  //               when missing. Map our sizeId to the right value so the
+  //               returned payload is labeled correctly downstream.
+  //   - `size` is NOT a /GetPayload param — silently ignored. Don't send it.
+  //
+  // Falls back to the raw country code only when CID_FOR_COUNTRY has no entry
+  // (validation flags this case).
+  const base = feedBaseUrl || 'https://bettingads.365scores.com';
+  const cidNumeric = CID_FOR_COUNTRY[country];
+  const cidParam = cidNumeric != null ? cidNumeric : country;
+  const placment = ({ '300x250': 'MPU', '320x50': 'Banner', '640x1280': 'Interstitial' })[dbaTemplate.sizeId] || 'Interstitial';
+  const feedUrl = `${base}/GetPayload?cid=${encodeURIComponent(cidParam)}&bmid=${bmid}&lang=${langId}&placment=${placment}`;
+
+  // Runtime URL: defaults to the env-configured DBAManagementService host.
+  // The script renders match cards into the `.matches[data-feed]` node.
+  const runtime = runtimeUrl
+    || process.env.DBA_RUNTIME_URL
+    || `${(linkBaseUrl || feedBaseUrl || 'https://cms.365scores.com')}/dba-runtime.js`;
 
   const variables = [
     { uniqueName: 'bookmaker_name',         value: bookmaker.name },
@@ -130,6 +170,7 @@ function buildCreative({ dbaTemplate, bookmaker, country, variant, bookieSetting
     { uniqueName: 'disclaimer_text',        value: (bookieSettings && bookieSettings.disclaimer_text) || '18+ · BeGambleAware.org' },
     { uniqueName: 'disclaimer_url',         value: (bookieSettings && bookieSettings.disclaimer_link) || 'https://www.begambleaware.org/' },
     { uniqueName: 'feed_url',               value: feedUrl },
+    { uniqueName: 'runtime_url',            value: runtime },
     // Welcome-offer variables, only set when the template uses them.
     { uniqueName: 'welcome_headline',       value: resolved['config.welcomeOffer.headline'] || '' },
     { uniqueName: 'welcome_subtext',        value: resolved['config.welcomeOffer.subtext']  || '' },
@@ -143,6 +184,7 @@ function buildCreative({ dbaTemplate, bookmaker, country, variant, bookieSetting
   if (!logoUrl)   validation.push('bookmaker_logo_url is empty');
   if (!affiliate) validation.push('cta_url (affiliate) is empty for this (bookmaker, country) pair');
   if (!resolved['config.ctaText']) validation.push('cta_text has no translation for this country language');
+  if (cidNumeric == null) validation.push(`feed_url cid falls back to country code "${country}" — no entry in CID_FOR_COUNTRY; AdsGeneratorService expects a numeric cid (e.g. BR→21)`);
   if (useContextLink) {
     validation.push(`cta_url is a click-time redirect (bmid=${bmid} is context-aware via /api/dba/links/click; actual URL resolved against the external link table per impression)`);
   }
@@ -160,4 +202,4 @@ function buildCreative({ dbaTemplate, bookmaker, country, variant, bookieSetting
   };
 }
 
-module.exports = { buildCreative, sizeFor };
+module.exports = { buildCreative, sizeFor, toNoBgBookmakerLogo };

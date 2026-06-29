@@ -42,6 +42,7 @@ const VARIABLE_SCHEMA = [
   { uniqueName: 'disclaimer_text',        label: 'Legal disclaimer',    description: 'Responsible-gaming text shown in the footer',                type: 'STRING', isRequired: false },
   { uniqueName: 'disclaimer_url',         label: 'Disclaimer URL',      description: 'Link target for the legal disclaimer',                       type: 'URL',    isRequired: false },
   { uniqueName: 'feed_url',               label: 'Match feed URL',      description: 'AdsGeneratorService endpoint for live match data',           type: 'URL',    isRequired: true },
+  { uniqueName: 'runtime_url',            label: 'DBA runtime URL',     description: 'Script URL that renders match cards into the creative (served by DBAManagementService at /dba-runtime.js)', type: 'URL', isRequired: true },
   // Welcome-offer fields — only required when the loaded template HTML uses them.
   { uniqueName: 'welcome_headline',       label: 'Welcome offer headline', description: 'Translated headline on the welcome slide',                type: 'STRING', isRequired: false },
   { uniqueName: 'welcome_subtext',        label: 'Welcome offer subtext',  description: 'Translated supporting copy on the welcome slide',         type: 'STRING', isRequired: false },
