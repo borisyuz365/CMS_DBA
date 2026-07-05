@@ -38,6 +38,8 @@ import DbaBookmakers from './pages/dba/DbaBookmakers';
 import DbaTemplates from './pages/dba/DbaTemplates';
 import DbaTemplateEditor from './pages/dba/DbaTemplateEditor';
 import DbaService from './pages/dba/DbaService';
+import BpPromotions from './pages/bp/BpPromotions';
+import BpEditor from './pages/bp/BpEditor';
 import PersonIcon from '@mui/icons-material/Person';
 import GroupsIcon from '@mui/icons-material/Groups';
 import StadiumIcon from '@mui/icons-material/Stadium';
@@ -74,6 +76,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import ViewQuiltIcon from '@mui/icons-material/ViewQuilt';
 import DnsIcon from '@mui/icons-material/Dns';
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 
 const CompetitionDetails = React.lazy(() => import('./pages/CompetitionDetails'));
 
@@ -149,6 +152,13 @@ const menuItems = [
           { label: 'Bookmakers', path: '/dba/bookmakers', icon: <StorefrontIcon /> },
           { label: 'Ad Formats', path: '/dba/templates',  icon: <ViewQuiltIcon /> },
           { label: 'Service',    path: '/dba/service',    icon: <DnsIcon /> },
+        ],
+      },
+      {
+        label: 'BP Management',
+        icon: <LocalOfferIcon />,
+        subItems: [
+          { label: 'Promotions', path: '/bp/promotions', icon: <LocalOfferIcon /> },
         ],
       },
     ],
@@ -228,6 +238,9 @@ function App() {
             <Route path="dba/templates/new" element={<DbaTemplateEditor />} />
             <Route path="dba/templates/:id/edit" element={<DbaTemplateEditor />} />
             <Route path="dba/service" element={<DbaService />} />
+            <Route path="bp/promotions" element={<BpPromotions />} />
+            <Route path="bp/promotions/new" element={<BpEditor />} />
+            <Route path="bp/promotions/:id/edit" element={<BpEditor />} />
           </Route>
         </Routes>
       </Box>

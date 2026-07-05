@@ -29,6 +29,8 @@ const dbaTemplatesRoutes = require('./routes/dbaTemplates');
 const dbaServiceRoutes = require('./routes/dbaService');
 const dbaGamRoutes = require('./routes/dbaGam');
 const dbaLinksRoutes = require('./routes/dbaLinks');
+const bpServiceRoutes = require('./routes/bpService');
+const bpCache = require('./services/bpCache');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -72,6 +74,7 @@ app.use('/api/dba/templates', dbaTemplatesRoutes);
 app.use('/api/dba/service', dbaServiceRoutes);
 app.use('/api/dba/gam', dbaGamRoutes);
 app.use('/api/dba/links', dbaLinksRoutes);
+app.use('/api/bp', bpServiceRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
@@ -117,6 +120,7 @@ app.use((req, res) => {
 });
 
 // Start server
+bpCache.start();
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
   console.log(`Health check: http://localhost:${PORT}/api/health`);
