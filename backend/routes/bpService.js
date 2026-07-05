@@ -65,6 +65,45 @@ function formatVersion(v) {
   };
 }
 
+/**
+ * @openapi
+ * /api/bp:
+ *   get:
+ *     tags: [Runtime]
+ *     summary: Get a matched promotion
+ *     description: >
+ *       Returns one promotion version selected by targeting + SOV lottery.
+ *       All data is served from an in-memory cache — no per-request DB I/O.
+ *       Omitting a query param widens the match (treated as "All").
+ *     parameters:
+ *       - in: query
+ *         name: geo
+ *         schema: { type: string }
+ *         example: Brazil
+ *       - in: query
+ *         name: platform
+ *         schema: { type: string, enum: [Android, iOS, Web] }
+ *       - in: query
+ *         name: lid
+ *         schema: { type: integer }
+ *         description: League ID
+ *     responses:
+ *       200:
+ *         description: Matched promotion
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/BPMBResponse' }
+ *       404:
+ *         description: No matching promotion for the given targeting params
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/Error' }
+ *       503:
+ *         description: Cache not yet ready — retry in a moment
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/Error' }
+ */
 router.get('/', (req, res) => {
   const cache = bpCache.get();
 
@@ -82,6 +121,34 @@ router.get('/', (req, res) => {
   res.json({ BPMB: { BPMB_Versions: [formatVersion(version)] } });
 });
 
+/**
+ * @openapi
+ * /api/bp/meta:
+ *   get:
+ *     tags: [Runtime]
+ *     summary: Cache health and metadata
+ *     description: Ops/debug endpoint — returns cache readiness, age, and version count without exposing promotion data.
+ *     responses:
+ *       200:
+ *         description: Cache status
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 ready:         { type: boolean }
+ *                 builtAt:       { type: string, format: date-time }
+ *                 ageMs:         { type: integer, description: 'Milliseconds since last cache build' }
+ *                 totalVersions: { type: integer }
+ *       503:
+ *         description: Cache not yet ready
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 ready: { type: boolean, example: false }
+ */
 // Cache metadata — useful for ops/debugging without exposing data.
 router.get('/meta', (req, res) => {
   const cache = bpCache.get();
@@ -241,6 +308,35 @@ async function insertBookies(conn, promotionId, bookies) {
   );
 }
 
+/**
+ * @openapi
+ * /api/bp/promotions:
+ *   get:
+ *     tags: [Promotions]
+ *     summary: List all promotions
+ *     responses:
+ *       200:
+ *         description: Array of all promotions, newest first
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items: { $ref: '#/components/schemas/Promotion' }
+ *   post:
+ *     tags: [Promotions]
+ *     summary: Create a promotion
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema: { $ref: '#/components/schemas/Promotion' }
+ *     responses:
+ *       201:
+ *         description: Created promotion
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/Promotion' }
+ */
 // GET /api/bp/promotions — list all (for CMS)
 router.get('/promotions', async (req, res, next) => {
   try {
@@ -249,6 +345,75 @@ router.get('/promotions', async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
+/**
+ * @openapi
+ * /api/bp/promotions/{id}:
+ *   get:
+ *     tags: [Promotions]
+ *     summary: Get a single promotion
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: integer }
+ *     responses:
+ *       200:
+ *         description: Promotion object
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/Promotion' }
+ *       404:
+ *         description: Not found
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/Error' }
+ *   put:
+ *     tags: [Promotions]
+ *     summary: Replace a promotion (full update)
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: integer }
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema: { $ref: '#/components/schemas/Promotion' }
+ *     responses:
+ *       200:
+ *         description: Updated promotion
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/Promotion' }
+ *       404:
+ *         description: Not found
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/Error' }
+ *   delete:
+ *     tags: [Promotions]
+ *     summary: Delete a promotion
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: integer }
+ *     responses:
+ *       200:
+ *         description: Deletion confirmed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success: { type: boolean, example: true }
+ *       404:
+ *         description: Not found
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/Error' }
+ */
 // GET /api/bp/promotions/:id
 router.get('/promotions/:id', async (req, res, next) => {
   try {

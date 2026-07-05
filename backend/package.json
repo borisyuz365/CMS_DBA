@@ -23,6 +23,8 @@
     "googleapis": "^172.0.0",
     "mssql": "^12.5.4",
     "mysql2": "^3.22.3",
+    "swagger-jsdoc": "^6.3.0",
+    "swagger-ui-express": "^5.0.1",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
