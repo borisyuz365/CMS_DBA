@@ -101,7 +101,7 @@ function BookiePreviewCard({ bookie, index }) {
           {bookie.titleText || `Bonus Offer ${index + 1}`}
         </Typography>
         {bookie.subtitleText && (
-          <Typography fontSize="0.6rem" color="rgba(255,255,255,0.6)" lineHeight={1.35} mb={0.3}>
+          <Typography fontSize="0.6rem" color={bookie.subtitleTextColor || 'rgba(255,255,255,0.6)'} lineHeight={1.35} mb={0.3}>
             {bookie.subtitleText}
           </Typography>
         )}
@@ -264,6 +264,8 @@ function BookieSection({ index, bookie, onChange, bookmakerOptions }) {
             onChange={(e) => set('subtitleText', e.target.value)}
             placeholder="e.g. T&C apply · 18+ · BeGambleAware.org" />
         </Field>
+        <ColField label="Subtitle text colour" value={bookie.subtitleTextColor || 'rgba(255,255,255,0.6)'}
+          onChange={(v) => set('subtitleTextColor', v)} />
         <Field label="Description (terms) *" help="Mandatory — bonus terms text, may be long (Italian regulation)">
           <TextField
             size="small" fullWidth multiline minRows={2} maxRows={6}
@@ -305,7 +307,7 @@ function BookieSection({ index, bookie, onChange, bookmakerOptions }) {
 
 const DEFAULT_BOOKIE = { position: 0, bmid: '', sectionBgColor: '#12193A',
   titleText: '', titleTextColor: '#ffffff',
-  subtitleText: '', termsText: '', ctaText: '', ctaTextColor: '#ffffff',
+  subtitleText: '', subtitleTextColor: 'rgba(255,255,255,0.6)', termsText: '', ctaText: '', ctaTextColor: '#ffffff',
   stripColors: ['#333333', '#000000'], logoImageUrl: '', clickUrl: '' };
 
 const DEFAULT_FORM = {
@@ -344,7 +346,7 @@ const DEFAULT_FORM = {
 function promoToForm(promo) {
   const bookies = [1, 2, 3].map((pos) => {
     const found = promo.bookies?.find((b) => b.position === pos);
-    return found ? { ...found } : { ...DEFAULT_BOOKIE, position: pos };
+    return found ? { subtitleTextColor: 'rgba(255,255,255,0.6)', ...found } : { ...DEFAULT_BOOKIE, position: pos };
   });
   return {
     name: promo.name || '',
