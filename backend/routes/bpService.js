@@ -118,7 +118,6 @@ router.get('/', (req, res) => {
     return res.status(404).json({ error: 'No matching promotion found for the given targeting params' });
   }
 
-  res.set('Cache-Control', 'public, max-age=300, stale-while-revalidate=60');
   res.json({ BPMB: { BPMB_Versions: [formatVersion(version)] } });
 });
 
