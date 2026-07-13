@@ -25,7 +25,6 @@ export const DBA_PLATFORMS = [
   { value: 'All',     label: 'All platforms' },
   { value: 'Android', label: 'Android' },
   { value: 'iOS',     label: 'iOS' },
-  { value: 'Web',     label: 'Web' },
 ];
 
 const mkv = (affiliate, status, modified, modifiedBy) => ({ affiliate, status, modified, modifiedBy });

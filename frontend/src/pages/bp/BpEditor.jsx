@@ -396,12 +396,26 @@ function formToPayload(form) {
 
 // ── Inner editor ──────────────────────────────────────────────────────────────
 
-function BpEditorInner({ initial, isNew, bookmakerOptions }) {
+function BpEditorInner({ initial, isNew, bookmakerOptions, draftKey }) {
   const navigate = useNavigate();
-  const [form, setForm] = useState(() => initial ? promoToForm(initial) : { ...DEFAULT_FORM });
+
+  const [form, setForm] = useState(() => {
+    try {
+      const saved = localStorage.getItem(draftKey);
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return initial ? promoToForm(initial) : { ...DEFAULT_FORM };
+  });
+  const [hasDraft, setHasDraft] = useState(() => {
+    try { return !!localStorage.getItem(draftKey); } catch { return false; }
+  });
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState(null);
   const [zoom, setZoom] = useState(1.4);
+
+  useEffect(() => {
+    try { localStorage.setItem(draftKey, JSON.stringify(form)); } catch {}
+  }, [form, draftKey]);
 
   const set = (key, val) => setForm((f) => ({ ...f, [key]: val }));
   const setHeader = (key, val) => setForm((f) => ({ ...f, header: { ...f.header, [key]: val } }));
@@ -409,6 +423,12 @@ function BpEditorInner({ initial, isNew, bookmakerOptions }) {
     setForm((f) => ({ ...f, header: { ...f.header, [which]: { ...f.header[which], [key]: val } } }));
   const setBookie = (index, val) =>
     setForm((f) => { const b = [...f.bookies]; b[index] = val; return { ...f, bookies: b }; });
+
+  const discardDraft = () => {
+    try { localStorage.removeItem(draftKey); } catch {}
+    setForm(initial ? promoToForm(initial) : { ...DEFAULT_FORM });
+    setHasDraft(false);
+  };
 
   const handleSave = async () => {
     if (!form.name.trim()) { setToast({ kind: 'error', msg: 'Name is required' }); return; }
@@ -425,6 +445,7 @@ function BpEditorInner({ initial, isNew, bookmakerOptions }) {
       } else {
         await apiService.updateBpPromotion(initial.id, payload);
       }
+      try { localStorage.removeItem(draftKey); } catch {}
       setToast({ kind: 'success', msg: isNew ? 'Promotion created' : 'Saved' });
       setTimeout(() => navigate('/bp/promotions'), 800);
     } catch (err) {
@@ -467,6 +488,19 @@ function BpEditorInner({ initial, isNew, bookmakerOptions }) {
         {/* Form panel */}
         <Box sx={{ width: 380, borderRight: '1px solid #E5E5E5', overflowY: 'auto',
           flexShrink: 0, px: 3, py: 3 }}>
+
+          {hasDraft && (
+            <Box sx={{ mx: -3, mt: -3, mb: 2, px: 2, py: 0.75, bgcolor: '#fff8e1',
+              borderBottom: '1px solid #ffe082', display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Typography fontSize="0.78rem" color="text.secondary" sx={{ flex: 1 }}>
+                Unsaved draft restored
+              </Typography>
+              <Button size="small" onClick={discardDraft}
+                sx={{ fontSize: '0.72rem', color: 'text.secondary', minWidth: 0, px: 1 }}>
+                Discard
+              </Button>
+            </Box>
+          )}
 
           <Section title="Version info">
             <Field label="Name">
@@ -763,5 +797,6 @@ export default function BpEditor() {
   if (loadError) return <Box sx={{ p: 4 }}><Typography color="error">{loadError}</Typography></Box>;
   if (!ready) return <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}><CircularProgress /></Box>;
 
-  return <BpEditorInner key={id || 'new'} initial={initial} isNew={isNew} bookmakerOptions={bookmakerOptions} />;
+  const draftKey = isNew ? 'bp_draft_new' : `bp_draft_${id}`;
+  return <BpEditorInner key={id || 'new'} initial={initial} isNew={isNew} bookmakerOptions={bookmakerOptions} draftKey={draftKey} />;
 }

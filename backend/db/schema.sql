@@ -378,3 +378,13 @@ PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 SET @cnt := (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'bp_bookies' AND COLUMN_NAME = 'section_bg_color');
 SET @sql := IF(@cnt = 0, 'ALTER TABLE bp_bookies ADD COLUMN section_bg_color VARCHAR(20) NOT NULL DEFAULT ''#12193A'' AFTER position', 'SELECT 1');
 PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+-- Idempotent: add terms_text when re-applying schema to an existing DB.
+SET @cnt := (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'bp_bookies' AND COLUMN_NAME = 'terms_text');
+SET @sql := IF(@cnt = 0, 'ALTER TABLE bp_bookies ADD COLUMN terms_text TEXT NULL AFTER subtitle_text', 'SELECT 1');
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+-- Idempotent: add subtitle_text_color when re-applying schema to an existing DB.
+SET @cnt := (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'bp_bookies' AND COLUMN_NAME = 'subtitle_text_color');
+SET @sql := IF(@cnt = 0, 'ALTER TABLE bp_bookies ADD COLUMN subtitle_text_color VARCHAR(20) DEFAULT NULL AFTER terms_text', 'SELECT 1');
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;

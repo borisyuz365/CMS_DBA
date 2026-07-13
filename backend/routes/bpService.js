@@ -55,8 +55,9 @@ function formatVersion(v) {
       Section_BG_Color: b.sectionBgColor,
       Title_Text:      b.titleText,
       Title_Text_Color: b.titleTextColor,
-      Subtitle_Text:   b.subtitleText,
-      Terms_Text:      b.termsText,
+      Subtitle_Text:       b.subtitleText,
+      Subtitle_Text_Color: b.subtitleTextColor || null,
+      Terms_Text:          b.termsText,
       CTA_Text:        b.ctaText,
       CTA_Text_Color:  b.ctaTextColor,
       Strip_Colors:    b.stripColors,
@@ -91,6 +92,10 @@ function formatVersion(v) {
  *     responses:
  *       200:
  *         description: Matched promotion
+ *         headers:
+ *           Cache-Control:
+ *             schema: { type: string }
+ *             description: 'public, max-age=300, stale-while-revalidate=60'
  *         content:
  *           application/json:
  *             schema: { $ref: '#/components/schemas/BPMBResponse' }
@@ -183,7 +188,8 @@ const FETCH_QUERY = `
     p.created_at, p.updated_at,
     b.position,       b.bmid,
     b.section_bg_color,
-    b.title_text,     b.title_text_color,  b.subtitle_text,  b.terms_text,
+    b.title_text,     b.title_text_color,
+    b.subtitle_text,  b.subtitle_text_color, b.terms_text,
     b.cta_text,       b.cta_text_color,
     b.strip_color_1,  b.strip_color_2,
     b.logo_image_url, b.click_url
@@ -237,8 +243,9 @@ function groupRows(rows) {
         sectionBgColor: r.section_bg_color || '#12193A',
         titleText:      r.title_text,
         titleTextColor: r.title_text_color,
-        subtitleText:   r.subtitle_text,
-        termsText:      r.terms_text,
+        subtitleText:      r.subtitle_text,
+        subtitleTextColor: r.subtitle_text_color || null,
+        termsText:         r.terms_text,
         ctaText:        r.cta_text,
         ctaTextColor:   r.cta_text_color,
         stripColors:    [r.strip_color_1, r.strip_color_2].filter(Boolean),
@@ -291,7 +298,8 @@ async function insertBookies(conn, promotionId, bookies) {
     b.titleText       || '',
     b.titleTextColor  || '#ffffff',
     b.subtitleText    || null,
-    b.termsText       || null,
+    b.subtitleTextColor|| null,
+    b.termsText        || null,
     b.ctaText         || '',
     b.ctaTextColor    || '#ffffff',
     b.stripColors?.[0]|| null,
@@ -302,7 +310,7 @@ async function insertBookies(conn, promotionId, bookies) {
   await conn.query(
     `INSERT INTO bp_bookies
        (promotion_id, position, section_bg_color, bmid,
-        title_text, title_text_color, subtitle_text, terms_text,
+        title_text, title_text_color, subtitle_text, subtitle_text_color, terms_text,
         cta_text, cta_text_color, strip_color_1, strip_color_2,
         logo_image_url, click_url)
      VALUES ?`,
@@ -327,6 +335,7 @@ async function insertBookies(conn, promotionId, bookies) {
  *   post:
  *     tags: [Promotions]
  *     summary: Create a promotion
+ *     description: 'Creates the promotion, refreshes the in-memory cache, and triggers a CloudFront invalidation of /api/bp*.'
  *     requestBody:
  *       required: true
  *       content:
@@ -372,6 +381,7 @@ router.get('/promotions', async (req, res, next) => {
  *   put:
  *     tags: [Promotions]
  *     summary: Replace a promotion (full update)
+ *     description: 'Replaces the promotion in full, refreshes the in-memory cache, and triggers a CloudFront invalidation of /api/bp*.'
  *     parameters:
  *       - in: path
  *         name: id
@@ -396,6 +406,7 @@ router.get('/promotions', async (req, res, next) => {
  *   delete:
  *     tags: [Promotions]
  *     summary: Delete a promotion
+ *     description: 'Deletes the promotion, refreshes the in-memory cache, and triggers a CloudFront invalidation of /api/bp*.'
  *     parameters:
  *       - in: path
  *         name: id
