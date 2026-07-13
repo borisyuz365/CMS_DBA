@@ -5,12 +5,19 @@
 // On refresh failure the previous snapshot is kept — the endpoint never
 // goes dark because the DB is momentarily unreachable.
 //
-// The cache entry shape mirrors the targeting/response structure so that
-// the route can filter and serialise without any further DB I/O.
+// Write-triggered invalidation (called after every CMS mutation) is the
+// primary freshness mechanism, so the background interval is intentionally
+// long. The disk snapshot (PERSIST_PATH) ensures instant warm-start on
+// server restart with no 503 window.
 
+const fs   = require('fs');
+const path = require('path');
 const { pool } = require('../db/mysql');
 
-const REFRESH_INTERVAL_MS = 30_000;
+// Safety-net background refresh — write-triggered invalidate() handles real freshness.
+const REFRESH_INTERVAL_MS = 5 * 60 * 1000; // 5 min
+
+const PERSIST_PATH = path.join(__dirname, '../data/temp/bp_cache.json');
 
 // { versions: [...], builtAt: number } | null
 let _cache = null;
@@ -96,17 +103,34 @@ function buildVersions(rows) {
   return [...map.values()];
 }
 
+function persistToDisk(snapshot) {
+  fs.writeFile(PERSIST_PATH, JSON.stringify(snapshot), (err) => {
+    if (err) console.warn('[bpCache] disk persist failed:', err.message);
+  });
+}
+
 async function load() {
   const [rows] = await pool.query(LOAD_QUERY);
   const versions = buildVersions(rows);
   _cache = { versions, builtAt: Date.now() };
+  persistToDisk(_cache);
   console.log(`[bpCache] loaded ${versions.length} promotion(s)`);
 }
 
 function start() {
+  // Warm start from disk so the endpoint is immediately ready after a restart.
+  try {
+    const raw = fs.readFileSync(PERSIST_PATH, 'utf8');
+    _cache = JSON.parse(raw);
+    console.log(`[bpCache] warm start: restored ${_cache.versions.length} promotion(s) from disk`);
+  } catch {
+    // No snapshot yet — first run or file missing. DB load below fills the gap.
+  }
+
   load().catch((err) =>
-    console.error('[bpCache] initial load failed (serving empty until next refresh):', err.message)
+    console.error('[bpCache] initial load failed (serving disk snapshot until next refresh):', err.message)
   );
+
   _timer = setInterval(() => {
     load().catch((err) =>
       console.warn('[bpCache] refresh failed, continuing with stale snapshot:', err.message)
