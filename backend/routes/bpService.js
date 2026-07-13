@@ -17,6 +17,7 @@
 const router = require('express').Router();
 const bpCache = require('../services/bpCache');
 const { selectVersion } = require('../services/bpTargeting');
+const { invalidateBpCache } = require('../services/cloudfront');
 
 function formatVersion(v) {
   return {
@@ -118,6 +119,7 @@ router.get('/', (req, res) => {
     return res.status(404).json({ error: 'No matching promotion found for the given targeting params' });
   }
 
+  res.set('Cache-Control', 'public, max-age=300, stale-while-revalidate=60');
   res.json({ BPMB: { BPMB_Versions: [formatVersion(version)] } });
 });
 
@@ -446,6 +448,7 @@ router.post('/promotions', async (req, res, next) => {
     await insertBookies(conn, result.insertId, req.body.bookies);
     await conn.commit();
     await bpCache.invalidate();
+    invalidateBpCache().catch((err) => console.warn('[cloudfront] invalidation failed:', err.message));
     const [rows] = await pool.query(`${FETCH_QUERY} WHERE p.id = ? ORDER BY b.position`, [result.insertId]);
     res.status(201).json(groupRows(rows)[0]);
   } catch (err) { await conn.rollback(); next(err); }
@@ -474,6 +477,7 @@ router.put('/promotions/:id', async (req, res, next) => {
     await insertBookies(conn, req.params.id, req.body.bookies);
     await conn.commit();
     await bpCache.invalidate();
+    invalidateBpCache().catch((err) => console.warn('[cloudfront] invalidation failed:', err.message));
     const [rows] = await pool.query(`${FETCH_QUERY} WHERE p.id = ? ORDER BY b.position`, [req.params.id]);
     res.json(groupRows(rows)[0]);
   } catch (err) { await conn.rollback(); next(err); }
@@ -486,6 +490,7 @@ router.delete('/promotions/:id', async (req, res, next) => {
     const [result] = await pool.query('DELETE FROM bp_promotions WHERE id = ?', [req.params.id]);
     if (!result.affectedRows) return res.status(404).json({ error: 'Not found' });
     await bpCache.invalidate();
+    invalidateBpCache().catch((err) => console.warn('[cloudfront] invalidation failed:', err.message));
     res.json({ success: true });
   } catch (err) { next(err); }
 });
