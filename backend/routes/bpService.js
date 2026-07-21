@@ -4,7 +4,7 @@
 // Returns a single promotion version selected by targeting + SOV lottery.
 //
 // Query params (all optional — omitting a param widens the match):
-//   geo       string  e.g. "Brazil" — matched against the CMS's stored geo name
+//   cid       int     Country ID (see GET /api/bp/countries) — omit to match any country
 //   appType   int     1 = iOS, 2 = Android — omit to match any platform
 //   lid       int     League ID
 //
@@ -24,12 +24,16 @@ const { invalidateBpCache } = require('../services/cloudfront');
 // which platform it is, so the response doesn't need to echo it back.
 const PLATFORM_BY_APP_TYPE = { '1': 'iOS', '2': 'Android' };
 
+// Real production CID (T_COUNTRIES.COUNTRY_ID) for Italy — drives the
+// Italy-only regulatory logos, both here and in the CMS's Legal section.
+const ITALY_CID = 3;
+
 function formatVersion(v) {
   return {
     BP_Version_Name:    v.name,
     Num_Of_Bookies:     v.bookies.length,
     Targeting: {
-      CID: countryCache.resolveCid(v.geo),
+      CID: v.cid,
       LID: v.lid,
       SOV: v.sov,
     },
@@ -51,7 +55,7 @@ function formatVersion(v) {
       Text:  v.legal.text,
       Color: v.legal.color,
       Link:  v.legal.link,
-      Regulatory_Logos: v.geo === 'Italy' ? v.legal.regulatoryLogos.map((l) => ({ Src: l.src, Link: l.link })) : undefined,
+      Regulatory_Logos: v.cid === ITALY_CID ? v.legal.regulatoryLogos.map((l) => ({ Src: l.src, Link: l.link })) : undefined,
     } : null,
     Bookies: v.bookies.map((b) => ({
       BMID:             b.bmid,
@@ -80,9 +84,10 @@ function formatVersion(v) {
  *       Omitting a query param widens the match (treated as "All").
  *     parameters:
  *       - in: query
- *         name: geo
- *         schema: { type: string }
- *         example: Brazil
+ *         name: cid
+ *         schema: { type: integer }
+ *         description: Country ID — see GET /api/bp/countries
+ *         example: 3
  *       - in: query
  *         name: appType
  *         schema: { type: integer, enum: [1, 2] }
@@ -119,9 +124,9 @@ router.get('/', (req, res) => {
     return res.status(503).json({ error: 'Service initializing — retry in a moment' });
   }
 
-  const { geo, appType, lid } = req.query;
+  const { cid, appType, lid } = req.query;
   const platform = PLATFORM_BY_APP_TYPE[appType];
-  const version = selectVersion(cache.versions, { geo, platform, lid });
+  const version = selectVersion(cache.versions, { cid, platform, lid });
 
   if (!version) {
     return res.status(404).json({ error: 'No matching promotion found for the given targeting params' });
@@ -171,6 +176,33 @@ router.get('/meta', (req, res) => {
   });
 });
 
+/**
+ * @openapi
+ * /api/bp/countries:
+ *   get:
+ *     tags: [Promotions]
+ *     summary: List countries for the Geo picker
+ *     description: >
+ *       { id, name } pairs sourced from the production T_COUNTRIES table
+ *       (MSSQL SportifierDB) — the same real CIDs used by Targeting.CID.
+ *       Not backend/data/countries.json, which uses unrelated ID numbering.
+ *     responses:
+ *       200:
+ *         description: Countries, sorted by name
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:   { type: integer }
+ *                   name: { type: string }
+ */
+router.get('/countries', (req, res) => {
+  res.json(countryCache.listCountries());
+});
+
 // =============================================================================
 // CMS CRUD — /api/bp/promotions
 // =============================================================================
@@ -179,7 +211,7 @@ const { pool } = require('../db/mysql');
 
 const FETCH_QUERY = `
   SELECT
-    p.id, p.name, p.geo, p.platform, p.lid, p.sov, p.active,
+    p.id, p.name, p.cid, p.platform, p.lid, p.sov, p.active,
     p.page_bg_color,
     p.bg_type, p.bg_gradient_color1, p.bg_gradient_color2,
     p.bg_gradient_angle, p.bg_image_url,
@@ -207,7 +239,7 @@ function groupRows(rows) {
       map.set(r.id, {
         id: r.id,
         name: r.name,
-        geo: r.geo,
+        cid: r.cid,
         platform: r.platform,
         lid: r.lid,
         sov: r.sov,
@@ -264,7 +296,7 @@ function promoParams(body) {
   const l = body.legal  || {};
   return [
     body.name,
-    body.geo       || 'All',
+    body.cid       != null ? Number(body.cid) : null,
     body.platform  || 'All',
     body.lid       != null ? Number(body.lid) : null,
     body.sov       != null ? Number(body.sov) : 100,
@@ -448,7 +480,7 @@ router.post('/promotions', async (req, res, next) => {
     await conn.beginTransaction();
     const [result] = await conn.query(
       `INSERT INTO bp_promotions
-         (name, geo, platform, lid, sov, page_bg_color,
+         (name, cid, platform, lid, sov, page_bg_color,
           bg_type, bg_gradient_color1, bg_gradient_color2, bg_gradient_angle, bg_image_url,
           header_main_text, header_main_color,
           header_secondary_text, header_secondary_color,
@@ -476,7 +508,7 @@ router.put('/promotions/:id', async (req, res, next) => {
     if (!check.length) { await conn.rollback(); return res.status(404).json({ error: 'Not found' }); }
     await conn.query(
       `UPDATE bp_promotions SET
-         name=?, geo=?, platform=?, lid=?, sov=?, page_bg_color=?,
+         name=?, cid=?, platform=?, lid=?, sov=?, page_bg_color=?,
          bg_type=?, bg_gradient_color1=?, bg_gradient_color2=?, bg_gradient_angle=?, bg_image_url=?,
          header_main_text=?, header_main_color=?,
          header_secondary_text=?, header_secondary_color=?,

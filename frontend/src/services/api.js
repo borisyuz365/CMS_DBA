@@ -2364,6 +2364,10 @@ class ApiService {
     return this.fetch('/bp/promotions');
   }
 
+  async getBpCountries() {
+    return this.fetch('/bp/countries');
+  }
+
   async getBpPromotion(id) {
     return this.fetch(`/bp/promotions/${id}`);
   }

@@ -305,8 +305,8 @@ CREATE TABLE IF NOT EXISTS dba_games_loading_config (
 CREATE TABLE IF NOT EXISTS bp_promotions (
   id                     INT UNSIGNED    AUTO_INCREMENT PRIMARY KEY,
   name                   VARCHAR(255)    NOT NULL,
-  -- Targeting fields. 'All' is the wildcard value for geo / platform.
-  geo                    VARCHAR(100)    NOT NULL DEFAULT 'All',
+  -- Targeting fields. NULL cid = all countries; 'All' platform = all platforms.
+  cid                    INT UNSIGNED    DEFAULT NULL,             -- Country ID (T_COUNTRIES.COUNTRY_ID, MSSQL SportifierDB)
   platform               VARCHAR(50)     NOT NULL DEFAULT 'All',  -- All | Android | iOS | Web
   lid                    INT UNSIGNED    DEFAULT NULL,             -- NULL = all leagues
   sov                    TINYINT UNSIGNED NOT NULL DEFAULT 100,    -- share of voice 0-100
@@ -327,8 +327,20 @@ CREATE TABLE IF NOT EXISTS bp_promotions (
   legal_text     TEXT          DEFAULT NULL,
   legal_color    VARCHAR(20)   DEFAULT '#ffffff',
   legal_link     VARCHAR(1024) DEFAULT NULL,
-  INDEX idx_bp_targeting (geo, platform, active)
+  INDEX idx_bp_targeting (cid, platform, active)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Idempotent: geo (country name, VARCHAR) -> cid (Country ID, INT). No clean
+-- rename since the data type changes; existing geo values are dropped rather
+-- than migrated — there was no reliable name->CID mapping to backfill from
+-- (backend/data/countries.json's IDs don't match production T_COUNTRIES).
+SET @cnt := (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'bp_promotions' AND COLUMN_NAME = 'geo');
+SET @sql := IF(@cnt > 0, 'ALTER TABLE bp_promotions DROP INDEX idx_bp_targeting, DROP COLUMN geo', 'SELECT 1');
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+SET @cnt := (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'bp_promotions' AND COLUMN_NAME = 'cid');
+SET @sql := IF(@cnt = 0, 'ALTER TABLE bp_promotions ADD COLUMN cid INT UNSIGNED DEFAULT NULL AFTER name, ADD INDEX idx_bp_targeting (cid, platform, active)', 'SELECT 1');
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 
 -- Idempotent: add header_image_height when re-applying schema to an existing DB.
 SET @cnt := (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'bp_promotions' AND COLUMN_NAME = 'header_image_height');
