@@ -40,10 +40,9 @@ const options = {
             Targeting: {
               type: 'object',
               properties: {
-                Geo:      { type: 'string', nullable: true },
-                Platform: { type: 'string', nullable: true },
-                LID:      { type: 'integer', nullable: true },
-                SOV:      { type: 'integer', example: 100 },
+                CID: { type: 'integer', nullable: true, description: 'Country ID, resolved from the production T_COUNTRIES table (MSSQL SportifierDB). null matches any country.' },
+                LID: { type: 'integer', nullable: true },
+                SOV: { type: 'integer', example: 100 },
               },
             },
             Header: {
@@ -51,8 +50,7 @@ const options = {
               properties: {
                 Main_Title:      { $ref: '#/components/schemas/TextColor' },
                 Secondary_Title: { $ref: '#/components/schemas/TextColor' },
-                ImageURL:        { type: 'string', nullable: true },
-                ImageHeight:     { type: 'integer', example: 110 },
+                ImageURL:        { type: 'string', nullable: true, description: 'null means no header image/badge — clients should render no reserved space above the titles.' },
               },
             },
             Page_Background_Color: { type: 'string', example: '#12193A' },
@@ -101,11 +99,9 @@ const options = {
             Title_Text_Color:    { type: 'string' },
             Subtitle_Text:       { type: 'string', nullable: true },
             Subtitle_Text_Color: { type: 'string', nullable: true },
-            Terms_Text:          { type: 'string', nullable: true },
             CTA_Text:            { type: 'string' },
             CTA_Text_Color:      { type: 'string' },
             Strip_Colors:        { type: 'array', items: { type: 'string' } },
-            LogoImage:           { type: 'string', nullable: true },
             Click_URL:           { type: 'string' },
           },
         },
@@ -188,7 +184,6 @@ const options = {
             titleTextColor: { type: 'string', default: '#ffffff' },
             subtitleText:      { type: 'string', nullable: true },
             subtitleTextColor: { type: 'string', nullable: true, default: 'rgba(255,255,255,0.6)' },
-            termsText:         { type: 'string', nullable: true },
             ctaText:        { type: 'string' },
             ctaTextColor:   { type: 'string', default: '#ffffff' },
             stripColors:    { type: 'array', items: { type: 'string' }, maxItems: 2 },

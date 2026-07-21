@@ -4,8 +4,8 @@
 // Returns a single promotion version selected by targeting + SOV lottery.
 //
 // Query params (all optional — omitting a param widens the match):
-//   geo       string  e.g. "Brazil"
-//   platform  string  e.g. "Android" | "iOS" | "Web"
+//   geo       string  e.g. "Brazil" — matched against the CMS's stored geo name
+//   appType   int     1 = iOS, 2 = Android — omit to match any platform
 //   lid       int     League ID
 //
 // Response matches the BPMB_v8 JSON contract:
@@ -16,24 +16,27 @@
 
 const router = require('express').Router();
 const bpCache = require('../services/bpCache');
+const countryCache = require('../services/countryCache');
 const { selectVersion } = require('../services/bpTargeting');
 const { invalidateBpCache } = require('../services/cloudfront');
+
+// AppType, as sent by client apps in the request — the client already knows
+// which platform it is, so the response doesn't need to echo it back.
+const PLATFORM_BY_APP_TYPE = { '1': 'iOS', '2': 'Android' };
 
 function formatVersion(v) {
   return {
     BP_Version_Name:    v.name,
     Num_Of_Bookies:     v.bookies.length,
     Targeting: {
-      Geo:      v.geo,
-      Platform: v.platform,
-      LID:      v.lid,
-      SOV:      v.sov,
+      CID: countryCache.resolveCid(v.geo),
+      LID: v.lid,
+      SOV: v.sov,
     },
     Header: {
       Main_Title:      { Text: v.header.mainTitle.text,      Color: v.header.mainTitle.color },
       Secondary_Title: { Text: v.header.secondaryTitle.text, Color: v.header.secondaryTitle.color },
       ImageURL:        v.header.imageUrl,
-      ImageHeight:     v.header.imageHeight || 110,
     },
     Page_Background_Color: v.pageBgColor,
     Page_Background: {
@@ -57,11 +60,9 @@ function formatVersion(v) {
       Title_Text_Color: b.titleTextColor,
       Subtitle_Text:       b.subtitleText,
       Subtitle_Text_Color: b.subtitleTextColor || null,
-      Terms_Text:          b.termsText,
       CTA_Text:        b.ctaText,
       CTA_Text_Color:  b.ctaTextColor,
       Strip_Colors:    b.stripColors,
-      LogoImage:       b.logoImageUrl,
       Click_URL:       b.clickUrl,
     })),
   };
@@ -83,8 +84,9 @@ function formatVersion(v) {
  *         schema: { type: string }
  *         example: Brazil
  *       - in: query
- *         name: platform
- *         schema: { type: string, enum: [Android, iOS, Web] }
+ *         name: appType
+ *         schema: { type: integer, enum: [1, 2] }
+ *         description: 1 = iOS, 2 = Android
  *       - in: query
  *         name: lid
  *         schema: { type: integer }
@@ -117,7 +119,8 @@ router.get('/', (req, res) => {
     return res.status(503).json({ error: 'Service initializing — retry in a moment' });
   }
 
-  const { geo, platform, lid } = req.query;
+  const { geo, appType, lid } = req.query;
+  const platform = PLATFORM_BY_APP_TYPE[appType];
   const version = selectVersion(cache.versions, { geo, platform, lid });
 
   if (!version) {
@@ -189,7 +192,7 @@ const FETCH_QUERY = `
     b.position,       b.bmid,
     b.section_bg_color,
     b.title_text,     b.title_text_color,
-    b.subtitle_text,  b.subtitle_text_color, b.terms_text,
+    b.subtitle_text,  b.subtitle_text_color,
     b.cta_text,       b.cta_text_color,
     b.strip_color_1,  b.strip_color_2,
     b.logo_image_url, b.click_url
@@ -245,7 +248,6 @@ function groupRows(rows) {
         titleTextColor: r.title_text_color,
         subtitleText:      r.subtitle_text,
         subtitleTextColor: r.subtitle_text_color || null,
-        termsText:         r.terms_text,
         ctaText:        r.cta_text,
         ctaTextColor:   r.cta_text_color,
         stripColors:    [r.strip_color_1, r.strip_color_2].filter(Boolean),
@@ -299,7 +301,6 @@ async function insertBookies(conn, promotionId, bookies) {
     b.titleTextColor  || '#ffffff',
     b.subtitleText    || null,
     b.subtitleTextColor|| null,
-    b.termsText        || null,
     b.ctaText         || '',
     b.ctaTextColor    || '#ffffff',
     b.stripColors?.[0]|| null,
@@ -310,7 +311,7 @@ async function insertBookies(conn, promotionId, bookies) {
   await conn.query(
     `INSERT INTO bp_bookies
        (promotion_id, position, section_bg_color, bmid,
-        title_text, title_text_color, subtitle_text, subtitle_text_color, terms_text,
+        title_text, title_text_color, subtitle_text, subtitle_text_color,
         cta_text, cta_text_color, strip_color_1, strip_color_2,
         logo_image_url, click_url)
      VALUES ?`,

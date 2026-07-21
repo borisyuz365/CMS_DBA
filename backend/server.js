@@ -34,6 +34,7 @@ const dbaGamRoutes = require('./routes/dbaGam');
 const dbaLinksRoutes = require('./routes/dbaLinks');
 const bpServiceRoutes = require('./routes/bpService');
 const bpCache = require('./services/bpCache');
+const countryCache = require('./services/countryCache');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -139,6 +140,7 @@ app.use((req, res) => {
 
 // Start server
 bpCache.start();
+countryCache.start();
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
   console.log(`Health check: http://localhost:${PORT}/api/health`);

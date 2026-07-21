@@ -37,7 +37,7 @@ const LOAD_QUERY = `
     b.position,       b.bmid,
     b.section_bg_color,
     b.title_text,     b.title_text_color,
-    b.subtitle_text,  b.subtitle_text_color, b.terms_text,
+    b.subtitle_text,  b.subtitle_text_color,
     b.cta_text,       b.cta_text_color,
     b.strip_color_1,  b.strip_color_2,
     b.logo_image_url, b.click_url
@@ -94,7 +94,6 @@ function buildVersions(rows) {
         titleTextColor:    r.title_text_color,
         subtitleText:      r.subtitle_text      || null,
         subtitleTextColor: r.subtitle_text_color|| null,
-        termsText:         r.terms_text         || null,
         ctaText:           r.cta_text,
         ctaTextColor:   r.cta_text_color,
         stripColors:    [r.strip_color_1, r.strip_color_2].filter(Boolean),
