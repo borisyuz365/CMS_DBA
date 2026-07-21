@@ -294,3 +294,97 @@ CREATE TABLE IF NOT EXISTS dba_games_loading_config (
   max_days     INT,
   PRIMARY KEY (country_id, lang_id, bookie_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+-- =========================================================================
+-- Betting Promotion (BPMB) tables.
+-- A promotion = one version in BPMB_Versions. Each has up to 3 bookies.
+-- The service caches all active rows in memory; no per-request DB I/O.
+-- =========================================================================
+
+CREATE TABLE IF NOT EXISTS bp_promotions (
+  id                     INT UNSIGNED    AUTO_INCREMENT PRIMARY KEY,
+  name                   VARCHAR(255)    NOT NULL,
+  -- Targeting fields. 'All' is the wildcard value for geo / platform.
+  geo                    VARCHAR(100)    NOT NULL DEFAULT 'All',
+  platform               VARCHAR(50)     NOT NULL DEFAULT 'All',  -- All | Android | iOS | Web
+  lid                    INT UNSIGNED    DEFAULT NULL,             -- NULL = all leagues
+  sov                    TINYINT UNSIGNED NOT NULL DEFAULT 100,    -- share of voice 0-100
+  -- Page style
+  page_bg_color          VARCHAR(20)     NOT NULL DEFAULT '#000000',
+  -- Header
+  header_main_text       TEXT            NOT NULL,
+  header_main_color      VARCHAR(20)     NOT NULL DEFAULT '#ffffff',
+  header_secondary_text  TEXT            NOT NULL,
+  header_secondary_color VARCHAR(20)     NOT NULL DEFAULT '#ffffff',
+  header_image_url       VARCHAR(1024)   DEFAULT NULL,
+  -- Lifecycle
+  active                 TINYINT(1)      NOT NULL DEFAULT 1,
+  created_at             TIMESTAMP       DEFAULT CURRENT_TIMESTAMP,
+  updated_at             TIMESTAMP       DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  -- Legal / footer (optional)
+  legal_enabled  TINYINT(1)    NOT NULL DEFAULT 0,
+  legal_text     TEXT          DEFAULT NULL,
+  legal_color    VARCHAR(20)   DEFAULT '#ffffff',
+  legal_link     VARCHAR(1024) DEFAULT NULL,
+  INDEX idx_bp_targeting (geo, platform, active)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Idempotent: add header_image_height when re-applying schema to an existing DB.
+SET @cnt := (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'bp_promotions' AND COLUMN_NAME = 'header_image_height');
+SET @sql := IF(@cnt = 0, 'ALTER TABLE bp_promotions ADD COLUMN header_image_height SMALLINT UNSIGNED NOT NULL DEFAULT 110 AFTER header_image_url', 'SELECT 1');
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+-- Idempotent: add background-type columns when re-applying schema to an existing DB.
+SET @cnt := (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'bp_promotions' AND COLUMN_NAME = 'bg_type');
+SET @sql := IF(@cnt = 0, 'ALTER TABLE bp_promotions ADD COLUMN bg_type VARCHAR(20) NOT NULL DEFAULT ''solid'' AFTER page_bg_color, ADD COLUMN bg_gradient_color1 VARCHAR(20) DEFAULT NULL AFTER bg_type, ADD COLUMN bg_gradient_color2 VARCHAR(20) DEFAULT NULL AFTER bg_gradient_color1, ADD COLUMN bg_gradient_angle SMALLINT DEFAULT 135 AFTER bg_gradient_color2, ADD COLUMN bg_image_url VARCHAR(1024) DEFAULT NULL AFTER bg_gradient_angle', 'SELECT 1');
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+-- Idempotent: add legal columns when re-applying schema to an existing DB.
+SET @cnt := (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'bp_promotions' AND COLUMN_NAME = 'legal_enabled');
+SET @sql := IF(@cnt = 0, 'ALTER TABLE bp_promotions ADD COLUMN legal_enabled TINYINT(1) NOT NULL DEFAULT 0, ADD COLUMN legal_text TEXT NULL, ADD COLUMN legal_color VARCHAR(20) NULL DEFAULT NULL, ADD COLUMN legal_link VARCHAR(1024) NULL', 'SELECT 1');
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+-- Idempotent: add Italy regulatory logo link columns.
+SET @cnt := (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'bp_promotions' AND COLUMN_NAME = 'legal_reg_logo1_link');
+SET @sql := IF(@cnt = 0, 'ALTER TABLE bp_promotions ADD COLUMN legal_reg_logo1_link VARCHAR(1024) DEFAULT NULL, ADD COLUMN legal_reg_logo2_link VARCHAR(1024) DEFAULT NULL', 'SELECT 1');
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+-- Up to 3 bookmakers per promotion, ordered by position (1, 2, 3).
+CREATE TABLE IF NOT EXISTS bp_bookies (
+  id               INT UNSIGNED  AUTO_INCREMENT PRIMARY KEY,
+  promotion_id     INT UNSIGNED  NOT NULL,
+  position         TINYINT UNSIGNED NOT NULL,   -- 1, 2, or 3
+  bmid             INT UNSIGNED  NOT NULL,
+  title_text       TEXT          NOT NULL,
+  title_text_color VARCHAR(20)   NOT NULL DEFAULT '#ffffff',
+  cta_text         TEXT          NOT NULL,
+  cta_text_color   VARCHAR(20)   NOT NULL DEFAULT '#ffffff',
+  strip_color_1    VARCHAR(20)   DEFAULT NULL,
+  strip_color_2    VARCHAR(20)   DEFAULT NULL,
+  logo_image_url   VARCHAR(1024) DEFAULT NULL,
+  click_url        TEXT          NOT NULL,
+  subtitle_text    TEXT          DEFAULT NULL,
+  UNIQUE KEY uq_promo_pos (promotion_id, position),
+  FOREIGN KEY (promotion_id) REFERENCES bp_promotions(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Idempotent: add subtitle_text when re-applying schema to an existing DB.
+SET @cnt := (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'bp_bookies' AND COLUMN_NAME = 'subtitle_text');
+SET @sql := IF(@cnt = 0, 'ALTER TABLE bp_bookies ADD COLUMN subtitle_text TEXT NULL AFTER title_text_color', 'SELECT 1');
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+-- Idempotent: add section_bg_color when re-applying schema to an existing DB.
+SET @cnt := (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'bp_bookies' AND COLUMN_NAME = 'section_bg_color');
+SET @sql := IF(@cnt = 0, 'ALTER TABLE bp_bookies ADD COLUMN section_bg_color VARCHAR(20) NOT NULL DEFAULT ''#12193A'' AFTER position', 'SELECT 1');
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+-- Idempotent: drop terms_text — T&Cs now live in subtitle_text, no longer a separate field.
+SET @cnt := (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'bp_bookies' AND COLUMN_NAME = 'terms_text');
+SET @sql := IF(@cnt > 0, 'ALTER TABLE bp_bookies DROP COLUMN terms_text', 'SELECT 1');
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+-- Idempotent: add subtitle_text_color when re-applying schema to an existing DB.
+SET @cnt := (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'bp_bookies' AND COLUMN_NAME = 'subtitle_text_color');
+SET @sql := IF(@cnt = 0, 'ALTER TABLE bp_bookies ADD COLUMN subtitle_text_color VARCHAR(20) DEFAULT NULL AFTER subtitle_text', 'SELECT 1');
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;

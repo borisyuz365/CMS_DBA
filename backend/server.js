@@ -2,6 +2,9 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./swagger');
 
 // Import routes
 const athletesRoutes = require('./routes/athletes');
@@ -29,6 +32,9 @@ const dbaTemplatesRoutes = require('./routes/dbaTemplates');
 const dbaServiceRoutes = require('./routes/dbaService');
 const dbaGamRoutes = require('./routes/dbaGam');
 const dbaLinksRoutes = require('./routes/dbaLinks');
+const bpServiceRoutes = require('./routes/bpService');
+const bpCache = require('./services/bpCache');
+const countryCache = require('./services/countryCache');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -45,6 +51,10 @@ app.use((req, res, next) => {
   console.log(`${timestamp} - ${req.method} ${req.path} from ${ip}`);
   next();
 });
+
+// Swagger UI — BP Service docs
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.get('/api-docs.json', (req, res) => res.json(swaggerSpec));
 
 // API Routes
 app.use('/api/athletes', athletesRoutes);
@@ -72,6 +82,7 @@ app.use('/api/dba/templates', dbaTemplatesRoutes);
 app.use('/api/dba/service', dbaServiceRoutes);
 app.use('/api/dba/gam', dbaGamRoutes);
 app.use('/api/dba/links', dbaLinksRoutes);
+app.use('/api/bp', bpServiceRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
@@ -93,6 +104,17 @@ app.get('/dba-runtime.js', (req, res) => {
   res.setHeader('Cache-Control', 'public, max-age=300');
   res.sendFile(dbaRuntimePath);
 });
+
+// Serve the built frontend when present (Docker/production). After all API
+// routes so /api/* keeps priority. Skipped in local dev, where Vite serves
+// the frontend separately on :3000 and frontend/dist doesn't exist.
+const frontendDistPath = path.join(__dirname, '..', 'frontend', 'dist');
+if (fs.existsSync(frontendDistPath)) {
+  app.use(express.static(frontendDistPath));
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(frontendDistPath, 'index.html'));
+  });
+}
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -117,13 +139,12 @@ app.use((req, res) => {
 });
 
 // Start server
+bpCache.start();
+countryCache.start();
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
   console.log(`Health check: http://localhost:${PORT}/api/health`);
-  console.log(`Athletes API: http://localhost:${PORT}/api/athletes`);
-  console.log(`Competitors API: http://localhost:${PORT}/api/competitors`);
-  console.log(`Venues API: http://localhost:${PORT}/api/venues`);
-  console.log(`Countries API: http://localhost:${PORT}/api/countries`);
+  console.log(`BP Service docs: http://localhost:${PORT}/api-docs`);
 });
 
 module.exports = app;

@@ -2353,6 +2353,32 @@ class ApiService {
   async getDbaGamPreview(id) {
     return this.fetch(`/dba/gam/templates/${encodeURIComponent(id)}/preview`);
   }
+
+  async getDbaBookmakerPool() {
+    return this.fetch('/dba/bookmaker-pool');
+  }
+
+  // ── Betting Promotions (BPMB) ──────────────────────────────────────────────
+
+  async getBpPromotions() {
+    return this.fetch('/bp/promotions');
+  }
+
+  async getBpPromotion(id) {
+    return this.fetch(`/bp/promotions/${id}`);
+  }
+
+  async createBpPromotion(data) {
+    return this.fetch('/bp/promotions', { method: 'POST', body: JSON.stringify(data) });
+  }
+
+  async updateBpPromotion(id, data) {
+    return this.fetch(`/bp/promotions/${id}`, { method: 'PUT', body: JSON.stringify(data) });
+  }
+
+  async deleteBpPromotion(id) {
+    return this.fetch(`/bp/promotions/${id}`, { method: 'DELETE' });
+  }
 }
 
 export default new ApiService();

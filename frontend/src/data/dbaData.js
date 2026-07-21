@@ -21,6 +21,12 @@ export const DBA_COUNTRIES = [
   { code: 'PL',     name: 'Poland',          flag: '🇵🇱' },
 ];
 
+export const DBA_PLATFORMS = [
+  { value: 'All',     label: 'All platforms' },
+  { value: 'Android', label: 'Android' },
+  { value: 'iOS',     label: 'iOS' },
+];
+
 const mkv = (affiliate, status, modified, modifiedBy) => ({ affiliate, status, modified, modifiedBy });
 
 // Helper for the seed data: build the Cloudinary CDN URL for a bookmaker's
