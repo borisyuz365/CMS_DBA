@@ -10,6 +10,18 @@ import SaveIcon from '@mui/icons-material/Save';
 import { useNavigate, useParams } from 'react-router-dom';
 import apiService from '../../services/api';
 import { DBA_COUNTRIES, DBA_PLATFORMS } from '../../data/dbaData';
+import './365-sans.css';
+
+// Auto-derived from the selected bookmaker's BMID — no manual logo upload needed.
+const BOOKMAKER_LOGO_BASE = 'https://imagecache.365scores.com/image/upload/f_webp,w_80,c_limit,q_auto,dpr_2,d_Bookmakers:Round:default.png/v101/Bookmakers/';
+const bookmakerLogoUrl = (bmid) => (bmid !== null && bmid !== undefined && bmid !== '' ? `${BOOKMAKER_LOGO_BASE}${bmid}` : null);
+
+// Strip background auto-derived from T_BET_BOOKMAKERS.COLOR (primary colour),
+// exposed as `brandColor` on bookmakerOptions (see getDbaBookmakerPool mapping below).
+const bookmakerBrandColor = (bmid, bookmakerOptions) =>
+  bookmakerOptions?.find((o) => o.bmid === bmid)?.brandColor || null;
+
+const PREVIEW_FONT_FAMILY = "'365 Sans', sans-serif";
 
 // ── Shared primitives ─────────────────────────────────────────────────────────
 
@@ -37,9 +49,9 @@ function Field({ label, help, children }) {
   );
 }
 
-function ColField({ label, value, onChange }) {
+function ColField({ label, help, value, onChange }) {
   return (
-    <Field label={label}>
+    <Field label={label} help={help}>
       <Stack direction="row" spacing={1} alignItems="center">
         <input
           type="color"
@@ -61,47 +73,49 @@ function ColField({ label, value, onChange }) {
 
 // ── Interstitial preview ──────────────────────────────────────────────────────
 
-function BookiePreviewCard({ bookie, index }) {
-  const stripBg = (bookie.stripColors || [])[0] || '#333333';
+function BookiePreviewCard({ bookie, index, bookmakerOptions }) {
+  const stripBg = (bookie.stripColors || [])[0] || bookmakerBrandColor(bookie.bmid, bookmakerOptions) || '#333333';
   const contentBg = bookie.sectionBgColor || 'rgba(0,0,0,0.55)';
+  const logoSrc = bookie.logoImageUrl || bookmakerLogoUrl(bookie.bmid);
 
   return (
-    <Box sx={{ borderRadius: '10px', overflow: 'hidden', mb: 1.25 }}>
-      {/* Top strip: logo left, CTA right */}
+    <Box sx={{ borderRadius: '10px', overflow: 'hidden', mb: nativePx(32) }}>
+      {/* Top strip: logo left, CTA right — 80px native */}
       <Box sx={{
         bgcolor: stripBg,
-        px: 1.5, py: 0.9,
+        height: nativePx(80), flexShrink: 0,
+        px: 1.5,
         display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1,
       }}>
         <Box sx={{ height: 26, display: 'flex', alignItems: 'center', flex: 1, minWidth: 0 }}>
-          {bookie.logoImageUrl
-            ? <img src={bookie.logoImageUrl} alt=""
+          {logoSrc
+            ? <img src={logoSrc} alt=""
                 style={{ height: '100%', width: 'auto', maxWidth: 110, objectFit: 'contain' }} />
             : <Typography fontSize="0.62rem" fontWeight={700} color="#fff">{`BK${index + 1}`}</Typography>
           }
         </Box>
         <Box sx={{ bgcolor: '#fff', borderRadius: 10, px: 1.25, py: 0.35, flexShrink: 0 }}>
-          <Typography fontSize="0.6rem" fontWeight={700} color="#111">
+          <Typography fontSize={nativePx(20)} fontWeight={400} color="#111">
             {bookie.ctaText || 'Visit Site'}
           </Typography>
         </Box>
       </Box>
 
-      {/* Content area: title + subtitle + terms */}
-      <Box sx={{ bgcolor: contentBg, px: 1.5, pt: 0.9, pb: 1.1 }}>
-        <Typography fontSize="0.72rem" fontWeight={800} color={bookie.titleTextColor || '#fff'}
+      {/* Content area: title + description (description also carries T&Cs) — 180px native */}
+      <Box sx={{
+        bgcolor: contentBg, height: nativePx(180), overflow: 'hidden', flexShrink: 0,
+        px: 1.5, pt: 0.9, pb: 1.1,
+        wordBreak: 'break-word', overflowWrap: 'break-word',
+        textAlign: 'center',
+      }}>
+        <Typography fontSize={nativePx(28)} fontWeight={600} color={bookie.titleTextColor || '#fff'}
           lineHeight={1.2} mb={0.35}>
           {bookie.titleText || `Bonus Offer ${index + 1}`}
         </Typography>
         {bookie.subtitleText && (
-          <Typography fontSize="0.6rem" color={bookie.subtitleTextColor || 'rgba(255,255,255,0.65)'}
+          <Typography fontSize={nativePx(20)} fontWeight={400} color={bookie.subtitleTextColor || 'rgba(255,255,255,0.65)'}
             lineHeight={1.4} mb={0.25}>
             {bookie.subtitleText}
-          </Typography>
-        )}
-        {bookie.termsText && (
-          <Typography fontSize="0.55rem" color="rgba(255,255,255,0.4)" lineHeight={1.3} fontStyle="italic">
-            {bookie.termsText}
           </Typography>
         )}
       </Box>
@@ -123,11 +137,19 @@ function previewBackground(form) {
   return `linear-gradient(175deg, ${c} 0%, ${c}dd 100%)`;
 }
 
-// 640×1280 native — preview is rendered at 270×540 (exactly 1:2)
+// 640×1280 native ad canvas. Preview renders at 270×540 for editor real
+// estate — NOT exactly half-scale (that'd be 320×640) — so native px specs
+// must go through NATIVE_SCALE (0.421875), not a flat ÷2.
 const PREVIEW_W = 270;
 const PREVIEW_H = 540;
+const NATIVE_SCALE = PREVIEW_W / 640;
+const nativePx = (px) => `${+(px * NATIVE_SCALE).toFixed(2)}px`;
 
-function InterstitialPreview({ form }) {
+// Client renders the header image/badge at a fixed height — not sent by the
+// server and not configurable per-promotion.
+const HEADER_IMAGE_HEIGHT = 110;
+
+function InterstitialPreview({ form, bookmakerOptions }) {
   const { header, bookies, legal, geo } = form;
 
   return (
@@ -142,6 +164,8 @@ function InterstitialPreview({ form }) {
       position: 'relative',
       display: 'flex',
       flexDirection: 'column',
+      fontFamily: PREVIEW_FONT_FAMILY,
+      '& .MuiTypography-root': { fontFamily: 'inherit' },
     }}>
       {/* Side glow effects */}
       <Box sx={{ position: 'absolute', left: -20, top: '30%', width: 40, height: 220,
@@ -151,22 +175,29 @@ function InterstitialPreview({ form }) {
         background: 'radial-gradient(ellipse, rgba(30,100,255,0.35) 0%, transparent 70%)',
         pointerEvents: 'none' }} />
 
-      {/* Header image / badge — optional; takes no space when unset */}
+      {/* Header image / badge — optional; takes no space when unset. Fixed
+          height (client-side constant, not sent by the server). */}
       {header.imageUrl && (
-        <Box sx={{ height: header.imageHeight || 110, flexShrink: 0, position: 'relative', overflow: 'hidden' }}>
+        <Box sx={{ height: HEADER_IMAGE_HEIGHT, flexShrink: 0, position: 'relative', overflow: 'hidden' }}>
           <img src={header.imageUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
         </Box>
       )}
 
       {/* Titles */}
-      <Box sx={{ px: 1.75, pt: 1.25, pb: 0.75, textAlign: 'center', flexShrink: 0 }}>
-        <Typography fontSize="1rem" fontWeight={900} lineHeight={1.1}
+      {/* No header image: 120px native from the very top of the interstitial to the headline. */}
+      <Box sx={{ px: 1.75, pt: header.imageUrl ? 1.25 : nativePx(120), pb: 0.75, textAlign: 'center', flexShrink: 0 }}>
+        <Typography
+          // No header image: main title is the hero text — 48px native, DemiBold.
+          // With a header image/badge above it, the title stays smaller so the badge keeps focus.
+          fontSize={header.imageUrl ? '1rem' : nativePx(48)}
+          fontWeight={header.imageUrl ? 900 : 600}
+          lineHeight={1.1}
           color={header.mainTitle?.color || '#fff'}
-          textTransform="uppercase" letterSpacing="0.01em">
-          {header.mainTitle?.text || 'BIGGEST SIGNUP BONUS'}
+          letterSpacing="0.01em">
+          {header.mainTitle?.text || 'Biggest Signup Bonus'}
         </Typography>
-        <Typography fontSize="0.68rem" color={header.secondaryTitle?.color || 'rgba(255,255,255,0.8)'} mt={0.4} mb={1}>
-          {header.secondaryTitle?.text || 'Compare offers & claim your bonus'}
+        <Typography fontSize={nativePx(32)} fontWeight={400} color={header.secondaryTitle?.color || 'rgba(255,255,255,0.8)'} mt={0.4} mb={1}>
+          {header.secondaryTitle?.text || 'Compare Offers & Claim Your Bonus'}
         </Typography>
       </Box>
 
@@ -174,13 +205,15 @@ function InterstitialPreview({ form }) {
       <Box sx={{ flex: 1, minHeight: 0, px: 1.25, pb: 1.25, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
         <Box sx={{ flex: 1, overflow: 'hidden' }}>
           {[0, 1, 2].map((i) => (
-            <BookiePreviewCard key={i} bookie={bookies[i] || {}} index={i} />
+            <BookiePreviewCard key={i} bookie={bookies[i] || {}} index={i} bookmakerOptions={bookmakerOptions} />
           ))}
         </Box>
         {legal?.enabled && (
           <Box sx={{ pt: 0.75, borderTop: '1px solid rgba(255,255,255,0.08)', flexShrink: 0, display: 'flex', alignItems: 'center', gap: 0.5 }}>
+            <Box component="img" src="/legal-logos/18-plus-icon.png" alt="18+"
+              sx={{ height: 16, width: 'auto', flexShrink: 0 }} />
             <Typography fontSize="0.56rem" color={legal.color || 'rgba(255,255,255,0.4)'} lineHeight={1.4} sx={{ flex: 1 }}>
-              {legal.text || '18+ · Gamble responsibly'}
+              {legal.text || 'Gamble responsibly'}
             </Typography>
             {geo === 'Italy' && (
               <Box sx={{ display: 'flex', gap: 0.5, flexShrink: 0 }}>
@@ -198,7 +231,7 @@ function InterstitialPreview({ form }) {
 
 // ── Bookie section ────────────────────────────────────────────────────────────
 
-function BookieSection({ index, bookie, onChange, bookmakerOptions }) {
+function BookieSection({ index, bookie, onChange, bookmakerOptions, descriptionError }) {
   const set = (key, val) => onChange({ ...bookie, [key]: val });
   const setStrip = (idx, val) => {
     const colors = [...(bookie.stripColors || ['#000000', '#000000'])];
@@ -249,37 +282,31 @@ function BookieSection({ index, bookie, onChange, bookmakerOptions }) {
         </Field>
         <ColField label="Title text colour" value={bookie.titleTextColor || '#ffffff'}
           onChange={(v) => set('titleTextColor', v)} />
-        <Field label="Subtitle / description" help="Smaller text below the title">
-          <TextField size="small" fullWidth multiline maxRows={3} value={bookie.subtitleText || ''}
-            onChange={(e) => set('subtitleText', e.target.value)}
-            placeholder="e.g. T&C apply · 18+ · BeGambleAware.org" />
-        </Field>
-        <ColField label="Subtitle text colour" value={bookie.subtitleTextColor || 'rgba(255,255,255,0.6)'}
-          onChange={(v) => set('subtitleTextColor', v)} />
-        <Field label="Description (terms) *" help="Mandatory — bonus terms text, may be long (Italian regulation)">
+        <Field label="Description *" help="Mandatory — smaller text below the title. Also carries bonus terms/T&Cs (Italian regulation) — no separate terms field.">
           <TextField
             size="small" fullWidth multiline minRows={2} maxRows={6}
             required
-            value={bookie.termsText || ''}
-            onChange={(e) => set('termsText', e.target.value)}
+            error={!!descriptionError}
+            helperText={descriptionError ? 'Description is required' : ''}
+            value={bookie.subtitleText || ''}
+            onChange={(e) => set('subtitleText', e.target.value)}
             placeholder="e.g. Fino a 50€ sul deposito + 25€ Scommesse + fino a 2.000€ Scommesse. T&C Lottomatica."
             sx={{ '& .MuiOutlinedInput-root': { fontSize: '0.82rem' } }}
           />
         </Field>
+        <ColField label="Description text colour" value={bookie.subtitleTextColor || 'rgba(255,255,255,0.6)'}
+          onChange={(v) => set('subtitleTextColor', v)} />
         <Field label="CTA text">
           <TextField size="small" fullWidth value={bookie.ctaText || ''}
             onChange={(e) => set('ctaText', e.target.value)} />
         </Field>
         <ColField label="CTA text colour" value={bookie.ctaTextColor || '#ffffff'}
           onChange={(v) => set('ctaTextColor', v)} />
-        <Stack direction="row" spacing={1}>
-          <ColField label="Strip bg colour" value={(bookie.stripColors || [])[0] || '#000000'}
-            onChange={(v) => setStrip(0, v)} />
-          <ColField label="Strip colour 2" value={(bookie.stripColors || [])[1] || '#000000'}
-            onChange={(v) => setStrip(1, v)} />
-        </Stack>
-        <Field label="Logo image URL">
-          <TextField size="small" fullWidth placeholder="https://…"
+        <ColField label="Strip bg colour" help="Auto-filled from the bookmaker's brand colour — only set this to override."
+          value={(bookie.stripColors || [])[0] || selectedOption?.brandColor || '#000000'}
+          onChange={(v) => setStrip(0, v)} />
+        <Field label="Logo image URL (override)" help="Auto-filled from the selected bookmaker's BMID — only set this to use a different image.">
+          <TextField size="small" fullWidth placeholder={bookmakerLogoUrl(bookie.bmid) || 'https://…'}
             value={bookie.logoImageUrl || ''}
             onChange={(e) => set('logoImageUrl', e.target.value)} />
         </Field>
@@ -297,8 +324,8 @@ function BookieSection({ index, bookie, onChange, bookmakerOptions }) {
 
 const DEFAULT_BOOKIE = { position: 0, bmid: '', sectionBgColor: '#12193A',
   titleText: '', titleTextColor: '#ffffff',
-  subtitleText: '', subtitleTextColor: 'rgba(255,255,255,0.6)', termsText: '', ctaText: '', ctaTextColor: '#ffffff',
-  stripColors: ['#333333', '#000000'], logoImageUrl: '', clickUrl: '' };
+  subtitleText: '', subtitleTextColor: 'rgba(255,255,255,0.6)', ctaText: '', ctaTextColor: '#ffffff',
+  stripColors: ['', '#000000'], logoImageUrl: '', clickUrl: '' };
 
 const DEFAULT_FORM = {
   name: '',
@@ -402,6 +429,7 @@ function BpEditorInner({ initial, isNew, bookmakerOptions, draftKey }) {
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState(null);
   const [zoom, setZoom] = useState(1.4);
+  const [errors, setErrors] = useState({ name: false, bookieDescriptions: [false, false, false] });
 
   useEffect(() => {
     try { localStorage.setItem(draftKey, JSON.stringify(form)); } catch {}
@@ -421,12 +449,18 @@ function BpEditorInner({ initial, isNew, bookmakerOptions, draftKey }) {
   };
 
   const handleSave = async () => {
-    if (!form.name.trim()) { setToast({ kind: 'error', msg: 'Name is required' }); return; }
-    const missingTerms = form.bookies.map((b, i) => !b.termsText?.trim() ? i + 1 : null).filter(Boolean);
-    if (missingTerms.length) {
-      setToast({ kind: 'error', msg: `Description (terms) is required for bookmaker${missingTerms.length > 1 ? 's' : ''} ${missingTerms.join(', ')}` });
+    const nameError = !form.name.trim();
+    const bookieDescriptionErrors = form.bookies.map((b) => !b.subtitleText?.trim());
+    if (nameError || bookieDescriptionErrors.some(Boolean)) {
+      setErrors({ name: nameError, bookieDescriptions: bookieDescriptionErrors });
+      const missingDescriptions = bookieDescriptionErrors.map((err, i) => (err ? i + 1 : null)).filter(Boolean);
+      const msgs = [];
+      if (nameError) msgs.push('Name is required');
+      if (missingDescriptions.length) msgs.push(`Description is required for bookmaker${missingDescriptions.length > 1 ? 's' : ''} ${missingDescriptions.join(', ')}`);
+      setToast({ kind: 'error', msg: msgs.join(' · ') });
       return;
     }
+    setErrors({ name: false, bookieDescriptions: [false, false, false] });
     setSaving(true);
     try {
       const payload = formToPayload(form);
@@ -495,7 +529,10 @@ function BpEditorInner({ initial, isNew, bookmakerOptions, draftKey }) {
           <Section title="Version info">
             <Field label="Name">
               <TextField size="small" fullWidth value={form.name}
-                onChange={(e) => set('name', e.target.value)} placeholder="e.g. Brazil Android Q3" />
+                error={errors.name}
+                helperText={errors.name ? 'Name is required' : ''}
+                onChange={(e) => { set('name', e.target.value); if (errors.name) setErrors((er) => ({ ...er, name: false })); }}
+                placeholder="e.g. Brazil Android Q3" />
             </Field>
             <FormControlLabel
               control={<Switch checked={form.active} onChange={(e) => set('active', e.target.checked)} size="small" />}
@@ -541,18 +578,11 @@ function BpEditorInner({ initial, isNew, bookmakerOptions, draftKey }) {
             </Field>
             <ColField label="Secondary title colour" value={form.header.secondaryTitle.color}
               onChange={(v) => setHeaderTitle('secondaryTitle', 'color', v)} />
-            <Field label="Header image / badge URL" help="Optional — e.g. a 'Special Offer / Limited Time' badge graphic. Leave blank for a plain text header with no reserved space above it.">
+            <Field label="Header image / badge URL" help="Optional — e.g. a 'Special Offer / Limited Time' badge graphic. Leave blank for a plain text header with no reserved space above it. Rendered at a fixed height set by the client — not configurable here.">
               <TextField size="small" fullWidth placeholder="https://…"
                 value={form.header.imageUrl}
                 onChange={(e) => setHeader('imageUrl', e.target.value)} />
             </Field>
-            {form.header.imageUrl && (
-              <Field label={`Header image height — ${form.header.imageHeight ?? 110}px`}>
-                <Slider min={40} max={300} step={5}
-                  value={form.header.imageHeight ?? 110}
-                  onChange={(_, v) => setHeader('imageHeight', v)} />
-              </Field>
-            )}
           </Section>
 
           <Section title="Page style">
@@ -603,7 +633,18 @@ function BpEditorInner({ initial, isNew, bookmakerOptions, draftKey }) {
           <Section title="Bookmakers">
             {[0, 1, 2].map((i) => (
               <BookieSection key={i} index={i} bookie={form.bookies[i] || {}}
-                onChange={(val) => setBookie(i, val)} bookmakerOptions={bookmakerOptions} />
+                onChange={(val) => {
+                  setBookie(i, val);
+                  if (errors.bookieDescriptions[i]) {
+                    setErrors((er) => {
+                      const next = [...er.bookieDescriptions];
+                      next[i] = false;
+                      return { ...er, bookieDescriptions: next };
+                    });
+                  }
+                }}
+                bookmakerOptions={bookmakerOptions}
+                descriptionError={errors.bookieDescriptions[i]} />
             ))}
           </Section>
 
@@ -737,7 +778,7 @@ function BpEditorInner({ initial, isNew, bookmakerOptions, draftKey }) {
                 transformOrigin: 'top left',
                 transition: 'transform 0.15s ease',
               }}>
-                <InterstitialPreview form={form} />
+                <InterstitialPreview form={form} bookmakerOptions={bookmakerOptions} />
               </Box>
             </Box>
           </Box>

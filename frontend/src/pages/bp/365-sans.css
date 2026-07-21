@@ -1,0 +1,122 @@
+/* 365 Sans — used only in the BP interstitial preview (BpEditor.jsx). */
+
+@font-face {
+  font-family: '365 Sans';
+  src: url('/fonts/365-sans/365_Sans_Hairline.woff') format('woff');
+  font-weight: 100;
+  font-style: normal;
+}
+@font-face {
+  font-family: '365 Sans';
+  src: url('/fonts/365-sans/365_Sans_Hairline_Italic.woff') format('woff');
+  font-weight: 100;
+  font-style: italic;
+}
+@font-face {
+  font-family: '365 Sans';
+  src: url('/fonts/365-sans/365_Sans_Thin.woff') format('woff');
+  font-weight: 200;
+  font-style: normal;
+}
+@font-face {
+  font-family: '365 Sans';
+  src: url('/fonts/365-sans/365_Sans_Thin_Italic.woff') format('woff');
+  font-weight: 200;
+  font-style: italic;
+}
+@font-face {
+  font-family: '365 Sans';
+  src: url('/fonts/365-sans/365_Sans_ExtraLight.woff') format('woff');
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: '365 Sans';
+  src: url('/fonts/365-sans/365_Sans_ExtraLight_Italic.woff') format('woff');
+  font-weight: 300;
+  font-style: italic;
+}
+@font-face {
+  font-family: '365 Sans';
+  src: url('/fonts/365-sans/365_Sans_Light.woff') format('woff');
+  font-weight: 350;
+  font-style: normal;
+}
+@font-face {
+  font-family: '365 Sans';
+  src: url('/fonts/365-sans/365_Sans_Light_Italic.woff') format('woff');
+  font-weight: 350;
+  font-style: italic;
+}
+@font-face {
+  font-family: '365 Sans';
+  src: url('/fonts/365-sans/365_Sans_Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: '365 Sans';
+  src: url('/fonts/365-sans/365_Sans_Italic.woff') format('woff');
+  font-weight: 400;
+  font-style: italic;
+}
+@font-face {
+  font-family: '365 Sans';
+  src: url('/fonts/365-sans/365_Sans_Medium.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: '365 Sans';
+  src: url('/fonts/365-sans/365_Sans_Medium_Italic.woff') format('woff');
+  font-weight: 500;
+  font-style: italic;
+}
+@font-face {
+  font-family: '365 Sans';
+  src: url('/fonts/365-sans/365_Sans_DemiBold.woff') format('woff');
+  font-weight: 600;
+  font-style: normal;
+}
+@font-face {
+  font-family: '365 Sans';
+  src: url('/fonts/365-sans/365_Sans_DemiBold_Italic.woff') format('woff');
+  font-weight: 600;
+  font-style: italic;
+}
+@font-face {
+  font-family: '365 Sans';
+  src: url('/fonts/365-sans/365_Sans_Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: '365 Sans';
+  src: url('/fonts/365-sans/365_Sans_Bold_Italic.woff') format('woff');
+  font-weight: 700;
+  font-style: italic;
+}
+@font-face {
+  font-family: '365 Sans';
+  src: url('/fonts/365-sans/365_Sans_ExtraBold.woff') format('woff');
+  font-weight: 800;
+  font-style: normal;
+}
+@font-face {
+  font-family: '365 Sans';
+  src: url('/fonts/365-sans/365_Sans_ExtraBold_Italic.woff') format('woff');
+  font-weight: 800;
+  font-style: italic;
+}
+@font-face {
+  font-family: '365 Sans';
+  src: url('/fonts/365-sans/365_Sans_Black.woff') format('woff');
+  font-weight: 900;
+  font-style: normal;
+}
+@font-face {
+  font-family: '365 Sans';
+  src: url('/fonts/365-sans/365_Sans_Black_Italic.woff') format('woff');
+  font-weight: 900;
+  font-style: italic;
+}
