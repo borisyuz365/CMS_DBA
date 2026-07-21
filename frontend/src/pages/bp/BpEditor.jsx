@@ -9,7 +9,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SaveIcon from '@mui/icons-material/Save';
 import { useNavigate, useParams } from 'react-router-dom';
 import apiService from '../../services/api';
-import { DBA_COUNTRIES, DBA_PLATFORMS } from '../../data/dbaData';
+import { DBA_PLATFORMS } from '../../data/dbaData';
 import './365-sans.css';
 
 // Auto-derived from the selected bookmaker's BMID — no manual logo upload needed.
@@ -20,6 +20,10 @@ const bookmakerLogoUrl = (bmid) => (bmid !== null && bmid !== undefined && bmid 
 // exposed as `brandColor` on bookmakerOptions (see getDbaBookmakerPool mapping below).
 const bookmakerBrandColor = (bmid, bookmakerOptions) =>
   bookmakerOptions?.find((o) => o.bmid === bmid)?.brandColor || null;
+
+// Real production CID (T_COUNTRIES.COUNTRY_ID) for Italy — drives the
+// Italy-only regulatory logos, matching the same constant in bpService.js.
+const ITALY_CID = 3;
 
 const PREVIEW_FONT_FAMILY = "'365 Sans', sans-serif";
 
@@ -150,7 +154,7 @@ const nativePx = (px) => `${+(px * NATIVE_SCALE).toFixed(2)}px`;
 const HEADER_IMAGE_HEIGHT = 110;
 
 function InterstitialPreview({ form, bookmakerOptions }) {
-  const { header, bookies, legal, geo } = form;
+  const { header, bookies, legal, cid } = form;
 
   return (
     <Box sx={{
@@ -215,7 +219,7 @@ function InterstitialPreview({ form, bookmakerOptions }) {
             <Typography fontSize="0.56rem" color={legal.color || 'rgba(255,255,255,0.4)'} lineHeight={1.4} sx={{ flex: 1 }}>
               {legal.text || 'Gamble responsibly'}
             </Typography>
-            {geo === 'Italy' && (
+            {cid === ITALY_CID && (
               <Box sx={{ display: 'flex', gap: 0.5, flexShrink: 0 }}>
                 {legal.regulatoryLogos?.map((logo, i) => (
                   <Box key={i} component="img" src={logo.src} alt="" sx={{ height: 10, width: 'auto', opacity: 0.8 }} />
@@ -329,7 +333,7 @@ const DEFAULT_BOOKIE = { position: 0, bmid: '', sectionBgColor: '#12193A',
 
 const DEFAULT_FORM = {
   name: '',
-  geo: 'All',
+  cid: '',
   platform: 'All',
   lid: null,
   sov: 100,
@@ -367,7 +371,7 @@ function promoToForm(promo) {
   });
   return {
     name: promo.name || '',
-    geo: promo.geo || 'All',
+    cid: promo.cid ?? '',
     platform: promo.platform || 'All',
     lid: promo.lid ?? null,
     sov: promo.sov ?? 100,
@@ -401,6 +405,7 @@ function promoToForm(promo) {
 function formToPayload(form) {
   return {
     ...form,
+    cid: form.cid !== '' ? Number(form.cid) : null,
     lid: form.lid !== '' ? Number(form.lid) : null,
     sov: Number(form.sov),
     bookies: form.bookies.map((b, i) => ({
@@ -413,7 +418,7 @@ function formToPayload(form) {
 
 // ── Inner editor ──────────────────────────────────────────────────────────────
 
-function BpEditorInner({ initial, isNew, bookmakerOptions, draftKey }) {
+function BpEditorInner({ initial, isNew, bookmakerOptions, countries, draftKey }) {
   const navigate = useNavigate();
 
   const [form, setForm] = useState(() => {
@@ -543,10 +548,10 @@ function BpEditorInner({ initial, isNew, bookmakerOptions, draftKey }) {
           <Section title="Targeting">
             <Field label="Geo">
               <FormControl size="small" fullWidth>
-                <Select value={form.geo} onChange={(e) => set('geo', e.target.value)}>
-                  <MenuItem value="All">🌐 All countries</MenuItem>
-                  {DBA_COUNTRIES.filter((c) => c.code !== 'GLOBAL').map((c) => (
-                    <MenuItem key={c.code} value={c.name}>{c.flag} {c.name}</MenuItem>
+                <Select value={form.cid} onChange={(e) => set('cid', e.target.value)}>
+                  <MenuItem value="">🌐 All countries</MenuItem>
+                  {countries.map((c) => (
+                    <MenuItem key={c.id} value={c.id}>{c.name}</MenuItem>
                   ))}
                 </Select>
               </FormControl>
@@ -686,7 +691,7 @@ function BpEditorInner({ initial, isNew, bookmakerOptions, draftKey }) {
                     onChange={(e) => set('legal', { ...(form.legal || {}), link: e.target.value })}
                   />
                 </Field>
-                {form.geo === 'Italy' && (
+                {form.cid === ITALY_CID && (
                   <Field label="Regulatory logos" help="Both logos appear on the right of the footer — set each link">
                     <Stack spacing={1}>
                       {[
@@ -802,14 +807,15 @@ export default function BpEditor() {
   const isNew = !id || id === 'new';
   const [initial, setInitial] = useState(null);
   const [bookmakerOptions, setBookmakerOptions] = useState([]);
+  const [countries, setCountries] = useState([]);
   const [loadError, setLoadError] = useState(null);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
     const promoPromise = isNew ? Promise.resolve(null) : apiService.getBpPromotion(id);
-    Promise.all([promoPromise, apiService.getDbaBookmakerPool()])
-      .then(([promo, bms]) => {
+    Promise.all([promoPromise, apiService.getDbaBookmakerPool(), apiService.getBpCountries()])
+      .then(([promo, bms, cids]) => {
         if (cancelled) return;
         setInitial(promo);
         // Pool response: { id: "bk_47", name, brandColor, defaultLogo: { bg, fg, initials } }
@@ -821,6 +827,8 @@ export default function BpEditor() {
           initials:   bm.defaultLogo?.initials || bm.name?.slice(0, 3).toUpperCase(),
         })).filter((o) => !isNaN(o.bmid));
         setBookmakerOptions(opts);
+        // Countries response: { id, name } — real T_COUNTRIES CIDs, not backend/data/countries.json.
+        setCountries(Array.isArray(cids) ? cids : []);
         setReady(true);
       })
       .catch((err) => { if (!cancelled) setLoadError(err.message); });
@@ -831,5 +839,5 @@ export default function BpEditor() {
   if (!ready) return <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}><CircularProgress /></Box>;
 
   const draftKey = isNew ? 'bp_draft_new' : `bp_draft_${id}`;
-  return <BpEditorInner key={id || 'new'} initial={initial} isNew={isNew} bookmakerOptions={bookmakerOptions} draftKey={draftKey} />;
+  return <BpEditorInner key={id || 'new'} initial={initial} isNew={isNew} bookmakerOptions={bookmakerOptions} countries={countries} draftKey={draftKey} />;
 }

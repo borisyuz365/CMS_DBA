@@ -25,7 +25,7 @@ let _timer = null;
 
 const LOAD_QUERY = `
   SELECT
-    p.id, p.name, p.geo, p.platform, p.lid, p.sov,
+    p.id, p.name, p.cid, p.platform, p.lid, p.sov,
     p.page_bg_color,
     p.bg_type, p.bg_gradient_color1, p.bg_gradient_color2,
     p.bg_gradient_angle, p.bg_image_url,
@@ -55,7 +55,7 @@ function buildVersions(rows) {
       map.set(r.id, {
         id:       r.id,
         name:     r.name,
-        geo:      r.geo,
+        cid:      r.cid,
         platform: r.platform,
         lid:      r.lid,
         sov:      r.sov,

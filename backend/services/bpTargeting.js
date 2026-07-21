@@ -4,19 +4,19 @@
 // params, returns a single selected version or null if nothing matches.
 //
 // Matching rules:
-//   geo      — exact match OR version.geo === 'All'
+//   cid      — exact match OR version.cid === null (all countries)
 //   platform — exact match OR version.platform === 'All'
 //   lid      — exact match OR version.lid === null (all leagues)
 //
 // SOV selection: weighted random lottery among the matching candidates.
 // Versions with higher SOV are proportionally more likely to be served.
 
-function selectVersion(versions, { geo, platform, lid } = {}) {
+function selectVersion(versions, { cid, platform, lid } = {}) {
   const candidates = versions.filter((v) => {
-    const geoMatch      = !geo      || v.geo      === 'All' || v.geo      === geo;
+    const cidMatch      = cid == null || v.cid == null      || v.cid      === Number(cid);
     const platformMatch = !platform || v.platform === 'All' || v.platform === platform;
     const lidMatch      = lid == null || v.lid == null       || v.lid      === Number(lid);
-    return geoMatch && platformMatch && lidMatch;
+    return cidMatch && platformMatch && lidMatch;
   });
 
   if (candidates.length === 0) return null;

@@ -21,7 +21,7 @@ const PLATFORM_COLORS = {
   All: '#888',
 };
 
-function PromotionCard({ promo, onEdit, onDuplicate, onDelete }) {
+function PromotionCard({ promo, countryName, onEdit, onDuplicate, onDelete }) {
   return (
     <Paper
       variant="outlined"
@@ -47,7 +47,7 @@ function PromotionCard({ promo, onEdit, onDuplicate, onDelete }) {
           <Chip
             size="small"
             icon={<PublicIcon sx={{ fontSize: '0.85rem !important' }} />}
-            label={promo.geo || 'All'}
+            label={countryName || 'All'}
             variant="outlined"
             sx={{ fontSize: '0.75rem' }}
           />
@@ -103,39 +103,48 @@ function PromotionCard({ promo, onEdit, onDuplicate, onDelete }) {
 export default function BpPromotions() {
   const navigate = useNavigate();
   const [promotions, setPromotions] = useState([]);
+  const [countries, setCountries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(null);
   const [toast, setToast] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(null);
 
   // Filters
-  const [filterGeo, setFilterGeo] = useState('');
+  const [filterCid, setFilterCid] = useState('');
   const [filterPlatform, setFilterPlatform] = useState('');
   const [filterActive, setFilterActive] = useState('');
 
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
-    apiService.getBpPromotions()
-      .then((data) => { if (!cancelled) { setPromotions(Array.isArray(data) ? data : []); setLoading(false); } })
+    Promise.all([apiService.getBpPromotions(), apiService.getBpCountries()])
+      .then(([promos, cids]) => {
+        if (cancelled) return;
+        setPromotions(Array.isArray(promos) ? promos : []);
+        // Real T_COUNTRIES CIDs, not backend/data/countries.json.
+        setCountries(Array.isArray(cids) ? cids : []);
+        setLoading(false);
+      })
       .catch((err) => { if (!cancelled) { setLoadError(err.message); setLoading(false); } });
     return () => { cancelled = true; };
   }, []);
 
-  const geoOptions = useMemo(() => {
-    const set = new Set(promotions.map((p) => p.geo).filter(Boolean));
-    return [...set].sort();
-  }, [promotions]);
+  const countryNameById = useMemo(() => new Map(countries.map((c) => [c.id, c.name])), [countries]);
+
+  const cidOptions = useMemo(() => {
+    const set = new Set(promotions.map((p) => p.cid).filter((cid) => cid != null));
+    return [...set].sort((a, b) => (countryNameById.get(a) || '').localeCompare(countryNameById.get(b) || ''));
+  }, [promotions, countryNameById]);
 
   const filtered = useMemo(() => {
     return promotions.filter((p) => {
-      if (filterGeo && p.geo !== filterGeo) return false;
+      if (filterCid && p.cid !== filterCid) return false;
       if (filterPlatform && p.platform !== filterPlatform) return false;
       if (filterActive === 'active' && !p.active) return false;
       if (filterActive === 'inactive' && p.active) return false;
       return true;
     });
-  }, [promotions, filterGeo, filterPlatform, filterActive]);
+  }, [promotions, filterCid, filterPlatform, filterActive]);
 
   const handleDuplicate = async (promo) => {
     try {
@@ -168,7 +177,7 @@ export default function BpPromotions() {
     return <Box sx={{ p: 4 }}><Typography color="error">{loadError}</Typography></Box>;
   }
 
-  const filtersActive = [filterGeo, filterPlatform, filterActive].filter(Boolean).length;
+  const filtersActive = [filterCid !== '', filterPlatform !== '', filterActive !== ''].filter(Boolean).length;
 
   return (
     <Box sx={{ p: 3, maxWidth: 1400 }}>
@@ -194,9 +203,9 @@ export default function BpPromotions() {
         <Stack direction="row" alignItems="center" gap={2} flexWrap="wrap">
           <FormControl size="small" sx={{ minWidth: 140 }}>
             <InputLabel>Geo</InputLabel>
-            <Select value={filterGeo} label="Geo" onChange={(e) => setFilterGeo(e.target.value)}>
+            <Select value={filterCid} label="Geo" onChange={(e) => setFilterCid(e.target.value)}>
               <MenuItem value="">All</MenuItem>
-              {geoOptions.map((g) => <MenuItem key={g} value={g}>{g}</MenuItem>)}
+              {cidOptions.map((cid) => <MenuItem key={cid} value={cid}>{countryNameById.get(cid) || cid}</MenuItem>)}
             </Select>
           </FormControl>
 
@@ -218,7 +227,7 @@ export default function BpPromotions() {
           </FormControl>
 
           {filtersActive > 0 && (
-            <Button size="small" onClick={() => { setFilterGeo(''); setFilterPlatform(''); setFilterActive(''); }}>
+            <Button size="small" onClick={() => { setFilterCid(''); setFilterPlatform(''); setFilterActive(''); }}>
               Clear filters ({filtersActive})
             </Button>
           )}
@@ -239,6 +248,7 @@ export default function BpPromotions() {
             <PromotionCard
               key={promo.id}
               promo={promo}
+              countryName={promo.cid != null ? countryNameById.get(promo.cid) : null}
               onEdit={() => navigate(`/bp/promotions/${promo.id}/edit`)}
               onDuplicate={handleDuplicate}
               onDelete={setConfirmDelete}

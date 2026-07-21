@@ -119,7 +119,7 @@ const options = {
           properties: {
             id:       { type: 'integer', readOnly: true },
             name:     { type: 'string', example: 'Summer Promo IT' },
-            geo:      { type: 'string', example: 'Italy', default: 'All' },
+            cid:      { type: 'integer', nullable: true, example: 3, description: 'Country ID (T_COUNTRIES.COUNTRY_ID) — null matches any country' },
             platform: { type: 'string', example: 'Android', default: 'All' },
             lid:      { type: 'integer', nullable: true },
             sov:      { type: 'integer', example: 100, description: 'Share of voice (0-100)' },
