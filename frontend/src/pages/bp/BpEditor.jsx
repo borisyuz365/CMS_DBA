@@ -62,51 +62,45 @@ function ColField({ label, value, onChange }) {
 // ── Interstitial preview ──────────────────────────────────────────────────────
 
 function BookiePreviewCard({ bookie, index }) {
+  const stripBg = (bookie.stripColors || [])[0] || '#333333';
+  const contentBg = bookie.sectionBgColor || 'rgba(0,0,0,0.55)';
+
   return (
-    <Box sx={{
-      bgcolor: bookie.sectionBgColor || '#12193A',
-      borderRadius: 2,
-      p: 1.25,
-      mb: 1,
-      display: 'flex',
-      gap: 1.25,
-      alignItems: 'flex-start',
-    }}>
-      {/* Left col: logo + CTA */}
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0.75, flexShrink: 0, width: 80 }}>
-        <Box sx={{
-          width: 80, height: 44,
-          borderRadius: 1,
-          overflow: 'hidden',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-        }}>
+    <Box sx={{ borderRadius: '10px', overflow: 'hidden', mb: 1.25 }}>
+      {/* Top strip: logo left, CTA right */}
+      <Box sx={{
+        bgcolor: stripBg,
+        px: 1.5, py: 0.9,
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1,
+      }}>
+        <Box sx={{ height: 26, display: 'flex', alignItems: 'center', flex: 1, minWidth: 0 }}>
           {bookie.logoImageUrl
-            ? <img src={bookie.logoImageUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain', padding: 4 }} />
-            : <Typography fontSize="0.6rem" fontWeight={700} color="#fff">{`BK${index + 1}`}</Typography>
+            ? <img src={bookie.logoImageUrl} alt=""
+                style={{ height: '100%', width: 'auto', maxWidth: 110, objectFit: 'contain' }} />
+            : <Typography fontSize="0.62rem" fontWeight={700} color="#fff">{`BK${index + 1}`}</Typography>
           }
         </Box>
-        <Box sx={{
-          bgcolor: '#fff', borderRadius: 10,
-          px: 1, py: 0.35, width: '100%', textAlign: 'center',
-        }}>
-          <Typography fontSize="0.58rem" fontWeight={700} color="#222">
-            {bookie.ctaText || 'Visit site'}
+        <Box sx={{ bgcolor: '#fff', borderRadius: 10, px: 1.25, py: 0.35, flexShrink: 0 }}>
+          <Typography fontSize="0.6rem" fontWeight={700} color="#111">
+            {bookie.ctaText || 'Visit Site'}
           </Typography>
         </Box>
       </Box>
 
-      {/* Right col: title + subtitle + terms */}
-      <Box sx={{ flex: 1, minWidth: 0, wordBreak: 'break-word', overflowWrap: 'break-word' }}>
-        <Typography fontSize="0.72rem" fontWeight={800} color={bookie.titleTextColor || '#fff'} lineHeight={1.2} mb={0.4}>
+      {/* Content area: title + subtitle + terms */}
+      <Box sx={{ bgcolor: contentBg, px: 1.5, pt: 0.9, pb: 1.1 }}>
+        <Typography fontSize="0.72rem" fontWeight={800} color={bookie.titleTextColor || '#fff'}
+          lineHeight={1.2} mb={0.35}>
           {bookie.titleText || `Bonus Offer ${index + 1}`}
         </Typography>
         {bookie.subtitleText && (
-          <Typography fontSize="0.6rem" color={bookie.subtitleTextColor || 'rgba(255,255,255,0.6)'} lineHeight={1.35} mb={0.3}>
+          <Typography fontSize="0.6rem" color={bookie.subtitleTextColor || 'rgba(255,255,255,0.65)'}
+            lineHeight={1.4} mb={0.25}>
             {bookie.subtitleText}
           </Typography>
         )}
         {bookie.termsText && (
-          <Typography fontSize="0.55rem" color="rgba(255,255,255,0.42)" lineHeight={1.3} fontStyle="italic">
+          <Typography fontSize="0.55rem" color="rgba(255,255,255,0.4)" lineHeight={1.3} fontStyle="italic">
             {bookie.termsText}
           </Typography>
         )}
@@ -157,16 +151,12 @@ function InterstitialPreview({ form }) {
         background: 'radial-gradient(ellipse, rgba(30,100,255,0.35) 0%, transparent 70%)',
         pointerEvents: 'none' }} />
 
-      {/* Header image / banner */}
-      <Box sx={{ height: header.imageHeight || 110, flexShrink: 0, position: 'relative', overflow: 'hidden',
-        background: 'linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 100%)' }}>
-        {header.imageUrl
-          ? <img src={header.imageUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-          : <Box sx={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Typography fontSize="0.62rem" color="rgba(255,255,255,0.2)">Header image</Typography>
-            </Box>
-        }
-      </Box>
+      {/* Header image / badge — optional; takes no space when unset */}
+      {header.imageUrl && (
+        <Box sx={{ height: header.imageHeight || 110, flexShrink: 0, position: 'relative', overflow: 'hidden' }}>
+          <img src={header.imageUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        </Box>
+      )}
 
       {/* Titles */}
       <Box sx={{ px: 1.75, pt: 1.25, pb: 0.75, textAlign: 'center', flexShrink: 0 }}>
@@ -251,7 +241,7 @@ function BookieSection({ index, bookie, onChange, bookmakerOptions }) {
             )}
           />
         </Field>
-        <ColField label="Section background colour" value={bookie.sectionBgColor || '#12193A'}
+        <ColField label="Content area background" value={bookie.sectionBgColor || '#12193A'}
           onChange={(v) => set('sectionBgColor', v)} />
         <Field label="Title text">
           <TextField size="small" fullWidth value={bookie.titleText || ''}
@@ -283,7 +273,7 @@ function BookieSection({ index, bookie, onChange, bookmakerOptions }) {
         <ColField label="CTA text colour" value={bookie.ctaTextColor || '#ffffff'}
           onChange={(v) => set('ctaTextColor', v)} />
         <Stack direction="row" spacing={1}>
-          <ColField label="Strip colour 1" value={(bookie.stripColors || [])[0] || '#000000'}
+          <ColField label="Strip bg colour" value={(bookie.stripColors || [])[0] || '#000000'}
             onChange={(v) => setStrip(0, v)} />
           <ColField label="Strip colour 2" value={(bookie.stripColors || [])[1] || '#000000'}
             onChange={(v) => setStrip(1, v)} />
@@ -551,16 +541,18 @@ function BpEditorInner({ initial, isNew, bookmakerOptions, draftKey }) {
             </Field>
             <ColField label="Secondary title colour" value={form.header.secondaryTitle.color}
               onChange={(v) => setHeaderTitle('secondaryTitle', 'color', v)} />
-            <Field label="Header image URL">
+            <Field label="Header image / badge URL" help="Optional — e.g. a 'Special Offer / Limited Time' badge graphic. Leave blank for a plain text header with no reserved space above it.">
               <TextField size="small" fullWidth placeholder="https://…"
                 value={form.header.imageUrl}
                 onChange={(e) => setHeader('imageUrl', e.target.value)} />
             </Field>
-            <Field label={`Header image height — ${form.header.imageHeight ?? 110}px`}>
-              <Slider min={40} max={300} step={5}
-                value={form.header.imageHeight ?? 110}
-                onChange={(_, v) => setHeader('imageHeight', v)} />
-            </Field>
+            {form.header.imageUrl && (
+              <Field label={`Header image height — ${form.header.imageHeight ?? 110}px`}>
+                <Slider min={40} max={300} step={5}
+                  value={form.header.imageHeight ?? 110}
+                  onChange={(_, v) => setHeader('imageHeight', v)} />
+              </Field>
+            )}
           </Section>
 
           <Section title="Page style">
