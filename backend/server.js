@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./swagger');
 
@@ -102,6 +103,17 @@ app.get('/dba-runtime.js', (req, res) => {
   res.setHeader('Cache-Control', 'public, max-age=300');
   res.sendFile(dbaRuntimePath);
 });
+
+// Serve the built frontend when present (Docker/production). After all API
+// routes so /api/* keeps priority. Skipped in local dev, where Vite serves
+// the frontend separately on :3000 and frontend/dist doesn't exist.
+const frontendDistPath = path.join(__dirname, '..', 'frontend', 'dist');
+if (fs.existsSync(frontendDistPath)) {
+  app.use(express.static(frontendDistPath));
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(frontendDistPath, 'index.html'));
+  });
+}
 
 // Error handling middleware
 app.use((err, req, res, next) => {
