@@ -35,6 +35,14 @@
     position: relative;
     text-decoration: none;
   }
+  /* Reserve space so CTA/matches sit above the Brazil ~10% band, and densify
+     logo / CTA / matches to match AdPreview.jsx Brazil compact metrics. */
+  .ad:has(.legal-band) {
+    padding: 6px 12px 27px;
+  }
+  .ad:has(.legal-band) .logo { width: 22px; height: 22px; }
+  .ad:has(.legal-band) .matches { margin-top: 4px; padding-top: 6px; }
+  .ad:has(.legal-band) .cta { height: 24px; margin-top: 4px; font-size: 11px; }
   .ad .logo {
     width: 28px; height: 28px;
     background-image: url('[%bookmaker_logo_url%]');
@@ -66,18 +74,19 @@
     font-family: inherit;
     letter-spacing: 0.01em;
   }
-  /* Legal footer — mirrors AdPreview.jsx renderMPU: position absolute on
-     6/6/2 insets, 12 px circular `18+` badge on the left, truncated text on
-     the right. pointer-events:none lets clicks pass through to the wrapping
-     <a class="ad">; the disclaimer link itself re-enables pointer-events. */
+  /* Legal footer — layout selected via [%disclaimer_layout%]:
+       legal-strip  — default markets (small corner strip + 18+ badge)
+       legal-band   — Brazil SPA/MF (~10% of ad height, multiline copy) */
   .ad .legal {
+    pointer-events: none;
+  }
+  .ad .legal.legal-strip {
     position: absolute; left: 6px; right: 6px; bottom: 2px;
     display: flex; justify-content: space-between; align-items: center;
     font-size: 7px; opacity: 0.85;
-    pointer-events: none;
   }
-  .ad .legal .marks { display: inline-flex; align-items: center; gap: 3px; }
-  .ad .legal .age18 {
+  .ad .legal.legal-strip .marks { display: inline-flex; align-items: center; gap: 3px; }
+  .ad .legal.legal-strip .age18 {
     display: inline-flex; align-items: center; justify-content: center;
     width: 12px; height: 12px; border-radius: 50%;
     background: #0A0A0A; color: #FFFFFF;
@@ -85,10 +94,40 @@
     letter-spacing: -0.06em; padding-left: 0.5px;
     flex-shrink: 0;
   }
-  .ad .legal .text {
+  .ad .legal.legal-strip .text {
     color: inherit; text-decoration: underline;
     pointer-events: auto;
     max-width: 70%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  /* Brazil: full-width band ≈ 10% of 250px (= 25px).
+     18+ badge on the left + Ministério da Fazenda sentence (no "jogue…" copy). */
+  .ad .legal.legal-band {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    height: 10%; min-height: 25px;
+    display: flex; align-items: center; justify-content: flex-start;
+    gap: 5px;
+    box-sizing: border-box;
+    padding: 1px 6px;
+    background: rgba(0, 0, 0, 0.72);
+    color: #FFFFFF;
+    font-size: 7px; font-weight: 700; line-height: 1.15;
+    text-align: left; z-index: 2;
+  }
+  .ad .legal.legal-band .marks { display: inline-flex; align-items: center; flex-shrink: 0; }
+  .ad .legal.legal-band .age18 {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 14px; height: 14px; border-radius: 50%;
+    background: #0A0A0A; color: #FFFFFF;
+    font-size: 7px; font-weight: 800; line-height: 1;
+    letter-spacing: -0.06em; padding-left: 0.5px;
+  }
+  .ad .legal.legal-band .text {
+    color: inherit; text-decoration: none;
+    pointer-events: auto;
+    white-space: normal;
+    overflow: hidden;
+    letter-spacing: 0.01em;
+    flex: 1; min-width: 0;
   }
 </style>
 </head>
@@ -101,7 +140,7 @@
            data-transition ms slide animation (default 700) -->
     <div class="matches" data-feed="[%feed_url%]" data-per-slide="2" data-interval="3500" data-transition="700"></div>
     <button class="cta" type="button">[%cta_text%]</button>
-    <div class="legal">
+    <div class="legal [%disclaimer_layout%]">
       <span class="marks"><span class="age18">18+</span></span>
       <a class="text" href="[%disclaimer_url%]" target="_blank">[%disclaimer_text%]</a>
     </div>

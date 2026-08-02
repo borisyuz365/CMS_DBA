@@ -1,12 +1,58 @@
 import React, { useLayoutEffect, useRef, useState } from 'react';
 import { Box } from '@mui/material';
 import { LogoThumb } from './DbaPrimitives';
-import { bgCss, invertText, SIZE_DIMS, resolveLogoUrl, competitorLogoUrl } from './dbaUtils';
+import { bgCss, invertText, SIZE_DIMS, resolveLogoUrl, competitorLogoUrl, BRAZIL_LEGAL_FALLBACK_TEXT } from './dbaUtils';
 import { DBA_SAMPLE_MATCHES } from '../../data/dbaData';
 
 // Constants for team-name fitting in MatchRow.
 const MIN_RATIO = 0.5;
 const MIN_FONT_PX = 8;
+
+// =============================================================================
+// BANNER (320×50) — edit sizes here
+// `default` = normal markets · `brazil` = SPA/MF legal band on
+// =============================================================================
+const BANNER = {
+  default: {
+    logoSize: 48,
+    contentGap: 0,       // px between content row and legal strip (0 = no band)
+    sidePad: 8,
+    colGap: 8,
+    ctaH: 30,
+    ctaFont: 10,
+    ctaPx: 8,
+    // Center betting content (date pill · teams · odds)
+    match: {
+      pillH: 14.3, pillFont: 8.8, pillPx: 7,
+      teamFont: 11, crest: 12.1, teamGap: 4.4,
+      oddsFont: 9.9, oddsH: 13.2, oddDot: 3.3,
+      rowGap: 2.5,
+    },
+    // Welcome-offer slide
+    welcome: { headFont: 13, subFont: 9, ctaFont: 10 },
+    // Non-Brazil corner legal strip
+    legal: { fontSize: 6, badgeSize: 10, logoH: 7 },
+  },
+  brazil: {
+    logoSize: 52,
+    contentGap: 6,       // px between content row and Brazil legal band
+    lift: 4,             // shift logo · match · CTA up by this many px
+    sidePad: 6,
+    colGap: 5,
+    ctaH: 20,
+    ctaFont: 8,
+    ctaPx: 6,
+    match: {
+      pillH: 8.8, pillFont: 6.6, pillPx: 3.3,
+      teamFont: 8.5, crest: 8.8, teamGap: 2.5,
+      oddsFont: 7.7, oddsH: 8.8, oddDot: 2.2,
+      rowGap: 1.5,
+    },
+    welcome: { headFont: 9, subFont: 6, ctaFont: 8 },
+    // Brazil full-width legal band
+    legal: { fontSize: 4.5, badgeSize: 8 },
+  },
+};
 
 // 18+ age-restriction badge. The DBA repo doesn't ship a dedicated 18+ asset
 // (production uses plain text), so we render it as a styled badge in pure CSS:
@@ -42,11 +88,14 @@ function Age18PlusBadge({ size = 14, bg = '#0A0A0A', color = '#FFFFFF' }) {
 // glyph's centre via offsetLeft/offsetWidth after layout and absolutely-position
 // each odd onto that x-coordinate. Re-runs when team names change or the banner
 // resizes (ResizeObserver).
-function BannerMatchSection({ match, config }) {
+function BannerMatchSection({ match, config, dense = false }) {
+  // Sizes come from BANNER.default.match / BANNER.brazil.match — edit there.
+  const s = dense ? BANNER.brazil.match : BANNER.default.match;
   const teamRowRef  = useRef(null);
   const homeNameRef = useRef(null);
   const xRef        = useRef(null);
   const awayNameRef = useRef(null);
+  const pillRef     = useRef(null);
   const homeOddRef  = useRef(null);
   const tieOddRef   = useRef(null);
   const awayOddRef  = useRef(null);
@@ -56,22 +105,21 @@ function BannerMatchSection({ match, config }) {
       const hn = homeNameRef.current;
       const x  = xRef.current;
       const an = awayNameRef.current;
+      const pill = pillRef.current;
       const ho = homeOddRef.current;
       const to = tieOddRef.current;
       const ao = awayOddRef.current;
-      if (!hn || !x || !an || !ho || !to || !ao) return;
+      if (!hn || !x || !an || !pill || !ho || !to || !ao) return;
       // offsetLeft/Width are in unscaled CSS px relative to the offsetParent —
-      // both team row and odds row share the same width (alignItems: stretch on
-      // their flex-column parent), so the same coordinates apply to both.
+      // pill row, team row, and odds row share the same width (alignItems:
+      // stretch), so the X centre maps to the same x on the pill/odds rows.
       const homeC = hn.offsetLeft + hn.offsetWidth / 2;
       const xC    = x.offsetLeft  + x.offsetWidth  / 2;
       const awayC = an.offsetLeft + an.offsetWidth / 2;
-      // For visual symmetry around the tie odd, pick the SMALLER of the two
-      // team-name → X distances and apply it to both sides. That keeps the
-      // outer odds tucked closer to the centre (instead of one stretching out
-      // under a long team name like "Corinthians"), while guaranteeing the
-      // tie-odd-to-home-odd distance equals the tie-odd-to-away-odd distance.
+      // Pill + tie odd sit on the X. Outer odds use the smaller team→X span
+      // so they stay symmetric when one name is much longer.
       const symDist = Math.min(Math.abs(xC - homeC), Math.abs(awayC - xC));
+      pill.style.left = `${xC}px`;
       ho.style.left = `${xC - symDist}px`;
       to.style.left = `${xC}px`;
       ao.style.left = `${xC + symDist}px`;
@@ -83,43 +131,46 @@ function BannerMatchSection({ match, config }) {
     const ro = new ResizeObserver(place);
     ro.observe(target);
     return () => ro.disconnect();
-  }, [match.home.name, match.away.name]);
+  }, [match.home.name, match.away.name, dense, match.date]);
 
   return (
     <Box sx={{
       justifySelf: 'center',
       display: 'flex', flexDirection: 'column', alignItems: 'stretch',
-      rowGap: '2px',
+      rowGap: `${s.rowGap}px`,
       minWidth: 0,
     }}>
-      {/* Date pill — opts out of stretch so it sizes to content and centres. */}
-      <Box sx={{
-        alignSelf: 'center',
-        height: 13, px: '6px', borderRadius: 999,
-        bgcolor: config.datePillColor || 'rgba(0,0,0,0.55)',
-        color: config.datePillTextColor || config.text,
-        fontSize: 8, fontWeight: 600, letterSpacing: '0.02em',
-        display: 'inline-flex', alignItems: 'center',
-        whiteSpace: 'nowrap', flexShrink: 0, lineHeight: 1,
-      }}>{match.date}</Box>
+      {/* Date pill — absolutely placed so its centre sits above the X (not the
+          section midpoint; asymmetric team names shift the X off-centre). */}
+      <Box sx={{ position: 'relative', height: s.pillH }}>
+        <Box ref={pillRef} sx={{
+          position: 'absolute', top: 0, transform: 'translateX(-50%)',
+          height: s.pillH, px: `${s.pillPx}px`, borderRadius: 999,
+          bgcolor: config.datePillColor || 'rgba(0,0,0,0.55)',
+          color: config.datePillTextColor || config.text,
+          fontSize: s.pillFont, fontWeight: 600, letterSpacing: '0.02em',
+          display: 'inline-flex', alignItems: 'center',
+          whiteSpace: 'nowrap', flexShrink: 0, lineHeight: 1,
+        }}>{match.date}</Box>
+      </Box>
 
       {/* Team row — natural-width tight cluster, centred in the row. The row
           itself stretches to section width (alignItems: stretch on parent),
           so its offset coordinates are the same coordinate system as the
-          odds row below.
+          pill/odds rows.
           `position: relative` so the inner spans' offsetLeft is measured
           relative to the team row (their offsetParent), not whatever
           positioned ancestor sits further up the tree. */}
       <Box ref={teamRowRef} sx={{
         position: 'relative',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        gap: '4px',
-        fontSize: 10, fontWeight: 600, lineHeight: 1,
+        gap: `${s.teamGap}px`,
+        fontSize: s.teamFont, fontWeight: 600, lineHeight: 1,
       }}>
         <Box ref={homeNameRef} component="span" sx={{ whiteSpace: 'nowrap' }}>{match.home.name}</Box>
-        <TeamCrest team={match.home} size={11} />
-        <Box ref={xRef} component="span" sx={{ opacity: 0.6, fontWeight: 700, mx: '2px' }}>X</Box>
-        <TeamCrest team={match.away} size={11} />
+        <TeamCrest team={match.home} size={s.crest} />
+        <Box ref={xRef} component="span" sx={{ opacity: 0.6, fontWeight: 700, mx: '1px' }}>X</Box>
+        <TeamCrest team={match.away} size={s.crest} />
         <Box ref={awayNameRef} component="span" sx={{ whiteSpace: 'nowrap' }}>{match.away.name}</Box>
       </Box>
 
@@ -131,19 +182,19 @@ function BannerMatchSection({ match, config }) {
           odd on the computed x. */}
       <Box sx={{
         position: 'relative',
-        height: 12,
-        fontSize: 9, fontWeight: 700,
+        height: s.oddsH,
+        fontSize: s.oddsFont, fontWeight: 700, lineHeight: 1,
       }}>
-        <Box ref={homeOddRef} sx={{ position: 'absolute', top: 0, transform: 'translateX(-50%)', display: 'inline-flex', alignItems: 'center', gap: '2px', whiteSpace: 'nowrap' }}>
-          <Box component="span" sx={{ width: 3, height: 3, borderRadius: 999, bgcolor: '#FFC107' }} />
+        <Box ref={homeOddRef} sx={{ position: 'absolute', top: 0, transform: 'translateX(-50%)', display: 'inline-flex', alignItems: 'center', gap: '2px', whiteSpace: 'nowrap', lineHeight: 1 }}>
+          <Box component="span" sx={{ width: s.oddDot, height: s.oddDot, borderRadius: 999, bgcolor: '#FFC107' }} />
           <Box component="span">{match.odds[0]}</Box>
         </Box>
-        <Box ref={tieOddRef} sx={{ position: 'absolute', top: 0, transform: 'translateX(-50%)', display: 'inline-flex', alignItems: 'center', gap: '2px', whiteSpace: 'nowrap' }}>
-          <Box component="span" sx={{ width: 3, height: 3, borderRadius: 999, bgcolor: '#FFC107' }} />
+        <Box ref={tieOddRef} sx={{ position: 'absolute', top: 0, transform: 'translateX(-50%)', display: 'inline-flex', alignItems: 'center', gap: '2px', whiteSpace: 'nowrap', lineHeight: 1 }}>
+          <Box component="span" sx={{ width: s.oddDot, height: s.oddDot, borderRadius: 999, bgcolor: '#FFC107' }} />
           <Box component="span">{match.odds[1]}</Box>
         </Box>
-        <Box ref={awayOddRef} sx={{ position: 'absolute', top: 0, transform: 'translateX(-50%)', display: 'inline-flex', alignItems: 'center', gap: '2px', whiteSpace: 'nowrap' }}>
-          <Box component="span" sx={{ width: 3, height: 3, borderRadius: 999, bgcolor: '#FFC107' }} />
+        <Box ref={awayOddRef} sx={{ position: 'absolute', top: 0, transform: 'translateX(-50%)', display: 'inline-flex', alignItems: 'center', gap: '2px', whiteSpace: 'nowrap', lineHeight: 1 }}>
+          <Box component="span" sx={{ width: s.oddDot, height: s.oddDot, borderRadius: 999, bgcolor: '#FFC107' }} />
           <Box component="span">{match.odds[2]}</Box>
         </Box>
       </Box>
@@ -298,11 +349,38 @@ function MatchRow({ match, config, d }) {
   );
 }
 
-export default function AdPreview({ config, sizeId, bookmaker, scale = 1, slideIdx = 0 }) {
+export default function AdPreview({ config, sizeId, bookmaker, scale = 1, slideIdx = 0, countries = [] }) {
   const [w, h] = SIZE_DIMS[sizeId] || [300, 250];
   const isInterstitial = sizeId === '640x1280';
   const isBanner = sizeId === '320x50';
   const radius = config.radius || 8;
+  const isBrazil = Array.isArray(countries) && countries.includes('BR');
+  const useBrazilBand = isBrazil && !!config.legal?.enabled;
+  // ~10% of ad height; floor so the two-line SPA/MF copy stays readable.
+  const brazilBandH = Math.max(isBanner ? 12 : 25, Math.round(h * 0.1));
+
+  // Brazil (SPA/MF): full-width disclaimer band (~10% of ad).
+  // 18+ is a badge; copy is the Ministério da Fazenda sentence only.
+  const brazilLegalText = (() => {
+    const raw = (config.legal?.text || BRAZIL_LEGAL_FALLBACK_TEXT).trim();
+    return raw.replace(/^\s*18\+?\s*JOGUE COM RESPONSABILIDADE\.?\s*/i, '').trim() || BRAZIL_LEGAL_FALLBACK_TEXT;
+  })();
+  const renderBrazilLegalBand = (heightPx, fontSize, badgeSize) => (
+    <Box sx={{
+      position: 'absolute', left: 0, right: 0, bottom: 0, height: heightPx, zIndex: 2,
+      display: 'flex', alignItems: 'center', justifyContent: 'center', gap: `${Math.max(4, heightPx * 0.14)}px`,
+      px: `${Math.max(3, heightPx * 0.12)}px`, py: `${Math.max(1, heightPx * 0.06)}px`, boxSizing: 'border-box',
+      bgcolor: 'rgba(0,0,0,0.72)', color: config.legal?.color || '#FFFFFF',
+      fontSize, lineHeight: 1.15, fontWeight: 700, textAlign: 'left',
+      pointerEvents: 'none',
+    }}>
+      <Age18PlusBadge size={badgeSize} />
+      {config.legal?.logo && <Box component="img" src={config.legal.logo} alt="" sx={{ height: badgeSize, width: 'auto', flexShrink: 0 }} />}
+      <Box component="span" sx={{ whiteSpace: 'normal', overflow: 'hidden', letterSpacing: '0.01em', flex: 1, minWidth: 0 }}>
+        {brazilLegalText}
+      </Box>
+    </Box>
+  );
 
   const wo = config.welcomeOffer || {};
   const woCtaText = (wo.ctaText && wo.ctaText.trim()) || config.ctaText;
@@ -389,45 +467,60 @@ export default function AdPreview({ config, sizeId, bookmaker, scale = 1, slideI
     const cornerInset = radius * (1 - 1 / Math.SQRT2);
     const legalSideInset = Math.max(4, cornerInset);
     const legalBottomInset = Math.max(1, cornerInset);
+    // Sizes: edit BANNER.default / BANNER.brazil at the top of this file.
+    // All three columns share the same vertical centre (and the same Brazil
+    // footer clearance) so logo · match · CTA stay aligned at current sizes.
+    const b = useBrazilBand ? BANNER.brazil : BANNER.default;
+    const footerClearance = useBrazilBand ? brazilBandH + b.contentGap : 0;
+    const lift = useBrazilBand ? (b.lift || 0) : 0;
+    const colSx = {
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      pb: `${footerClearance}px`, boxSizing: 'border-box', minWidth: 0,
+      transform: lift ? `translateY(-${lift}px)` : undefined,
+    };
     return (
       <Box sx={{
         width: w, height: h,
         background: bgCss(config), color: config.text,
         borderRadius: `${radius}px`, overflow: 'hidden',
         fontFamily: '"365 Sans", Inter, sans-serif',
-        // 3-column row: logo · middle · CTA. alignItems centres each cell
-        // vertically against the banner's mid-line, so the logo, the middle
-        // block, and the CTA all share the same vertical axis. Horizontal
-        // padding only — vertical padding would clip the 48px logo inside a
-        // 50px banner.
-        display: 'grid', gridTemplateColumns: 'auto 1fr auto', alignItems: 'center', columnGap: '8px',
-        padding: '0 8px', boxSizing: 'border-box', position: 'relative',
+        display: 'grid', gridTemplateColumns: 'auto 1fr auto',
+        alignItems: 'stretch',
+        columnGap: `${b.colGap}px`,
+        padding: `0 ${b.sidePad}px`,
+        boxSizing: 'border-box', position: 'relative',
         transform: `scale(${scale})`, transformOrigin: 'top left',
       }}>
-        {/* Banner logo: 14.84% of 320 ≈ 48px — matches production frame-container.css */}
-        <LogoThumb bg={bookmaker.logoBg} fg={bookmaker.logoFg} initials={bookmaker.initials} imageUrl={resolveLogoUrl(bookmaker, config)} size={48} radius={4} bare />
-        <BannerMatchSection match={m} config={config} />
-        <Box component="button" sx={{
-          background: config.cta, color: config.ctaTextColor || invertText(config.cta),
-          border: 'none', height: 30, px: '8px',
-          borderRadius: `${Math.min(radius, 4)}px`,
-          fontSize: 10, fontWeight: 700, cursor: 'pointer',
-          fontFamily: 'inherit', whiteSpace: 'nowrap', letterSpacing: '0.01em',
-        }}>{config.ctaText}</Box>
+        <Box sx={colSx}>
+          <LogoThumb bg={bookmaker.logoBg} fg={bookmaker.logoFg} initials={bookmaker.initials} imageUrl={resolveLogoUrl(bookmaker, config)} size={b.logoSize} radius={4} bare />
+        </Box>
+        <Box sx={colSx}>
+          <BannerMatchSection match={m} config={config} dense={useBrazilBand} />
+        </Box>
+        <Box sx={colSx}>
+          <Box component="button" sx={{
+            background: config.cta, color: config.ctaTextColor || invertText(config.cta),
+            border: 'none', height: b.ctaH, px: `${b.ctaPx}px`,
+            borderRadius: `${Math.min(radius, 4)}px`,
+            fontSize: b.ctaFont, fontWeight: 700, cursor: 'pointer',
+            fontFamily: 'inherit', whiteSpace: 'nowrap', letterSpacing: '0.01em',
+          }}>{config.ctaText}</Box>
+        </Box>
         {/* Bottom regulatory strip — both the 18+ badge and the legal text
             are gated on config.legal.enabled. pointerEvents: none keeps the
             CTA clickable through it. Inset by the diagonal safe distance so
             nothing gets clipped by the rounded corners. */}
         {config.legal && config.legal.enabled && (
+          useBrazilBand ? renderBrazilLegalBand(brazilBandH, b.legal.fontSize, b.legal.badgeSize) : (
           <Box sx={{
             position: 'absolute', left: legalSideInset, right: legalSideInset, bottom: legalBottomInset,
             display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-            fontSize: 6, color: config.legal.color || config.text, opacity: 0.85,
+            fontSize: b.legal.fontSize, color: config.legal.color || config.text, opacity: 0.85,
             pointerEvents: 'none',
           }}>
             <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
-              {config.legal.logo && <Box component="img" src={config.legal.logo} alt="" sx={{ height: 7, width: 'auto' }} />}
-              <Age18PlusBadge size={10} />
+              {config.legal.logo && <Box component="img" src={config.legal.logo} alt="" sx={{ height: b.legal.logoH, width: 'auto' }} />}
+              <Age18PlusBadge size={b.legal.badgeSize} />
             </Box>
             {config.legal.text && (
               <Box component="span" sx={{ maxWidth: '60%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -435,6 +528,7 @@ export default function AdPreview({ config, sizeId, bookmaker, scale = 1, slideI
               </Box>
             )}
           </Box>
+          )
         )}
       </Box>
     );
@@ -448,40 +542,54 @@ export default function AdPreview({ config, sizeId, bookmaker, scale = 1, slideI
     // top edge, leaving the full 152px below for two full-size cards (148px
     // total) with a small buffer. CTA + dots stay at their fixed positions
     // anchored by the unchanged wrap bottom padding (14).
-    const d = { cardRadius: 12, cardPad: '14px 12px 10px', pillH: 16, pillFont: 9,
-                teamsGap: 6, teamFont: 10, crest: 18, xFont: 11,
-                oddsGap: 12, oddsFont: 11, oddsDot: 5, rowGap: 6 };
+    //
+    // Brazil band (~25px / 10%): denser card metrics + smaller logo/CTA/gaps
+    // so two match cards still fit above the disclaimer.
+    const d = useBrazilBand
+      ? { cardRadius: 10, cardPad: '9px 10px 6px', pillH: 13, pillFont: 8,
+          teamsGap: 4, teamFont: 9, crest: 14, xFont: 9,
+          oddsGap: 8, oddsFont: 9, oddsDot: 4, rowGap: 4 }
+      : { cardRadius: 12, cardPad: '14px 12px 10px', pillH: 16, pillFont: 9,
+          teamsGap: 6, teamFont: 10, crest: 18, xFont: 11,
+          oddsGap: 12, oddsFont: 11, oddsDot: 5, rowGap: 6 };
+    const logoSize = useBrazilBand ? 22 : 28;
+    const cardGap = useBrazilBand ? 8 : 14;
+    const ctaH = useBrazilBand ? 24 : 30;
+    const ctaMt = useBrazilBand ? 4 : 8;
+    const ctaFont = useBrazilBand ? 11 : 12;
+    const sidePad = useBrazilBand ? 12 : 14;
+    const bottomPad = useBrazilBand ? brazilBandH + 2 : 14;
     return wrap(
       <>
-        {/* Logo zone budget = 28px (see comment above). Logo is 28 with mb=0
-            so the matches slot keeps exactly 152px for 2 full cards. The CTA
-            then lands at y=188-218, same as the previous layout. */}
+        {/* Logo zone budget = 28px normally / 22px with Brazil band. */}
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <LogoThumb bg={bookmaker.logoBg} fg={bookmaker.logoFg} initials={bookmaker.initials} imageUrl={resolveLogoUrl(bookmaker, config)} size={28} radius={6} bare />
+          <LogoThumb bg={bookmaker.logoBg} fg={bookmaker.logoFg} initials={bookmaker.initials} imageUrl={resolveLogoUrl(bookmaker, config)} size={logoSize} radius={6} bare />
         </Box>
         {/* No overflow:hidden — the date pill on the top card is positioned
             top: -pillH/2 to poke above the card, and clipping that here
             chops it in half. The CTA below now has `position: relative` so
             even if cards visually overflowed downward, the CTA would paint
-            on top (same stacking context). Cards are also sized to fit the
-            152-px slot, so there's no real bottom overflow to clip anyway. */}
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '14px', flex: 1, minHeight: 0 }}>
+            on top (same stacking context). */}
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: `${cardGap}px`, flex: 1, minHeight: 0 }}>
           {visible.map((m, i) => <MatchRow key={i} match={m} config={config} d={d} />)}
         </Box>
         <Box component="button" sx={{
           background: config.cta, color: config.ctaTextColor || invertText(config.cta),
-          border: 'none', height: 30, mt: '8px',
+          border: 'none', height: ctaH, mt: `${ctaMt}px`,
           // position: relative so the CTA participates in the same stacking
           // context as the cards (which are also positioned) — ensures the
           // CTA paints ABOVE any card paint, not below.
           position: 'relative',
           borderRadius: `${Math.min(radius, 6)}px`,
-          fontSize: 12, fontWeight: 700, cursor: 'pointer',
+          fontSize: ctaFont, fontWeight: 700, cursor: 'pointer',
           fontFamily: 'inherit', letterSpacing: '0.01em',
         }}>{config.ctaText}</Box>
         {/* Dots flow as a flex child immediately after the CTA. */}
-        {renderInAdDots({ rowHeight: 10, dotSize: 4, mt: 8 })}
+        {renderInAdDots(useBrazilBand
+          ? { rowHeight: 7, dotSize: 3, mt: 3 }
+          : { rowHeight: 10, dotSize: 4, mt: 8 })}
         {config.legal && config.legal.enabled && (
+          useBrazilBand ? renderBrazilLegalBand(brazilBandH, 7, 10) : (
           <Box sx={{ position: 'absolute', left: 6, right: 6, bottom: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 7, color: config.legal.color || config.text, opacity: 0.85 }}>
             <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
               {config.legal.logo && <Box component="img" src={config.legal.logo} alt="" sx={{ height: 8, width: 'auto' }} />}
@@ -491,12 +599,13 @@ export default function AdPreview({ config, sizeId, bookmaker, scale = 1, slideI
               {config.legal.text || 'Jogue com responsabilidade'}
             </Box>
           </Box>
+          )
         )}
       </>,
       // Top padding = 0 so the logo sits flush at the top (matches
       // production's `padding: 0` on .dynamic-banner-widget-container).
-      // Bottom padding stays 14 to anchor the CTA / dots at y=188-218 / 226-236.
-      '0px 14px 14px'
+      // Brazil: bottom pad equals the band height so CTA/dots sit above it.
+      `0px ${sidePad}px ${bottomPad}px`
     );
   };
 
@@ -533,93 +642,127 @@ export default function AdPreview({ config, sizeId, bookmaker, scale = 1, slideI
         }}>{config.ctaText}</Box>
         {/* Dots flow as a flex child immediately after the CTA. */}
         {renderInAdDots({ rowHeight: 24, dotSize: 10, mt: 24 })}
-        <Box sx={{ position: 'absolute', bottom: 20, left: 56, right: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 16, color: (config.legal && config.legal.color) || config.text, opacity: 0.85 }}>
-          <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-            {config.legal && config.legal.enabled && config.legal.logo && <Box component="img" src={config.legal.logo} alt="" sx={{ height: 22, width: 'auto' }} />}
-            <Age18PlusBadge size={28} />
+        {isBrazil && config.legal && config.legal.enabled ? renderBrazilLegalBand(brazilBandH, 20, 28) : (
+          <Box sx={{ position: 'absolute', bottom: 20, left: 56, right: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 16, color: (config.legal && config.legal.color) || config.text, opacity: 0.85 }}>
+            <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+              {config.legal && config.legal.enabled && config.legal.logo && <Box component="img" src={config.legal.logo} alt="" sx={{ height: 22, width: 'auto' }} />}
+              <Age18PlusBadge size={28} />
+            </Box>
+            <Box component="span" sx={{ maxWidth: '70%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {(config.legal && config.legal.enabled && config.legal.text) || 'Jogue com responsabilidade'}
+            </Box>
           </Box>
-          <Box component="span" sx={{ maxWidth: '70%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-            {(config.legal && config.legal.enabled && config.legal.text) || 'Jogue com responsabilidade'}
-          </Box>
-        </Box>
+        )}
       </>,
-      '24px 56px 80px'
+      isBrazil && config.legal?.enabled ? `24px 56px ${80 + brazilBandH}px` : '24px 56px 80px'
     );
   };
 
   // ===== Welcome offer slides =====
-  const renderWelcomeBanner = () => (
-    <Box sx={{
-      width: w, height: h,
-      // Use the welcome override if set; otherwise inherit the main slide's bg.
-      background: welcomeBg || bgCss(config), color: config.text,
-      borderRadius: `${radius}px`, overflow: 'hidden',
-      fontFamily: '"365 Sans", Inter, sans-serif',
-      display: 'grid', gridTemplateColumns: 'auto 1fr auto', alignItems: 'center', columnGap: 1,
-      padding: '4px 8px', boxSizing: 'border-box', position: 'relative',
-      transform: `scale(${scale})`, transformOrigin: 'top left',
-    }}>
-      {/* Welcome-banner logo: matches the main banner size (production parity) */}
-      <LogoThumb bg={bookmaker.logoBg} fg={bookmaker.logoFg} initials={bookmaker.initials} imageUrl={resolveLogoUrl(bookmaker, config)} size={48} radius={4} bare />
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1px', minWidth: 0, lineHeight: 1.1, textAlign: 'center' }}>
-        <Box sx={{ fontSize: 13, fontWeight: 800, letterSpacing: '-0.01em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' }}>{woHeadline}</Box>
-        <Box sx={{ fontSize: 9, opacity: 0.8, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' }}>{woSubtext}</Box>
-      </Box>
-      <Box component="button" sx={{
-        background: woCtaBg, color: woCtaFg,
-        border: 'none', height: 30, px: '8px',
-        borderRadius: `${Math.min(radius, 4)}px`,
-        fontSize: 10, fontWeight: 700, cursor: 'pointer',
-        fontFamily: 'inherit', whiteSpace: 'nowrap', letterSpacing: '0.01em',
-      }}>{woCtaText}</Box>
-    </Box>
-  );
-
-  const renderWelcomeMPU = () => wrap(
-    <>
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: '8px' }}>
-        {/* Welcome-MPU logo: matches the main MPU size (production parity) */}
-        <LogoThumb bg={bookmaker.logoBg} fg={bookmaker.logoFg} initials={bookmaker.initials} imageUrl={resolveLogoUrl(bookmaker, config)} size={42} radius={6} bare />
-        {/* textIndent balances the trailing letter-spacing after the last
-            glyph (otherwise the text reads as left-shifted inside the pill).
-            Asymmetric vertical padding (top > bottom) compensates for the
-            empty descender area: uppercase glyphs occupy ~70% of the line
-            box from the top, so equal padding makes the text read top-heavy. */}
-        <Box sx={{
-          padding: '3px 8px 1px', borderRadius: 999,
-          bgcolor: woPillBg, color: woPillFg,
-          fontSize: 9, fontWeight: 800, lineHeight: 1,
-          letterSpacing: '0.06em', textIndent: '0.06em',
-          textTransform: 'uppercase', textAlign: 'center',
-        }}>{woPillText}</Box>
-      </Box>
-      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '6px', textAlign: 'center', px: '4px' }}>
-        {wo.image && <Box component="img" src={wo.image} alt="" sx={{ maxHeight: 50, maxWidth: '100%', objectFit: 'contain', mb: '2px' }} />}
-        <Box sx={{ fontSize: 22, fontWeight: 800, lineHeight: 1.05, letterSpacing: '-0.02em' }}>{woHeadline}</Box>
-        <Box sx={{ fontSize: 11, opacity: 0.8, lineHeight: 1.25 }}>{woSubtext}</Box>
-        <Box sx={{ fontSize: 8, opacity: 0.55, lineHeight: 1.2, mt: '2px' }}>{woTerms}</Box>
-      </Box>
-      <Box component="button" sx={{
-        background: woCtaBg, color: woCtaFg,
-        border: 'none', height: 32, mt: '6px',
-        borderRadius: `${Math.min(radius, 6)}px`,
-        fontSize: 13, fontWeight: 800, cursor: 'pointer',
-        fontFamily: 'inherit', letterSpacing: '0.01em',
-      }}>{woCtaText}</Box>
-      {renderInAdDots({ rowHeight: 10, dotSize: 4, mt: 8 })}
-      {config.legal && config.legal.enabled && (
-        <Box sx={{ position: 'absolute', left: 6, right: 6, bottom: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 7, color: config.legal.color || config.text, opacity: 0.85 }}>
-          <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
-            {config.legal.logo && <Box component="img" src={config.legal.logo} alt="" sx={{ height: 8, width: 'auto' }} />}
-            <Age18PlusBadge size={12} />
-          </Box>
-          <Box component="span" sx={{ maxWidth: '70%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{config.legal.text || 'Jogue com responsabilidade'}</Box>
+  const renderWelcomeBanner = () => {
+    // Sizes: edit BANNER.default / BANNER.brazil at the top of this file.
+    const b = useBrazilBand ? BANNER.brazil : BANNER.default;
+    const footerClearance = useBrazilBand ? brazilBandH + b.contentGap : 0;
+    const lift = useBrazilBand ? (b.lift || 0) : 0;
+    const colSx = {
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      pb: `${footerClearance}px`, boxSizing: 'border-box', minWidth: 0,
+      transform: lift ? `translateY(-${lift}px)` : undefined,
+    };
+    return (
+      <Box sx={{
+        width: w, height: h,
+        // Use the welcome override if set; otherwise inherit the main slide's bg.
+        background: welcomeBg || bgCss(config), color: config.text,
+        borderRadius: `${radius}px`, overflow: 'hidden',
+        fontFamily: '"365 Sans", Inter, sans-serif',
+        display: 'grid', gridTemplateColumns: 'auto 1fr auto',
+        alignItems: 'stretch',
+        columnGap: `${b.colGap}px`,
+        padding: useBrazilBand ? `0 ${b.sidePad}px` : '4px 8px',
+        boxSizing: 'border-box', position: 'relative',
+        transform: `scale(${scale})`, transformOrigin: 'top left',
+      }}>
+        <Box sx={colSx}>
+          <LogoThumb bg={bookmaker.logoBg} fg={bookmaker.logoFg} initials={bookmaker.initials} imageUrl={resolveLogoUrl(bookmaker, config)} size={b.logoSize} radius={4} bare />
         </Box>
-      )}
-    </>,
-    '10px 14px 14px',
-    welcomeBg,
-  );
+        <Box sx={{ ...colSx, flexDirection: 'column', gap: '1px', lineHeight: 1.1, textAlign: 'center' }}>
+          <Box sx={{ fontSize: b.welcome.headFont, fontWeight: 800, letterSpacing: '-0.01em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' }}>{woHeadline}</Box>
+          <Box sx={{ fontSize: b.welcome.subFont, opacity: 0.8, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' }}>{woSubtext}</Box>
+        </Box>
+        <Box sx={colSx}>
+          <Box component="button" sx={{
+            background: woCtaBg, color: woCtaFg,
+            border: 'none', height: b.ctaH, px: `${b.ctaPx}px`,
+            borderRadius: `${Math.min(radius, 4)}px`,
+            fontSize: b.welcome.ctaFont, fontWeight: 700, cursor: 'pointer',
+            fontFamily: 'inherit', whiteSpace: 'nowrap', letterSpacing: '0.01em',
+          }}>{woCtaText}</Box>
+        </Box>
+        {useBrazilBand && renderBrazilLegalBand(brazilBandH, b.legal.fontSize, b.legal.badgeSize)}
+      </Box>
+    );
+  };
+
+  const renderWelcomeMPU = () => {
+    const logoSize = useBrazilBand ? 32 : 42;
+    const headFont = useBrazilBand ? 18 : 22;
+    const subFont = useBrazilBand ? 10 : 11;
+    const termsFont = useBrazilBand ? 7 : 8;
+    const imgMax = useBrazilBand ? 36 : 50;
+    const ctaH = useBrazilBand ? 26 : 32;
+    const gap = useBrazilBand ? 4 : 6;
+    const topPad = useBrazilBand ? 8 : 10;
+    const bottomPad = useBrazilBand ? brazilBandH + 2 : 14;
+    return wrap(
+      <>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: useBrazilBand ? '4px' : '8px' }}>
+          <LogoThumb bg={bookmaker.logoBg} fg={bookmaker.logoFg} initials={bookmaker.initials} imageUrl={resolveLogoUrl(bookmaker, config)} size={logoSize} radius={6} bare />
+          {/* textIndent balances the trailing letter-spacing after the last
+              glyph (otherwise the text reads as left-shifted inside the pill).
+              Asymmetric vertical padding (top > bottom) compensates for the
+              empty descender area: uppercase glyphs occupy ~70% of the line
+              box from the top, so equal padding makes the text read top-heavy. */}
+          <Box sx={{
+            padding: useBrazilBand ? '2px 6px 1px' : '3px 8px 1px', borderRadius: 999,
+            bgcolor: woPillBg, color: woPillFg,
+            fontSize: useBrazilBand ? 8 : 9, fontWeight: 800, lineHeight: 1,
+            letterSpacing: '0.06em', textIndent: '0.06em',
+            textTransform: 'uppercase', textAlign: 'center',
+          }}>{woPillText}</Box>
+        </Box>
+        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: `${gap}px`, textAlign: 'center', px: '4px' }}>
+          {wo.image && <Box component="img" src={wo.image} alt="" sx={{ maxHeight: imgMax, maxWidth: '100%', objectFit: 'contain', mb: '2px' }} />}
+          <Box sx={{ fontSize: headFont, fontWeight: 800, lineHeight: 1.05, letterSpacing: '-0.02em' }}>{woHeadline}</Box>
+          <Box sx={{ fontSize: subFont, opacity: 0.8, lineHeight: 1.25 }}>{woSubtext}</Box>
+          <Box sx={{ fontSize: termsFont, opacity: 0.55, lineHeight: 1.2, mt: '2px' }}>{woTerms}</Box>
+        </Box>
+        <Box component="button" sx={{
+          background: woCtaBg, color: woCtaFg,
+          border: 'none', height: ctaH, mt: useBrazilBand ? '4px' : '6px',
+          borderRadius: `${Math.min(radius, 6)}px`,
+          fontSize: useBrazilBand ? 11 : 13, fontWeight: 800, cursor: 'pointer',
+          fontFamily: 'inherit', letterSpacing: '0.01em',
+        }}>{woCtaText}</Box>
+        {renderInAdDots(useBrazilBand
+          ? { rowHeight: 7, dotSize: 3, mt: 3 }
+          : { rowHeight: 10, dotSize: 4, mt: 8 })}
+        {config.legal && config.legal.enabled && (
+          useBrazilBand ? renderBrazilLegalBand(brazilBandH, 7, 10) : (
+          <Box sx={{ position: 'absolute', left: 6, right: 6, bottom: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 7, color: config.legal.color || config.text, opacity: 0.85 }}>
+            <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
+              {config.legal.logo && <Box component="img" src={config.legal.logo} alt="" sx={{ height: 8, width: 'auto' }} />}
+              <Age18PlusBadge size={12} />
+            </Box>
+            <Box component="span" sx={{ maxWidth: '70%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{config.legal.text || 'Jogue com responsabilidade'}</Box>
+          </Box>
+          )
+        )}
+      </>,
+      `${topPad}px 14px ${bottomPad}px`,
+      welcomeBg,
+    );
+  };
 
   const renderWelcomeInterstitial = () => wrap(
     <>
@@ -655,6 +798,7 @@ export default function AdPreview({ config, sizeId, bookmaker, scale = 1, slideI
       }}>{woCtaText}</Box>
       <Box sx={{ mt: '20px', fontSize: 18, opacity: 0.55, textAlign: 'center', lineHeight: 1.3 }}>{woTerms}</Box>
       {renderInAdDots({ rowHeight: 24, dotSize: 10, mt: 24 })}
+      {isBrazil && config.legal?.enabled ? renderBrazilLegalBand(brazilBandH, 20, 28) : (
       <Box sx={{ position: 'absolute', bottom: 20, left: 56, right: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 16, color: (config.legal && config.legal.color) || config.text, opacity: 0.85 }}>
         <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
           {config.legal && config.legal.enabled && config.legal.logo && <Box component="img" src={config.legal.logo} alt="" sx={{ height: 22, width: 'auto' }} />}
@@ -664,8 +808,9 @@ export default function AdPreview({ config, sizeId, bookmaker, scale = 1, slideI
           {(config.legal && config.legal.enabled && config.legal.text) || 'Jogue com responsabilidade'}
         </Box>
       </Box>
+      )}
     </>,
-    '64px 56px 80px',
+    isBrazil && config.legal?.enabled ? `64px 56px ${80 + brazilBandH}px` : '64px 56px 80px',
     welcomeBg,
   );
 

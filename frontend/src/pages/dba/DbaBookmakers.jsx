@@ -434,9 +434,9 @@ function BookmakerForm({ open, mode, initial, defaultCountry, configuredBookmake
       }
       const v = {};
       if (initial?.variants) {
-        Object.entries(initial.variants).forEach(([cc, val]) => { v[cc] = { affiliate: val.affiliate, status: val.status }; });
+        Object.entries(initial.variants).forEach(([cc, val]) => { v[cc] = { affiliate: val.affiliate, licenseNumber: val.licenseNumber || '', status: val.status }; });
       } else {
-        v[defaultCountry] = { affiliate: '', status: 'draft' };
+        v[defaultCountry] = { affiliate: '', licenseNumber: '', status: 'draft' };
       }
       setVariants(v);
       setActiveCC(defaultCountry in v ? defaultCountry : Object.keys(v)[0]);
@@ -518,6 +518,7 @@ function BookmakerForm({ open, mode, initial, defaultCountry, configuredBookmake
     Object.entries(variants).forEach(([cc, v]) => {
       finalVariants[cc] = {
         affiliate: v.affiliate.trim(),
+        licenseNumber: (v.licenseNumber || '').trim(),
         status: publishAll ? 'live' : v.status,
         modified: new Date().toISOString(),
         modifiedBy: 'D. Benvelgy',
@@ -547,7 +548,7 @@ function BookmakerForm({ open, mode, initial, defaultCountry, configuredBookmake
   };
 
   const addCountryVariant = (cc) => {
-    setVariants((vs) => ({ ...vs, [cc]: { affiliate: '', status: 'draft' } }));
+    setVariants((vs) => ({ ...vs, [cc]: { affiliate: '', licenseNumber: '', status: 'draft' } }));
     setActiveCC(cc);
     setAddCountryMenuAnchor(null);
     setTouched(true);
@@ -853,6 +854,16 @@ function BookmakerForm({ open, mode, initial, defaultCountry, configuredBookmake
                   startAdornment: <InputAdornment position="start"><LinkIcon fontSize="small" /></InputAdornment>,
                   sx: { fontFamily: 'ui-monospace, monospace', fontSize: 13 },
                 }}
+                sx={{ mb: 1.5 }}
+              />
+
+              <TextField
+                label={`Regulatory license number · ${activeCC} (optional)`}
+                size="small" fullWidth
+                value={activeV?.licenseNumber || ''}
+                onChange={(e) => setVariantField(activeCC, 'licenseNumber', e.target.value)}
+                helperText={`e.g. Brazil SPA/MF authorization number. Substituted into the default legal disclaimer for this bookmaker in ${activeCC}.`}
+                placeholder="e.g. 247/2025"
                 sx={{ mb: 1.5 }}
               />
 

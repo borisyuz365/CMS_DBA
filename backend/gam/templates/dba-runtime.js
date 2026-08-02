@@ -143,7 +143,86 @@
       '.matches .dba-x { font-size: 11px; font-weight: 700; opacity: 0.65; flex: 0 0 auto; }' +
       '.matches .dba-odds { display: flex; justify-content: space-around; gap: 12px; margin-top: 5px; font-size: 11px; font-weight: 700; }' +
       '.matches .dba-odd { display: inline-flex; align-items: center; gap: 6px; }' +
-      '.matches .dba-odd:before { content: ""; display: inline-block; width: 5px; height: 5px; border-radius: 999px; background: #FFC107; }';
+      '.matches .dba-odd:before { content: ""; display: inline-block; width: 5px; height: 5px; border-radius: 999px; background: #FFC107; }' +
+      /* Brazil ~10% legal band: denser match cards (mirrors AdPreview.jsx). */ +
+      '.ad:has(.legal-band) .matches .dba-slide { gap: 8px; }' +
+      '.ad:has(.legal-band) .matches .dba-card { border-radius: 10px; padding: 8px 10px 5px; }' +
+      '.ad:has(.legal-band) .matches .dba-pill { top: -6px; padding: 1px 5px; font-size: 8px; }' +
+      '.ad:has(.legal-band) .matches .dba-teams { gap: 4px; margin-top: 4px; font-size: 9px; }' +
+      '.ad:has(.legal-band) .matches .dba-team-logo { width: 14px; height: 14px; }' +
+      '.ad:has(.legal-band) .matches .dba-x { font-size: 9px; }' +
+      '.ad:has(.legal-band) .matches .dba-odds { gap: 8px; margin-top: 3px; font-size: 9px; }' +
+      '.ad:has(.legal-band) .matches .dba-odd { gap: 4px; }' +
+      '.ad:has(.legal-band) .matches .dba-odd:before { width: 4px; height: 4px; }' +
+      /* Banner (320×50): flat match block — no card chrome. Mirrors AdPreview
+         BannerMatchSection. Activated via data-layout="banner" on .matches. */ +
+      '.matches[data-layout="banner"] { display: flex; align-items: center; }' +
+      '.matches[data-layout="banner"] .dba-track { width: 100%; height: auto; }' +
+      '.matches[data-layout="banner"] .dba-slide { gap: 0; justify-content: center; }' +
+      '.matches[data-layout="banner"] .dba-card {' +
+        'background: transparent; border: none; border-radius: 0; padding: 0;' +
+        'display: flex; flex-direction: column; align-items: stretch; gap: 2px;' +
+      '}' +
+      '.matches[data-layout="banner"] .dba-card { position: relative; padding-top: 12px; }' +
+      '.matches[data-layout="banner"] .dba-pill {' +
+        'position: absolute; top: 0; left: 50%; transform: translateX(-50%);' +
+        'padding: 2px 6px; font-size: 8px; white-space: nowrap;' +
+      '}' +
+      '.matches[data-layout="banner"] .dba-teams {' +
+        'justify-content: center; gap: 4px; margin-top: 0; font-size: 10px;' +
+      '}' +
+      '.matches[data-layout="banner"] .dba-teamblock { flex: 0 1 auto; }' +
+      '.matches[data-layout="banner"] .dba-team-logo { width: 11px; height: 11px; }' +
+      '.matches[data-layout="banner"] .dba-x { font-size: 10px; opacity: 0.6; }' +
+      '.matches[data-layout="banner"] .dba-odds {' +
+        'justify-content: center; gap: 10px; margin-top: 0; font-size: 9px;' +
+      '}' +
+      '.matches[data-layout="banner"] .dba-odd { gap: 2px; }' +
+      '.matches[data-layout="banner"] .dba-odd:before { width: 3px; height: 3px; }' +
+      /* Banner + Brazil legal band: denser metrics (BANNER.brazil.match). */ +
+      '.ad:has(.legal-band) .matches[data-layout="banner"] .dba-card { gap: 1px; }' +
+      '.ad:has(.legal-band) .matches[data-layout="banner"] .dba-pill { padding: 1px 3px; font-size: 6.6px; }' +
+      '.ad:has(.legal-band) .matches[data-layout="banner"] .dba-teams { gap: 2px; font-size: 7.7px; }' +
+      '.ad:has(.legal-band) .matches[data-layout="banner"] .dba-team-logo { width: 9px; height: 9px; }' +
+      '.ad:has(.legal-band) .matches[data-layout="banner"] .dba-x { font-size: 7.7px; }' +
+      '.ad:has(.legal-band) .matches[data-layout="banner"] .dba-odds { gap: 6px; font-size: 7.7px; }' +
+      '.ad:has(.legal-band) .matches[data-layout="banner"] .dba-odd:before { width: 2px; height: 2px; }' +
+      /* Interstitial (640×1280): large cards, 3 per slide. Mirrors AdPreview
+         MatchRow interstitial metrics. data-layout="interstitial". */ +
+      '.matches[data-layout="interstitial"] .dba-slide { gap: 56px; }' +
+      '.matches[data-layout="interstitial"] .dba-card {' +
+        'border-radius: 36px; padding: 40px 36px 32px;' +
+      '}' +
+      '.matches[data-layout="interstitial"] .dba-pill {' +
+        'top: -22px; padding: 8px 16px; font-size: 22px;' +
+      '}' +
+      '.matches[data-layout="interstitial"] .dba-teams {' +
+        'gap: 18px; margin-top: 22px; font-size: 24px;' +
+      '}' +
+      '.matches[data-layout="interstitial"] .dba-team-logo { width: 64px; height: 64px; }' +
+      '.matches[data-layout="interstitial"] .dba-x { font-size: 28px; }' +
+      '.matches[data-layout="interstitial"] .dba-odds {' +
+        'gap: 32px; margin-top: 24px; font-size: 30px;' +
+      '}' +
+      '.matches[data-layout="interstitial"] .dba-odd { gap: 12px; }' +
+      '.matches[data-layout="interstitial"] .dba-odd:before { width: 12px; height: 12px; }' +
+      /* Interstitial + Brazil: slightly tighter so 3 cards still fit. */ +
+      '.ad:has(.legal-band) .matches[data-layout="interstitial"] .dba-slide { gap: 40px; }' +
+      '.ad:has(.legal-band) .matches[data-layout="interstitial"] .dba-card {' +
+        'border-radius: 28px; padding: 28px 28px 22px;' +
+      '}' +
+      '.ad:has(.legal-band) .matches[data-layout="interstitial"] .dba-pill {' +
+        'top: -16px; padding: 6px 12px; font-size: 18px;' +
+      '}' +
+      '.ad:has(.legal-band) .matches[data-layout="interstitial"] .dba-teams {' +
+        'gap: 14px; margin-top: 16px; font-size: 20px;' +
+      '}' +
+      '.ad:has(.legal-band) .matches[data-layout="interstitial"] .dba-team-logo { width: 52px; height: 52px; }' +
+      '.ad:has(.legal-band) .matches[data-layout="interstitial"] .dba-x { font-size: 22px; }' +
+      '.ad:has(.legal-band) .matches[data-layout="interstitial"] .dba-odds {' +
+        'gap: 24px; margin-top: 16px; font-size: 24px;' +
+      '}' +
+      '.ad:has(.legal-band) .matches[data-layout="interstitial"] .dba-odd:before { width: 10px; height: 10px; }';
     var s = el('style', { id: 'dba-runtime-styles' });
     s.textContent = css;
     (document.head || document.documentElement).appendChild(s);
@@ -232,6 +311,22 @@
     setInterval(advance, intervalMs);
   }
 
+  // Banner: pin each date pill's centre above the X between the crests
+  // (section-centre is wrong when team names are asymmetric).
+  function alignBannerPills(root) {
+    var cards = root.querySelectorAll('.dba-card');
+    for (var i = 0; i < cards.length; i++) {
+      var card = cards[i];
+      var pill = card.querySelector('.dba-pill');
+      var x = card.querySelector('.dba-x');
+      if (!pill || !x) continue;
+      var cardRect = card.getBoundingClientRect();
+      var xRect = x.getBoundingClientRect();
+      var xC = xRect.left + xRect.width / 2 - cardRect.left;
+      pill.style.left = xC + 'px';
+    }
+  }
+
   function render(node, data) {
     injectStyles();
     var perSlide = parseInt(node.getAttribute('data-per-slide') || node.getAttribute('data-max') || '2', 10);
@@ -243,6 +338,9 @@
     if (!games.length) return;
     var slides = buildSlides(games, perSlide);
     mountCarousel(node, slides, intervalMs, transitionMs);
+    if (node.getAttribute('data-layout') === 'banner') {
+      alignBannerPills(node);
+    }
   }
   window.DbaRenderMatches = render;
 

@@ -1,0 +1,150 @@
+<!--
+  GAM Creative Template — Banner (320×50).
+  Variables use GAM's `[%variable_name%]` macro syntax.
+
+  Horizontal 3-column layout: logo · match (runtime) · CTA.
+  Match cards are rendered by dba-runtime.js with data-layout="banner".
+
+  Brazil: full-height grid; match/CTA columns clear the legal band via
+  padding-bottom so the 52px logo stays in frame.
+-->
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<script src="[%runtime_url%]" defer></script>
+<style>
+  html, body { margin: 0; padding: 0; }
+  .ad {
+    width: 320px; height: 50px;
+    background: [%brand_color_1%];
+    color: [%brand_color_2_or_white%];
+    border-radius: 8px;
+    overflow: hidden;
+    font-family: '365 Sans', Inter, sans-serif;
+    box-sizing: border-box;
+    padding: 0 8px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: stretch;
+    column-gap: 8px;
+    position: relative;
+    text-decoration: none;
+  }
+  .ad:has(.legal-band) { padding: 0 6px; column-gap: 5px; }
+  .ad:has(.legal-band) .logo { width: 52px; height: 52px; }
+  /* Same footer clearance on all columns so logo · match · CTA share one midline. */
+  .ad:has(.legal-band) .logo-wrap,
+  .ad:has(.legal-band) .matches,
+  .ad:has(.legal-band) .cta-wrap {
+    padding-bottom: 18px;
+    transform: translateY(-4px);
+  }
+
+  .ad .logo-wrap {
+    display: flex; align-items: center; justify-content: center;
+    box-sizing: border-box;
+  }
+  .ad .logo {
+    width: 48px; height: 48px;
+    background-image: url('[%bookmaker_logo_url%]');
+    background-size: contain; background-repeat: no-repeat;
+    background-position: center;
+    flex-shrink: 0;
+  }
+  .ad .matches {
+    position: relative;
+    overflow: hidden;
+    min-width: 0;
+    display: flex; align-items: center; justify-content: center;
+    box-sizing: border-box;
+  }
+  .ad .cta-wrap {
+    display: flex; align-items: center; justify-content: center;
+    box-sizing: border-box;
+  }
+  .ad .cta {
+    background: [%cta_bg_color%];
+    color: [%cta_text_color%];
+    border: none; height: 30px; padding: 0 8px;
+    position: relative;
+    border-radius: 4px;
+    font-size: 10px; font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    white-space: nowrap;
+    letter-spacing: 0.01em;
+  }
+  .ad:has(.legal-band) .cta { height: 20px; padding: 0 6px; font-size: 8px; }
+
+  .ad .legal { pointer-events: none; }
+  .ad .legal.legal-strip {
+    position: absolute; left: 4px; right: 4px; bottom: 1px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 6px; opacity: 0.85;
+  }
+  .ad .legal.legal-strip .marks { display: inline-flex; align-items: center; gap: 2px; }
+  .ad .legal.legal-strip .age18 {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: #0A0A0A; color: #FFFFFF;
+    font-size: 5px; font-weight: 800; line-height: 1;
+    letter-spacing: -0.06em; padding-left: 0.5px;
+    flex-shrink: 0;
+  }
+  .ad .legal.legal-strip .text {
+    color: inherit; text-decoration: underline;
+    pointer-events: auto;
+    max-width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .ad .legal.legal-band {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    height: 10%; min-height: 12px;
+    display: flex; align-items: center; justify-content: flex-start;
+    gap: 4px;
+    box-sizing: border-box;
+    padding: 1px 4px;
+    background: rgba(0, 0, 0, 0.72);
+    color: #FFFFFF;
+    font-size: 4.5px; font-weight: 700; line-height: 1.15;
+    text-align: left; z-index: 2;
+  }
+  .ad .legal.legal-band .marks { display: inline-flex; align-items: center; flex-shrink: 0; }
+  .ad .legal.legal-band .age18 {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #0A0A0A; color: #FFFFFF;
+    font-size: 4px; font-weight: 800; line-height: 1;
+    letter-spacing: -0.06em; padding-left: 0.5px;
+  }
+  .ad .legal.legal-band .text {
+    color: inherit; text-decoration: none;
+    pointer-events: auto;
+    white-space: normal;
+    overflow: hidden;
+    letter-spacing: 0.01em;
+    flex: 1; min-width: 0;
+  }
+</style>
+</head>
+<body>
+  <a class="ad" href="%%CLICK_URL_UNESC%%[%cta_url%]" target="_blank">
+    <div class="logo-wrap">
+      <div class="logo" aria-label="[%bookmaker_name%]"></div>
+    </div>
+    <div class="matches"
+         data-feed="[%feed_url%]"
+         data-layout="banner"
+         data-per-slide="1"
+         data-interval="3500"
+         data-transition="700"></div>
+    <div class="cta-wrap">
+      <button class="cta" type="button">[%cta_text%]</button>
+    </div>
+    <div class="legal [%disclaimer_layout%]">
+      <span class="marks"><span class="age18">18+</span></span>
+      <a class="text" href="[%disclaimer_url%]" target="_blank">[%disclaimer_text%]</a>
+    </div>
+  </a>
+</body>
+</html>

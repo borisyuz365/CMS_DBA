@@ -79,10 +79,10 @@ router.put('/:id', async (req, res, next) => {
     for (const [cc, v] of Object.entries(variants)) {
       await conn.query(
         `INSERT INTO dba_bookmaker_variants
-           (bookmaker_id, country_code, affiliate, status, modified, modified_by)
-         VALUES (?, ?, ?, ?, ?, ?)`,
+           (bookmaker_id, country_code, affiliate, license_number, status, modified, modified_by)
+         VALUES (?, ?, ?, ?, ?, ?, ?)`,
         [
-          bm.id, cc, v.affiliate || '', v.status || 'draft',
+          bm.id, cc, v.affiliate || '', v.licenseNumber || null, v.status || 'draft',
           v.modified ? new Date(v.modified) : new Date(),
           v.modifiedBy || 'D. Benvelgy',
         ],
@@ -115,8 +115,9 @@ router.patch('/:id/variants/:cc', async (req, res, next) => {
     // Build the SET clause dynamically from the patch keys we accept.
     const setFragments = [];
     const params = [];
-    if (patch.affiliate !== undefined) { setFragments.push('affiliate = ?');   params.push(patch.affiliate); }
-    if (patch.status    !== undefined) { setFragments.push('status = ?');      params.push(patch.status); }
+    if (patch.affiliate     !== undefined) { setFragments.push('affiliate = ?');      params.push(patch.affiliate); }
+    if (patch.licenseNumber !== undefined) { setFragments.push('license_number = ?'); params.push(patch.licenseNumber || null); }
+    if (patch.status        !== undefined) { setFragments.push('status = ?');         params.push(patch.status); }
     if (patch.modifiedBy !== undefined){ setFragments.push('modified_by = ?'); params.push(patch.modifiedBy); }
     // `modified` always bumps to either the supplied value or "now".
     setFragments.push('modified = ?');

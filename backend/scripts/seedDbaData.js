@@ -10,7 +10,10 @@ const DATA_DIR = path.join(__dirname, '..', 'data');
 const logoUrl = (numId, noBg = false) =>
   `https://res.cloudinary.com/scores365/image/upload/w_140,h_140,c_limit,d_countries:default.png/BookMakers/${noBg ? 'NoBG/' : ''}${numId}`;
 
-const mkv = (affiliate, status, modified, modifiedBy) => ({ affiliate, status, modified, modifiedBy });
+const mkv = (affiliate, status, modified, modifiedBy, licenseNumber) => ({
+  affiliate, status, modified, modifiedBy,
+  ...(licenseNumber ? { licenseNumber } : {}),
+});
 
 const bookmakers = [
   { id: 'bk_14', name: 'Bet365',
@@ -67,7 +70,7 @@ const bookmakers = [
     logoBg: '#0573CD', logoFg: '#FFFFFF', initials: 'SPO',
     defaultLogoImageUrl: logoUrl(139), defaultLogoImageUrlNoBg: logoUrl(139, true), useNoBgLogo: true,
     variants: {
-      BR: mkv('https://sports.sportingbet.com.br/?aff=365_br', 'live', '2026-04-13T09:00:00Z', 'D. Benvelgy'),
+      BR: mkv('https://sports.sportingbet.com.br/?aff=365_br', 'live', '2026-04-13T09:00:00Z', 'D. Benvelgy', '247/2025'),
       DE: mkv('https://sports.sportingbet.de/?aff=365_de',     'live', '2026-04-12T14:30:00Z', 'M. Cohen'),
     }},
   { id: 'bk_42', name: 'Betsson',

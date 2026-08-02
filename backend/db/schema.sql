@@ -17,15 +17,21 @@ CREATE TABLE IF NOT EXISTS dba_bookmakers (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS dba_bookmaker_variants (
-  bookmaker_id  VARCHAR(64)  NOT NULL,
-  country_code  VARCHAR(16)  NOT NULL,
-  affiliate     VARCHAR(1024) NOT NULL,
-  status        ENUM('live', 'draft') NOT NULL DEFAULT 'draft',
-  modified      TIMESTAMP(3) NOT NULL,
-  modified_by   VARCHAR(128) NOT NULL,
+  bookmaker_id     VARCHAR(64)  NOT NULL,
+  country_code     VARCHAR(16)  NOT NULL,
+  affiliate        VARCHAR(1024) NOT NULL,
+  license_number   VARCHAR(64)  DEFAULT NULL,
+  status           ENUM('live', 'draft') NOT NULL DEFAULT 'draft',
+  modified         TIMESTAMP(3) NOT NULL,
+  modified_by      VARCHAR(128) NOT NULL,
   PRIMARY KEY (bookmaker_id, country_code),
   FOREIGN KEY (bookmaker_id) REFERENCES dba_bookmakers(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Idempotent: add license_number when re-applying schema to an existing DB.
+SET @cnt := (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'dba_bookmaker_variants' AND COLUMN_NAME = 'license_number');
+SET @sql := IF(@cnt = 0, 'ALTER TABLE dba_bookmaker_variants ADD COLUMN license_number VARCHAR(64) DEFAULT NULL AFTER affiliate', 'SELECT 1');
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 
 CREATE TABLE IF NOT EXISTS dba_templates (
   id            VARCHAR(64)  PRIMARY KEY,

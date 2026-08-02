@@ -27,7 +27,10 @@ export const DBA_PLATFORMS = [
   { value: 'iOS',     label: 'iOS' },
 ];
 
-const mkv = (affiliate, status, modified, modifiedBy) => ({ affiliate, status, modified, modifiedBy });
+const mkv = (affiliate, status, modified, modifiedBy, licenseNumber) => ({
+  affiliate, status, modified, modifiedBy,
+  ...(licenseNumber ? { licenseNumber } : {}),
+});
 
 // Helper for the seed data: build the Cloudinary CDN URL for a bookmaker's
 // default logo. Mirrors the bookmakerLogoUrl() helper in dbaUtils.js — kept
@@ -132,7 +135,7 @@ export const DBA_BOOKMAKERS = [
     logoBg: '#0573CD', logoFg: '#FFFFFF', initials: 'SPO',
     defaultLogoImageUrl: _logoUrl(139), defaultLogoImageUrlNoBg: _logoUrl(139, true), useNoBgLogo: true,
     variants: {
-      BR: mkv('https://sports.sportingbet.com.br/?aff=365_br', 'live', '2026-04-13T09:00:00Z', 'D. Benvelgy'),
+      BR: mkv('https://sports.sportingbet.com.br/?aff=365_br', 'live', '2026-04-13T09:00:00Z', 'D. Benvelgy', '247/2025'),
       DE: mkv('https://sports.sportingbet.de/?aff=365_de',     'live', '2026-04-12T14:30:00Z', 'M. Cohen'),
     }},
   // Betsson — global European (orange primary)

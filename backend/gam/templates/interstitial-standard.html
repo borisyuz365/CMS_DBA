@@ -1,0 +1,140 @@
+<!--
+  GAM Creative Template — Interstitial Standard (640×1280).
+  Variables use GAM's `[%variable_name%]` macro syntax.
+
+  Vertical layout: centered logo · 3 match cards (runtime) · CTA.
+  Match cards rendered by dba-runtime.js with data-layout="interstitial"
+  (large card metrics matching AdPreview.jsx).
+
+  Brazil SPA/MF: [%disclaimer_layout%] = legal-band (~10% height).
+  Other markets: legal-strip.
+-->
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<script src="[%runtime_url%]" defer></script>
+<style>
+  html, body { margin: 0; padding: 0; }
+  .ad {
+    width: 640px; height: 1280px;
+    background: [%brand_color_1%];
+    color: [%brand_color_2_or_white%];
+    border-radius: 16px;
+    overflow: hidden;
+    font-family: '365 Sans', Inter, sans-serif;
+    box-sizing: border-box;
+    padding: 24px 56px 80px;
+    display: flex; flex-direction: column;
+    position: relative;
+    text-decoration: none;
+  }
+  /* Brazil: reserve ~128px band (10%) inside bottom padding. */
+  .ad:has(.legal-band) {
+    padding: 24px 56px 208px;
+  }
+  .ad:has(.legal-band) .logo { width: 160px; height: 160px; }
+  .ad:has(.legal-band) .cta { height: 88px; font-size: 28px; margin-top: 32px; }
+
+  .ad .logo-wrap {
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 8px; margin-bottom: 24px;
+  }
+  .ad .logo {
+    width: 181px; height: 181px;
+    background-image: url('[%bookmaker_logo_url%]');
+    background-size: contain; background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 24px;
+  }
+  .ad .matches {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    padding-top: 24px;
+    box-sizing: border-box;
+    min-height: 0;
+  }
+  .ad .cta {
+    background: [%cta_bg_color%];
+    color: [%cta_text_color%];
+    border: none; height: 96px; margin-top: 40px;
+    position: relative;
+    border-radius: 20px;
+    font-size: 32px; font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    letter-spacing: 0.01em;
+  }
+
+  .ad .legal { pointer-events: none; }
+  .ad .legal.legal-strip {
+    position: absolute; left: 56px; right: 56px; bottom: 20px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 16px; opacity: 0.85;
+  }
+  .ad .legal.legal-strip .marks { display: inline-flex; align-items: center; gap: 8px; }
+  .ad .legal.legal-strip .age18 {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px; border-radius: 50%;
+    background: #0A0A0A; color: #FFFFFF;
+    font-size: 14px; font-weight: 800; line-height: 1;
+    letter-spacing: -0.06em; padding-left: 0.5px;
+    flex-shrink: 0;
+  }
+  .ad .legal.legal-strip .text {
+    color: inherit; text-decoration: underline;
+    pointer-events: auto;
+    max-width: 70%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  /* Brazil: full-width band ≈ 10% of 1280px (= 128px). */
+  .ad .legal.legal-band {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    height: 10%; min-height: 128px;
+    display: flex; align-items: center; justify-content: flex-start;
+    gap: 12px;
+    box-sizing: border-box;
+    padding: 8px 24px;
+    background: rgba(0, 0, 0, 0.72);
+    color: #FFFFFF;
+    font-size: 20px; font-weight: 700; line-height: 1.2;
+    text-align: left; z-index: 2;
+  }
+  .ad .legal.legal-band .marks { display: inline-flex; align-items: center; flex-shrink: 0; }
+  .ad .legal.legal-band .age18 {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px; border-radius: 50%;
+    background: #0A0A0A; color: #FFFFFF;
+    font-size: 14px; font-weight: 800; line-height: 1;
+    letter-spacing: -0.06em; padding-left: 0.5px;
+  }
+  .ad .legal.legal-band .text {
+    color: inherit; text-decoration: none;
+    pointer-events: auto;
+    white-space: normal;
+    overflow: hidden;
+    letter-spacing: 0.01em;
+    flex: 1; min-width: 0;
+  }
+</style>
+</head>
+<body>
+  <a class="ad" href="%%CLICK_URL_UNESC%%[%cta_url%]" target="_blank">
+    <div class="logo-wrap">
+      <div class="logo" aria-label="[%bookmaker_name%]"></div>
+    </div>
+    <!-- Interstitial: 3 games per slide, large card metrics. -->
+    <div class="matches"
+         data-feed="[%feed_url%]"
+         data-layout="interstitial"
+         data-per-slide="3"
+         data-interval="3500"
+         data-transition="700"></div>
+    <button class="cta" type="button">[%cta_text%]</button>
+    <div class="legal [%disclaimer_layout%]">
+      <span class="marks"><span class="age18">18+</span></span>
+      <a class="text" href="[%disclaimer_url%]" target="_blank">[%disclaimer_text%]</a>
+    </div>
+  </a>
+</body>
+</html>
