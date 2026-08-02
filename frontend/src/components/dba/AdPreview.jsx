@@ -300,19 +300,22 @@ function MatchRow({ match, config, d, syncFonts = false }) {
     return () => ro.disconnect();
   }, [match.home.name, match.away.name, d.teamFont, syncFonts]);
 
+  const wrapNames = !!d.wrapNames;
   const slotSx = (align) => ({
     flex: 1, minWidth: 0,
     textAlign: align,
     display: 'flex', alignItems: 'center',
     justifyContent: align === 'right' ? 'flex-end' : 'flex-start',
     minHeight: d.teamFont * 1.1,
-    overflow: 'hidden',
+    overflow: wrapNames ? 'visible' : 'hidden',
   });
   const textSx = {
-    display: 'inline-block', maxWidth: '100%',
-    fontSize: d.teamFont, fontWeight: 600, lineHeight: 1.1,
-    whiteSpace: 'nowrap',
-    overflow: 'hidden', textOverflow: 'ellipsis',
+    display: wrapNames ? 'block' : 'inline-block',
+    maxWidth: '100%',
+    fontSize: d.teamFont, fontWeight: 600, lineHeight: 1.15,
+    ...(wrapNames
+      ? { whiteSpace: 'normal', overflowWrap: 'break-word', wordBreak: 'break-word' }
+      : { whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }),
   };
 
   return (
@@ -639,9 +642,11 @@ export default function AdPreview({ config, sizeId, bookmaker, scale = 1, slideI
   // INTERSTITIAL · 640×1280
   const renderInterstitial = () => {
     const visible = slideMatches.slice(0, 3);
+    // Cards sit 5px from the template edge; long team names wrap (not ellipsis).
+    const sidePad = 5;
     const d = { cardRadius: 36, cardPad: '40px 36px 32px', pillH: 44, pillFont: 22,
                 teamsGap: 18, teamFont: 24, crest: 64, xFont: 28,
-                oddsGap: 32, oddsFont: 30, oddsDot: 12, rowGap: 24 };
+                oddsGap: 32, oddsFont: 30, oddsDot: 12, rowGap: 24, wrapNames: true };
     // Brazil: same element sizes. CTA + dots sit in a flex zone that fills the
     // space between the bottom card and the legal band, centered exactly mid-way.
     const cardGap = useBrazilBand ? 40 : 56;
@@ -691,7 +696,7 @@ export default function AdPreview({ config, sizeId, bookmaker, scale = 1, slideI
         )}
         {useBrazilBand ? renderBrazilLegalBand(brazilBandH, 20, 28) : (
           config.legal && config.legal.enabled ? (
-          <Box sx={{ position: 'absolute', bottom: 20, left: 56, right: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 16, color: config.legal.color || config.text, opacity: 0.85 }}>
+          <Box sx={{ position: 'absolute', bottom: 20, left: sidePad, right: sidePad, display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 16, color: config.legal.color || config.text, opacity: 0.85 }}>
             <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
               {config.legal.logo && <Box component="img" src={config.legal.logo} alt="" sx={{ height: 22, width: 'auto' }} />}
               <Age18PlusBadge size={28} />
@@ -703,7 +708,7 @@ export default function AdPreview({ config, sizeId, bookmaker, scale = 1, slideI
           ) : null
         )}
       </>,
-      `24px 56px ${bottomPad}px`
+      `24px ${sidePad}px ${bottomPad}px`
     );
   };
 

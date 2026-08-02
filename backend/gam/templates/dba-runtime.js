@@ -197,7 +197,12 @@
         'top: -22px; padding: 8px 16px; font-size: 22px;' +
       '}' +
       '.matches[data-layout="interstitial"] .dba-teams {' +
-        'gap: 18px; margin-top: 22px; font-size: 24px;' +
+        'gap: 18px; margin-top: 22px; font-size: 24px; align-items: center;' +
+      '}' +
+      /* Long team names wrap instead of ellipsizing (AdPreview wrapNames). */ +
+      '.matches[data-layout="interstitial"] .dba-team-name {' +
+        'white-space: normal; overflow: visible; text-overflow: unset;' +
+        'overflow-wrap: break-word; word-break: break-word; line-height: 1.15;' +
       '}' +
       '.matches[data-layout="interstitial"] .dba-team-logo { width: 64px; height: 64px; }' +
       '.matches[data-layout="interstitial"] .dba-x { font-size: 28px; }' +

@@ -24,7 +24,8 @@
     overflow: hidden;
     font-family: '365 Sans', Inter, sans-serif;
     box-sizing: border-box;
-    padding: 24px 56px 80px;
+    /* 5px side pad — match cards sit close to the template edge. */
+    padding: 24px 5px 80px;
     display: flex; flex-direction: column;
     position: relative;
     text-decoration: none;
@@ -32,7 +33,7 @@
   /* Brazil: same element sizes. CTA sits in a flex zone centered exactly
      between the bottom card and the legal band. */
   .ad:has(.legal-band) {
-    padding: 24px 56px 128px; /* band height only */
+    padding: 24px 5px 128px; /* band height only */
   }
   .ad:has(.legal-band) .logo-wrap { margin-bottom: 16px; }
   .ad:has(.legal-band) .matches {
@@ -81,7 +82,7 @@
 
   .ad .legal { pointer-events: none; }
   .ad .legal.legal-strip {
-    position: absolute; left: 56px; right: 56px; bottom: 20px;
+    position: absolute; left: 5px; right: 5px; bottom: 20px;
     display: flex; justify-content: space-between; align-items: center;
     font-size: 16px; opacity: 0.85;
   }
