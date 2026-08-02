@@ -253,12 +253,27 @@ export function CarouselDots({ count, active, color, dotSize = 5 }) {
   );
 }
 
-function MatchRow({ match, config, d }) {
+/** Measure how small a home/away pair must go to fit both names in their slots. */
+function neededTeamFont(homeEl, awayEl, base) {
+  if (!homeEl?.parentElement || !awayEl?.parentElement) return base;
+  const floor = Math.max(MIN_FONT_PX, base * MIN_RATIO);
+  homeEl.style.fontSize = `${base}px`;
+  awayEl.style.fontSize = `${base}px`;
+  const homeRatio = homeEl.scrollWidth / homeEl.parentElement.clientWidth;
+  const awayRatio = awayEl.scrollWidth / awayEl.parentElement.clientWidth;
+  const maxRatio = Math.max(homeRatio, awayRatio);
+  return maxRatio > 1.005 ? Math.max(floor, base / maxRatio) : base;
+}
+
+function MatchRow({ match, config, d, syncFonts = false }) {
   // Pair-coordinated font fitting. Home and away render at the SAME size: we
   // measure both at the base size, then shrink both to the size that lets the
   // longer-rendered one fit. Matches the reference where both names visibly
   // share a height, even when one is short ("Brasil") and the other long
   // ("Chapecoense").
+  //
+  // When syncFonts is true, skip per-card shrinking so every card keeps the
+  // designed teamFont (long names ellipsize instead of looking smaller).
   //
   // DOM-mutation (not state) keeps useLayoutEffect from re-running off its
   // own writes. The ResizeObserver watches the flex slots, whose widths come
@@ -267,30 +282,23 @@ function MatchRow({ match, config, d }) {
   const awayRef = React.useRef(null);
 
   useLayoutEffect(() => {
+    if (syncFonts) return undefined;
     const home = homeRef.current;
     const away = awayRef.current;
     if (!home || !away) return undefined;
     const base = d.teamFont;
-    const floor = Math.max(MIN_FONT_PX, base * MIN_RATIO);
 
     const fit = () => {
-      home.style.fontSize = `${base}px`;
-      away.style.fontSize = `${base}px`;
-      const homeRatio = home.scrollWidth / home.parentElement.clientWidth;
-      const awayRatio = away.scrollWidth / away.parentElement.clientWidth;
-      const maxRatio = Math.max(homeRatio, awayRatio);
-      if (maxRatio > 1.005) {
-        const next = Math.max(floor, base / maxRatio);
-        home.style.fontSize = `${next}px`;
-        away.style.fontSize = `${next}px`;
-      }
+      const next = neededTeamFont(home, away, base);
+      home.style.fontSize = `${next}px`;
+      away.style.fontSize = `${next}px`;
     };
     fit();
     const ro = new ResizeObserver(fit);
     ro.observe(home.parentElement);
     ro.observe(away.parentElement);
     return () => ro.disconnect();
-  }, [match.home.name, match.away.name, d.teamFont]);
+  }, [match.home.name, match.away.name, d.teamFont, syncFonts]);
 
   const slotSx = (align) => ({
     flex: 1, minWidth: 0,
@@ -308,7 +316,7 @@ function MatchRow({ match, config, d }) {
   };
 
   return (
-    <Box sx={{
+    <Box data-match-card sx={{
       bgcolor: 'rgba(255,255,255,0.06)',
       border: '1px solid rgba(255,255,255,0.1)',
       borderRadius: `${d.cardRadius}px`,
@@ -328,13 +336,13 @@ function MatchRow({ match, config, d }) {
       }}>{match.date}</Box>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: `${d.teamsGap}px`, mt: `${d.pillH / 2}px`, minWidth: 0 }}>
         <Box sx={slotSx('right')}>
-          <Box ref={homeRef} component="span" sx={textSx}>{match.home.name}</Box>
+          <Box ref={homeRef} component="span" data-team-name="home" sx={textSx}>{match.home.name}</Box>
         </Box>
         <TeamCrest team={match.home} size={d.crest} />
         <Box sx={{ fontSize: d.xFont, fontWeight: 700, opacity: 0.65, px: `${d.crest * 0.05}px`, flexShrink: 0 }}>X</Box>
         <TeamCrest team={match.away} size={d.crest} />
         <Box sx={slotSx('left')}>
-          <Box ref={awayRef} component="span" sx={textSx}>{match.away.name}</Box>
+          <Box ref={awayRef} component="span" data-team-name="away" sx={textSx}>{match.away.name}</Box>
         </Box>
       </Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', gap: `${d.oddsGap}px` }}>
@@ -345,6 +353,17 @@ function MatchRow({ match, config, d }) {
           </Box>
         ))}
       </Box>
+    </Box>
+  );
+}
+
+/** Column of match cards — same teamFont on every card (no per-card shrink). */
+function MatchCardColumn({ matches, config, d, sx }) {
+  return (
+    <Box sx={sx}>
+      {matches.map((m, i) => (
+        <MatchRow key={i} match={m} config={config} d={d} syncFonts />
+      ))}
     </Box>
   );
 }
@@ -571,13 +590,16 @@ export default function AdPreview({ config, sizeId, bookmaker, scale = 1, slideI
             chops it in half. The CTA below now has `position: relative` so
             even if cards visually overflowed downward, the CTA would paint
             on top (same stacking context). */}
-        <Box sx={{
-          display: 'flex', flexDirection: 'column', gap: `${cardGap}px`,
-          flex: 1, minHeight: 0, mt: `${matchesMt}px`,
-          justifyContent: 'flex-start',
-        }}>
-          {visible.map((m, i) => <MatchRow key={i} match={m} config={config} d={d} />)}
-        </Box>
+        <MatchCardColumn
+          matches={visible}
+          config={config}
+          d={d}
+          sx={{
+            display: 'flex', flexDirection: 'column', gap: `${cardGap}px`,
+            flex: 1, minHeight: 0, mt: `${matchesMt}px`,
+            justifyContent: 'flex-start',
+          }}
+        />
         <Box component="button" sx={{
           background: config.cta, color: config.ctaTextColor || invertText(config.cta),
           border: 'none', height: ctaH, mt: `${ctaMt}px`,
@@ -643,12 +665,15 @@ export default function AdPreview({ config, sizeId, bookmaker, scale = 1, slideI
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: '8px', mb: `${logoMb}px`, flexShrink: 0 }}>
           <LogoThumb bg={bookmaker.logoBg} fg={bookmaker.logoFg} initials={bookmaker.initials} imageUrl={resolveLogoUrl(bookmaker, config)} size={181} radius={24} bare />
         </Box>
-        <Box sx={{
-          display: 'flex', flexDirection: 'column', gap: `${cardGap}px`,
-          ...(useBrazilBand ? { flexShrink: 0 } : { flex: 1, minHeight: 0, justifyContent: 'flex-start' }),
-        }}>
-          {visible.map((m, i) => <MatchRow key={i} match={m} config={config} d={d} />)}
-        </Box>
+        <MatchCardColumn
+          matches={visible}
+          config={config}
+          d={d}
+          sx={{
+            display: 'flex', flexDirection: 'column', gap: `${cardGap}px`,
+            ...(useBrazilBand ? { flexShrink: 0 } : { flex: 1, minHeight: 0, justifyContent: 'flex-start' }),
+          }}
+        />
         {useBrazilBand ? (
           <Box sx={{
             flex: 1, minHeight: 0,
