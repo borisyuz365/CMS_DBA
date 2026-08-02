@@ -24,9 +24,20 @@
     position: relative;
     text-decoration: none;
   }
+  /* Brazil: CTA + terms centered between offer copy and legal band. */
   .ad:has(.legal-band) {
-    padding: 64px 56px 208px;
+    padding: 64px 56px 128px;
   }
+  .ad:has(.legal-band) .copy { flex: 0 0 auto; }
+  .ad:has(.legal-band) .cta-zone {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .ad:has(.legal-band) .cta { margin-top: 0; }
+  .ad:has(.legal-band) .terms { margin-top: 20px; }
 
   .ad .logo-wrap {
     display: flex; align-items: center; justify-content: center;
@@ -142,8 +153,10 @@
       <div class="head">[%welcome_headline%]</div>
       <div class="sub">[%welcome_subtext%]</div>
     </div>
-    <button class="cta" type="button">[%welcome_cta_text%]</button>
-    <div class="terms">[%welcome_terms%]</div>
+    <div class="cta-zone">
+      <button class="cta" type="button">[%welcome_cta_text%]</button>
+      <div class="terms">[%welcome_terms%]</div>
+    </div>
     <div class="legal [%disclaimer_layout%]">
       <span class="marks"><span class="age18">18+</span></span>
       <a class="text" href="[%disclaimer_url%]" target="_blank">[%disclaimer_text%]</a>

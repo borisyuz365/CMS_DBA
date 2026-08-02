@@ -144,14 +144,14 @@
       '.matches .dba-odds { display: flex; justify-content: space-around; gap: 12px; margin-top: 5px; font-size: 11px; font-weight: 700; }' +
       '.matches .dba-odd { display: inline-flex; align-items: center; gap: 6px; }' +
       '.matches .dba-odd:before { content: ""; display: inline-block; width: 5px; height: 5px; border-radius: 999px; background: #FFC107; }' +
-      /* Brazil ~10% legal band: denser match cards (mirrors AdPreview.jsx). */ +
+      /* Brazil MPU: slightly denser cards so they clear the CTA (AdPreview). */ +
       '.ad:has(.legal-band) .matches .dba-slide { gap: 8px; }' +
-      '.ad:has(.legal-band) .matches .dba-card { border-radius: 10px; padding: 8px 10px 5px; }' +
-      '.ad:has(.legal-band) .matches .dba-pill { top: -6px; padding: 1px 5px; font-size: 8px; }' +
-      '.ad:has(.legal-band) .matches .dba-teams { gap: 4px; margin-top: 4px; font-size: 9px; }' +
-      '.ad:has(.legal-band) .matches .dba-team-logo { width: 14px; height: 14px; }' +
-      '.ad:has(.legal-band) .matches .dba-x { font-size: 9px; }' +
-      '.ad:has(.legal-band) .matches .dba-odds { gap: 8px; margin-top: 3px; font-size: 9px; }' +
+      '.ad:has(.legal-band) .matches .dba-card { border-radius: 11px; padding: 10px 10px 7px; }' +
+      '.ad:has(.legal-band) .matches .dba-pill { top: -7px; padding: 2px 5px; font-size: 8px; }' +
+      '.ad:has(.legal-band) .matches .dba-teams { gap: 5px; margin-top: 4px; font-size: 10px; }' +
+      '.ad:has(.legal-band) .matches .dba-team-logo { width: 15px; height: 15px; }' +
+      '.ad:has(.legal-band) .matches .dba-x { font-size: 10px; }' +
+      '.ad:has(.legal-band) .matches .dba-odds { gap: 10px; margin-top: 3px; font-size: 10px; }' +
       '.ad:has(.legal-band) .matches .dba-odd { gap: 4px; }' +
       '.ad:has(.legal-band) .matches .dba-odd:before { width: 4px; height: 4px; }' +
       /* Banner (320×50): flat match block — no card chrome. Mirrors AdPreview
@@ -206,23 +206,8 @@
       '}' +
       '.matches[data-layout="interstitial"] .dba-odd { gap: 12px; }' +
       '.matches[data-layout="interstitial"] .dba-odd:before { width: 12px; height: 12px; }' +
-      /* Interstitial + Brazil: slightly tighter so 3 cards still fit. */ +
-      '.ad:has(.legal-band) .matches[data-layout="interstitial"] .dba-slide { gap: 40px; }' +
-      '.ad:has(.legal-band) .matches[data-layout="interstitial"] .dba-card {' +
-        'border-radius: 28px; padding: 28px 28px 22px;' +
-      '}' +
-      '.ad:has(.legal-band) .matches[data-layout="interstitial"] .dba-pill {' +
-        'top: -16px; padding: 6px 12px; font-size: 18px;' +
-      '}' +
-      '.ad:has(.legal-band) .matches[data-layout="interstitial"] .dba-teams {' +
-        'gap: 14px; margin-top: 16px; font-size: 20px;' +
-      '}' +
-      '.ad:has(.legal-band) .matches[data-layout="interstitial"] .dba-team-logo { width: 52px; height: 52px; }' +
-      '.ad:has(.legal-band) .matches[data-layout="interstitial"] .dba-x { font-size: 22px; }' +
-      '.ad:has(.legal-band) .matches[data-layout="interstitial"] .dba-odds {' +
-        'gap: 24px; margin-top: 16px; font-size: 24px;' +
-      '}' +
-      '.ad:has(.legal-band) .matches[data-layout="interstitial"] .dba-odd:before { width: 10px; height: 10px; }';
+      /* Interstitial + Brazil: spacing only (gap), keep default card metrics. */ +
+      '.ad:has(.legal-band) .matches[data-layout="interstitial"] .dba-slide { gap: 40px; }';
     var s = el('style', { id: 'dba-runtime-styles' });
     s.textContent = css;
     (document.head || document.documentElement).appendChild(s);

@@ -35,14 +35,13 @@
     position: relative;
     text-decoration: none;
   }
-  /* Reserve space so CTA/matches sit above the Brazil ~10% band, and densify
-     logo / CTA / matches to match AdPreview.jsx Brazil compact metrics. */
+  /* Brazil ~10% band: 52px logo, tight logo→card gap, cards clear of CTA. */
   .ad:has(.legal-band) {
-    padding: 6px 12px 27px;
+    padding: 4px 12px 27px;
   }
-  .ad:has(.legal-band) .logo { width: 22px; height: 22px; }
-  .ad:has(.legal-band) .matches { margin-top: 4px; padding-top: 6px; }
-  .ad:has(.legal-band) .cta { height: 24px; margin-top: 4px; font-size: 11px; }
+  .ad:has(.legal-band) .logo { width: 52px; height: 52px; }
+  .ad:has(.legal-band) .matches { margin-top: 2px; padding-top: 6px; }
+  .ad:has(.legal-band) .cta { height: 26px; margin-top: 4px; font-size: 11px; }
   .ad .logo {
     width: 28px; height: 28px;
     background-image: url('[%bookmaker_logo_url%]');

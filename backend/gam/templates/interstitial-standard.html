@@ -29,12 +29,24 @@
     position: relative;
     text-decoration: none;
   }
-  /* Brazil: reserve ~128px band (10%) inside bottom padding. */
+  /* Brazil: same element sizes. CTA sits in a flex zone centered exactly
+     between the bottom card and the legal band. */
   .ad:has(.legal-band) {
-    padding: 24px 56px 208px;
+    padding: 24px 56px 128px; /* band height only */
   }
-  .ad:has(.legal-band) .logo { width: 160px; height: 160px; }
-  .ad:has(.legal-band) .cta { height: 88px; font-size: 28px; margin-top: 32px; }
+  .ad:has(.legal-band) .logo-wrap { margin-bottom: 16px; }
+  .ad:has(.legal-band) .matches {
+    flex: 0 0 auto;
+    padding-top: 18px;
+  }
+  .ad:has(.legal-band) .cta-zone {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .ad:has(.legal-band) .cta { margin-top: 0; }
 
   .ad .logo-wrap {
     display: flex; align-items: center; justify-content: center;
@@ -130,7 +142,9 @@
          data-per-slide="3"
          data-interval="3500"
          data-transition="700"></div>
-    <button class="cta" type="button">[%cta_text%]</button>
+    <div class="cta-zone">
+      <button class="cta" type="button">[%cta_text%]</button>
+    </div>
     <div class="legal [%disclaimer_layout%]">
       <span class="marks"><span class="age18">18+</span></span>
       <a class="text" href="[%disclaimer_url%]" target="_blank">[%disclaimer_text%]</a>

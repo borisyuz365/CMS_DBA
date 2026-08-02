@@ -543,26 +543,27 @@ export default function AdPreview({ config, sizeId, bookmaker, scale = 1, slideI
     // total) with a small buffer. CTA + dots stay at their fixed positions
     // anchored by the unchanged wrap bottom padding (14).
     //
-    // Brazil band (~25px / 10%): denser card metrics + smaller logo/CTA/gaps
-    // so two match cards still fit above the disclaimer.
+    // Brazil band (~25px / 10%): 52px logo, cards sit tight under it and stay
+    // clear of the CTA (slightly denser cards + smaller logo→card gap).
     const d = useBrazilBand
-      ? { cardRadius: 10, cardPad: '9px 10px 6px', pillH: 13, pillFont: 8,
-          teamsGap: 4, teamFont: 9, crest: 14, xFont: 9,
-          oddsGap: 8, oddsFont: 9, oddsDot: 4, rowGap: 4 }
+      ? { cardRadius: 11, cardPad: '10px 10px 7px', pillH: 14, pillFont: 8,
+          teamsGap: 5, teamFont: 10, crest: 15, xFont: 10,
+          oddsGap: 10, oddsFont: 10, oddsDot: 4, rowGap: 4 }
       : { cardRadius: 12, cardPad: '14px 12px 10px', pillH: 16, pillFont: 9,
           teamsGap: 6, teamFont: 10, crest: 18, xFont: 11,
           oddsGap: 12, oddsFont: 11, oddsDot: 5, rowGap: 6 };
-    const logoSize = useBrazilBand ? 22 : 28;
+    const logoSize = useBrazilBand ? 52 : 28;
     const cardGap = useBrazilBand ? 8 : 14;
-    const ctaH = useBrazilBand ? 24 : 30;
+    const ctaH = useBrazilBand ? 26 : 30;
     const ctaMt = useBrazilBand ? 4 : 8;
     const ctaFont = useBrazilBand ? 11 : 12;
     const sidePad = useBrazilBand ? 12 : 14;
     const bottomPad = useBrazilBand ? brazilBandH + 2 : 14;
+    // Room for the protruding date pill only — keep logo→card gap tight.
+    const matchesMt = useBrazilBand ? 2 : 0;
     return wrap(
       <>
-        {/* Logo zone budget = 28px normally / 22px with Brazil band. */}
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
           <LogoThumb bg={bookmaker.logoBg} fg={bookmaker.logoFg} initials={bookmaker.initials} imageUrl={resolveLogoUrl(bookmaker, config)} size={logoSize} radius={6} bare />
         </Box>
         {/* No overflow:hidden — the date pill on the top card is positioned
@@ -570,7 +571,11 @@ export default function AdPreview({ config, sizeId, bookmaker, scale = 1, slideI
             chops it in half. The CTA below now has `position: relative` so
             even if cards visually overflowed downward, the CTA would paint
             on top (same stacking context). */}
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: `${cardGap}px`, flex: 1, minHeight: 0 }}>
+        <Box sx={{
+          display: 'flex', flexDirection: 'column', gap: `${cardGap}px`,
+          flex: 1, minHeight: 0, mt: `${matchesMt}px`,
+          justifyContent: 'flex-start',
+        }}>
           {visible.map((m, i) => <MatchRow key={i} match={m} config={config} d={d} />)}
         </Box>
         <Box component="button" sx={{
@@ -586,7 +591,7 @@ export default function AdPreview({ config, sizeId, bookmaker, scale = 1, slideI
         }}>{config.ctaText}</Box>
         {/* Dots flow as a flex child immediately after the CTA. */}
         {renderInAdDots(useBrazilBand
-          ? { rowHeight: 7, dotSize: 3, mt: 3 }
+          ? { rowHeight: 6, dotSize: 3, mt: 2 }
           : { rowHeight: 10, dotSize: 4, mt: 8 })}
         {config.legal && config.legal.enabled && (
           useBrazilBand ? renderBrazilLegalBand(brazilBandH, 7, 10) : (
@@ -615,46 +620,65 @@ export default function AdPreview({ config, sizeId, bookmaker, scale = 1, slideI
     const d = { cardRadius: 36, cardPad: '40px 36px 32px', pillH: 44, pillFont: 22,
                 teamsGap: 18, teamFont: 24, crest: 64, xFont: 28,
                 oddsGap: 32, oddsFont: 30, oddsDot: 12, rowGap: 24 };
+    // Brazil: same element sizes. CTA + dots sit in a flex zone that fills the
+    // space between the bottom card and the legal band, centered exactly mid-way.
+    const cardGap = useBrazilBand ? 40 : 56;
+    const logoMb = useBrazilBand ? 16 : 24;
+    const bottomPad = useBrazilBand ? brazilBandH : 80;
+    const ctaBtn = (
+      <Box component="button" sx={{
+        background: config.cta, color: config.ctaTextColor || invertText(config.cta),
+        border: 'none', height: 96, mt: useBrazilBand ? 0 : '40px',
+        position: 'relative', flexShrink: 0,
+        borderRadius: `${Math.min(radius * 1.5, 20)}px`,
+        fontSize: 32, fontWeight: 700, cursor: 'pointer',
+        fontFamily: 'inherit', letterSpacing: '0.01em',
+      }}>{config.ctaText}</Box>
+    );
+    const dots = renderInAdDots({ rowHeight: 24, dotSize: 10, mt: useBrazilBand ? 0 : 24 });
     return wrap(
       <>
-        {/* Interstitial logo: 28.28% of 640 ≈ 181px. The whole top zone
-            (wrap top padding + logo mt + logo mb) is kept tight here so
-            three 215+ px cards plus their 56 px gaps fit above the CTA
-            without the bottom card overflowing into it. Horizontally
-            centered to match production's flex `align-items: center`. */}
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: '8px', mb: '24px' }}>
+        {/* Interstitial logo: 28.28% of 640 ≈ 181px. Horizontally centered to
+            match production's flex `align-items: center`. */}
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: '8px', mb: `${logoMb}px`, flexShrink: 0 }}>
           <LogoThumb bg={bookmaker.logoBg} fg={bookmaker.logoFg} initials={bookmaker.initials} imageUrl={resolveLogoUrl(bookmaker, config)} size={181} radius={24} bare />
         </Box>
-        {/* minHeight: 0 — see renderMPU note. */}
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '56px', flex: 1, minHeight: 0 }}>
+        <Box sx={{
+          display: 'flex', flexDirection: 'column', gap: `${cardGap}px`,
+          ...(useBrazilBand ? { flexShrink: 0 } : { flex: 1, minHeight: 0, justifyContent: 'flex-start' }),
+        }}>
           {visible.map((m, i) => <MatchRow key={i} match={m} config={config} d={d} />)}
         </Box>
-        {/* position: relative puts the CTA in the same positioned-stacking
-            context as the cards (which need it for their date pills), so the
-            CTA paints on top in document order rather than being covered. */}
-        <Box component="button" sx={{
-          background: config.cta, color: config.ctaTextColor || invertText(config.cta),
-          border: 'none', height: 96, mt: '40px',
-          position: 'relative',
-          borderRadius: `${Math.min(radius * 1.5, 20)}px`,
-          fontSize: 32, fontWeight: 700, cursor: 'pointer',
-          fontFamily: 'inherit', letterSpacing: '0.01em',
-        }}>{config.ctaText}</Box>
-        {/* Dots flow as a flex child immediately after the CTA. */}
-        {renderInAdDots({ rowHeight: 24, dotSize: 10, mt: 24 })}
-        {isBrazil && config.legal && config.legal.enabled ? renderBrazilLegalBand(brazilBandH, 20, 28) : (
-          <Box sx={{ position: 'absolute', bottom: 20, left: 56, right: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 16, color: (config.legal && config.legal.color) || config.text, opacity: 0.85 }}>
+        {useBrazilBand ? (
+          <Box sx={{
+            flex: 1, minHeight: 0,
+            display: 'flex', flexDirection: 'column',
+            alignItems: 'stretch', justifyContent: 'center', gap: '24px',
+          }}>
+            {ctaBtn}
+            {dots}
+          </Box>
+        ) : (
+          <>
+            {ctaBtn}
+            <Box sx={{ flexShrink: 0 }}>{dots}</Box>
+          </>
+        )}
+        {useBrazilBand ? renderBrazilLegalBand(brazilBandH, 20, 28) : (
+          config.legal && config.legal.enabled ? (
+          <Box sx={{ position: 'absolute', bottom: 20, left: 56, right: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 16, color: config.legal.color || config.text, opacity: 0.85 }}>
             <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-              {config.legal && config.legal.enabled && config.legal.logo && <Box component="img" src={config.legal.logo} alt="" sx={{ height: 22, width: 'auto' }} />}
+              {config.legal.logo && <Box component="img" src={config.legal.logo} alt="" sx={{ height: 22, width: 'auto' }} />}
               <Age18PlusBadge size={28} />
             </Box>
             <Box component="span" sx={{ maxWidth: '70%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-              {(config.legal && config.legal.enabled && config.legal.text) || 'Jogue com responsabilidade'}
+              {config.legal.text || 'Jogue com responsabilidade'}
             </Box>
           </Box>
+          ) : null
         )}
       </>,
-      isBrazil && config.legal?.enabled ? `24px 56px ${80 + brazilBandH}px` : '24px 56px 80px'
+      `24px 56px ${bottomPad}px`
     );
   };
 
@@ -764,55 +788,84 @@ export default function AdPreview({ config, sizeId, bookmaker, scale = 1, slideI
     );
   };
 
-  const renderWelcomeInterstitial = () => wrap(
-    <>
-      {/* Logo centered on its own row; the "Welcome offer" pill stacks below
-          so the logo retains its centered alignment instead of being shifted
-          off by the pill in a justify-between row. */}
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: '46px', mb: '20px' }}>
-        <LogoThumb bg={bookmaker.logoBg} fg={bookmaker.logoFg} initials={bookmaker.initials} imageUrl={resolveLogoUrl(bookmaker, config)} size={181} radius={24} bare />
-      </Box>
-      <Box sx={{ display: 'flex', justifyContent: 'center', mb: '32px' }}>
-        <Box sx={{
-          padding: '10px 24px', borderRadius: 999,
-          bgcolor: woPillBg, color: woPillFg,
-          fontSize: 22, fontWeight: 800, letterSpacing: '0.08em', textIndent: '0.08em',
-          textTransform: 'uppercase', textAlign: 'center',
-        }}>{woPillText}</Box>
-      </Box>
-      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '40px', textAlign: 'center' }}>
-        {wo.image && (
-          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-            <Box component="img" src={wo.image} alt="" sx={{ maxHeight: 280, maxWidth: '100%', objectFit: 'contain' }} />
-          </Box>
-        )}
-        <Box sx={{ fontSize: 108, fontWeight: 800, lineHeight: 0.98, letterSpacing: '-0.03em' }}>{woHeadline}</Box>
-        <Box sx={{ fontSize: 36, opacity: 0.85, lineHeight: 1.25, fontWeight: 500 }}>{woSubtext}</Box>
-      </Box>
+  const renderWelcomeInterstitial = () => {
+    // Brazil: CTA + dots centered in the space between offer content and legal band.
+    const bottomPad = useBrazilBand ? brazilBandH : 80;
+    const ctaBtn = (
       <Box component="button" sx={{
         background: woCtaBg, color: woCtaFg,
-        border: 'none', height: 104, mt: '32px',
+        border: 'none', height: 104, mt: useBrazilBand ? 0 : '32px',
+        position: 'relative', flexShrink: 0,
         borderRadius: `${Math.min(radius * 1.5, 24)}px`,
         fontSize: 36, fontWeight: 800, cursor: 'pointer',
         fontFamily: 'inherit', letterSpacing: '0.01em',
       }}>{woCtaText}</Box>
-      <Box sx={{ mt: '20px', fontSize: 18, opacity: 0.55, textAlign: 'center', lineHeight: 1.3 }}>{woTerms}</Box>
-      {renderInAdDots({ rowHeight: 24, dotSize: 10, mt: 24 })}
-      {isBrazil && config.legal?.enabled ? renderBrazilLegalBand(brazilBandH, 20, 28) : (
-      <Box sx={{ position: 'absolute', bottom: 20, left: 56, right: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 16, color: (config.legal && config.legal.color) || config.text, opacity: 0.85 }}>
-        <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-          {config.legal && config.legal.enabled && config.legal.logo && <Box component="img" src={config.legal.logo} alt="" sx={{ height: 22, width: 'auto' }} />}
-          <Age18PlusBadge size={28} />
+    );
+    const dots = renderInAdDots({ rowHeight: 24, dotSize: 10, mt: useBrazilBand ? 0 : 24 });
+    return wrap(
+      <>
+        {/* Logo centered on its own row; the "Welcome offer" pill stacks below
+            so the logo retains its centered alignment instead of being shifted
+            off by the pill in a justify-between row. */}
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: '46px', mb: '20px', flexShrink: 0 }}>
+          <LogoThumb bg={bookmaker.logoBg} fg={bookmaker.logoFg} initials={bookmaker.initials} imageUrl={resolveLogoUrl(bookmaker, config)} size={181} radius={24} bare />
         </Box>
-        <Box component="span" sx={{ maxWidth: '70%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-          {(config.legal && config.legal.enabled && config.legal.text) || 'Jogue com responsabilidade'}
+        <Box sx={{ display: 'flex', justifyContent: 'center', mb: '32px', flexShrink: 0 }}>
+          <Box sx={{
+            padding: '10px 24px', borderRadius: 999,
+            bgcolor: woPillBg, color: woPillFg,
+            fontSize: 22, fontWeight: 800, letterSpacing: '0.08em', textIndent: '0.08em',
+            textTransform: 'uppercase', textAlign: 'center',
+          }}>{woPillText}</Box>
         </Box>
-      </Box>
-      )}
-    </>,
-    isBrazil && config.legal?.enabled ? `64px 56px ${80 + brazilBandH}px` : '64px 56px 80px',
-    welcomeBg,
-  );
+        <Box sx={{
+          display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '40px',
+          textAlign: 'center', minHeight: 0,
+          ...(useBrazilBand ? { flexShrink: 0 } : { flex: 1 }),
+        }}>
+          {wo.image && (
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+              <Box component="img" src={wo.image} alt="" sx={{ maxHeight: 280, maxWidth: '100%', objectFit: 'contain' }} />
+            </Box>
+          )}
+          <Box sx={{ fontSize: 108, fontWeight: 800, lineHeight: 0.98, letterSpacing: '-0.03em' }}>{woHeadline}</Box>
+          <Box sx={{ fontSize: 36, opacity: 0.85, lineHeight: 1.25, fontWeight: 500 }}>{woSubtext}</Box>
+        </Box>
+        {useBrazilBand ? (
+          <Box sx={{
+            flex: 1, minHeight: 0,
+            display: 'flex', flexDirection: 'column',
+            alignItems: 'stretch', justifyContent: 'center', gap: '20px',
+          }}>
+            {ctaBtn}
+            <Box sx={{ fontSize: 18, opacity: 0.55, textAlign: 'center', lineHeight: 1.3, flexShrink: 0 }}>{woTerms}</Box>
+            {dots}
+          </Box>
+        ) : (
+          <>
+            {ctaBtn}
+            <Box sx={{ mt: '20px', fontSize: 18, opacity: 0.55, textAlign: 'center', lineHeight: 1.3, flexShrink: 0 }}>{woTerms}</Box>
+            <Box sx={{ flexShrink: 0 }}>{dots}</Box>
+          </>
+        )}
+        {useBrazilBand ? renderBrazilLegalBand(brazilBandH, 20, 28) : (
+          config.legal && config.legal.enabled ? (
+          <Box sx={{ position: 'absolute', bottom: 20, left: 56, right: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 16, color: config.legal.color || config.text, opacity: 0.85 }}>
+            <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+              {config.legal.logo && <Box component="img" src={config.legal.logo} alt="" sx={{ height: 22, width: 'auto' }} />}
+              <Age18PlusBadge size={28} />
+            </Box>
+            <Box component="span" sx={{ maxWidth: '70%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {config.legal.text || 'Jogue com responsabilidade'}
+            </Box>
+          </Box>
+          ) : null
+        )}
+      </>,
+      `64px 56px ${bottomPad}px`,
+      welcomeBg,
+    );
+  };
 
   if (isBanner) return showWelcome ? renderWelcomeBanner() : renderBanner();
   if (isInterstitial) return showWelcome ? renderWelcomeInterstitial() : renderInterstitial();
