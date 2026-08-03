@@ -15,6 +15,56 @@ const options = {
       { name: 'Promotions', description: 'CMS CRUD for BP promotion versions' },
     ],
     components: {
+      parameters: {
+        BpQueryUc: {
+          in: 'query',
+          name: 'uc',
+          required: false,
+          schema: { type: 'integer' },
+          description: 'User country ID (T_COUNTRIES.COUNTRY_ID). Same as mobile API `uc`. Omit to match promotions targeted at any country. See GET /api/bp/countries.',
+          example: 3,
+        },
+        BpQueryAppType: {
+          in: 'query',
+          name: 'appType',
+          required: false,
+          schema: { type: 'integer', enum: [1, 2] },
+          description: 'Client platform sent by the app. `1` = iOS, `2` = Android. Omit to match any platform.',
+          example: 2,
+        },
+        BpQueryLid: {
+          in: 'query',
+          name: 'lid',
+          required: false,
+          schema: { type: 'integer' },
+          description: 'League ID. Omit to match promotions targeted at any league.',
+          example: 102,
+        },
+        BpQueryLang: {
+          in: 'query',
+          name: 'lang',
+          required: false,
+          schema: { type: 'integer' },
+          description: 'Language ID (same IDs as the mobile API `lang` param). Omit to match any language.',
+          example: 10,
+        },
+        BpQueryPublisher: {
+          in: 'query',
+          name: 'publisher',
+          required: false,
+          schema: { type: 'integer' },
+          description: 'Publisher ID (same IDs as the mobile API `publisher` param). Omit to match any publisher.',
+          example: 147,
+        },
+        BpQueryCampaign: {
+          in: 'query',
+          name: 'campaign',
+          required: false,
+          schema: { type: 'string' },
+          description: 'Campaign name (same value as the mobile API `campaign` param). Omit to match any campaign.',
+          example: 'summer_promo',
+        },
+      },
       schemas: {
         // ── Runtime response ──────────────────────────────────────────
         BPMBResponse: {
@@ -43,6 +93,9 @@ const options = {
                 CID: { type: 'integer', nullable: true, description: 'Country ID, resolved from the production T_COUNTRIES table (MSSQL SportifierDB). null matches any country.' },
                 LID: { type: 'integer', nullable: true },
                 SOV: { type: 'integer', example: 100 },
+                Lang: { type: 'integer', nullable: true, description: 'Language ID — null matches any language.' },
+                Publisher: { type: 'integer', nullable: true, description: 'Publisher ID — null matches any publisher.' },
+                Campaign: { type: 'string', nullable: true, description: 'Campaign name — null matches any campaign.' },
               },
             },
             Header: {
@@ -122,6 +175,9 @@ const options = {
             cid:      { type: 'integer', nullable: true, example: 3, description: 'Country ID (T_COUNTRIES.COUNTRY_ID) — null matches any country' },
             platform: { type: 'string', example: 'Android', default: 'All' },
             lid:      { type: 'integer', nullable: true },
+            lang:     { type: 'integer', nullable: true, description: 'Language ID — null matches any language' },
+            publisher:{ type: 'integer', nullable: true, description: 'Publisher ID — null matches any publisher' },
+            campaign: { type: 'string', nullable: true, description: 'Campaign name — null matches any campaign' },
             sov:      { type: 'integer', example: 100, description: 'Share of voice (0-100)' },
             active:   { type: 'boolean', default: true },
             pageBgColor:      { type: 'string', example: '#12193A' },

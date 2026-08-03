@@ -4,9 +4,12 @@
 // Returns a single promotion version selected by targeting + SOV lottery.
 //
 // Query params (all optional — omitting a param widens the match):
-//   cid       int     Country ID (see GET /api/bp/countries) — omit to match any country
+//   uc        int     User country ID (see GET /api/bp/countries) — omit to match any country
 //   appType   int     1 = iOS, 2 = Android — omit to match any platform
 //   lid       int     League ID
+//   lang      int     Language ID — omit to match any language
+//   publisher int     Publisher ID — omit to match any publisher
+//   campaign  string  Campaign name — omit to match any campaign
 //
 // Response matches the BPMB_v8 JSON contract:
 //   { BPMB: { BPMB_Versions: [ <one version> ] } }
@@ -36,6 +39,9 @@ function formatVersion(v) {
       CID: v.cid,
       LID: v.lid,
       SOV: v.sov,
+      Lang: v.lang,
+      Publisher: v.publisher,
+      Campaign: v.campaign,
     },
     Header: {
       Main_Title:      { Text: v.header.mainTitle.text,      Color: v.header.mainTitle.color },
@@ -81,21 +87,49 @@ function formatVersion(v) {
  *     description: >
  *       Returns one promotion version selected by targeting + SOV lottery.
  *       All data is served from an in-memory cache — no per-request DB I/O.
- *       Omitting a query param widens the match (treated as "All").
+ *       All query params are optional — omitting a param widens the match (treated as "All").
+ *       Matching uses AND logic across params: a promotion matches when each configured
+ *       targeting field equals the request value or is null (wildcard).
+ *
+ *       Example:
+ *       `GET /api/bp?uc=3&appType=2&lang=10&publisher=147&campaign=summer_promo`
  *     parameters:
  *       - in: query
- *         name: cid
+ *         name: uc
+ *         required: false
  *         schema: { type: integer }
- *         description: Country ID — see GET /api/bp/countries
+ *         description: User country ID (T_COUNTRIES.COUNTRY_ID). Same as mobile API `uc`. Omit to match any country. See GET /api/bp/countries.
  *         example: 3
  *       - in: query
  *         name: appType
+ *         required: false
  *         schema: { type: integer, enum: [1, 2] }
- *         description: 1 = iOS, 2 = Android
+ *         description: Client platform — 1 = iOS, 2 = Android. Omit to match any platform.
+ *         example: 2
  *       - in: query
  *         name: lid
+ *         required: false
  *         schema: { type: integer }
- *         description: League ID
+ *         description: League ID. Omit to match any league.
+ *         example: 102
+ *       - in: query
+ *         name: lang
+ *         required: false
+ *         schema: { type: integer }
+ *         description: Language ID (mobile API `lang`). Omit to match any language.
+ *         example: 10
+ *       - in: query
+ *         name: publisher
+ *         required: false
+ *         schema: { type: integer }
+ *         description: Publisher ID (mobile API `publisher`). Omit to match any publisher.
+ *         example: 147
+ *       - in: query
+ *         name: campaign
+ *         required: false
+ *         schema: { type: string }
+ *         description: Campaign name (mobile API `campaign`). Omit to match any campaign.
+ *         example: summer_promo
  *     responses:
  *       200:
  *         description: Matched promotion
@@ -124,9 +158,9 @@ router.get('/', (req, res) => {
     return res.status(503).json({ error: 'Service initializing — retry in a moment' });
   }
 
-  const { cid, appType, lid } = req.query;
+  const { uc, appType, lid, lang, publisher, campaign } = req.query;
   const platform = PLATFORM_BY_APP_TYPE[appType];
-  const version = selectVersion(cache.versions, { cid, platform, lid });
+  const version = selectVersion(cache.versions, { cid: uc, platform, lid, lang, publisher, campaign });
 
   if (!version) {
     return res.status(404).json({ error: 'No matching promotion found for the given targeting params' });
@@ -211,7 +245,7 @@ const { pool } = require('../db/mysql');
 
 const FETCH_QUERY = `
   SELECT
-    p.id, p.name, p.cid, p.platform, p.lid, p.sov, p.active,
+    p.id, p.name, p.cid, p.platform, p.lid, p.lang, p.publisher, p.campaign, p.sov, p.active,
     p.page_bg_color,
     p.bg_type, p.bg_gradient_color1, p.bg_gradient_color2,
     p.bg_gradient_angle, p.bg_image_url,
@@ -242,6 +276,9 @@ function groupRows(rows) {
         cid: r.cid,
         platform: r.platform,
         lid: r.lid,
+        lang: r.lang,
+        publisher: r.publisher,
+        campaign: r.campaign,
         sov: r.sov,
         active: !!r.active,
         pageBgColor:      r.page_bg_color,
@@ -299,6 +336,9 @@ function promoParams(body) {
     body.cid       != null ? Number(body.cid) : null,
     body.platform  || 'All',
     body.lid       != null ? Number(body.lid) : null,
+    body.lang      != null && body.lang !== '' ? Number(body.lang) : null,
+    body.publisher != null && body.publisher !== '' ? Number(body.publisher) : null,
+    body.campaign?.trim() || null,
     body.sov       != null ? Number(body.sov) : 100,
     body.pageBgColor || '#000000',
     body.bgType || 'solid',
@@ -480,13 +520,13 @@ router.post('/promotions', async (req, res, next) => {
     await conn.beginTransaction();
     const [result] = await conn.query(
       `INSERT INTO bp_promotions
-         (name, cid, platform, lid, sov, page_bg_color,
+         (name, cid, platform, lid, lang, publisher, campaign, sov, page_bg_color,
           bg_type, bg_gradient_color1, bg_gradient_color2, bg_gradient_angle, bg_image_url,
           header_main_text, header_main_color,
           header_secondary_text, header_secondary_color,
           header_image_url, header_image_height, legal_enabled, legal_text, legal_color, legal_link,
           legal_reg_logo1_link, legal_reg_logo2_link, active)
-       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
       promoParams(req.body)
     );
     await insertBookies(conn, result.insertId, req.body.bookies);
@@ -508,7 +548,7 @@ router.put('/promotions/:id', async (req, res, next) => {
     if (!check.length) { await conn.rollback(); return res.status(404).json({ error: 'Not found' }); }
     await conn.query(
       `UPDATE bp_promotions SET
-         name=?, cid=?, platform=?, lid=?, sov=?, page_bg_color=?,
+         name=?, cid=?, platform=?, lid=?, lang=?, publisher=?, campaign=?, sov=?, page_bg_color=?,
          bg_type=?, bg_gradient_color1=?, bg_gradient_color2=?, bg_gradient_angle=?, bg_image_url=?,
          header_main_text=?, header_main_color=?,
          header_secondary_text=?, header_secondary_color=?,
