@@ -148,7 +148,19 @@ export default function CreativeTemplateCodeDialog({ open, onClose, templateId }
                 <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 1 }}>
                   <Typography variant="caption" color="text.secondary">
                     {ct.snippet.length.toLocaleString()} chars · {ct.snippet.split('\n').length} lines
-                    · macros: <Box component="code" sx={{ fontSize: 11 }}>[%variable_name%]</Box>
+                    {(ct.remainingMacros || []).length > 0 ? (
+                      <>
+                        {' '}· remaining macros:{' '}
+                        {(ct.remainingMacros || []).map((name, i) => (
+                          <React.Fragment key={name}>
+                            {i > 0 ? ', ' : null}
+                            <Box component="code" sx={{ fontSize: 11 }}>[%{name}%]</Box>
+                          </React.Fragment>
+                        ))}
+                      </>
+                    ) : (
+                      <> · no [%…%] macros left in snippet</>
+                    )}
                   </Typography>
                   <CopyButton getText={() => ct.snippet} label="Copy snippet" />
                 </Stack>
@@ -160,7 +172,7 @@ export default function CreativeTemplateCodeDialog({ open, onClose, templateId }
               <Box>
                 <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 1 }}>
                   <Typography variant="caption" color="text.secondary">
-                    Variable schema sent to GAM with the CreativeTemplate
+                    Variables declared on the CreativeTemplate (only cta_url — everything else is inlined into the HTML)
                   </Typography>
                   <CopyButton getText={() => JSON.stringify(ct.variables, null, 2)} label="Copy JSON" />
                 </Stack>
@@ -199,10 +211,11 @@ export default function CreativeTemplateCodeDialog({ open, onClose, templateId }
                 <Box>
                   <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 1 }}>
                     <Typography variant="caption" color="text.secondary">
-                      Variable values for the first targeted market ·
+                      GAM variable values for the first targeted market ·
                       <Box component="span" sx={{ ml: 0.5, fontWeight: 500 }}>
                         {sampleCreative.market.bookmakerId} / {sampleCreative.market.country} (lang {sampleCreative.market.languageId})
                       </Box>
+                      {' '}· other fields are baked into the HTML snippet
                     </Typography>
                     <CopyButton getText={() => JSON.stringify(sampleCreative, null, 2)} label="Copy JSON" />
                   </Stack>

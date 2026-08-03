@@ -12,6 +12,7 @@ const { countryToLangId, getByPath, TRANSLATABLE_PATHS, termIdPathFor } =
   require('../routes/_dbaLang');
 const { resolveTerm, findTerm } = require('../routes/_dbaTerms');
 const { brazilDefaultLegalText, BRAZIL_LEGAL_FALLBACK_TEXT } = require('../utils/brazilLegal');
+const { INLINE_VARIABLE_NAMES } = require('./templateBuilder');
 
 // Pull a translated value for a given field path. If the template has a
 // *TermId reference at that path, resolve it for the requested language.
@@ -178,7 +179,8 @@ function buildCreative({ dbaTemplate, bookmaker, country, variant, bookieSetting
     : ((bookieSettings && bookieSettings.disclaimer_link) || 'https://www.begambleaware.org/');
   const disclaimerLayout = isBrazil ? 'legal-band' : 'legal-strip';
 
-  const variables = [
+  // Full resolved map (includes values that are baked into the HTML snippet).
+  const allVariableValues = [
     { uniqueName: 'bookmaker_name',         value: bookmaker.name },
     { uniqueName: 'bookmaker_logo_url',     value: logoUrl },
     { uniqueName: 'brand_color_1',          value: brandColor1 },
@@ -199,6 +201,13 @@ function buildCreative({ dbaTemplate, bookmaker, country, variant, bookieSetting
     { uniqueName: 'welcome_cta_text',       value: resolved['config.welcomeOffer.ctaText']
       || resolved['config.ctaText'] || dbaTemplate.config?.ctaText || 'Bet Now' },
   ];
+  // Only values that remain real GAM CreativeTemplate variables.
+  const variables = allVariableValues.filter((v) => !INLINE_VARIABLE_NAMES.has(v.uniqueName));
+  const inlineValues = Object.fromEntries(
+    allVariableValues
+      .filter((v) => INLINE_VARIABLE_NAMES.has(v.uniqueName))
+      .map((v) => [v.uniqueName, v.value]),
+  );
 
   // Surface validation hits so the dry-run can flag missing fields without
   // throwing — easier to spot N issues at once than fix-and-retry.
@@ -220,6 +229,7 @@ function buildCreative({ dbaTemplate, bookmaker, country, variant, bookieSetting
     creativeTemplateIdPending: !dbaTemplate.gam_creative_template_id,
     market: { country, bookmakerId: bookmaker.id, languageId: langId },
     creativeTemplateVariableValues: variables,
+    inlineValues,
     validation,
   };
 }

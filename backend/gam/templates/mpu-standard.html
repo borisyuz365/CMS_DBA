@@ -1,19 +1,10 @@
 <!--
   GAM Creative Template — MPU Standard (300×250).
-  Variables use GAM's `[%variable_name%]` macro syntax (per CreativeTemplate
-  spec). Those are replaced when the per-market Creative is built; they are
-  NOT GAM ad-serving macros like %%CLICK_URL_UNESC%% (which would also be
-  valid here but serve a different purpose — wrapping cta_url with the click
-  tracker happens in this template's <a href>).
+  At export, branding / feed / disclaimer placeholders are baked into this
+  HTML. The only remaining CreativeTemplate variable is cta_url (plus
+  %%CLICK_URL_UNESC%% for the GAM click tracker).
 
-  Layout-specific config (size, fonts, gaps) is baked into this HTML.
-  Branding and copy come from variables so one template serves N
-  (bookmaker, country) pairs.
-
-  Per-impression match data is fetched at runtime by the embedded
-  `dba-runtime.js` script (loaded from `[%runtime_url%]`). The runtime finds
-  every `.matches[data-feed]` node, fetches the feed JSON, and renders a
-  rotating carousel inside.
+  Per-impression match data is fetched at runtime by dba-runtime.js.
 -->
 <!DOCTYPE html>
 <html>
@@ -35,27 +26,28 @@
     position: relative;
     text-decoration: none;
   }
-  /* Brazil ~10% band: 52px logo, tight logo→card gap, cards clear of CTA. */
+  /* Brazil ~10% band: larger logo; tighten logo→matches to reclaim height. */
   .ad:has(.legal-band) {
     padding: 4px 12px 27px;
   }
-  .ad:has(.legal-band) .logo { width: 52px; height: 52px; }
-  .ad:has(.legal-band) .matches { margin-top: 2px; padding-top: 6px; }
+  .ad:has(.legal-band) .logo { width: 64px; height: 64px; }
+  .ad:has(.legal-band) .matches { margin-top: 0; padding-top: 4px; }
   .ad:has(.legal-band) .cta { height: 26px; margin-top: 4px; font-size: 11px; }
   .ad .logo {
-    width: 28px; height: 28px;
+    width: 36px; height: 36px;
     background-image: url('[%bookmaker_logo_url%]');
     background-size: contain; background-repeat: no-repeat;
     background-position: left center;
   }
   /* Carousel viewport. overflow:hidden clips the horizontal slide track that
-     dba-runtime.js mounts inside. padding-top:8 gives the top card's date
-     pill room to protrude upward without being clipped. */
+     dba-runtime.js mounts inside. padding-top gives the top card's date
+     pill room to protrude upward without being clipped. margin-top is the
+     logo→cards gap (scaled down for the larger 36px logo). */
   .ad .matches {
     flex: 1;
     position: relative;
     overflow: hidden;
-    margin-top: 8px;
+    margin-top: 4px;
     padding-top: 8px;
     box-sizing: border-box;
   }

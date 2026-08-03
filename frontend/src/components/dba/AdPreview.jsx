@@ -565,7 +565,7 @@ export default function AdPreview({ config, sizeId, bookmaker, scale = 1, slideI
     // total) with a small buffer. CTA + dots stay at their fixed positions
     // anchored by the unchanged wrap bottom padding (14).
     //
-    // Brazil band (~25px / 10%): 52px logo, cards sit tight under it and stay
+    // Brazil band (~25px / 10%): larger logo, cards sit tight under it and stay
     // clear of the CTA (slightly denser cards + smaller logo→card gap).
     const d = useBrazilBand
       ? { cardRadius: 11, cardPad: '10px 10px 7px', pillH: 14, pillFont: 8,
@@ -574,15 +574,16 @@ export default function AdPreview({ config, sizeId, bookmaker, scale = 1, slideI
       : { cardRadius: 12, cardPad: '14px 12px 10px', pillH: 16, pillFont: 9,
           teamsGap: 6, teamFont: 10, crest: 18, xFont: 11,
           oddsGap: 12, oddsFont: 11, oddsDot: 5, rowGap: 6 };
-    const logoSize = useBrazilBand ? 52 : 28;
+    const logoSize = useBrazilBand ? 64 : 36;
     const cardGap = useBrazilBand ? 8 : 14;
     const ctaH = useBrazilBand ? 26 : 30;
     const ctaMt = useBrazilBand ? 4 : 8;
     const ctaFont = useBrazilBand ? 11 : 12;
     const sidePad = useBrazilBand ? 12 : 14;
     const bottomPad = useBrazilBand ? brazilBandH + 2 : 14;
-    // Room for the protruding date pill only — keep logo→card gap tight.
-    const matchesMt = useBrazilBand ? 2 : 0;
+    // Logo→cards gap: reclaim the extra logo height so the stack still fits
+    // (Brazil 52→64 / default 28→36). Date-pill protrusion is handled on the card.
+    const matchesMt = useBrazilBand ? 0 : 4;
     return wrap(
       <>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>

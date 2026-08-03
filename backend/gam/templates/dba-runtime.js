@@ -1,8 +1,8 @@
 // DBA Runtime — renders match cards into GAM creatives.
 //
-// The GAM creative template (mpu-standard.html etc.) embeds this script via
-// `<script src="[%runtime_url%]" defer>`. On load it finds every
-// `.matches[data-feed]` node, fetches its feed JSON, and renders an
+// Embedded by the GAM creative (external script URL or inlined into the
+// exported HTML snippet). On load it finds every `.matches[data-feed]` node,
+// fetches its feed JSON (or paints data-sample-b64), and renders an
 // auto-rotating carousel of match cards inside.
 //
 // Hosted by Express at GET /dba-runtime.js. CDN cache is 5 minutes so a
@@ -334,18 +334,39 @@
   }
   window.DbaRenderMatches = render;
 
+  // Optional base64 JSON blob baked into the creative for GAM preview /
+  // offline fallback when the live feed cannot be fetched.
+  function loadSample(node) {
+    var b64 = node.getAttribute('data-sample-b64');
+    if (!b64) return null;
+    try {
+      return JSON.parse(atob(b64));
+    } catch (e) {
+      if (window.console) console.warn('[dba-runtime] bad data-sample-b64');
+      return null;
+    }
+  }
+
   function autoRender() {
     var nodes = document.querySelectorAll(ROOT_SEL);
     if (!nodes.length) return;
     for (var i = 0; i < nodes.length; i++) {
       (function (node) {
+        var sample = loadSample(node);
+        // Paint sample immediately so GAM / SafeFrame previews show cards
+        // even when the live feed is blocked or slow.
+        if (sample) render(node, sample);
+
         var feed = node.getAttribute('data-feed');
         if (!feed) return;
         fetch(feed, { credentials: 'omit' })
           .then(function (r) { return r.ok ? r.json() : null; })
-          .then(function (data) { if (data) render(node, data); })
+          .then(function (data) {
+            if (data && extractMatches(data).length) render(node, data);
+          })
           .catch(function (err) {
             if (window.console) console.warn('[dba-runtime] feed failed:', err && err.message);
+            if (!sample && loadSample(node)) render(node, loadSample(node));
           });
       }(nodes[i]));
     }
