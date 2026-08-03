@@ -11,6 +11,8 @@ const dictionaryStorage = require('../utils/dictionaryStorage');
 const { countryToLangId, getByPath, TRANSLATABLE_PATHS, termIdPathFor } =
   require('../routes/_dbaLang');
 const { resolveTerm, findTerm } = require('../routes/_dbaTerms');
+const { brazilDefaultLegalText, BRAZIL_LEGAL_FALLBACK_TEXT } = require('../utils/brazilLegal');
+const { INLINE_VARIABLE_NAMES } = require('./templateBuilder');
 
 // Pull a translated value for a given field path. If the template has a
 // *TermId reference at that path, resolve it for the requested language.
@@ -158,7 +160,27 @@ function buildCreative({ dbaTemplate, bookmaker, country, variant, bookieSetting
     || process.env.DBA_RUNTIME_URL
     || `${(linkBaseUrl || feedBaseUrl || 'https://cms.365scores.com')}/dba-runtime.js`;
 
-  const variables = [
+  // Brazil SPA/MF: disclaimer comes from template legal text (or default with
+  // the bookmaker BR license number) and uses the ~10% legal-band layout.
+  const isBrazil = country === 'BR';
+  const licenseNumber = (variant && (variant.license_number || variant.licenseNumber)) || '';
+  const stripLegacyBrazilPrefix = (text) => (text || '')
+    .replace(/^\s*18\+?\s*JOGUE COM RESPONSABILIDADE\.?\s*/i, '')
+    .trim();
+  const brazilDisclaimer =
+    stripLegacyBrazilPrefix(resolved['config.legal.text'])
+    || stripLegacyBrazilPrefix(dbaTemplate.config?.legal?.text)
+    || (licenseNumber ? brazilDefaultLegalText(licenseNumber) : BRAZIL_LEGAL_FALLBACK_TEXT);
+  const disclaimerText = isBrazil
+    ? brazilDisclaimer
+    : ((bookieSettings && bookieSettings.disclaimer_text) || '18+ · BeGambleAware.org');
+  const disclaimerUrl = isBrazil
+    ? ((bookieSettings && bookieSettings.disclaimer_link) || '')
+    : ((bookieSettings && bookieSettings.disclaimer_link) || 'https://www.begambleaware.org/');
+  const disclaimerLayout = isBrazil ? 'legal-band' : 'legal-strip';
+
+  // Full resolved map (includes values that are baked into the HTML snippet).
+  const allVariableValues = [
     { uniqueName: 'bookmaker_name',         value: bookmaker.name },
     { uniqueName: 'bookmaker_logo_url',     value: logoUrl },
     { uniqueName: 'brand_color_1',          value: brandColor1 },
@@ -167,16 +189,25 @@ function buildCreative({ dbaTemplate, bookmaker, country, variant, bookieSetting
     { uniqueName: 'cta_text_color',         value: ctaText },
     { uniqueName: 'cta_text',               value: resolved['config.ctaText'] || dbaTemplate.config?.ctaText || 'Bet Now' },
     { uniqueName: 'cta_url',                value: affiliate },
-    { uniqueName: 'disclaimer_text',        value: (bookieSettings && bookieSettings.disclaimer_text) || '18+ · BeGambleAware.org' },
-    { uniqueName: 'disclaimer_url',         value: (bookieSettings && bookieSettings.disclaimer_link) || 'https://www.begambleaware.org/' },
+    { uniqueName: 'disclaimer_text',        value: disclaimerText },
+    { uniqueName: 'disclaimer_url',         value: disclaimerUrl },
+    { uniqueName: 'disclaimer_layout',      value: disclaimerLayout },
     { uniqueName: 'feed_url',               value: feedUrl },
     { uniqueName: 'runtime_url',            value: runtime },
     // Welcome-offer variables, only set when the template uses them.
     { uniqueName: 'welcome_headline',       value: resolved['config.welcomeOffer.headline'] || '' },
     { uniqueName: 'welcome_subtext',        value: resolved['config.welcomeOffer.subtext']  || '' },
     { uniqueName: 'welcome_terms',          value: resolved['config.welcomeOffer.terms']    || '' },
-    { uniqueName: 'welcome_cta_text',       value: resolved['config.welcomeOffer.ctaText']  || '' },
+    { uniqueName: 'welcome_cta_text',       value: resolved['config.welcomeOffer.ctaText']
+      || resolved['config.ctaText'] || dbaTemplate.config?.ctaText || 'Bet Now' },
   ];
+  // Only values that remain real GAM CreativeTemplate variables.
+  const variables = allVariableValues.filter((v) => !INLINE_VARIABLE_NAMES.has(v.uniqueName));
+  const inlineValues = Object.fromEntries(
+    allVariableValues
+      .filter((v) => INLINE_VARIABLE_NAMES.has(v.uniqueName))
+      .map((v) => [v.uniqueName, v.value]),
+  );
 
   // Surface validation hits so the dry-run can flag missing fields without
   // throwing — easier to spot N issues at once than fix-and-retry.
@@ -198,6 +229,7 @@ function buildCreative({ dbaTemplate, bookmaker, country, variant, bookieSetting
     creativeTemplateIdPending: !dbaTemplate.gam_creative_template_id,
     market: { country, bookmakerId: bookmaker.id, languageId: langId },
     creativeTemplateVariableValues: variables,
+    inlineValues,
     validation,
   };
 }

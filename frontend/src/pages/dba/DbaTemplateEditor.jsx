@@ -27,7 +27,7 @@ import CreativeTemplateCodeDialog from '../../components/dba/CreativeTemplateCod
 import apiService from '../../services/api';
 import AdPreview, { CarouselDots } from '../../components/dba/AdPreview';
 import { StatusPill, LogoThumb, Toggle } from '../../components/dba/DbaPrimitives';
-import { invertText, SIZE_DIMS, resolveLogoUrl, bookmakerLogoUrl, autoLogoReason } from '../../components/dba/dbaUtils';
+import { invertText, SIZE_DIMS, resolveLogoUrl, bookmakerLogoUrl, autoLogoReason, brazilDefaultLegalText } from '../../components/dba/dbaUtils';
 
 const DEFAULT_CONFIG = {
   bg: '#151E22', text: '#FFFFFF', cta: '#1976D2', ctaText: 'Bet Now',
@@ -207,6 +207,33 @@ function DbaTemplateEditorInner({ initial, allBookmakers, isNew }) {
 
   const set = (key, val) => setConfig((c) => ({ ...c, [key]: val }));
   const previewBm = allBookmakers.find((b) => b.id === bookmakerId) || allBookmakers[0];
+
+  // Brazil requires a legal disclaimer with the bookmaker's own SPA/MF
+  // authorization number. As soon as a format targets Brazil, turn the
+  // disclaimer on and seed it with the compliant default. Also strip the
+  // legacy "18+ JOGUE COM RESPONSABILIDADE" prefix — 18+ is now a badge.
+  useEffect(() => {
+    if (!countries.includes('BR')) return;
+    const licenseNumber = previewBm?.variants?.BR?.licenseNumber;
+    const stripLegacy = (text) => (text || '')
+      .replace(/^\s*18\+?\s*JOGUE COM RESPONSABILIDADE\.?\s*/i, '')
+      .trim();
+    setConfig((c) => {
+      const cleaned = stripLegacy(c.legal?.text);
+      const nextText = cleaned || brazilDefaultLegalText(licenseNumber);
+      if (c.legal?.enabled && c.legal?.text === nextText) return c;
+      return {
+        ...c,
+        legal: {
+          ...(c.legal || {}),
+          enabled: true,
+          text: nextText,
+        },
+      };
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [countries, previewBm?.variants?.BR?.licenseNumber]);
+
   // "DBA-enabled" = a bookmaker that's been configured in the Bookmaker Management
   // screen with at least one live country variant.
   const dbaEnabledBookmakers = useMemo(
@@ -738,14 +765,31 @@ function DbaTemplateEditorInner({ initial, allBookmakers, isNew }) {
               <Stack direction="row" alignItems="center" spacing={1.25}>
                 <Toggle on={!!config.legal?.enabled} onChange={(on) => set('legal', { ...(config.legal || {}), enabled: on })} ariaLabel="Toggle legal disclaimer" />
                 <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>
-                  {config.legal?.enabled ? 'Shown in the ad' : 'Hidden'}
+                  {config.legal?.enabled
+                    ? (countries.includes('BR') ? 'Brazil band (~10% of ad)' : 'Shown in the ad')
+                    : 'Hidden'}
                 </Typography>
               </Stack>
               {config.legal?.enabled && (
                 <>
-                  <Field label="Legal text" help="e.g. 18+ · Gamble responsibly · BeGambleAware.org">
-                    <TextField size="small" fullWidth value={config.legal?.text || ''} inputProps={{ maxLength: 120 }} placeholder="18+ · Gamble responsibly"
-                      onChange={(e) => set('legal', { ...(config.legal || {}), text: e.target.value })} />
+                  <Field
+                    label="Legal text"
+                    help={countries.includes('BR')
+                      ? 'Brazil SPA/MF (~10% band). 18+ badge is shown automatically; paste the Ministério sentence. License from bookmaker BR variant.'
+                      : 'e.g. 18+ · Gamble responsibly · BeGambleAware.org'}
+                  >
+                    <TextField
+                      size="small"
+                      fullWidth
+                      multiline
+                      minRows={countries.includes('BR') ? 3 : 1}
+                      value={config.legal?.text || ''}
+                      inputProps={{ maxLength: 320 }}
+                      placeholder={countries.includes('BR')
+                        ? 'MINISTÉRIO DA FAZENDA ADVERTE: APOSTA NÃO É INVESTIMENTO. AUTORIZAÇÃO SPA/MF …'
+                        : '18+ · Gamble responsibly'}
+                      onChange={(e) => set('legal', { ...(config.legal || {}), text: e.target.value })}
+                    />
                   </Field>
                   <Field label="Legal text color">
                     <ColorField value={config.legal?.color || config.text} onChange={(v) => set('legal', { ...(config.legal || {}), color: v })} />
@@ -858,7 +902,7 @@ function DbaTemplateEditorInner({ initial, allBookmakers, isNew }) {
                 }}>
                   {Array.from({ length: totalSlides + 1 }).map((_, i) => (
                     <Box key={i} sx={{ width: w * displayScale, height: h * displayScale, flexShrink: 0, position: 'relative', overflow: 'hidden' }}>
-                      <AdPreview config={config} sizeId={previewSize} bookmaker={previewBm} scale={displayScale} slideIdx={i % totalSlides} />
+                      <AdPreview config={config} sizeId={previewSize} bookmaker={previewBm} scale={displayScale} slideIdx={i % totalSlides} countries={countries} />
                     </Box>
                   ))}
                 </Box>

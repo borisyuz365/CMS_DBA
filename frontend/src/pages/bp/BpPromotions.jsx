@@ -61,6 +61,15 @@ function PromotionCard({ promo, countryName, onEdit, onDuplicate, onDelete }) {
           {promo.lid && (
             <Chip size="small" label={`LID ${promo.lid}`} variant="outlined" sx={{ fontSize: '0.75rem' }} />
           )}
+          {promo.lang && (
+            <Chip size="small" label={`Lang ${promo.lang}`} variant="outlined" sx={{ fontSize: '0.75rem' }} />
+          )}
+          {promo.publisher && (
+            <Chip size="small" label={`Pub ${promo.publisher}`} variant="outlined" sx={{ fontSize: '0.75rem' }} />
+          )}
+          {promo.campaign && (
+            <Chip size="small" label={promo.campaign} variant="outlined" sx={{ fontSize: '0.75rem' }} />
+          )}
           <Chip size="small" label={`SOV ${promo.sov}%`} variant="outlined" sx={{ fontSize: '0.75rem' }} />
         </Stack>
 

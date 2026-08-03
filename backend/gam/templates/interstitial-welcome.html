@@ -1,0 +1,165 @@
+<!--
+  GAM Creative Template — Interstitial Welcome Offer (640×1280).
+  Vertical layout: centered logo · welcome pill · headline/subtext · CTA · terms.
+  At export, branding / disclaimer / welcome copy are baked in.
+  Remaining variable: cta_url.
+-->
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<style>
+  html, body { margin: 0; padding: 0; }
+  .ad {
+    width: 640px; height: 1280px;
+    background: [%brand_color_1%];
+    color: [%brand_color_2_or_white%];
+    border-radius: 16px;
+    overflow: hidden;
+    font-family: '365 Sans', Inter, sans-serif;
+    box-sizing: border-box;
+    padding: 64px 56px 80px;
+    display: flex; flex-direction: column;
+    position: relative;
+    text-decoration: none;
+  }
+  /* Brazil: CTA + terms centered between offer copy and legal band. */
+  .ad:has(.legal-band) {
+    padding: 64px 56px 128px;
+  }
+  .ad:has(.legal-band) .copy { flex: 0 0 auto; }
+  .ad:has(.legal-band) .cta-zone {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .ad:has(.legal-band) .cta { margin-top: 0; }
+  .ad:has(.legal-band) .terms { margin-top: 20px; }
+
+  .ad .logo-wrap {
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 46px; margin-bottom: 20px;
+  }
+  .ad .logo {
+    width: 181px; height: 181px;
+    background-image: url('[%bookmaker_logo_url%]');
+    background-size: contain; background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 24px;
+  }
+  .ad .pill-wrap {
+    display: flex; justify-content: center; margin-bottom: 32px;
+  }
+  .ad .pill {
+    padding: 10px 24px; border-radius: 999px;
+    background: #FFC107; color: #0A0A0A;
+    font-size: 22px; font-weight: 800;
+    letter-spacing: 0.08em; text-indent: 0.08em;
+    text-transform: uppercase; text-align: center;
+  }
+  .ad .copy {
+    flex: 1;
+    display: flex; flex-direction: column;
+    justify-content: center; gap: 40px;
+    text-align: center; min-height: 0;
+  }
+  .ad .copy .head {
+    font-size: 108px; font-weight: 800;
+    line-height: 0.98; letter-spacing: -0.03em;
+  }
+  .ad .copy .sub {
+    font-size: 36px; opacity: 0.85;
+    line-height: 1.25; font-weight: 500;
+  }
+  .ad .cta {
+    background: [%cta_bg_color%];
+    color: [%cta_text_color%];
+    border: none; height: 104px; margin-top: 32px;
+    position: relative;
+    border-radius: 24px;
+    font-size: 36px; font-weight: 800;
+    cursor: pointer;
+    font-family: inherit;
+    letter-spacing: 0.01em;
+  }
+  .ad .terms {
+    margin-top: 20px;
+    font-size: 18px; opacity: 0.55;
+    text-align: center; line-height: 1.3;
+  }
+
+  .ad .legal { pointer-events: none; }
+  .ad .legal.legal-strip {
+    position: absolute; left: 56px; right: 56px; bottom: 20px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 16px; opacity: 0.85;
+  }
+  .ad .legal.legal-strip .marks { display: inline-flex; align-items: center; gap: 8px; }
+  .ad .legal.legal-strip .age18 {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px; border-radius: 50%;
+    background: #0A0A0A; color: #FFFFFF;
+    font-size: 14px; font-weight: 800; line-height: 1;
+    letter-spacing: -0.06em; padding-left: 0.5px;
+    flex-shrink: 0;
+  }
+  .ad .legal.legal-strip .text {
+    color: inherit; text-decoration: underline;
+    pointer-events: auto;
+    max-width: 70%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .ad .legal.legal-band {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    height: 10%; min-height: 128px;
+    display: flex; align-items: center; justify-content: flex-start;
+    gap: 12px;
+    box-sizing: border-box;
+    padding: 8px 24px;
+    background: rgba(0, 0, 0, 0.72);
+    color: #FFFFFF;
+    font-size: 20px; font-weight: 700; line-height: 1.2;
+    text-align: left; z-index: 2;
+  }
+  .ad .legal.legal-band .marks { display: inline-flex; align-items: center; flex-shrink: 0; }
+  .ad .legal.legal-band .age18 {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px; border-radius: 50%;
+    background: #0A0A0A; color: #FFFFFF;
+    font-size: 14px; font-weight: 800; line-height: 1;
+    letter-spacing: -0.06em; padding-left: 0.5px;
+  }
+  .ad .legal.legal-band .text {
+    color: inherit; text-decoration: none;
+    pointer-events: auto;
+    white-space: normal;
+    overflow: hidden;
+    letter-spacing: 0.01em;
+    flex: 1; min-width: 0;
+  }
+</style>
+</head>
+<body>
+  <a class="ad" href="%%CLICK_URL_UNESC%%[%cta_url%]" target="_blank">
+    <div class="logo-wrap">
+      <div class="logo" aria-label="[%bookmaker_name%]"></div>
+    </div>
+    <div class="pill-wrap">
+      <div class="pill">Welcome offer</div>
+    </div>
+    <div class="copy">
+      <div class="head">[%welcome_headline%]</div>
+      <div class="sub">[%welcome_subtext%]</div>
+    </div>
+    <div class="cta-zone">
+      <button class="cta" type="button">[%welcome_cta_text%]</button>
+      <div class="terms">[%welcome_terms%]</div>
+    </div>
+    <div class="legal [%disclaimer_layout%]">
+      <span class="marks"><span class="age18">18+</span></span>
+      <a class="text" href="[%disclaimer_url%]" target="_blank">[%disclaimer_text%]</a>
+    </div>
+  </a>
+</body>
+</html>

@@ -36,20 +36,10 @@ router.get('/templates/:id/preview', async (req, res, next) => {
       gam_last_synced_at: tplRow.gam_last_synced_at,
     };
 
-    // Build the (single) CreativeTemplate payload. If the layout HTML file
-    // is missing — common in Phase 1 where only mpu-standard.html exists —
-    // surface that as an error rather than failing the whole request.
-    let creativeTemplate = null;
+    // Resolve the market list first: a Creative per (template.bookmakerId, country).
+    // Branding / feed / disclaimer values from the first market are then baked
+    // into the CreativeTemplate HTML snippet (they are not GAM variables).
     const errors = [];
-    try {
-      creativeTemplate = buildCreativeTemplate(dbaTemplate);
-    } catch (err) {
-      errors.push(err.message);
-    }
-
-    // Resolve the market list: a Creative per (template.bookmakerId, country).
-    // Pull the per-market affiliate URL from dba_bookmaker_variants and the
-    // bookmaker branding from dba_bookmakers / dba_bookie_settings.
     const creatives = [];
     if (dbaTemplate.bookmakerId) {
       const [[bookmaker]] = await pool.query(
@@ -106,9 +96,27 @@ router.get('/templates/:id/preview', async (req, res, next) => {
       errors.push('Template has no bookmaker_id — assign one in the editor first');
     }
 
+    // Build CreativeTemplate with inlined brand/feed/disclaimer from the first
+    // market. If the layout HTML file is missing, surface that as an error.
+    let creativeTemplate = null;
+    const sample = creatives[0] || null;
+    try {
+      creativeTemplate = buildCreativeTemplate(dbaTemplate, {
+        inlineValues: sample ? sample.inlineValues : null,
+        bakedMarket: sample ? sample.market : null,
+      });
+    } catch (err) {
+      errors.push(err.message);
+    }
+
     const warnings = creatives.flatMap((c) =>
       (c.validation || []).map((msg) => `${c.market.bookmakerId}/${c.market.country}: ${msg}`),
     );
+    if (sample && creatives.length > 1) {
+      warnings.push(
+        `HTML snippet branding/feed/disclaimer are inlined from the first market (${sample.market.bookmakerId}/${sample.market.country}). Other countries need their own baked export.`,
+      );
+    }
 
     res.json({
       dbaTemplate: { id: dbaTemplate.id, name: dbaTemplate.name, sizeId: dbaTemplate.sizeId, status: dbaTemplate.status, countries, bookmakerId: dbaTemplate.bookmakerId },

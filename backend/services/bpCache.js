@@ -25,7 +25,7 @@ let _timer = null;
 
 const LOAD_QUERY = `
   SELECT
-    p.id, p.name, p.cid, p.platform, p.lid, p.sov,
+    p.id, p.name, p.cid, p.platform, p.lid, p.lang, p.publisher, p.campaign, p.sov,
     p.page_bg_color,
     p.bg_type, p.bg_gradient_color1, p.bg_gradient_color2,
     p.bg_gradient_angle, p.bg_image_url,
@@ -55,10 +55,13 @@ function buildVersions(rows) {
       map.set(r.id, {
         id:       r.id,
         name:     r.name,
-        cid:      r.cid,
-        platform: r.platform,
-        lid:      r.lid,
-        sov:      r.sov,
+        cid:       r.cid,
+        platform:  r.platform,
+        lid:       r.lid,
+        lang:      r.lang,
+        publisher: r.publisher,
+        campaign:  r.campaign,
+        sov:       r.sov,
         pageBgColor:      r.page_bg_color,
         bgType:           r.bg_type || 'solid',
         bgGradientColor1: r.bg_gradient_color1,

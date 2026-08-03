@@ -4,19 +4,26 @@
 // params, returns a single selected version or null if nothing matches.
 //
 // Matching rules:
-//   cid      — exact match OR version.cid === null (all countries)
-//   platform — exact match OR version.platform === 'All'
-//   lid      — exact match OR version.lid === null (all leagues)
+//   cid       — exact match OR version.cid === null (all countries)
+//   platform  — exact match OR version.platform === 'All'
+//   lid       — exact match OR version.lid === null (all leagues)
+//   lang      — exact match OR version.lang === null (all languages)
+//   publisher — exact match OR version.publisher === null (all publishers)
+//   campaign  — exact match OR version.campaign === null (all campaigns)
 //
 // SOV selection: weighted random lottery among the matching candidates.
 // Versions with higher SOV are proportionally more likely to be served.
 
-function selectVersion(versions, { cid, platform, lid } = {}) {
+function selectVersion(versions, { cid, platform, lid, lang, publisher, campaign } = {}) {
+  const campaignNorm = campaign == null ? null : String(campaign).trim();
   const candidates = versions.filter((v) => {
-    const cidMatch      = cid == null || v.cid == null      || v.cid      === Number(cid);
-    const platformMatch = !platform || v.platform === 'All' || v.platform === platform;
-    const lidMatch      = lid == null || v.lid == null       || v.lid      === Number(lid);
-    return cidMatch && platformMatch && lidMatch;
+    const cidMatch       = cid == null || v.cid == null       || v.cid       === Number(cid);
+    const platformMatch  = !platform || v.platform === 'All'  || v.platform === platform;
+    const lidMatch       = lid == null || v.lid == null        || v.lid       === Number(lid);
+    const langMatch      = lang == null || v.lang == null      || v.lang      === Number(lang);
+    const publisherMatch = publisher == null || v.publisher == null || v.publisher === Number(publisher);
+    const campaignMatch  = campaignNorm == null || !v.campaign || v.campaign === campaignNorm;
+    return cidMatch && platformMatch && lidMatch && langMatch && publisherMatch && campaignMatch;
   });
 
   if (candidates.length === 0) return null;

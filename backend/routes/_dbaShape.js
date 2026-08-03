@@ -35,10 +35,11 @@ function bookmakerRowToJson(row, variantRows) {
       (variantRows || []).map((v) => [
         v.country_code,
         {
-          affiliate:  v.affiliate,
-          status:     v.status,
-          modified:   isoOrNull(v.modified),
-          modifiedBy: v.modified_by,
+          affiliate:     v.affiliate,
+          licenseNumber: v.license_number,
+          status:        v.status,
+          modified:      isoOrNull(v.modified),
+          modifiedBy:    v.modified_by,
         },
       ]),
     ),

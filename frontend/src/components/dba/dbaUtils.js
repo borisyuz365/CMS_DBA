@@ -1,5 +1,15 @@
 // Shared helpers for DBA Management screens.
 
+// Brazil (SPA/MF) regulation disclaimer. The full band must occupy ~10% of
+// the ad area. The 18+ mark is rendered as a badge next to this sentence
+// (not as text). License number comes from the bookmaker's BR variant.
+export const BRAZIL_LEGAL_FALLBACK_TEXT =
+  'MINISTÉRIO DA FAZENDA ADVERTE: APOSTA NÃO É INVESTIMENTO. AUTORIZAÇÃO SPA/MF. *T&CS SE APLICAM';
+
+export function brazilDefaultLegalText(licenseNumber) {
+  return `MINISTÉRIO DA FAZENDA ADVERTE: APOSTA NÃO É INVESTIMENTO. AUTORIZAÇÃO SPA/MF ${licenseNumber || '[license number]'}. *T&CS SE APLICAM`;
+}
+
 export function hexToRgba(hex, a) {
   const c = (hex || '#000').replace('#', '');
   const full = c.length === 3 ? c.split('').map((x) => x + x).join('') : c.padEnd(6, '0');
