@@ -141,19 +141,20 @@
       '.matches .dba-team-logo { width: 18px; height: 18px; flex: 0 0 auto; object-fit: contain; border-radius: 50%; background: rgba(255,255,255,0.08); }' +
       '.matches .dba-team-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }' +
       '.matches .dba-x { font-size: 11px; font-weight: 700; opacity: 0.65; flex: 0 0 auto; }' +
-      '.matches .dba-odds { display: flex; justify-content: space-around; gap: 12px; margin-top: 5px; font-size: 11px; font-weight: 700; }' +
+      '.matches .dba-odds { display: flex; justify-content: space-around; gap: 10px; margin-top: 5px; font-size: 11px; font-weight: 700; }' +
       '.matches .dba-odd { display: inline-flex; align-items: center; gap: 6px; }' +
       '.matches .dba-odd:before { content: ""; display: inline-block; width: 5px; height: 5px; border-radius: 999px; background: #FFC107; }' +
       /* Brazil MPU: slightly denser cards so they clear the CTA (AdPreview). */ +
-      '.ad:has(.legal-band) .matches .dba-slide { gap: 8px; }' +
-      '.ad:has(.legal-band) .matches .dba-card { border-radius: 11px; padding: 10px 10px 7px; }' +
-      '.ad:has(.legal-band) .matches .dba-pill { top: -7px; padding: 2px 5px; font-size: 8px; }' +
-      '.ad:has(.legal-band) .matches .dba-teams { gap: 5px; margin-top: 4px; font-size: 10px; }' +
-      '.ad:has(.legal-band) .matches .dba-team-logo { width: 15px; height: 15px; }' +
-      '.ad:has(.legal-band) .matches .dba-x { font-size: 10px; }' +
-      '.ad:has(.legal-band) .matches .dba-odds { gap: 10px; margin-top: 3px; font-size: 10px; }' +
-      '.ad:has(.legal-band) .matches .dba-odd { gap: 4px; }' +
-      '.ad:has(.legal-band) .matches .dba-odd:before { width: 4px; height: 4px; }' +
+      '.ad-shell.legal-band .matches .dba-slide { gap: 6px; }' +
+      '.ad-shell.legal-band .matches .dba-card { border-radius: 11px; padding: 10px 10px 7px; }' +
+      '.ad-shell.legal-band .matches .dba-pill { top: -7px; padding: 2px 5px; font-size: 8px; }' +
+      '.ad-shell.legal-band .matches { flex: 0 0 auto; margin-bottom: 4px; padding-top: 7px; overflow-x: hidden; overflow-y: visible; }' +
+      '.ad-shell.legal-band .matches .dba-teams { gap: 5px; margin-top: 4px; font-size: 10px; }' +
+      '.ad-shell.legal-band .matches .dba-team-logo { width: 15px; height: 15px; }' +
+      '.ad-shell.legal-band .matches .dba-x { font-size: 10px; }' +
+      '.ad-shell.legal-band .matches .dba-odds { gap: 8px; margin-top: 3px; font-size: 10px; }' +
+      '.ad-shell.legal-band .matches .dba-odd { gap: 4px; }' +
+      '.ad-shell.legal-band .matches .dba-odd:before { width: 4px; height: 4px; }' +
       /* Banner (320×50): flat match block — no card chrome. Mirrors AdPreview
          BannerMatchSection. Activated via data-layout="banner" on .matches. */ +
       '.matches[data-layout="banner"] { display: flex; align-items: center; }' +
@@ -175,18 +176,18 @@
       '.matches[data-layout="banner"] .dba-team-logo { width: 11px; height: 11px; }' +
       '.matches[data-layout="banner"] .dba-x { font-size: 10px; opacity: 0.6; }' +
       '.matches[data-layout="banner"] .dba-odds {' +
-        'justify-content: center; gap: 10px; margin-top: 0; font-size: 9px;' +
+        'justify-content: center; gap: 8px; margin-top: 0; font-size: 9px;' +
       '}' +
       '.matches[data-layout="banner"] .dba-odd { gap: 2px; }' +
       '.matches[data-layout="banner"] .dba-odd:before { width: 3px; height: 3px; }' +
       /* Banner + Brazil legal band: denser metrics (BANNER.brazil.match). */ +
-      '.ad:has(.legal-band) .matches[data-layout="banner"] .dba-card { gap: 1px; }' +
-      '.ad:has(.legal-band) .matches[data-layout="banner"] .dba-pill { padding: 1px 3px; font-size: 6.6px; }' +
-      '.ad:has(.legal-band) .matches[data-layout="banner"] .dba-teams { gap: 2px; font-size: 7.7px; }' +
-      '.ad:has(.legal-band) .matches[data-layout="banner"] .dba-team-logo { width: 9px; height: 9px; }' +
-      '.ad:has(.legal-band) .matches[data-layout="banner"] .dba-x { font-size: 7.7px; }' +
-      '.ad:has(.legal-band) .matches[data-layout="banner"] .dba-odds { gap: 6px; font-size: 7.7px; }' +
-      '.ad:has(.legal-band) .matches[data-layout="banner"] .dba-odd:before { width: 2px; height: 2px; }' +
+      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-card { gap: 1px; }' +
+      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-pill { padding: 1px 3px; font-size: 6.6px; }' +
+      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-teams { gap: 2px; font-size: 7.7px; }' +
+      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-team-logo { width: 9px; height: 9px; }' +
+      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-x { font-size: 7.7px; }' +
+      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-odds { gap: 5px; font-size: 7.7px; }' +
+      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-odd:before { width: 2px; height: 2px; }' +
       /* Interstitial (640×1280): large cards, 3 per slide. Mirrors AdPreview
          MatchRow interstitial metrics. data-layout="interstitial". */ +
       '.matches[data-layout="interstitial"] .dba-slide { gap: 56px; }' +
@@ -207,12 +208,28 @@
       '.matches[data-layout="interstitial"] .dba-team-logo { width: 64px; height: 64px; }' +
       '.matches[data-layout="interstitial"] .dba-x { font-size: 28px; }' +
       '.matches[data-layout="interstitial"] .dba-odds {' +
-        'gap: 32px; margin-top: 24px; font-size: 30px;' +
+        'gap: 26px; margin-top: 24px; font-size: 30px;' +
       '}' +
       '.matches[data-layout="interstitial"] .dba-odd { gap: 12px; }' +
       '.matches[data-layout="interstitial"] .dba-odd:before { width: 12px; height: 12px; }' +
       /* Interstitial + Brazil: spacing only (gap), keep default card metrics. */ +
-      '.ad:has(.legal-band) .matches[data-layout="interstitial"] .dba-slide { gap: 40px; }';
+      '.ad-shell.legal-band .matches[data-layout="interstitial"] .dba-slide { gap: 40px; }' +
+      /* Carousel page indicator — on .ad-shell (outside click <a>) for GAM. */ +
+      '.ad .dba-dots, .ad-shell > .dba-dots-shell { display: flex; justify-content: center; align-items: center; flex-shrink: 0; pointer-events: none; color: inherit; }' +
+      '.ad .dba-dot, .ad-shell > .dba-dots-shell .dba-dot { display: inline-block; border-radius: 999px; background: currentColor; opacity: 0.35; transition: width 0.3s, opacity 0.3s; }' +
+      '.ad .dba-dot-active, .ad-shell > .dba-dots-shell .dba-dot-active { opacity: 1; }' +
+      '.ad-shell > .dba-dots-shell[data-layout="mpu"] { position: absolute; left: 0; right: 0; bottom: 12px; height: 10px; margin-top: 0; gap: 6px; z-index: 5; }' +
+      '.ad-shell > .dba-dots-shell[data-layout="mpu"] .dba-dot { height: 4px; width: 4px; }' +
+      '.ad-shell > .dba-dots-shell[data-layout="mpu"] .dba-dot-active { width: 9.6px; }' +
+      '.ad-shell.legal-band > .dba-dots-shell[data-layout="mpu"] { bottom: 29px; }' +
+      '.ad .dba-dots[data-layout="mpu"] { position: absolute; left: 0; right: 0; bottom: 12px; height: 10px; margin-top: 0; gap: 6px; z-index: 2; }' +
+      '.ad .dba-dots[data-layout="mpu"] .dba-dot { height: 4px; width: 4px; }' +
+      '.ad .dba-dots[data-layout="mpu"] .dba-dot-active { width: 9.6px; }' +
+      '.ad-shell.legal-band .ad .cta { position: absolute; left: 12px; right: 12px; bottom: 43px; margin-top: 0; z-index: 2; }' +
+      '.ad .dba-dots[data-layout="interstitial"] { height: 24px; margin-top: 24px; gap: 12px; }' +
+      '.ad .dba-dots[data-layout="interstitial"] .dba-dot { height: 10px; width: 10px; }' +
+      '.ad .dba-dots[data-layout="interstitial"] .dba-dot-active { width: 24px; }' +
+      '.ad-shell.legal-band .ad .dba-dots[data-layout="interstitial"] { margin-top: 0; }';
     var s = el('style', { id: 'dba-runtime-styles' });
     s.textContent = css;
     (document.head || document.documentElement).appendChild(s);
@@ -267,37 +284,110 @@
     return slides;
   }
 
+  function dotLayoutKey(node) {
+    var layout = node.getAttribute('data-layout');
+    if (layout === 'banner') return null;
+    return layout === 'interstitial' ? 'interstitial' : 'mpu';
+  }
+
+  function removeDots(node) {
+    var shell = node.closest('.ad-shell');
+    if (shell) {
+      var shellDots = shell.querySelector('.dba-dots-shell');
+      if (shellDots) shellDots.parentNode.removeChild(shellDots);
+    }
+    var ad = node.closest('.ad');
+    if (!ad) return;
+    var existing = ad.querySelector('.dba-dots');
+    if (existing) existing.parentNode.removeChild(existing);
+  }
+
+  function mountDots(node, slideCount) {
+    removeDots(node);
+    var layoutKey = dotLayoutKey(node);
+    if (!layoutKey || slideCount < 2) return null;
+
+    var shell = node.closest('.ad-shell');
+    var ad = node.closest('.ad');
+    if (!shell && !ad) return null;
+
+    var dots = el('div', { 'class': 'dba-dots', 'data-layout': layoutKey });
+    for (var i = 0; i < slideCount; i++) {
+      dots.appendChild(el('span', { 'class': 'dba-dot' + (i === 0 ? ' dba-dot-active' : '') }));
+    }
+
+    // Mount on the shell (sibling of the click <a>) so GAM / SafeFrame does not
+    // drop dots injected inside the anchor layer.
+    if (shell) {
+      dots.classList.add('dba-dots-shell');
+      var legal = shell.querySelector('.legal');
+      if (legal) shell.insertBefore(dots, legal);
+      else shell.appendChild(dots);
+      if (ad) {
+        try {
+          var c = window.getComputedStyle(ad).color;
+          if (c) dots.style.color = c;
+        } catch (e) { /* preview iframe */ }
+      }
+    } else {
+      var cta = ad.querySelector('.cta');
+      if (cta) ad.insertBefore(dots, cta.nextSibling);
+      else ad.appendChild(dots);
+    }
+    return dots;
+  }
+
+  function updateDots(dotsEl, activeIdx) {
+    if (!dotsEl) return;
+    var dots = dotsEl.querySelectorAll('.dba-dot');
+    for (var i = 0; i < dots.length; i++) {
+      if (i === activeIdx) dots[i].classList.add('dba-dot-active');
+      else dots[i].classList.remove('dba-dot-active');
+    }
+  }
+
   // Mount slides into `node`. When there's more than one slide, run an
   // infinite-forward carousel: animate to a clone of slide 0 sitting at the
   // end of the track, then drop the transition and reset translateX(0). The
   // snap is invisible because both endpoints render the same content.
   function mountCarousel(node, slides, intervalMs, transitionMs) {
     while (node.firstChild) node.removeChild(node.firstChild);
-    if (!slides.length) return;
+    if (!slides.length) {
+      removeDots(node);
+      return;
+    }
 
     var track = el('div', { 'class': 'dba-track' });
     for (var i = 0; i < slides.length; i++) track.appendChild(slides[i]);
     node.appendChild(track);
-    if (slides.length < 2) return;
+
+    var n = slides.length;
+    var dotsEl = mountDots(node, n);
+
+    if (n < 2) return;
 
     track.appendChild(slides[0].cloneNode(true));
 
-    var n = slides.length;
     var pos = 0;
+    function setActive(idx) {
+      updateDots(dotsEl, ((idx % n) + n) % n);
+    }
     function advance() {
       pos++;
+      setActive(pos);
       track.style.transition = 'transform ' + transitionMs + 'ms cubic-bezier(0.32, 0.72, 0.24, 1)';
       track.style.transform = 'translate3d(-' + (pos * 100) + '%, 0, 0)';
       if (pos === n) {
         setTimeout(function () {
           pos = 0;
+          setActive(0);
           track.style.transition = 'none';
           track.style.transform = 'translate3d(0, 0, 0)';
-          // Force a reflow so the next advance starts from a clean state.
           void track.offsetWidth;
         }, transitionMs + 30);
       }
     }
+    setActive(0);
     setInterval(advance, intervalMs);
   }
 
@@ -348,6 +438,7 @@
   }
 
   function autoRender() {
+    if (window.__DBA_SKIP_AUTORENDER) return;
     var nodes = document.querySelectorAll(ROOT_SEL);
     if (!nodes.length) return;
     for (var i = 0; i < nodes.length; i++) {
@@ -360,7 +451,13 @@
         var feed = node.getAttribute('data-feed');
         if (!feed) return;
         fetch(feed, { credentials: 'omit' })
-          .then(function (r) { return r.ok ? r.json() : null; })
+          .then(function (r) {
+            if (!r.ok) return null;
+            return r.text().then(function (t) {
+              if (!t || String(t).trim() === 'No Games') return null;
+              try { return JSON.parse(t); } catch (e) { return null; }
+            });
+          })
           .then(function (data) {
             if (data && extractMatches(data).length) render(node, data);
           })

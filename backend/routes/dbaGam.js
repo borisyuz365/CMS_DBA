@@ -3,7 +3,7 @@
 const express = require('express');
 const { pool } = require('../db/mysql');
 const { templateRowToJson } = require('./_dbaShape');
-const { buildCreativeTemplate } = require('../gam/templateBuilder');
+const { buildCreativeTemplate, validateFeedUrl } = require('../gam/templateBuilder');
 const { buildCreative } = require('../gam/creativeBuilder');
 
 const router = express.Router();
@@ -74,6 +74,7 @@ router.get('/templates/:id/preview', async (req, res, next) => {
           brandColor: bookmaker.brand_color,
           secondaryColor: bookmaker.secondary_color,
           defaultLogoImageUrl: bookmaker.default_logo_image_url,
+          useNoBgLogo: !!bookmaker.use_no_bg_logo,
         };
         for (const cc of countries) {
           const [[variant]] = await pool.query(
@@ -118,10 +119,24 @@ router.get('/templates/:id/preview', async (req, res, next) => {
       );
     }
 
+    let feedValidation = null;
+    const feedUrl = sample?.inlineValues?.feed_url || creativeTemplate?.bakedInline?.feed_url;
+    if (feedUrl) {
+      feedValidation = await validateFeedUrl(feedUrl);
+      if (!feedValidation.ok) {
+        warnings.push(`Games feed: ${feedValidation.error} (${feedUrl})`);
+      }
+    }
+
+    if (creativeTemplate?.bakeValidation && !creativeTemplate.bakeValidation.ok) {
+      creativeTemplate.bakeValidation.issues.forEach((msg) => warnings.push(`Snippet bake: ${msg}`));
+    }
+
     res.json({
       dbaTemplate: { id: dbaTemplate.id, name: dbaTemplate.name, sizeId: dbaTemplate.sizeId, status: dbaTemplate.status, countries, bookmakerId: dbaTemplate.bookmakerId },
       creativeTemplate,
       creatives,
+      feedValidation,
       validation: { errors, warnings },
     });
   } catch (err) { next(err); }

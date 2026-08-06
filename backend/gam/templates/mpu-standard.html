@@ -4,117 +4,130 @@
   HTML. The only remaining CreativeTemplate variable is cta_url (plus
   %%CLICK_URL_UNESC%% for the GAM click tracker).
 
-  Per-impression match data is fetched at runtime by dba-runtime.js.
+  Legal footer sits outside the click <a> (nested anchors break GAM preview).
+  Brazil layout uses .ad-shell.legal-band instead of :has() (unsupported in GAM).
 -->
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8" />
-<script src="[%runtime_url%]" defer></script>
+<script src="[[runtime_url]]" defer></script>
 <style>
   html, body { margin: 0; padding: 0; }
-  .ad {
+  .ad-shell {
     width: 300px; height: 250px;
-    background: [%brand_color_1%];
-    color: [%brand_color_2_or_white%];
-    border-radius: 8px;
-    overflow: hidden;
-    font-family: '365 Sans', Inter, sans-serif;
-    box-sizing: border-box;
-    padding: 8px 14px 22px;
-    display: flex; flex-direction: column;
     position: relative;
+    border-radius: [[ad_border_radius]];
+    overflow: hidden;
+    box-sizing: border-box;
+    color: [[brand_color_2_or_white]];
+  }
+  .ad {
+    width: 100%; height: 100%;
+    background: [[ad_background]];
+    color: [[brand_color_2_or_white]];
+    font-family: [[ad_font_family]];
+    box-sizing: border-box;
+    position: relative;
+    padding: 4px 14px 56px;
+    display: flex; flex-direction: column;
     text-decoration: none;
   }
-  /* Brazil ~10% band: larger logo; tighten logo→matches to reclaim height. */
-  .ad:has(.legal-band) {
-    padding: 4px 12px 27px;
+  /* Brazil: card→CTA gap is margin-bottom on .matches (4px), not bottom padding. */
+  .ad-shell.legal-band .ad {
+    padding: 0 12px 69px;
   }
-  .ad:has(.legal-band) .logo { width: 64px; height: 64px; }
-  .ad:has(.legal-band) .matches { margin-top: 0; padding-top: 4px; }
-  .ad:has(.legal-band) .cta { height: 26px; margin-top: 4px; font-size: 11px; }
+  .ad-shell.legal-band .ad .logo { width: 52px; height: 52px; }
+  .ad-shell.legal-band .ad .matches { flex: 0 0 auto; margin-top: 0; margin-bottom: 4px; padding-top: 7px; overflow-x: hidden; overflow-y: visible; }
+  .ad-shell.legal-band .ad .cta {
+    position: absolute; left: 12px; right: 12px; bottom: 43px;
+    height: 26px; margin-top: 0; font-size: 11px; flex-shrink: 0; z-index: 2;
+  }
+  /* Dots live on .ad-shell (outside the click <a>) — GAM strips/fails on
+     JS-inserted block elements inside the anchor layer. */
+  .ad-shell > .dba-dots-shell[data-layout="mpu"] {
+    position: absolute; left: 0; right: 0; bottom: 12px;
+    height: 10px; display: flex; justify-content: center; align-items: center;
+    gap: 6px; z-index: 5; pointer-events: none;
+  }
+  .ad-shell > .dba-dots-shell[data-layout="mpu"] .dba-dot { height: 4px; width: 4px; }
+  .ad-shell > .dba-dots-shell[data-layout="mpu"] .dba-dot-active { width: 9.6px; }
+  .ad-shell.legal-band > .dba-dots-shell[data-layout="mpu"] { bottom: 29px; }
   .ad .logo {
     width: 36px; height: 36px;
-    background-image: url('[%bookmaker_logo_url%]');
+    background-image: url('[[bookmaker_logo_url]]');
     background-size: contain; background-repeat: no-repeat;
     background-position: left center;
   }
-  /* Carousel viewport. overflow:hidden clips the horizontal slide track that
-     dba-runtime.js mounts inside. padding-top gives the top card's date
-     pill room to protrude upward without being clipped. margin-top is the
-     logo→cards gap (scaled down for the larger 36px logo). */
   .ad .matches {
     flex: 1;
     position: relative;
     overflow: hidden;
     margin-top: 4px;
+    margin-bottom: 8px;
     padding-top: 8px;
     box-sizing: border-box;
   }
-  /* position:relative on the CTA puts it in the same stacking context as the
-     positioned date pills inside the cards — without this, an overflowing
-     card edge can paint over the static CTA. */
   .ad .cta {
-    background: [%cta_bg_color%];
-    color: [%cta_text_color%];
-    border: none; height: 30px; margin-top: 8px;
-    position: relative;
+    background: [[cta_bg_color]];
+    color: [[cta_text_color]];
+    border: none; height: 30px;
+    position: absolute; left: 14px; right: 14px; bottom: 26px;
+    margin-top: 0; z-index: 2;
     border-radius: 6px;
     font-size: 12px; font-weight: 700;
     cursor: pointer;
     font-family: inherit;
     letter-spacing: 0.01em;
+    display: flex; align-items: center; justify-content: center;
   }
-  /* Legal footer — layout selected via [%disclaimer_layout%]:
-       legal-strip  — default markets (small corner strip + 18+ badge)
-       legal-band   — Brazil SPA/MF (~10% of ad height, multiline copy) */
-  .ad .legal {
+  /* Legal footer — sibling of .ad inside .ad-shell (not nested in click link). */
+  .ad-shell .legal {
     pointer-events: none;
+    z-index: 10;
   }
-  .ad .legal.legal-strip {
+  .ad-shell .legal.legal-hidden { display: none; }
+  .ad-shell .legal.legal-strip {
     position: absolute; left: 6px; right: 6px; bottom: 2px;
     display: flex; justify-content: space-between; align-items: center;
     font-size: 7px; opacity: 0.85;
+    color: [[legal_text_color]];
   }
-  .ad .legal.legal-strip .marks { display: inline-flex; align-items: center; gap: 3px; }
-  .ad .legal.legal-strip .age18 {
+  .ad-shell .legal.legal-strip .marks { display: inline-flex; align-items: center; gap: 3px; }
+  .ad-shell .legal.legal-strip .age18 {
     display: inline-flex; align-items: center; justify-content: center;
-    width: 12px; height: 12px; border-radius: 50%;
+    width: 13px; height: 13px; border-radius: 50%;
     background: #0A0A0A; color: #FFFFFF;
-    font-size: 6px; font-weight: 800; line-height: 1;
+    font-size: 7px; font-weight: 800; line-height: 1;
     letter-spacing: -0.06em; padding-left: 0.5px;
     flex-shrink: 0;
   }
-  .ad .legal.legal-strip .text {
+  .ad-shell .legal.legal-strip .text {
     color: inherit; text-decoration: underline;
-    pointer-events: auto;
     max-width: 70%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
-  /* Brazil: full-width band ≈ 10% of 250px (= 25px).
-     18+ badge on the left + Ministério da Fazenda sentence (no "jogue…" copy). */
-  .ad .legal.legal-band {
+  .ad-shell .legal.legal-band {
     position: absolute; left: 0; right: 0; bottom: 0;
     height: 10%; min-height: 25px;
     display: flex; align-items: center; justify-content: flex-start;
     gap: 5px;
     box-sizing: border-box;
     padding: 1px 6px;
-    background: rgba(0, 0, 0, 0.72);
-    color: #FFFFFF;
+    background: [[disclaimer_bg_color]];
+    color: [[legal_text_color]];
     font-size: 7px; font-weight: 700; line-height: 1.15;
-    text-align: left; z-index: 2;
+    text-align: left;
   }
-  .ad .legal.legal-band .marks { display: inline-flex; align-items: center; flex-shrink: 0; }
-  .ad .legal.legal-band .age18 {
+  .ad-shell .legal.legal-band .marks { display: inline-flex; align-items: center; flex-shrink: 0; }
+  .ad-shell .legal.legal-band .age18 {
     display: inline-flex; align-items: center; justify-content: center;
-    width: 14px; height: 14px; border-radius: 50%;
+    width: 15px; height: 15px; border-radius: 50%;
     background: #0A0A0A; color: #FFFFFF;
-    font-size: 7px; font-weight: 800; line-height: 1;
+    font-size: 8px; font-weight: 800; line-height: 1;
     letter-spacing: -0.06em; padding-left: 0.5px;
   }
-  .ad .legal.legal-band .text {
+  .ad-shell .legal.legal-band .text {
     color: inherit; text-decoration: none;
-    pointer-events: auto;
     white-space: normal;
     overflow: hidden;
     letter-spacing: 0.01em;
@@ -123,18 +136,16 @@
 </style>
 </head>
 <body>
-  <a class="ad" href="%%CLICK_URL_UNESC%%[%cta_url%]" target="_blank">
-    <div class="logo" aria-label="[%bookmaker_name%]"></div>
-    <!-- Populated at runtime by dba-runtime.js. Tunables:
-           data-per-slide  games per slide (default 2)
-           data-interval   ms between slides (default 3500)
-           data-transition ms slide animation (default 700) -->
-    <div class="matches" data-feed="[%feed_url%]" data-per-slide="2" data-interval="3500" data-transition="700"></div>
-    <button class="cta" type="button">[%cta_text%]</button>
-    <div class="legal [%disclaimer_layout%]">
+  <div class="ad-shell [[disclaimer_layout]]">
+    <a class="ad" href="%%CLICK_URL_UNESC%%[%cta_url%]" target="_blank">
+      <div class="logo" aria-label="[[bookmaker_name]]"></div>
+      <div class="matches" data-feed="[[feed_url]]" data-per-slide="2" data-interval="3500" data-transition="700"></div>
+      <span class="cta">[[cta_text]]</span>
+    </a>
+    <div class="legal [[disclaimer_layout]]">
       <span class="marks"><span class="age18">18+</span></span>
-      <a class="text" href="[%disclaimer_url%]" target="_blank">[%disclaimer_text%]</a>
+      <span class="text">[[disclaimer_text]]</span>
     </div>
-  </a>
+  </div>
 </body>
 </html>

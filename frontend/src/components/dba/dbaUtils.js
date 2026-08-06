@@ -6,6 +6,9 @@
 export const BRAZIL_LEGAL_FALLBACK_TEXT =
   'MINISTÉRIO DA FAZENDA ADVERTE: APOSTA NÃO É INVESTIMENTO. AUTORIZAÇÃO SPA/MF. *T&CS SE APLICAM';
 
+/** Default Brazil SPA/MF legal-band footer background. */
+export const LEGAL_BAND_BG_DEFAULT = 'rgba(0, 0, 0, 0.72)';
+
 export function brazilDefaultLegalText(licenseNumber) {
   return `MINISTÉRIO DA FAZENDA ADVERTE: APOSTA NÃO É INVESTIMENTO. AUTORIZAÇÃO SPA/MF ${licenseNumber || '[license number]'}. *T&CS SE APLICAM`;
 }

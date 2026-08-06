@@ -25,7 +25,7 @@ import Chip from '@mui/material/Chip';
 import TranslationPopover from '../../components/dba/TranslationPopover';
 import CreativeTemplateCodeDialog from '../../components/dba/CreativeTemplateCodeDialog';
 import apiService from '../../services/api';
-import AdPreview, { CarouselDots } from '../../components/dba/AdPreview';
+import AdPreview from '../../components/dba/AdPreview';
 import { StatusPill, LogoThumb, Toggle } from '../../components/dba/DbaPrimitives';
 import { invertText, SIZE_DIMS, resolveLogoUrl, bookmakerLogoUrl, autoLogoReason, brazilDefaultLegalText } from '../../components/dba/dbaUtils';
 
@@ -794,6 +794,17 @@ function DbaTemplateEditorInner({ initial, allBookmakers, isNew }) {
                   <Field label="Legal text color">
                     <ColorField value={config.legal?.color || config.text} onChange={(v) => set('legal', { ...(config.legal || {}), color: v })} />
                   </Field>
+                  <Field
+                    label="Legal footer background"
+                    help={countries.includes('BR')
+                      ? 'Background of the Brazil SPA/MF band (~10% of ad height). Supports hex or rgba.'
+                      : 'Used when the legal band layout is active (Brazil targeting). Supports hex or rgba.'}
+                  >
+                    <ColorField
+                      value={config.legal?.bgColor || 'rgba(0, 0, 0, 0.72)'}
+                      onChange={(v) => set('legal', { ...(config.legal || {}), bgColor: v })}
+                    />
+                  </Field>
                   <Field label="Legal logo / image">
                     <ImageUploadField value={config.legal?.logo || null} onChange={(v) => set('legal', { ...(config.legal || {}), logo: v })} />
                   </Field>
@@ -890,28 +901,18 @@ function DbaTemplateEditorInner({ initial, allBookmakers, isNew }) {
                 position: 'relative', overflow: 'hidden',
                 borderRadius: `${(config.radius || 8) * displayScale}px`,
               }}>
-                {/* Render totalSlides + 1 boxes — the last is a clone of slide
-                    0 so the carousel can scroll forward off the end and snap
-                    seamlessly back to the real slide 0. */}
-                <Box sx={{
-                  display: 'flex',
-                  width: w * displayScale * (totalSlides + 1),
-                  height: h * displayScale,
-                  transform: `translateX(-${displayPos * w * displayScale}px)`,
-                  transition: transitionOn ? `transform ${SLIDE_DURATION_MS}ms cubic-bezier(0.32, 0.72, 0.24, 1)` : 'none',
-                }}>
-                  {Array.from({ length: totalSlides + 1 }).map((_, i) => (
-                    <Box key={i} sx={{ width: w * displayScale, height: h * displayScale, flexShrink: 0, position: 'relative', overflow: 'hidden' }}>
-                      <AdPreview config={config} sizeId={previewSize} bookmaker={previewBm} scale={displayScale} slideIdx={i % totalSlides} countries={countries} />
-                    </Box>
-                  ))}
-                </Box>
+                <AdPreview
+                  config={config}
+                  sizeId={previewSize}
+                  bookmaker={previewBm}
+                  scale={displayScale}
+                  slideIdx={safeSlideIdx}
+                  displayPos={displayPos}
+                  transitionOn={transitionOn}
+                  carouselDurationMs={SLIDE_DURATION_MS}
+                  countries={countries}
+                />
               </Box>
-
-              {/* Carousel page indicator now lives INSIDE the ad render via
-                  renderInAdDots() in AdPreview.jsx — matches production's
-                  carousel behaviour (carousel.css: .dots { position: absolute;
-                  bottom: 0 }) and is what the served ad's end viewer will see. */}
 
               <Box sx={{ position: 'absolute', top: -22, left: 0, fontSize: 11, fontFamily: 'ui-monospace, monospace', color: 'text.secondary' }}>
                 {w} × {h}{displayScale !== 1 ? ` · ${Math.round(displayScale * 100)}%` : ''}
