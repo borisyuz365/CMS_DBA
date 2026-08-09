@@ -90,7 +90,7 @@ const options = {
             Targeting: {
               type: 'object',
               properties: {
-                CID: { type: 'integer', nullable: true, description: 'Country ID, resolved from the production T_COUNTRIES table (MSSQL SportifierDB). null matches any country.' },
+                uc: { type: 'integer', nullable: true, description: 'Echoes the request `uc` query param (T_COUNTRIES.COUNTRY_ID). null when `uc` was omitted.' },
                 LID: { type: 'integer', nullable: true },
                 SOV: { type: 'integer', example: 100 },
                 Lang: { type: 'integer', nullable: true, description: 'Language ID — null matches any language.' },

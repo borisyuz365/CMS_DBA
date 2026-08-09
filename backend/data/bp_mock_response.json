@@ -1,0 +1,91 @@
+{
+  "BPMB": {
+    "BPMB_Versions": [
+      {
+        "BP_Version_Name": "Summer Promo IT",
+        "Num_Of_Bookies": 3,
+        "Targeting": {
+          "uc": 3,
+          "LID": null,
+          "SOV": 60,
+          "Lang": 10,
+          "Publisher": 147,
+          "Campaign": "summer_promo"
+        },
+        "Header": {
+          "Main_Title": {
+            "Text": "Best Odds Guaranteed",
+            "Color": "#FFFFFF"
+          },
+          "Secondary_Title": {
+            "Text": "Top bookmakers, one place",
+            "Color": "#B0BEC5"
+          },
+          "ImageURL": "https://cdn.example.com/bp/header-summer-it.png"
+        },
+        "Page_Background_Color": "#12193A",
+        "Page_Background": {
+          "Type": "gradient",
+          "Color": "#12193A",
+          "GradientColor1": "#12193A",
+          "GradientColor2": "#0D3B6E",
+          "GradientAngle": 135,
+          "ImageUrl": null
+        },
+        "Legal": {
+          "Text": "Il gioco è vietato ai minori. Gioca responsabilmente.",
+          "Color": "#90A4AE",
+          "Link": "https://www.adm.gov.it",
+          "Regulatory_Logos": [
+            {
+              "Src": "/legal-logos/italia-gambling-full.svg",
+              "Link": "https://www.adm.gov.it"
+            },
+            {
+              "Src": "/legal-logos/italia-gambling-gauge.svg",
+              "Link": "https://www.adm.gov.it"
+            }
+          ]
+        },
+        "Bookies": [
+          {
+            "BMID": 14,
+            "Section_BG_Color": "#1A2340",
+            "Title_Text": "Bet365",
+            "Title_Text_Color": "#FFFFFF",
+            "Subtitle_Text": "Up to €50 in Bet Credits",
+            "Subtitle_Text_Color": "#B0BEC5",
+            "CTA_Text": "Claim Offer",
+            "CTA_Text_Color": "#FFFFFF",
+            "Strip_Colors": ["#027B5B", "#03A678"],
+            "Click_URL": "https://www.bet365.it/?affiliate=365_00000001"
+          },
+          {
+            "BMID": 204,
+            "Section_BG_Color": "#1A2340",
+            "Title_Text": "Betano",
+            "Title_Text_Color": "#FFFFFF",
+            "Subtitle_Text": "100% bonus up to €100",
+            "Subtitle_Text_Color": "#B0BEC5",
+            "CTA_Text": "Join Now",
+            "CTA_Text_Color": "#FFFFFF",
+            "Strip_Colors": ["#C0392B", "#E74C3C"],
+            "Click_URL": "https://www.betano.it/?ref=365_00000002"
+          },
+          {
+            "BMID": 317,
+            "Section_BG_Color": "#1A2340",
+            "Title_Text": "Snai",
+            "Title_Text_Color": "#FFFFFF",
+            "Subtitle_Text": null,
+            "Subtitle_Text_Color": null,
+            "CTA_Text": "Scommetti ora",
+            "CTA_Text_Color": "#FFFFFF",
+            "Strip_Colors": ["#F39C12"],
+            "Click_URL": "https://www.snai.it/?ref=365_00000003"
+          }
+        ]
+      }
+    ]
+  }
+}

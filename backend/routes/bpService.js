@@ -31,12 +31,20 @@ const PLATFORM_BY_APP_TYPE = { '1': 'iOS', '2': 'Android' };
 // Italy-only regulatory logos, both here and in the CMS's Legal section.
 const ITALY_CID = 3;
 
-function formatVersion(v) {
+function parseOptionalInt(val) {
+  if (val == null || val === '') return null;
+  const n = Number(val);
+  return Number.isFinite(n) ? n : null;
+}
+
+// Runtime response echoes request targeting where the client supplied it.
+function formatVersion(v, { uc } = {}) {
+  const requestUc = parseOptionalInt(uc);
   return {
     BP_Version_Name:    v.name,
     Num_Of_Bookies:     v.bookies.length,
     Targeting: {
-      CID: v.cid,
+      uc: requestUc,
       LID: v.lid,
       SOV: v.sov,
       Lang: v.lang,
@@ -61,7 +69,7 @@ function formatVersion(v) {
       Text:  v.legal.text,
       Color: v.legal.color,
       Link:  v.legal.link,
-      Regulatory_Logos: v.cid === ITALY_CID ? v.legal.regulatoryLogos.map((l) => ({ Src: l.src, Link: l.link })) : undefined,
+      Regulatory_Logos: requestUc === ITALY_CID ? v.legal.regulatoryLogos.map((l) => ({ Src: l.src, Link: l.link })) : undefined,
     } : null,
     Bookies: v.bookies.map((b) => ({
       BMID:             b.bmid,
@@ -167,7 +175,7 @@ router.get('/', (req, res) => {
   }
 
   res.set('Cache-Control', 'public, max-age=300, stale-while-revalidate=60');
-  res.json({ BPMB: { BPMB_Versions: [formatVersion(version)] } });
+  res.json({ BPMB: { BPMB_Versions: [formatVersion(version, { uc })] } });
 });
 
 /**
@@ -218,7 +226,7 @@ router.get('/meta', (req, res) => {
  *     summary: List countries for the Geo picker
  *     description: >
  *       { id, name } pairs sourced from the production T_COUNTRIES table
- *       (MSSQL SportifierDB) — the same real CIDs used by Targeting.CID.
+ *       (MSSQL SportifierDB) — the same real CIDs used by Targeting.uc.
  *       Not backend/data/countries.json, which uses unrelated ID numbering.
  *     responses:
  *       200:
