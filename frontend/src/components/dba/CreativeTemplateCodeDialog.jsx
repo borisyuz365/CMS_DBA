@@ -86,6 +86,9 @@ export default function CreativeTemplateCodeDialog({ open, onClose, templateId }
   const creatives = data?.creatives || [];
   const sampleCreative = creatives[0];
   const validation = data?.validation || { errors: [], warnings: [] };
+  const bakeChecks = ct?.bakeValidation?.checks || [];
+  const feedValidation = data?.feedValidation;
+  const bakedInline = ct?.bakedInline || sampleCreative?.inlineValues || {};
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
@@ -116,6 +119,80 @@ export default function CreativeTemplateCodeDialog({ open, onClose, templateId }
         )}
 
         {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+
+        {!loading && !error && ct && (ct.bakeValidation?.ok === false) && (
+          <Alert severity="warning" sx={{ mb: 2 }}>
+            <strong>Preview ↔ snippet mismatch:</strong> some editor values may be missing from the exported HTML.
+            See the alignment table below.
+          </Alert>
+        )}
+
+        {!loading && !error && feedValidation && (
+          <Alert severity={feedValidation.ok ? 'success' : 'warning'} sx={{ mb: 2 }}>
+            <strong>Games feed:</strong>{' '}
+            {feedValidation.ok
+              ? `${feedValidation.gameCount} game(s) returned${feedValidation.sampleGame ? ` — e.g. ${feedValidation.sampleGame}` : ''}`
+              : feedValidation.error}
+            {feedValidation.feedUrl && (
+              <Box component="div" sx={{ mt: 0.5, fontSize: 11, fontFamily: 'ui-monospace, monospace', wordBreak: 'break-all' }}>
+                {feedValidation.feedUrl}
+              </Box>
+            )}
+          </Alert>
+        )}
+
+        {!loading && !error && bakeChecks.length > 0 && (
+          <Box sx={{ mb: 2 }}>
+            <Typography variant="subtitle2" sx={{ mb: 1 }}>Preview ↔ snippet alignment</Typography>
+            <Table size="small">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Setting</TableCell>
+                  <TableCell>Baked value</TableCell>
+                  <TableCell sx={{ width: 72 }}>In snippet</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {bakeChecks.map((c) => (
+                  <TableRow key={c.key}>
+                    <TableCell sx={{ fontSize: 13 }}>{c.label}</TableCell>
+                    <TableCell sx={{ fontSize: 11, fontFamily: 'ui-monospace, monospace', wordBreak: 'break-all', maxWidth: 360 }}>
+                      {String(c.expected).slice(0, 120)}{String(c.expected).length > 120 ? '…' : ''}
+                    </TableCell>
+                    <TableCell>
+                      <Chip
+                        label={c.ok ? 'OK' : 'Missing'}
+                        size="small"
+                        color={c.ok ? 'success' : 'error'}
+                        sx={{ height: 20, fontSize: 10 }}
+                      />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+            {Object.keys(bakedInline).length > 0 && (
+              <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
+                Logo: {bakedInline.bookmaker_logo_url ? 'baked' : 'missing'} · Legal layout: {bakedInline.disclaimer_layout || '—'}
+              </Typography>
+            )}
+          </Box>
+        )}
+
+        {!loading && !error && ct && (ct.remainingMacros || []).some((m) => m !== 'cta_url') && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            <strong>Snippet not fully baked:</strong> GAM will reject placeholders{' '}
+            {(ct.remainingMacros || []).filter((m) => m !== 'cta_url').map((m) => `[${m}]`).join(', ')}.
+            Assign a bookmaker and countries, then re-open this dialog and copy again.
+          </Alert>
+        )}
+
+        {!loading && !error && ct && (ct.remainingMacros || []).length === 1 && ct.remainingMacros[0] === 'cta_url' && (
+          <Alert severity="info" sx={{ mb: 2 }}>
+            Paste into GAM with one template variable: <Box component="code" sx={{ fontSize: 12 }}>cta_url</Box> (URL, required).
+            All colors and legal copy are already baked into the HTML.
+          </Alert>
+        )}
 
         {!loading && !error && data && validation.errors.length > 0 && (
           <Alert severity="error" sx={{ mb: 2 }}>
@@ -172,7 +249,7 @@ export default function CreativeTemplateCodeDialog({ open, onClose, templateId }
               <Box>
                 <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 1 }}>
                   <Typography variant="caption" color="text.secondary">
-                    Variables declared on the CreativeTemplate (only cta_url — everything else is inlined into the HTML)
+                    Variables declared on the CreativeTemplate (only cta_url — colors, legal, and branding are baked into the HTML)
                   </Typography>
                   <CopyButton getText={() => JSON.stringify(ct.variables, null, 2)} label="Copy JSON" />
                 </Stack>

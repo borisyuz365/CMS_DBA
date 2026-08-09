@@ -3,11 +3,11 @@
 // CreativeTemplate schema (https://developers.google.com/ad-manager/api/reference/v202508/CreativeTemplateService.CreativeTemplate).
 //
 // Layout flags (welcome-offer enabled, banner-vs-MPU, etc.) decide which HTML
-// file is loaded. Branding / feed / disclaimer macros are BAKED into the
-// snippet at export time (per market). Only click-URL + welcome-offer fields
-// remain as real GAM CreativeTemplate variables.
+// file is loaded. Branding / feed / disclaimer text+layout macros are BAKED into the
+// snippet at export time (per market). Only cta_url remains a GAM variable.
 const fs = require('fs');
 const path = require('path');
+const { mergeInlineValues, validateBakedSnippet, validateFeedUrl } = require('./previewAlign');
 
 const TEMPLATES_DIR = path.join(__dirname, 'templates');
 
@@ -25,16 +25,21 @@ function templateFileFor(dbaTemplate) {
 }
 
 // Macros that are resolved into the HTML snippet when exporting to GAM —
-// NOT declared as CreativeTemplate variables. Only cta_url remains a variable.
+// NOT declared as CreativeTemplate variables. Per-creative var: cta_url only.
 const INLINE_VARIABLE_NAMES = new Set([
   'bookmaker_logo_url',
   'bookmaker_name',
+  'ad_background',
+  'ad_font_family',
+  'ad_border_radius',
   'brand_color_1',
   'brand_color_2_or_white',
   'cta_bg_color',
   'cta_text',
   'cta_text_color',
   'disclaimer_layout',
+  'disclaimer_bg_color',
+  'legal_text_color',
   'disclaimer_text',
   'disclaimer_url',
   'feed_url',
@@ -45,13 +50,17 @@ const INLINE_VARIABLE_NAMES = new Set([
   'welcome_cta_text',
 ]);
 
-// Full authoring macro set (HTML files still use [%name%] placeholders).
+// Full authoring macro set (HTML template files use [[name]] for baked fields;
+// only cta_url stays as GAM's [%cta_url%] syntax).
 // type:
 //   STRING  — single-line text (default)
 //   URL     — HTTP/HTTPS URL with validation
 const ALL_VARIABLE_SCHEMA = [
   { uniqueName: 'bookmaker_name',         label: 'Bookmaker name',      description: 'Display name of the bookmaker (Bet365, Betano, …)',          type: 'STRING', isRequired: true },
   { uniqueName: 'bookmaker_logo_url',     label: 'Bookmaker logo URL',  description: 'Full CDN URL to the bookmaker logo image',                   type: 'URL',    isRequired: true },
+  { uniqueName: 'ad_background',          label: 'Ad background',       description: 'CSS background from template editor (solid, gradient, or image)', type: 'STRING', isRequired: true },
+  { uniqueName: 'ad_font_family',         label: 'Font family',         description: 'Font stack from template editor',                            type: 'STRING', isRequired: false },
+  { uniqueName: 'ad_border_radius',       label: 'Border radius',       description: 'Corner radius from template editor',                         type: 'STRING', isRequired: false },
   { uniqueName: 'brand_color_1',          label: 'Brand color 1',       description: 'Primary brand color, hex e.g. #0d5240',                      type: 'STRING', isRequired: true },
   { uniqueName: 'brand_color_2_or_white', label: 'Brand color 2 / text',description: 'Secondary brand color or white for legibility, hex',         type: 'STRING', isRequired: true },
   { uniqueName: 'cta_bg_color',           label: 'CTA background color',description: 'CTA button background, hex',                                 type: 'STRING', isRequired: true },
@@ -61,6 +70,8 @@ const ALL_VARIABLE_SCHEMA = [
   { uniqueName: 'disclaimer_text',        label: 'Legal disclaimer',    description: 'Responsible-gaming text shown in the footer (Brazil: full SPA/MF copy)', type: 'STRING', isRequired: false },
   { uniqueName: 'disclaimer_url',         label: 'Disclaimer URL',      description: 'Link target for the legal disclaimer',                       type: 'URL',    isRequired: false },
   { uniqueName: 'disclaimer_layout',      label: 'Disclaimer layout',   description: 'CSS class: legal-band (~10% Brazil) or legal-strip (default)', type: 'STRING', isRequired: false },
+  { uniqueName: 'disclaimer_bg_color',    label: 'Disclaimer background', description: 'Legal band background color (hex or rgba)',                  type: 'STRING', isRequired: false },
+  { uniqueName: 'legal_text_color',       label: 'Legal text color',    description: 'Legal footer text color from template editor',               type: 'STRING', isRequired: false },
   { uniqueName: 'feed_url',               label: 'Match feed URL',      description: 'AdsGeneratorService endpoint for live match data',           type: 'URL',    isRequired: true },
   { uniqueName: 'runtime_url',            label: 'DBA runtime URL',     description: 'Script URL that renders match cards into the creative (served by DBAManagementService at /dba-runtime.js)', type: 'URL', isRequired: true },
   // Welcome-offer fields — only required when the loaded template HTML uses them.
@@ -70,7 +81,7 @@ const ALL_VARIABLE_SCHEMA = [
   { uniqueName: 'welcome_cta_text',       label: 'Welcome offer CTA text', description: 'Translated CTA on the welcome slide (overrides cta_text)',type: 'STRING', isRequired: false },
 ];
 
-// Variables actually declared on the GAM CreativeTemplate — click URL only.
+// Variables actually declared on the GAM CreativeTemplate — cta_url only.
 const VARIABLE_SCHEMA = ALL_VARIABLE_SCHEMA.filter((v) => !INLINE_VARIABLE_NAMES.has(v.uniqueName));
 
 function escapeHtml(value) {
@@ -82,24 +93,28 @@ function escapeHtml(value) {
     .replace(/'/g, '&#39;');
 }
 
-// Replace `[%name%]` macros. Text-ish fields are HTML-escaped; URL/color macros
-// are inserted raw so CSS/hrefs stay valid.
+// Replace [[name]] bake placeholders (and legacy [%name%] if any remain).
+// Text-ish fields are HTML-escaped; URL/color macros are inserted raw.
 const RAW_INLINE_NAMES = new Set([
   'bookmaker_logo_url',
+  'ad_background',
+  'ad_font_family',
+  'ad_border_radius',
   'brand_color_1',
   'brand_color_2_or_white',
   'cta_bg_color',
   'cta_text_color',
   'disclaimer_layout',
+  'disclaimer_bg_color',
+  'legal_text_color',
   'disclaimer_url',
   'feed_url',
   'runtime_url',
 ]);
 
 function applyInlineValues(snippet, inlineValues) {
-  // Always resolve every INLINE macro so `[%bookmaker_logo_url%]` etc. never
-  // leak into the exported GAM snippet — even when a market creative could
-  // not be built (empty string fallback).
+  // Always resolve every INLINE macro so bake placeholders never leak into the
+  // exported GAM snippet as [%…%] (GAM validates every [%name%] as a variable).
   const values = {};
   for (const name of INLINE_VARIABLE_NAMES) values[name] = '';
   if (inlineValues && typeof inlineValues === 'object') {
@@ -110,9 +125,20 @@ function applyInlineValues(snippet, inlineValues) {
   let out = snippet;
   for (const [name, value] of Object.entries(values)) {
     const inserted = RAW_INLINE_NAMES.has(name) ? value : escapeHtml(value);
+    out = out.split(`[[${name}]]`).join(inserted);
+    // Legacy source files that still use [%name%] for baked fields.
     out = out.split(`[%${name}%]`).join(inserted);
   }
   return out;
+}
+
+/** @deprecated use mergeInlineValues from previewAlign.js */
+function fallbackInlineFromTemplate(dbaTemplate) {
+  const { buildPreviewInlineValues } = require('./previewAlign');
+  return buildPreviewInlineValues({
+    dbaTemplate,
+    country: dbaTemplate.countries?.[0] || 'GLOBAL',
+  });
 }
 
 /** Macros still present in a snippet after inlining (for UI / validation). */
@@ -135,26 +161,93 @@ const SAMPLE_MATCH_FEED = {
   ],
 };
 
+const DEFAULT_RUNTIME_URL = process.env.DBA_RUNTIME_URL || 'https://cms.365scores.com/dba-runtime.js';
+
+/** Read dba-runtime.js and wrap for safe inline embedding in GAM HTML. */
+function inlinedRuntimeScriptTag() {
+  const runtimePath = path.join(TEMPLATES_DIR, 'dba-runtime.js');
+  let code = fs.readFileSync(runtimePath, 'utf8');
+  code = code.replace(/<\/script/gi, '<\\/script');
+  return `<script>\n${code}\n</script>`;
+}
+
+/** Parse /GetPayload — JSON object or plain-text "No Games". */
+const FEED_PARSE_FN = `
+function __dbaParseFeed(r) {
+  if (!r || !r.ok) return Promise.resolve(null);
+  return r.text().then(function (t) {
+    if (!t || String(t).trim() === 'No Games') return null;
+    try { return JSON.parse(t); } catch (e) { return null; }
+  });
+}`;
+
 /**
- * Make the exported snippet self-contained for GAM paste/preview:
- *  1. Inline dba-runtime.js (external script hosts are often blocked in GAM)
- *  2. Attach data-sample-b64 so cards render even if /GetPayload fails
+ * GAM preview: inline runtime at body end (external cms.365scores.com/dba-runtime.js
+ * currently serves SPA HTML, not JS), paint embedded sample, then fetch live feed.
+ */
+function gamBootstrapScripts() {
+  return [
+    '<script>window.__DBA_SKIP_AUTORENDER=true;</script>',
+    inlinedRuntimeScriptTag(),
+    `<script>${FEED_PARSE_FN}
+function __dbaGameCount(data) {
+  if (!data) return 0;
+  if (Array.isArray(data.Games)) return data.Games.length;
+  if (Array.isArray(data.matches)) return data.matches.length;
+  if (Array.isArray(data.games)) return data.games.length;
+  if (Array.isArray(data)) return data.length;
+  return 0;
+}
+(function () {
+  var node = document.querySelector('.matches[data-feed]');
+  if (!node || !window.DbaRenderMatches) return;
+  var perSlide = parseInt(node.getAttribute('data-per-slide') || '2', 10);
+  if (!isFinite(perSlide) || perSlide <= 0) perSlide = 2;
+  var b64 = node.getAttribute('data-sample-b64');
+  var sample = null;
+  if (b64) {
+    try {
+      sample = JSON.parse(atob(b64));
+      window.DbaRenderMatches(node, sample);
+    } catch (e) {}
+  }
+  var sampleCount = __dbaGameCount(sample);
+  var feed = node.getAttribute('data-feed');
+  if (!feed) return;
+  fetch(feed, { credentials: 'omit' })
+    .then(__dbaParseFeed)
+    .then(function (data) {
+      if (!data || !window.DbaRenderMatches) return;
+      var feedCount = __dbaGameCount(data);
+      // Keep sample carousel (and dots) when the live feed only fills one slide.
+      if (feedCount <= perSlide && sampleCount > perSlide) return;
+      window.DbaRenderMatches(node, data);
+    })
+    .catch(function () {});
+}());
+</script>`,
+  ].join('\n');
+}
+
+/**
+ * Prepare snippet for GAM paste/preview:
+ *  1. Move runtime load + feed bootstrap to end of <body> (GAM-proven pattern)
+ *  2. Attach data-sample-b64 so cards render when the live feed is blocked
  */
 function makeSnippetSelfContained(snippet) {
-  const runtimePath = path.join(TEMPLATES_DIR, 'dba-runtime.js');
-  if (fs.existsSync(runtimePath)) {
-    const js = fs.readFileSync(runtimePath, 'utf8').replace(/<\/script/gi, '<\\/script');
-    snippet = snippet.replace(
-      /<script\s+src="[^"]*"\s*defer\s*><\/script>/i,
-      `<script>\n${js}\n</script>`,
-    );
-  }
+  if (!/\bclass="matches"[^>]*\bdata-feed=/.test(snippet)) return snippet;
+
+  snippet = snippet.replace(/<script\s+src="[^"]*"\s*defer\s*><\/script>\s*/i, '');
 
   const b64 = Buffer.from(JSON.stringify(SAMPLE_MATCH_FEED), 'utf8').toString('base64');
   snippet = snippet.replace(/<div class="matches"([^>]*)>/g, (match, attrs) => {
     if (/\bdata-sample-b64=/.test(attrs)) return match;
     return `<div class="matches"${attrs} data-sample-b64="${b64}">`;
   });
+
+  if (!snippet.includes('__DBA_SKIP_AUTORENDER')) {
+    snippet = snippet.replace('</body>', `${gamBootstrapScripts()}\n</body>`);
+  }
   return snippet;
 }
 
@@ -174,10 +267,12 @@ function buildCreativeTemplate(dbaTemplate, options = {}) {
     throw new Error(`Template file missing: ${file} (expected at ${filePath})`);
   }
   const rawSnippet = fs.readFileSync(filePath, 'utf8');
-  let snippet = applyInlineValues(rawSnippet, options.inlineValues || null);
-  // Self-contained export: inline runtime + sample matches for GAM preview.
+  const inline = mergeInlineValues(dbaTemplate, options.inlineValues);
+  let snippet = applyInlineValues(rawSnippet, inline);
+  // GAM export: body-end bootstrap + sample matches for preview.
   snippet = makeSnippetSelfContained(snippet);
   const macrosLeft = remainingMacros(snippet);
+  const bakeValidation = validateBakedSnippet(snippet, inline);
   const bakedFor = options.bakedMarket
     ? ` Branding/feed/disclaimer inlined for ${options.bakedMarket.bookmakerId}/${options.bakedMarket.country}.`
     : ' Branding/feed/disclaimer macros cleared (no market sample to bake).';
@@ -186,17 +281,18 @@ function buildCreativeTemplate(dbaTemplate, options = {}) {
     operation: dbaTemplate.gam_creative_template_id ? 'UPDATE' : 'CREATE',
     id: dbaTemplate.gam_creative_template_id || null,
     name: `DBA: ${dbaTemplate.name} (${dbaTemplate.sizeId})`,
-    description: `Auto-generated from CMS template ${dbaTemplate.id}. Layout file: ${file}.${bakedFor} Runtime inlined; sample matches embedded for preview.`,
+    description: `Auto-generated from CMS template ${dbaTemplate.id}. Layout file: ${file}.${bakedFor} Body-end feed bootstrap + sample matches for GAM preview.`,
     sourceFile: file,
     status: 'ACTIVE',
     // GAM CreativeTemplateType: USER_DEFINED = publisher template (us);
     // SYSTEM_DEFINED is reserved for Google-shipped templates.
     type: 'USER_DEFINED',
     snippet,
-    // Declared GAM variable: cta_url. `remainingMacros` is what is still
-    // literally present in the baked snippet (should match).
+    // Declared GAM variable: cta_url only. `remainingMacros` must match.
     variables: VARIABLE_SCHEMA,
     remainingMacros: macrosLeft,
+    bakeValidation,
+    bakedInline: inline,
     // Layout flags GAM exposes on the template record itself:
     isInterstitial: dbaTemplate.sizeId === '640x1280',
     isNativeEligible: false,
@@ -210,6 +306,10 @@ module.exports = {
   ALL_VARIABLE_SCHEMA,
   INLINE_VARIABLE_NAMES,
   applyInlineValues,
+  mergeInlineValues,
+  validateBakedSnippet,
+  validateFeedUrl,
+  fallbackInlineFromTemplate,
   remainingMacros,
   templateFileFor,
 };

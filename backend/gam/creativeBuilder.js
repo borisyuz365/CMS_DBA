@@ -11,8 +11,8 @@ const dictionaryStorage = require('../utils/dictionaryStorage');
 const { countryToLangId, getByPath, TRANSLATABLE_PATHS, termIdPathFor } =
   require('../routes/_dbaLang');
 const { resolveTerm, findTerm } = require('../routes/_dbaTerms');
-const { brazilDefaultLegalText, BRAZIL_LEGAL_FALLBACK_TEXT } = require('../utils/brazilLegal');
 const { INLINE_VARIABLE_NAMES } = require('./templateBuilder');
+const { buildPreviewInlineValues, CID_FOR_COUNTRY } = require('./previewAlign');
 
 // Pull a translated value for a given field path. If the template has a
 // *TermId reference at that path, resolve it for the requested language.
@@ -37,19 +37,15 @@ const CONTEXT_AWARE_BMIDS = new Set(
     .split(',').map((s) => parseInt(s.trim(), 10)).filter(Number.isFinite),
 );
 
-// CMS country codes (BR, AR, …) are ISO; the link resolver wants the numeric
-// CID from the BettingAdsService world. Mirrors what the seeded Sheets data
-// shows in dba_ads_settings.
-const CID_FOR_COUNTRY = {
-  AR: 10, BR: 21, CL: 28, CO: 109, EC: 51, MX: 31, PE: 112, PL: 37,
-  DE: 25, ES: 36, IT: 27, UK: 17, US: 8, AU: 90, CA: 76, GLOBAL: 0,
-};
+// CMS country codes (BR, AR, …) → numeric CID for /GetPayload and link resolver.
+// Re-exported via previewAlign.js — kept here for validation messages.
+const CID_FOR_COUNTRY_REEXPORT = CID_FOR_COUNTRY;
 
 // Build the redirect URL the GAM Creative emits for click-time-resolved
 // bookmakers. `%%PLATFORM%%` is a placeholder for whatever the publisher /
 // AdsGeneratorService can inject at serve time (or 'all' fallback).
 function buildRedirectUrl({ baseUrl, bmid, country, languageId, sizeId }) {
-  const cid = CID_FOR_COUNTRY[country];
+  const cid = CID_FOR_COUNTRY_REEXPORT[country];
   const params = new URLSearchParams();
   params.set('bmid', String(bmid));
   if (cid != null) params.set('cid', String(cid));
@@ -102,18 +98,20 @@ function buildCreative({ dbaTemplate, bookmaker, country, variant, bookieSetting
     resolved[p] = resolveText(dbaTemplate, p, langId, terms);
   }
 
-  // Bookmaker brand colors come from either dba_bookmakers (frontend table) or
-  // dba_bookie_settings (sheet mirror). Prefer the sheet values when present.
-  const brandColor1 = (bookieSettings && bookieSettings.color1) || bookmaker.brandColor || '#0d5240';
-  const brandColor2 = (bookieSettings && bookieSettings.color2) || bookmaker.secondaryColor || '#FFFFFF';
-  const ctaBg       = (bookieSettings && bookieSettings.cta_bg_color)    || dbaTemplate.config?.cta || brandColor2;
-  const ctaText     = (bookieSettings && bookieSettings.cta_text_color)  || dbaTemplate.config?.ctaTextColor || '#FFFFFF';
-  // Prefer the NoBG variant of the bookmaker logo when the URL points at the
-  // standard Cloudinary BookMakers/<id> path — the templates render the logo
-  // over a coloured/gradient `.ad` background where a transparent crest reads
-  // significantly cleaner than the framed thumbnail. Non-standard URLs (e.g.
-  // brand-supplied direct asset hosts) pass through unchanged.
-  const logoUrl     = toNoBgBookmakerLogo(bookmaker.defaultLogoImageUrl);
+  // Template editor colors + legal + logo — shared with GAM export (previewAlign).
+  const previewInline = buildPreviewInlineValues({
+    dbaTemplate,
+    bookmaker,
+    country,
+    variant,
+    bookieSettings,
+    resolved,
+    feedBaseUrl,
+    runtimeUrl,
+  });
+
+  const logoUrl = previewInline.bookmaker_logo_url;
+  const cidNumeric = CID_FOR_COUNTRY[country];
 
   // bmid extracted from "bk_<N>" — needed below for both Bet365 dispatch and
   // the feed URL.
@@ -131,75 +129,10 @@ function buildCreative({ dbaTemplate, bookmaker, country, variant, bookieSetting
       })
     : ((variant && variant.affiliate) || dbaTemplate.config?.affiliate?.url || '');
 
-  // Feed URL: the live AdsGenerator endpoint for this (country, bookmaker).
-  // Caller can supply the base; default to the public host. bmid was computed
-  // above for the context-link dispatch.
-  //
-  // /GetPayload contract (AdsGeneratorService/app/main.py:createPayload):
-  //   - cid       NUMERIC country id (BR=21, not "BR"). Use CID_FOR_COUNTRY.
-  //   - bmid      numeric bookmaker id
-  //   - lang      numeric language id; OVERRIDDEN by the endpoint for BR (→31)
-  //               and Latin America (→29). We still send it so non-overridden
-  //               countries get the right language.
-  //   - placment  string label (typo intentional) — defaults to "Interstitial"
-  //               when missing. Map our sizeId to the right value so the
-  //               returned payload is labeled correctly downstream.
-  //   - `size` is NOT a /GetPayload param — silently ignored. Don't send it.
-  //
-  // Falls back to the raw country code only when CID_FOR_COUNTRY has no entry
-  // (validation flags this case).
-  const base = feedBaseUrl || 'https://bettingads.365scores.com';
-  const cidNumeric = CID_FOR_COUNTRY[country];
-  const cidParam = cidNumeric != null ? cidNumeric : country;
-  const placment = ({ '300x250': 'MPU', '320x50': 'Banner', '640x1280': 'Interstitial' })[dbaTemplate.sizeId] || 'Interstitial';
-  const feedUrl = `${base}/GetPayload?cid=${encodeURIComponent(cidParam)}&bmid=${bmid}&lang=${langId}&placment=${placment}`;
-
-  // Runtime URL: defaults to the env-configured DBAManagementService host.
-  // The script renders match cards into the `.matches[data-feed]` node.
-  const runtime = runtimeUrl
-    || process.env.DBA_RUNTIME_URL
-    || `${(linkBaseUrl || feedBaseUrl || 'https://cms.365scores.com')}/dba-runtime.js`;
-
-  // Brazil SPA/MF: disclaimer comes from template legal text (or default with
-  // the bookmaker BR license number) and uses the ~10% legal-band layout.
-  const isBrazil = country === 'BR';
-  const licenseNumber = (variant && (variant.license_number || variant.licenseNumber)) || '';
-  const stripLegacyBrazilPrefix = (text) => (text || '')
-    .replace(/^\s*18\+?\s*JOGUE COM RESPONSABILIDADE\.?\s*/i, '')
-    .trim();
-  const brazilDisclaimer =
-    stripLegacyBrazilPrefix(resolved['config.legal.text'])
-    || stripLegacyBrazilPrefix(dbaTemplate.config?.legal?.text)
-    || (licenseNumber ? brazilDefaultLegalText(licenseNumber) : BRAZIL_LEGAL_FALLBACK_TEXT);
-  const disclaimerText = isBrazil
-    ? brazilDisclaimer
-    : ((bookieSettings && bookieSettings.disclaimer_text) || '18+ · BeGambleAware.org');
-  const disclaimerUrl = isBrazil
-    ? ((bookieSettings && bookieSettings.disclaimer_link) || '')
-    : ((bookieSettings && bookieSettings.disclaimer_link) || 'https://www.begambleaware.org/');
-  const disclaimerLayout = isBrazil ? 'legal-band' : 'legal-strip';
-
   // Full resolved map (includes values that are baked into the HTML snippet).
   const allVariableValues = [
-    { uniqueName: 'bookmaker_name',         value: bookmaker.name },
-    { uniqueName: 'bookmaker_logo_url',     value: logoUrl },
-    { uniqueName: 'brand_color_1',          value: brandColor1 },
-    { uniqueName: 'brand_color_2_or_white', value: brandColor2 },
-    { uniqueName: 'cta_bg_color',           value: ctaBg },
-    { uniqueName: 'cta_text_color',         value: ctaText },
-    { uniqueName: 'cta_text',               value: resolved['config.ctaText'] || dbaTemplate.config?.ctaText || 'Bet Now' },
-    { uniqueName: 'cta_url',                value: affiliate },
-    { uniqueName: 'disclaimer_text',        value: disclaimerText },
-    { uniqueName: 'disclaimer_url',         value: disclaimerUrl },
-    { uniqueName: 'disclaimer_layout',      value: disclaimerLayout },
-    { uniqueName: 'feed_url',               value: feedUrl },
-    { uniqueName: 'runtime_url',            value: runtime },
-    // Welcome-offer variables, only set when the template uses them.
-    { uniqueName: 'welcome_headline',       value: resolved['config.welcomeOffer.headline'] || '' },
-    { uniqueName: 'welcome_subtext',        value: resolved['config.welcomeOffer.subtext']  || '' },
-    { uniqueName: 'welcome_terms',          value: resolved['config.welcomeOffer.terms']    || '' },
-    { uniqueName: 'welcome_cta_text',       value: resolved['config.welcomeOffer.ctaText']
-      || resolved['config.ctaText'] || dbaTemplate.config?.ctaText || 'Bet Now' },
+    ...Object.entries(previewInline).map(([uniqueName, value]) => ({ uniqueName, value })),
+    { uniqueName: 'cta_url', value: affiliate },
   ];
   // Only values that remain real GAM CreativeTemplate variables.
   const variables = allVariableValues.filter((v) => !INLINE_VARIABLE_NAMES.has(v.uniqueName));

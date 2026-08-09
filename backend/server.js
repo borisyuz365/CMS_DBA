@@ -110,6 +110,9 @@ app.get('/dba-runtime.js', (req, res) => {
 // the frontend separately on :3000 and frontend/dist doesn't exist.
 const frontendDistPath = path.join(__dirname, '..', 'frontend', 'dist');
 if (fs.existsSync(frontendDistPath)) {
+  console.log(
+    'Serving CMS UI from frontend/dist. For live template preview edits, use Vite at http://localhost:3000 (npm run both).',
+  );
   app.use(express.static(frontendDistPath));
   app.get('*', (req, res) => {
     res.sendFile(path.join(frontendDistPath, 'index.html'));

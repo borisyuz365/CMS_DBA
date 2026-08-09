@@ -1,12 +1,14 @@
 import React, { useLayoutEffect, useRef, useState } from 'react';
 import { Box } from '@mui/material';
 import { LogoThumb } from './DbaPrimitives';
-import { bgCss, invertText, SIZE_DIMS, resolveLogoUrl, competitorLogoUrl, BRAZIL_LEGAL_FALLBACK_TEXT } from './dbaUtils';
+import { bgCss, invertText, SIZE_DIMS, resolveLogoUrl, competitorLogoUrl, BRAZIL_LEGAL_FALLBACK_TEXT, LEGAL_BAND_BG_DEFAULT } from './dbaUtils';
 import { DBA_SAMPLE_MATCHES } from '../../data/dbaData';
 
 // Constants for team-name fitting in MatchRow.
 const MIN_RATIO = 0.5;
 const MIN_FONT_PX = 8;
+/** Pull home (1) and away (2) odds toward the draw (X); 0.828 = 8% + 10% tighter vs original. */
+const ODDS_X_TIGHTEN = 0.828;
 
 // =============================================================================
 // BANNER (320×50) — edit sizes here
@@ -31,7 +33,7 @@ const BANNER = {
     // Welcome-offer slide
     welcome: { headFont: 13, subFont: 9, ctaFont: 10 },
     // Non-Brazil corner legal strip
-    legal: { fontSize: 6, badgeSize: 10, logoH: 7 },
+    legal: { fontSize: 6, badgeSize: 11, logoH: 7 },
   },
   brazil: {
     logoSize: 52,
@@ -50,7 +52,7 @@ const BANNER = {
     },
     welcome: { headFont: 9, subFont: 6, ctaFont: 8 },
     // Brazil full-width legal band
-    legal: { fontSize: 4.5, badgeSize: 8 },
+    legal: { fontSize: 4.5, badgeSize: 9 },
   },
 };
 
@@ -59,7 +61,7 @@ const BANNER = {
 // a dark circle with bold "18+" inside. Sized by `size` (px diameter); colors
 // optional and default to a high-contrast black/white pairing that reads at
 // any ad-format size.
-function Age18PlusBadge({ size = 14, bg = '#0A0A0A', color = '#FFFFFF' }) {
+function Age18PlusBadge({ size = 15, bg = '#0A0A0A', color = '#FFFFFF' }) {
   return (
     <Box sx={{
       display: 'inline-flex',
@@ -118,7 +120,7 @@ function BannerMatchSection({ match, config, dense = false }) {
       const awayC = an.offsetLeft + an.offsetWidth / 2;
       // Pill + tie odd sit on the X. Outer odds use the smaller team→X span
       // so they stay symmetric when one name is much longer.
-      const symDist = Math.min(Math.abs(xC - homeC), Math.abs(awayC - xC));
+      const symDist = Math.min(Math.abs(xC - homeC), Math.abs(awayC - xC)) * ODDS_X_TIGHTEN;
       pill.style.left = `${xC}px`;
       ho.style.left = `${xC - symDist}px`;
       to.style.left = `${xC}px`;
@@ -348,7 +350,7 @@ function MatchRow({ match, config, d, syncFonts = false }) {
           <Box ref={awayRef} component="span" data-team-name="away" sx={textSx}>{match.away.name}</Box>
         </Box>
       </Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', gap: `${d.oddsGap}px` }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', gap: `${Math.round(d.oddsGap * ODDS_X_TIGHTEN)}px` }}>
         {match.odds.map((o, i) => (
           <Box key={i} sx={{ display: 'inline-flex', alignItems: 'center', gap: `${d.oddsDot * 1.2}px`, fontSize: d.oddsFont, fontWeight: 700 }}>
             <Box component="span" sx={{ width: d.oddsDot, height: d.oddsDot, borderRadius: 999, bgcolor: '#FFC107' }} />
@@ -371,7 +373,64 @@ function MatchCardColumn({ matches, config, d, sx }) {
   );
 }
 
-export default function AdPreview({ config, sizeId, bookmaker, scale = 1, slideIdx = 0, countries = [] }) {
+/**
+ * Horizontal match carousel — only the cards slide; logo / CTA / dots / legal
+ * footer stay fixed (mirrors GAM dba-runtime + production carousel.css).
+ */
+function MatchCarouselViewport({
+  matchSlideCount, matchesPerSlide, visualPos, transitionOn, durationMs = 720,
+  renderSlide, sx, pillPad = 8,
+}) {
+  const viewportSx = {
+    overflowX: 'hidden',
+    overflowY: 'visible',
+    width: '100%',
+    minWidth: 0,
+    flexShrink: 0,
+    pt: `${pillPad}px`,
+    boxSizing: 'border-box',
+    ...sx,
+  };
+  const n = matchSlideCount;
+  if (n <= 1) {
+    const matches = DBA_SAMPLE_MATCHES.slice(0, matchesPerSlide);
+    return (
+      <Box sx={viewportSx}>
+        {renderSlide(matches, { minWidth: 0, flexShrink: 0 })}
+      </Box>
+    );
+  }
+
+  const pos = Math.min(Math.max(0, visualPos), n);
+  const slideCount = n + 1;
+
+  return (
+    <Box sx={viewportSx}>
+      <Box sx={{
+        display: 'flex',
+        width: `${slideCount * 100}%`,
+        transform: `translateX(-${(pos * 100) / slideCount}%)`,
+        transition: transitionOn ? `transform ${durationMs}ms cubic-bezier(0.32, 0.72, 0.24, 1)` : 'none',
+      }}>
+        {Array.from({ length: slideCount }).map((_, i) => {
+          const slideIdx = i < n ? i : 0;
+          const start = slideIdx * matchesPerSlide;
+          const matches = DBA_SAMPLE_MATCHES.slice(start, start + matchesPerSlide);
+          return (
+            <Box key={i} sx={{ flex: `0 0 ${100 / slideCount}%`, width: `${100 / slideCount}%`, minWidth: 0 }}>
+              {renderSlide(matches, { minWidth: 0, flexShrink: 0 })}
+            </Box>
+          );
+        })}
+      </Box>
+    </Box>
+  );
+}
+
+export default function AdPreview({
+  config, sizeId, bookmaker, scale = 1, slideIdx = 0, countries = [],
+  displayPos, transitionOn = true, carouselDurationMs = 720,
+}) {
   const [w, h] = SIZE_DIMS[sizeId] || [300, 250];
   const isInterstitial = sizeId === '640x1280';
   const isBanner = sizeId === '320x50';
@@ -392,7 +451,7 @@ export default function AdPreview({ config, sizeId, bookmaker, scale = 1, slideI
       position: 'absolute', left: 0, right: 0, bottom: 0, height: heightPx, zIndex: 2,
       display: 'flex', alignItems: 'center', justifyContent: 'center', gap: `${Math.max(4, heightPx * 0.14)}px`,
       px: `${Math.max(3, heightPx * 0.12)}px`, py: `${Math.max(1, heightPx * 0.06)}px`, boxSizing: 'border-box',
-      bgcolor: 'rgba(0,0,0,0.72)', color: config.legal?.color || '#FFFFFF',
+      bgcolor: config.legal?.bgColor || LEGAL_BAND_BG_DEFAULT, color: config.legal?.color || '#FFFFFF',
       fontSize, lineHeight: 1.15, fontWeight: 700, textAlign: 'left',
       pointerEvents: 'none',
     }}>
@@ -420,10 +479,19 @@ export default function AdPreview({ config, sizeId, bookmaker, scale = 1, slideI
   const hasWelcome = !!wo.enabled;
   const totalSlides = (hasWelcome ? 1 : 0) + matchSlideCount;
   const safeIdx = totalSlides ? ((slideIdx % totalSlides) + totalSlides) % totalSlides : 0;
-  const showWelcome = hasWelcome && safeIdx === 0;
+  const showWelcome = hasWelcome && (
+    safeIdx === 0
+    || displayPos === 0
+    || (displayPos != null && displayPos === totalSlides)
+  );
   const matchSlideIdx = hasWelcome ? safeIdx - 1 : safeIdx;
-  const matchStart = matchSlideIdx * matchesPerSlide;
-  const slideMatches = DBA_SAMPLE_MATCHES.slice(matchStart, matchStart + matchesPerSlide);
+
+  const carouselPos = displayPos != null
+    ? (hasWelcome ? Math.max(0, displayPos - 1) : displayPos)
+    : Math.max(0, matchSlideIdx);
+  const matchTrackPos = matchSlideCount > 1
+    ? Math.min(Math.max(0, carouselPos), matchSlideCount)
+    : Math.max(0, matchSlideIdx);
 
   // If the welcome slide has its own background override, build a bgCss
   // input from the welcomeOffer.* fields. Otherwise welcome slides inherit
@@ -465,10 +533,13 @@ export default function AdPreview({ config, sizeId, bookmaker, scale = 1, slideI
   //
   // Hidden when there's only one slide and for banner (production also skips
   // dots for banner: `!baseUtils.isBanner() && container.appendChild(dots)`).
-  const renderInAdDots = ({ rowHeight, dotSize, mt = 6 }) => (
-    totalSlides > 1 ? (
+  const renderInAdDots = ({ rowHeight, dotSize, mt = 6, absoluteBottom }) => (
+    !isBanner && totalSlides > 1 ? (
       <Box sx={{
-        height: rowHeight, mt: `${mt}px`,
+        height: rowHeight,
+        ...(absoluteBottom != null
+          ? { position: 'absolute', left: 0, right: 0, bottom: absoluteBottom, zIndex: 3 }
+          : { mt: `${mt}px`, flexShrink: 0 }),
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         pointerEvents: 'none',
       }}>
@@ -477,9 +548,37 @@ export default function AdPreview({ config, sizeId, bookmaker, scale = 1, slideI
     ) : null
   );
 
+  const renderMatchCarousel = (d, { cardGap, columnSx, bannerDense, pillPad } = {}) => (
+    <MatchCarouselViewport
+      matchSlideCount={matchSlideCount}
+      matchesPerSlide={matchesPerSlide}
+      visualPos={matchTrackPos}
+      transitionOn={transitionOn}
+      durationMs={carouselDurationMs}
+      pillPad={pillPad ?? Math.ceil((d.pillH || 16) / 2)}
+      sx={columnSx}
+      renderSlide={(matches, innerSx) => (
+        isBanner ? (
+          <Box sx={{ ...innerSx, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <BannerMatchSection match={matches[0] || DBA_SAMPLE_MATCHES[0]} config={config} dense={bannerDense} />
+          </Box>
+        ) : (
+          <MatchCardColumn
+            matches={matches}
+            config={config}
+            d={d}
+            sx={{
+              display: 'flex', flexDirection: 'column', gap: `${cardGap ?? d.rowGap}px`,
+              ...innerSx,
+            }}
+          />
+        )
+      )}
+    />
+  );
+
   // BANNER · 320×50
   const renderBanner = () => {
-    const m = slideMatches[0] || DBA_SAMPLE_MATCHES[0];
     // A point (x, y) measured from a rounded corner is clipped if it falls
     // inside the corner square but outside the curve. The diagonal safe
     // inset — where the curve passes through — is radius * (1 - 1/√2). Use
@@ -517,7 +616,10 @@ export default function AdPreview({ config, sizeId, bookmaker, scale = 1, slideI
           <LogoThumb bg={bookmaker.logoBg} fg={bookmaker.logoFg} initials={bookmaker.initials} imageUrl={resolveLogoUrl(bookmaker, config)} size={b.logoSize} radius={4} bare />
         </Box>
         <Box sx={colSx}>
-          <BannerMatchSection match={m} config={config} dense={useBrazilBand} />
+          {renderMatchCarousel(
+            useBrazilBand ? BANNER.brazil.match : BANNER.default,
+            { bannerDense: useBrazilBand },
+          )}
         </Box>
         <Box sx={colSx}>
           <Box component="button" sx={{
@@ -558,7 +660,6 @@ export default function AdPreview({ config, sizeId, bookmaker, scale = 1, slideI
 
   // MPU · 300×250
   const renderMPU = () => {
-    const visible = slideMatches.slice(0, 2);
     // Cards keep their natural size; the space comes from a tight top zone:
     // wrap top padding 0 + logo mb 0 means the logo sits flush with the ad's
     // top edge, leaving the full 152px below for two full-size cards (148px
@@ -571,60 +672,53 @@ export default function AdPreview({ config, sizeId, bookmaker, scale = 1, slideI
       ? { cardRadius: 11, cardPad: '10px 10px 7px', pillH: 14, pillFont: 8,
           teamsGap: 5, teamFont: 10, crest: 15, xFont: 10,
           oddsGap: 10, oddsFont: 10, oddsDot: 4, rowGap: 4 }
-      : { cardRadius: 12, cardPad: '14px 12px 10px', pillH: 16, pillFont: 9,
+      : { cardRadius: 12, cardPad: '12px 12px 8px', pillH: 16, pillFont: 9,
           teamsGap: 6, teamFont: 10, crest: 18, xFont: 11,
           oddsGap: 12, oddsFont: 11, oddsDot: 5, rowGap: 6 };
-    const logoSize = useBrazilBand ? 64 : 36;
-    const cardGap = useBrazilBand ? 8 : 14;
+    const logoSize = useBrazilBand ? 52 : 36;
+    const cardGap = useBrazilBand ? 6 : 10;
     const ctaH = useBrazilBand ? 26 : 30;
-    const ctaMt = useBrazilBand ? 4 : 8;
     const ctaFont = useBrazilBand ? 11 : 12;
     const sidePad = useBrazilBand ? 12 : 14;
-    const bottomPad = useBrazilBand ? brazilBandH + 2 : 14;
-    // Logo→cards gap: reclaim the extra logo height so the stack still fits
-    // (Brazil 52→64 / default 28→36). Date-pill protrusion is handled on the card.
-    const matchesMt = useBrazilBand ? 0 : 4;
+    const dotsRowH = 10;
+    const dotsGap = 4;
+    const ctaGapAboveDots = 4;
+    const cardsCtaGap = useBrazilBand ? 4 : 8;
+    const hasLegalStrip = !!(config.legal?.enabled && !useBrazilBand);
+    // Pin CTA + dots in a reserved footer band (absolute) so they never overlap
+    // each other and never get clipped when match cards use their natural height.
+    const dotsBottom = useBrazilBand ? brazilBandH + dotsGap : (hasLegalStrip ? 12 : 6);
+    const ctaBottom = dotsBottom + dotsRowH + ctaGapAboveDots;
+    // Gap between last card and CTA is margin-bottom on .matches (not extra bottom
+    // padding — padding alone did not move the CTA when cards were shorter than the
+    // content box, so changing cardsCtaGap appeared to do nothing).
+    const bottomPad = ctaBottom + ctaH;
+    const matchesMt = 0;
     return wrap(
       <>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
           <LogoThumb bg={bookmaker.logoBg} fg={bookmaker.logoFg} initials={bookmaker.initials} imageUrl={resolveLogoUrl(bookmaker, config)} size={logoSize} radius={6} bare />
         </Box>
-        {/* No overflow:hidden — the date pill on the top card is positioned
-            top: -pillH/2 to poke above the card, and clipping that here
-            chops it in half. The CTA below now has `position: relative` so
-            even if cards visually overflowed downward, the CTA would paint
-            on top (same stacking context). */}
-        <MatchCardColumn
-          matches={visible}
-          config={config}
-          d={d}
-          sx={{
-            display: 'flex', flexDirection: 'column', gap: `${cardGap}px`,
-            flex: 1, minHeight: 0, mt: `${matchesMt}px`,
-            justifyContent: 'flex-start',
-          }}
-        />
+        {renderMatchCarousel(d, {
+          cardGap,
+          columnSx: { mt: `${matchesMt}px`, flexShrink: 0 },
+        })}
+        <Box sx={{ height: cardsCtaGap, flexShrink: 0 }} aria-hidden />
         <Box component="button" sx={{
           background: config.cta, color: config.ctaTextColor || invertText(config.cta),
-          border: 'none', height: ctaH, mt: `${ctaMt}px`,
-          // position: relative so the CTA participates in the same stacking
-          // context as the cards (which are also positioned) — ensures the
-          // CTA paints ABOVE any card paint, not below.
-          position: 'relative',
+          border: 'none', height: ctaH,
+          position: 'absolute', left: sidePad, right: sidePad, bottom: ctaBottom, zIndex: 2,
           borderRadius: `${Math.min(radius, 6)}px`,
           fontSize: ctaFont, fontWeight: 700, cursor: 'pointer',
           fontFamily: 'inherit', letterSpacing: '0.01em',
         }}>{config.ctaText}</Box>
-        {/* Dots flow as a flex child immediately after the CTA. */}
-        {renderInAdDots(useBrazilBand
-          ? { rowHeight: 6, dotSize: 3, mt: 2 }
-          : { rowHeight: 10, dotSize: 4, mt: 8 })}
+        {renderInAdDots({ rowHeight: dotsRowH, dotSize: 4, absoluteBottom: dotsBottom })}
         {config.legal && config.legal.enabled && (
-          useBrazilBand ? renderBrazilLegalBand(brazilBandH, 7, 10) : (
+          useBrazilBand ? renderBrazilLegalBand(brazilBandH, 7, 11) : (
           <Box sx={{ position: 'absolute', left: 6, right: 6, bottom: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 7, color: config.legal.color || config.text, opacity: 0.85 }}>
             <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
               {config.legal.logo && <Box component="img" src={config.legal.logo} alt="" sx={{ height: 8, width: 'auto' }} />}
-              <Age18PlusBadge size={12} />
+              <Age18PlusBadge size={13} />
             </Box>
             <Box component="span" sx={{ maxWidth: '70%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {config.legal.text || 'Jogue com responsabilidade'}
@@ -633,16 +727,13 @@ export default function AdPreview({ config, sizeId, bookmaker, scale = 1, slideI
           )
         )}
       </>,
-      // Top padding = 0 so the logo sits flush at the top (matches
-      // production's `padding: 0` on .dynamic-banner-widget-container).
-      // Brazil: bottom pad equals the band height so CTA/dots sit above it.
+      // Bottom pad reserves the pinned CTA + dots stack above the legal footer.
       `0px ${sidePad}px ${bottomPad}px`
     );
   };
 
   // INTERSTITIAL · 640×1280
   const renderInterstitial = () => {
-    const visible = slideMatches.slice(0, 3);
     // Cards sit 5px from the template edge; long team names wrap (not ellipsis).
     const sidePad = 5;
     const d = { cardRadius: 36, cardPad: '40px 36px 32px', pillH: 44, pillFont: 22,
@@ -671,15 +762,12 @@ export default function AdPreview({ config, sizeId, bookmaker, scale = 1, slideI
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: '8px', mb: `${logoMb}px`, flexShrink: 0 }}>
           <LogoThumb bg={bookmaker.logoBg} fg={bookmaker.logoFg} initials={bookmaker.initials} imageUrl={resolveLogoUrl(bookmaker, config)} size={181} radius={24} bare />
         </Box>
-        <MatchCardColumn
-          matches={visible}
-          config={config}
-          d={d}
-          sx={{
-            display: 'flex', flexDirection: 'column', gap: `${cardGap}px`,
+        {renderMatchCarousel(d, {
+          cardGap,
+          columnSx: {
             ...(useBrazilBand ? { flexShrink: 0 } : { flex: 1, minHeight: 0, justifyContent: 'flex-start' }),
-          }}
-        />
+          },
+        })}
         {useBrazilBand ? (
           <Box sx={{
             flex: 1, minHeight: 0,
@@ -695,12 +783,12 @@ export default function AdPreview({ config, sizeId, bookmaker, scale = 1, slideI
             <Box sx={{ flexShrink: 0 }}>{dots}</Box>
           </>
         )}
-        {useBrazilBand ? renderBrazilLegalBand(brazilBandH, 20, 28) : (
+        {useBrazilBand ? renderBrazilLegalBand(brazilBandH, 20, 31) : (
           config.legal && config.legal.enabled ? (
           <Box sx={{ position: 'absolute', bottom: 20, left: sidePad, right: sidePad, display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 16, color: config.legal.color || config.text, opacity: 0.85 }}>
             <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
               {config.legal.logo && <Box component="img" src={config.legal.logo} alt="" sx={{ height: 22, width: 'auto' }} />}
-              <Age18PlusBadge size={28} />
+              <Age18PlusBadge size={31} />
             </Box>
             <Box component="span" sx={{ maxWidth: '70%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {config.legal.text || 'Jogue com responsabilidade'}
@@ -803,11 +891,11 @@ export default function AdPreview({ config, sizeId, bookmaker, scale = 1, slideI
           ? { rowHeight: 7, dotSize: 3, mt: 3 }
           : { rowHeight: 10, dotSize: 4, mt: 8 })}
         {config.legal && config.legal.enabled && (
-          useBrazilBand ? renderBrazilLegalBand(brazilBandH, 7, 10) : (
+          useBrazilBand ? renderBrazilLegalBand(brazilBandH, 7, 11) : (
           <Box sx={{ position: 'absolute', left: 6, right: 6, bottom: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 7, color: config.legal.color || config.text, opacity: 0.85 }}>
             <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
               {config.legal.logo && <Box component="img" src={config.legal.logo} alt="" sx={{ height: 8, width: 'auto' }} />}
-              <Age18PlusBadge size={12} />
+              <Age18PlusBadge size={13} />
             </Box>
             <Box component="span" sx={{ maxWidth: '70%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{config.legal.text || 'Jogue com responsabilidade'}</Box>
           </Box>
@@ -879,12 +967,12 @@ export default function AdPreview({ config, sizeId, bookmaker, scale = 1, slideI
             <Box sx={{ flexShrink: 0 }}>{dots}</Box>
           </>
         )}
-        {useBrazilBand ? renderBrazilLegalBand(brazilBandH, 20, 28) : (
+        {useBrazilBand ? renderBrazilLegalBand(brazilBandH, 20, 31) : (
           config.legal && config.legal.enabled ? (
           <Box sx={{ position: 'absolute', bottom: 20, left: 56, right: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 16, color: config.legal.color || config.text, opacity: 0.85 }}>
             <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
               {config.legal.logo && <Box component="img" src={config.legal.logo} alt="" sx={{ height: 22, width: 'auto' }} />}
-              <Age18PlusBadge size={28} />
+              <Age18PlusBadge size={31} />
             </Box>
             <Box component="span" sx={{ maxWidth: '70%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {config.legal.text || 'Jogue com responsabilidade'}
