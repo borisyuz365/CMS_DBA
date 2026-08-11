@@ -304,7 +304,7 @@ CREATE TABLE IF NOT EXISTS dba_games_loading_config (
 
 -- =========================================================================
 -- Betting Promotion (BPMB) tables.
--- A promotion = one version in BPMB_Versions. Each has up to 3 bookies.
+-- A promotion maps to one BPMB response object. Each has up to 3 bookies.
 -- The service caches all active rows in memory; no per-request DB I/O.
 -- =========================================================================
 

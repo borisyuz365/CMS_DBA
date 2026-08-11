@@ -11,8 +11,8 @@
 //   publisher int     Publisher ID — omit to match any publisher
 //   campaign  string  Campaign name — omit to match any campaign
 //
-// Response matches the BPMB_v8 JSON contract:
-//   { BPMB: { BPMB_Versions: [ <one version> ] } }
+// Response matches the BPMB JSON contract:
+//   { BPMB: { BP_Version_Name, Targeting, Header, … } }
 //
 // All data is served from an in-memory cache — no per-request DB I/O.
 // Cache is loaded at startup and refreshed every 30 s in the background.
@@ -175,7 +175,7 @@ router.get('/', (req, res) => {
   }
 
   res.set('Cache-Control', 'public, max-age=300, stale-while-revalidate=60');
-  res.json({ BPMB: { BPMB_Versions: [formatVersion(version, { uc })] } });
+  res.json({ BPMB: formatVersion(version, { uc }) });
 });
 
 /**

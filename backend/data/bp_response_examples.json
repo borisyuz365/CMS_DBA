@@ -1,0 +1,195 @@
+{
+  "schema": "BPMB_v8",
+  "endpoint": "GET /api/bp",
+  "notes": [
+    "All query params are optional — omitting a param widens the match.",
+    "Response returns one promotion directly under BPMB (SOV lottery).",
+    "Targeting.uc echoes the request uc query param (null when uc was omitted).",
+    "Targeting.Lang, Publisher, Campaign, LID, SOV come from the matched promotion config.",
+    "Regulatory_Logos appear only when request uc=3 (Italy).",
+    "Legal is null when legal is disabled on the promotion."
+  ],
+  "examples": [
+    {
+      "name": "Italy — full targeting",
+      "request": "GET /api/bp?uc=3&appType=2&lang=10&publisher=147&campaign=summer_promo",
+      "response": {
+        "BPMB": {
+          "BP_Version_Name": "Summer Promo IT",
+          "Num_Of_Bookies": 3,
+          "Targeting": {
+            "uc": 3,
+            "LID": null,
+            "SOV": 60,
+            "Lang": 10,
+            "Publisher": 147,
+            "Campaign": "summer_promo"
+          },
+          "Header": {
+            "Main_Title": { "Text": "Best Odds Guaranteed", "Color": "#FFFFFF" },
+            "Secondary_Title": { "Text": "Top bookmakers, one place", "Color": "#B0BEC5" },
+            "ImageURL": "https://cdn.example.com/bp/header-summer-it.png"
+          },
+          "Page_Background_Color": "#12193A",
+          "Page_Background": {
+            "Type": "gradient",
+            "Color": "#12193A",
+            "GradientColor1": "#12193A",
+            "GradientColor2": "#0D3B6E",
+            "GradientAngle": 135,
+            "ImageUrl": null
+          },
+          "Legal": {
+            "Text": "Il gioco è vietato ai minori. Gioca responsabilmente.",
+            "Color": "#90A4AE",
+            "Link": "https://www.adm.gov.it",
+            "Regulatory_Logos": [
+              { "Src": "/legal-logos/italia-gambling-full.svg", "Link": "https://www.adm.gov.it" },
+              { "Src": "/legal-logos/italia-gambling-gauge.svg", "Link": "https://www.adm.gov.it" }
+            ]
+          },
+          "Bookies": [
+            {
+              "BMID": 14,
+              "Section_BG_Color": "#1A2340",
+              "Title_Text": "Bet365",
+              "Title_Text_Color": "#FFFFFF",
+              "Subtitle_Text": "Up to €50 in Bet Credits",
+              "Subtitle_Text_Color": "#B0BEC5",
+              "CTA_Text": "Claim Offer",
+              "CTA_Text_Color": "#FFFFFF",
+              "Strip_Colors": ["#027B5B", "#03A678"],
+              "Click_URL": "https://www.bet365.it/?affiliate=365_00000001"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Brazil — uc echoed, no Italy regulatory logos",
+      "request": "GET /api/bp?uc=21&appType=2&lang=31",
+      "response": {
+        "BPMB": {
+          "BP_Version_Name": "Brazil Welcome Offer",
+          "Num_Of_Bookies": 2,
+          "Targeting": {
+            "uc": 21,
+            "LID": null,
+            "SOV": 100,
+            "Lang": 31,
+            "Publisher": null,
+            "Campaign": null
+          },
+          "Header": {
+            "Main_Title": { "Text": "Apostas com as melhores odds", "Color": "#FFFFFF" },
+            "Secondary_Title": { "Text": "Escolha seu bookmaker", "Color": "#B0BEC5" },
+            "ImageURL": null
+          },
+          "Page_Background_Color": "#0B1F14",
+          "Page_Background": {
+            "Type": "solid",
+            "Color": "#0B1F14",
+            "GradientColor1": null,
+            "GradientColor2": null,
+            "GradientAngle": null,
+            "ImageUrl": null
+          },
+          "Legal": {
+            "Text": "Jogue com responsabilidade. Proibido para menores de 18 anos.",
+            "Color": "#90A4AE",
+            "Link": "https://example.com/br-terms"
+          },
+          "Bookies": [
+            {
+              "BMID": 14,
+              "Section_BG_Color": "#123024",
+              "Title_Text": "Bet365",
+              "Title_Text_Color": "#FFFFFF",
+              "Subtitle_Text": "Bônus de boas-vindas",
+              "Subtitle_Text_Color": "#B0BEC5",
+              "CTA_Text": "Apostar agora",
+              "CTA_Text_Color": "#FFFFFF",
+              "Strip_Colors": ["#027B5B"],
+              "Click_URL": "https://www.bet365.bet.br/?ref=365_br"
+            },
+            {
+              "BMID": 204,
+              "Section_BG_Color": "#123024",
+              "Title_Text": "Betano",
+              "Title_Text_Color": "#FFFFFF",
+              "Subtitle_Text": null,
+              "Subtitle_Text_Color": null,
+              "CTA_Text": "Cadastre-se",
+              "CTA_Text_Color": "#FFFFFF",
+              "Strip_Colors": ["#C0392B", "#E74C3C"],
+              "Click_URL": "https://www.betano.bet.br/?ref=365_br"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "uc omitted — Targeting.uc is null",
+      "request": "GET /api/bp?appType=2&lang=1",
+      "response": {
+        "BPMB": {
+          "BP_Version_Name": "Global Fallback Promo",
+          "Num_Of_Bookies": 1,
+          "Targeting": {
+            "uc": null,
+            "LID": null,
+            "SOV": 100,
+            "Lang": 1,
+            "Publisher": null,
+            "Campaign": null
+          },
+          "Header": {
+            "Main_Title": { "Text": "Featured bookmaker", "Color": "#FFFFFF" },
+            "Secondary_Title": { "Text": "Exclusive offer", "Color": "#CCCCCC" },
+            "ImageURL": null
+          },
+          "Page_Background_Color": "#12193A",
+          "Page_Background": {
+            "Type": "solid",
+            "Color": "#12193A",
+            "GradientColor1": null,
+            "GradientColor2": null,
+            "GradientAngle": null,
+            "ImageUrl": null
+          },
+          "Legal": null,
+          "Bookies": [
+            {
+              "BMID": 14,
+              "Section_BG_Color": "#1A2340",
+              "Title_Text": "Bet365",
+              "Title_Text_Color": "#FFFFFF",
+              "Subtitle_Text": "Sign up offer",
+              "Subtitle_Text_Color": null,
+              "CTA_Text": "Bet Now",
+              "CTA_Text_Color": "#FFFFFF",
+              "Strip_Colors": ["#027B5B", "#03A678"],
+              "Click_URL": "https://www.bet365.com/?ref=365_global"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "No matching promotion",
+      "request": "GET /api/bp?uc=999&appType=2",
+      "status": 404,
+      "response": {
+        "error": "No matching promotion found for the given targeting params"
+      }
+    },
+    {
+      "name": "Cache not ready",
+      "request": "GET /api/bp?uc=3",
+      "status": 503,
+      "response": {
+        "error": "Service initializing — retry in a moment"
+      }
+    }
+  ]
+}

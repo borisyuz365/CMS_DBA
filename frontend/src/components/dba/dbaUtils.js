@@ -86,6 +86,19 @@ export function fmtUptime(s) {
 
 export const SIZE_DIMS = { '300x250': [300, 250], '640x1280': [640, 1280], '320x50': [320, 50] };
 
+/** MPU (300×250) layout anchor — keep in sync with backend/gam/templates/mpu-standard.html */
+export const MPU_LAYOUT = {
+  /** Fixed vertical center (px from ad top). Match carousel centers here; logo hangs above. */
+  axisY: 118,
+  logoGap: 4,
+  sidePad: { default: 14, brazil: 12 },
+  logo: {
+    default: { w: 51, h: 42 },
+    brazil: { w: 70, h: 56 },
+  },
+  pillPad: { default: 8, brazil: 7 },
+};
+
 // Relative luminance (0..1) of a #RRGGBB color. Used to decide whether a
 // background is "dark" — we treat anything below 0.5 as dark.
 export function isDarkColor(hex) {

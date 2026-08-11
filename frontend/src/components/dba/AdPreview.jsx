@@ -1,7 +1,7 @@
 import React, { useLayoutEffect, useRef, useState } from 'react';
 import { Box } from '@mui/material';
 import { LogoThumb } from './DbaPrimitives';
-import { bgCss, invertText, SIZE_DIMS, resolveLogoUrl, competitorLogoUrl, BRAZIL_LEGAL_FALLBACK_TEXT, LEGAL_BAND_BG_DEFAULT } from './dbaUtils';
+import { bgCss, invertText, SIZE_DIMS, MPU_LAYOUT, resolveLogoUrl, competitorLogoUrl, BRAZIL_LEGAL_FALLBACK_TEXT, LEGAL_BAND_BG_DEFAULT } from './dbaUtils';
 import { DBA_SAMPLE_MATCHES } from '../../data/dbaData';
 
 // Constants for team-name fitting in MatchRow.
@@ -658,16 +658,8 @@ export default function AdPreview({
     );
   };
 
-  // MPU · 300×250
+  // MPU · 300×250 — match carousel pinned to MPU_LAYOUT.axisY; logo hangs above it.
   const renderMPU = () => {
-    // Cards keep their natural size; the space comes from a tight top zone:
-    // wrap top padding 0 + logo mb 0 means the logo sits flush with the ad's
-    // top edge, leaving the full 152px below for two full-size cards (148px
-    // total) with a small buffer. CTA + dots stay at their fixed positions
-    // anchored by the unchanged wrap bottom padding (14).
-    //
-    // Brazil band (~25px / 10%): larger logo, cards sit tight under it and stay
-    // clear of the CTA (slightly denser cards + smaller logo→card gap).
     const d = useBrazilBand
       ? { cardRadius: 11, cardPad: '10px 10px 7px', pillH: 14, pillFont: 8,
           teamsGap: 5, teamFont: 10, crest: 15, xFont: 10,
@@ -675,35 +667,47 @@ export default function AdPreview({
       : { cardRadius: 12, cardPad: '12px 12px 8px', pillH: 16, pillFont: 9,
           teamsGap: 6, teamFont: 10, crest: 18, xFont: 11,
           oddsGap: 12, oddsFont: 11, oddsDot: 5, rowGap: 6 };
-    const logoSize = useBrazilBand ? 52 : 36;
+    const sidePad = useBrazilBand ? MPU_LAYOUT.sidePad.brazil : MPU_LAYOUT.sidePad.default;
+    const logoSpec = useBrazilBand ? MPU_LAYOUT.logo.brazil : MPU_LAYOUT.logo.default;
+    const pillPad = useBrazilBand ? MPU_LAYOUT.pillPad.brazil : MPU_LAYOUT.pillPad.default;
     const cardGap = useBrazilBand ? 6 : 10;
     const ctaH = useBrazilBand ? 26 : 30;
     const ctaFont = useBrazilBand ? 11 : 12;
-    const sidePad = useBrazilBand ? 12 : 14;
     const dotsRowH = 10;
     const dotsGap = 4;
     const ctaGapAboveDots = 4;
-    const cardsCtaGap = useBrazilBand ? 4 : 8;
     const hasLegalStrip = !!(config.legal?.enabled && !useBrazilBand);
-    // Pin CTA + dots in a reserved footer band (absolute) so they never overlap
-    // each other and never get clipped when match cards use their natural height.
     const dotsBottom = useBrazilBand ? brazilBandH + dotsGap : (hasLegalStrip ? 12 : 6);
     const ctaBottom = dotsBottom + dotsRowH + ctaGapAboveDots;
-    // Gap between last card and CTA is margin-bottom on .matches (not extra bottom
-    // padding — padding alone did not move the CTA when cards were shorter than the
-    // content box, so changing cardsCtaGap appeared to do nothing).
     const bottomPad = ctaBottom + ctaH;
-    const matchesMt = 0;
+    const stackSx = {
+      position: 'absolute',
+      top: MPU_LAYOUT.axisY,
+      left: sidePad,
+      right: sidePad,
+      transform: 'translateY(-50%)',
+    };
+    const logoWrapSx = {
+      position: 'absolute',
+      bottom: '100%',
+      left: '50%',
+      transform: 'translateX(-50%)',
+      mb: `${MPU_LAYOUT.logoGap}px`,
+    };
     return wrap(
       <>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
-          <LogoThumb bg={bookmaker.logoBg} fg={bookmaker.logoFg} initials={bookmaker.initials} imageUrl={resolveLogoUrl(bookmaker, config)} size={logoSize} radius={6} bare />
+        <Box sx={stackSx}>
+          <Box sx={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <Box sx={logoWrapSx}>
+              <LogoThumb bg={bookmaker.logoBg} fg={bookmaker.logoFg} initials={bookmaker.initials} imageUrl={resolveLogoUrl(bookmaker, config)} size={logoSpec.w} height={logoSpec.h} radius={6} bare />
+            </Box>
+            {renderMatchCarousel(d, {
+              cardGap,
+              columnSx: { flexShrink: 0, width: '100%' },
+              pillPad,
+            })}
+          </Box>
         </Box>
-        {renderMatchCarousel(d, {
-          cardGap,
-          columnSx: { mt: `${matchesMt}px`, flexShrink: 0 },
-        })}
-        <Box sx={{ height: cardsCtaGap, flexShrink: 0 }} aria-hidden />
         <Box component="button" sx={{
           background: config.cta, color: config.ctaTextColor || invertText(config.cta),
           border: 'none', height: ctaH,

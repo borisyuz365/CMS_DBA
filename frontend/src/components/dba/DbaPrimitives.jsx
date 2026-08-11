@@ -29,14 +29,16 @@ export function StatusPill({ kind = 'draft', label, sx = {} }) {
 // to a coloured swatch with `initials` if it fails to load.
 // `bare` mode (used inside ad creatives) drops the white wrapper + border so
 // the logo sits directly on the ad's background.
-export function LogoThumb({ bg, fg, initials, imageUrl, size = 40, radius = 8, bare = false }) {
+export function LogoThumb({ bg, fg, initials, imageUrl, size = 40, height, radius = 8, bare = false }) {
+  const w = size;
+  const h = height ?? size;
   const [failed, setFailed] = React.useState(false);
   React.useEffect(() => { setFailed(false); }, [imageUrl]);
 
   if (imageUrl && !failed) {
     return (
       <Box sx={{
-        width: size, height: size, borderRadius: `${radius}px`,
+        width: w, height: h, borderRadius: `${radius}px`,
         overflow: 'hidden', flexShrink: 0,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         ...(bare ? null : { bgcolor: '#fff', border: '1px solid rgba(0,0,0,0.08)' }),
@@ -55,11 +57,11 @@ export function LogoThumb({ bg, fg, initials, imageUrl, size = 40, radius = 8, b
 
   return (
     <Box sx={{
-      width: size, height: size,
+      width: w, height: h,
       borderRadius: `${radius}px`,
       bgcolor: bg, color: fg,
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      fontSize: size * 0.28, fontWeight: 700,
+      fontSize: Math.min(w, h) * 0.28, fontWeight: 700,
       letterSpacing: '-0.02em',
       flexShrink: 0, overflow: 'hidden',
       ...(bare ? null : { border: '1px solid rgba(0,0,0,0.08)' }),

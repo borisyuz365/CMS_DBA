@@ -70,16 +70,7 @@ const options = {
         BPMBResponse: {
           type: 'object',
           properties: {
-            BPMB: {
-              type: 'object',
-              properties: {
-                BPMB_Versions: {
-                  type: 'array',
-                  maxItems: 1,
-                  items: { $ref: '#/components/schemas/BPMBVersion' },
-                },
-              },
-            },
+            BPMB: { $ref: '#/components/schemas/BPMBVersion' },
           },
         },
         BPMBVersion: {

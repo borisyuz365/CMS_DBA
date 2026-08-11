@@ -25,6 +25,32 @@ const bookmakerBrandColor = (bmid, bookmakerOptions) =>
 // Italy-only regulatory logos, matching the same constant in bpService.js.
 const ITALY_CID = 3;
 
+function isItalyCid(cid) {
+  return Number(cid) === ITALY_CID;
+}
+
+function Age18PlusBadge({ size = 16 }) {
+  return (
+    <Box sx={{
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: size,
+      height: size,
+      borderRadius: '50%',
+      bgcolor: '#0A0A0A',
+      color: '#FFFFFF',
+      fontSize: size * 0.5,
+      fontWeight: 800,
+      lineHeight: 1,
+      letterSpacing: '-0.06em',
+      flexShrink: 0,
+    }}>
+      18+
+    </Box>
+  );
+}
+
 const PREVIEW_FONT_FAMILY = "'365 Sans', sans-serif";
 
 // ── Shared primitives ─────────────────────────────────────────────────────────
@@ -214,15 +240,14 @@ function InterstitialPreview({ form, bookmakerOptions }) {
         </Box>
         {legal?.enabled && (
           <Box sx={{ pt: 0.75, borderTop: '1px solid rgba(255,255,255,0.08)', flexShrink: 0, display: 'flex', alignItems: 'center', gap: 0.5 }}>
-            <Box component="img" src="/legal-logos/18-plus-icon.png" alt="18+"
-              sx={{ height: 16, width: 'auto', flexShrink: 0 }} />
+            <Age18PlusBadge size={17} />
             <Typography fontSize="0.56rem" color={legal.color || 'rgba(255,255,255,0.4)'} lineHeight={1.4} sx={{ flex: 1 }}>
               {legal.text || 'Gamble responsibly'}
             </Typography>
-            {cid === ITALY_CID && (
-              <Box sx={{ display: 'flex', gap: 0.5, flexShrink: 0 }}>
+            {isItalyCid(cid) && (
+              <Box sx={{ display: 'flex', gap: 0.5, flexShrink: 0, alignItems: 'center' }}>
                 {legal.regulatoryLogos?.map((logo, i) => (
-                  <Box key={i} component="img" src={logo.src} alt="" sx={{ height: 10, width: 'auto', opacity: 0.8 }} />
+                  <Box key={i} component="img" src={logo.src} alt="" sx={{ height: 16, width: 'auto', flexShrink: 0 }} />
                 ))}
               </Box>
             )}
@@ -557,7 +582,10 @@ function BpEditorInner({ initial, isNew, bookmakerOptions, countries, languages,
           <Section title="Targeting">
             <Field label="Geo">
               <FormControl size="small" fullWidth>
-                <Select value={form.cid} onChange={(e) => set('cid', e.target.value)}>
+                <Select
+                  value={form.cid}
+                  onChange={(e) => set('cid', e.target.value === '' ? '' : Number(e.target.value))}
+                >
                   <MenuItem value="">🌐 All countries</MenuItem>
                   {countries.map((c) => (
                     <MenuItem key={c.id} value={c.id}>{c.name}</MenuItem>
@@ -722,7 +750,7 @@ function BpEditorInner({ initial, isNew, bookmakerOptions, countries, languages,
                     onChange={(e) => set('legal', { ...(form.legal || {}), link: e.target.value })}
                   />
                 </Field>
-                {form.cid === ITALY_CID && (
+                {isItalyCid(form.cid) && (
                   <Field label="Regulatory logos" help="Both logos appear on the right of the footer — set each link">
                     <Stack spacing={1}>
                       {[
@@ -730,7 +758,9 @@ function BpEditorInner({ initial, isNew, bookmakerOptions, countries, languages,
                         { idx: 1, src: '/legal-logos/italia-gambling-gauge.svg', placeholder: 'ADM gauge URL' },
                       ].map(({ idx, src, placeholder }) => (
                         <Stack key={idx} direction="row" spacing={1} alignItems="center">
-                          <Box component="img" src={src} alt="" sx={{ height: 16, width: 'auto', flexShrink: 0, opacity: 0.7 }} />
+                          <Box sx={{ bgcolor: '#1A2340', borderRadius: 0.5, px: 0.5, py: 0.25, flexShrink: 0 }}>
+                            <Box component="img" src={src} alt="" sx={{ height: 16, width: 'auto', display: 'block' }} />
+                          </Box>
                           <TextField size="small" fullWidth placeholder={placeholder}
                             value={form.legal?.regulatoryLogos?.[idx]?.link || ''}
                             onChange={(e) => {

@@ -6,6 +6,9 @@
 
   Legal footer sits outside the click <a> (nested anchors break GAM preview).
   Brazil layout uses .ad-shell.legal-band instead of :has() (unsupported in GAM).
+
+  Layout: .ad-stack is pinned to axisY (118px) — match carousel centers there;
+  logo hangs above via .logo-wrap (size changes do not shift the axis).
 -->
 <!DOCTYPE html>
 <html>
@@ -29,16 +32,45 @@
     font-family: [[ad_font_family]];
     box-sizing: border-box;
     position: relative;
-    padding: 4px 14px 56px;
-    display: flex; flex-direction: column;
+    display: block;
+    padding: 0;
     text-decoration: none;
   }
-  /* Brazil: card→CTA gap is margin-bottom on .matches (4px), not bottom padding. */
-  .ad-shell.legal-band .ad {
-    padding: 0 12px 69px;
+  /* Fixed vertical axis — sync with MPU_LAYOUT.axisY in frontend dbaUtils.js */
+  .ad-stack {
+    position: absolute;
+    top: 118px;
+    left: 14px;
+    right: 14px;
+    transform: translateY(-50%);
   }
-  .ad-shell.legal-band .ad .logo { width: 52px; height: 52px; }
-  .ad-shell.legal-band .ad .matches { flex: 0 0 auto; margin-top: 0; margin-bottom: 4px; padding-top: 7px; overflow-x: hidden; overflow-y: visible; }
+  .ad-shell.legal-band .ad-stack { left: 12px; right: 12px; }
+  .logo-wrap {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 4px;
+  }
+  .ad .logo {
+    width: 51px; height: 42px;
+    margin: 0;
+    background-image: url('[[bookmaker_logo_url]]');
+    background-size: contain; background-repeat: no-repeat;
+    background-position: center center;
+  }
+  .ad-shell.legal-band .ad .logo { width: 70px; height: 56px; }
+  .ad-stack .matches {
+    position: relative;
+    margin: 0;
+    padding-top: 8px;
+    overflow-x: hidden;
+    overflow-y: visible;
+    box-sizing: border-box;
+  }
+  .ad-shell.legal-band .ad-stack .matches { padding-top: 7px; }
+  /* Brazil: card→CTA gap is margin-bottom on .matches (4px), not bottom padding. */
+  .ad-shell.legal-band .ad-stack .matches { margin-bottom: 4px; }
   .ad-shell.legal-band .ad .cta {
     position: absolute; left: 12px; right: 12px; bottom: 43px;
     height: 26px; margin-top: 0; font-size: 11px; flex-shrink: 0; z-index: 2;
@@ -53,21 +85,6 @@
   .ad-shell > .dba-dots-shell[data-layout="mpu"] .dba-dot { height: 4px; width: 4px; }
   .ad-shell > .dba-dots-shell[data-layout="mpu"] .dba-dot-active { width: 9.6px; }
   .ad-shell.legal-band > .dba-dots-shell[data-layout="mpu"] { bottom: 29px; }
-  .ad .logo {
-    width: 36px; height: 36px;
-    background-image: url('[[bookmaker_logo_url]]');
-    background-size: contain; background-repeat: no-repeat;
-    background-position: left center;
-  }
-  .ad .matches {
-    flex: 1;
-    position: relative;
-    overflow: hidden;
-    margin-top: 4px;
-    margin-bottom: 8px;
-    padding-top: 8px;
-    box-sizing: border-box;
-  }
   .ad .cta {
     background: [[cta_bg_color]];
     color: [[cta_text_color]];
@@ -138,8 +155,12 @@
 <body>
   <div class="ad-shell [[disclaimer_layout]]">
     <a class="ad" href="%%CLICK_URL_UNESC%%[%cta_url%]" target="_blank">
-      <div class="logo" aria-label="[[bookmaker_name]]"></div>
-      <div class="matches" data-feed="[[feed_url]]" data-per-slide="2" data-interval="3500" data-transition="700"></div>
+      <div class="ad-stack">
+        <div class="logo-wrap">
+          <div class="logo" aria-label="[[bookmaker_name]]"></div>
+        </div>
+        <div class="matches" data-feed="[[feed_url]]" data-per-slide="2" data-interval="3500" data-transition="700"></div>
+      </div>
       <span class="cta">[[cta_text]]</span>
     </a>
     <div class="legal [[disclaimer_layout]]">

@@ -148,7 +148,9 @@
       '.ad-shell.legal-band .matches .dba-slide { gap: 6px; }' +
       '.ad-shell.legal-band .matches .dba-card { border-radius: 11px; padding: 10px 10px 7px; }' +
       '.ad-shell.legal-band .matches .dba-pill { top: -7px; padding: 2px 5px; font-size: 8px; }' +
-      '.ad-shell.legal-band .matches { flex: 0 0 auto; margin-bottom: 4px; padding-top: 7px; overflow-x: hidden; overflow-y: visible; }' +
+      '.ad-shell.legal-band .matches { flex: 0 0 auto; margin-top: 0; margin-bottom: 4px; padding-top: 7px; overflow-x: hidden; overflow-y: visible; }' +
+      '.ad-stack .matches { margin: 0; padding-top: 8px; overflow-x: hidden; overflow-y: visible; }' +
+      '.ad-shell.legal-band .ad-stack .matches { padding-top: 7px; margin-bottom: 4px; }' +
       '.ad-shell.legal-band .matches .dba-teams { gap: 5px; margin-top: 4px; font-size: 10px; }' +
       '.ad-shell.legal-band .matches .dba-team-logo { width: 15px; height: 15px; }' +
       '.ad-shell.legal-band .matches .dba-x { font-size: 10px; }' +
