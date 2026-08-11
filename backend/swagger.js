@@ -67,12 +67,7 @@ const options = {
       },
       schemas: {
         // ── Runtime response ──────────────────────────────────────────
-        BPMBResponse: {
-          type: 'object',
-          properties: {
-            BPMB: { $ref: '#/components/schemas/BPMBVersion' },
-          },
-        },
+        BPMBResponse: { $ref: '#/components/schemas/BPMBVersion' },
         BPMBVersion: {
           type: 'object',
           properties: {
