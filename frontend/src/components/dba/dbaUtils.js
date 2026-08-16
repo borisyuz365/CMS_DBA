@@ -91,8 +91,8 @@ export const MPU_LAYOUT = {
   /** Fixed vertical center (px from ad top). Match carousel centers here; logo hangs above. */
   axisY: 110,
   logoGap: 4,
-  /** Counteract axisY lift so the logo stays put while cards move up. */
-  logoOffsetY: 8,
+  /** Counteract axisY lift so the logo stays put while cards move up. Extra +3px nudge down. */
+  logoOffsetY: 11,
   sidePad: { default: 14, brazil: 12 },
   logo: {
     default: { w: 51, h: 42 },
