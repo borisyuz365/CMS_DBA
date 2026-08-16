@@ -7,8 +7,8 @@
   Legal footer sits outside the click <a> (nested anchors break GAM preview).
   Brazil layout uses .ad-shell.legal-band instead of :has() (unsupported in GAM).
 
-  Layout: .ad-stack is pinned to axisY (118px) — match carousel centers there;
-  logo hangs above via .logo-wrap (size changes do not shift the axis).
+  Layout: .ad-stack is pinned to axisY (110px) — match carousel centers there;
+  logo hangs above via .logo-wrap + logoOffsetY so size/axis shifts do not move the logo.
 -->
 <!DOCTYPE html>
 <html>
@@ -39,7 +39,7 @@
   /* Fixed vertical axis — sync with MPU_LAYOUT.axisY in frontend dbaUtils.js */
   .ad-stack {
     position: absolute;
-    top: 118px;
+    top: 110px;
     left: 14px;
     right: 14px;
     transform: translateY(-50%);
@@ -49,7 +49,8 @@
     position: absolute;
     bottom: 100%;
     left: 50%;
-    transform: translateX(-50%);
+    /* logoOffsetY (8px) keeps logo fixed when axisY is lowered */
+    transform: translateX(-50%) translateY(8px);
     margin-bottom: 4px;
   }
   .ad .logo {

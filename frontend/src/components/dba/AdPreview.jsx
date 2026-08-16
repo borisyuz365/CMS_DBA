@@ -9,6 +9,10 @@ const MIN_RATIO = 0.5;
 const MIN_FONT_PX = 8;
 /** Pull home (1) and away (2) odds toward the draw (X); 0.828 = 8% + 10% tighter vs original. */
 const ODDS_X_TIGHTEN = 0.828;
+/** Extra 25% tighter spacing between the three odds columns. */
+const ODDS_GAP_TIGHTEN = 0.75;
+const ODD_OUTCOME_LABELS = ['1', 'X', '2'];
+const ODD_LABEL_COLOR = '#FFC107';
 
 // =============================================================================
 // BANNER (320×50) — edit sizes here
@@ -120,7 +124,7 @@ function BannerMatchSection({ match, config, dense = false }) {
       const awayC = an.offsetLeft + an.offsetWidth / 2;
       // Pill + tie odd sit on the X. Outer odds use the smaller team→X span
       // so they stay symmetric when one name is much longer.
-      const symDist = Math.min(Math.abs(xC - homeC), Math.abs(awayC - xC)) * ODDS_X_TIGHTEN;
+      const symDist = Math.min(Math.abs(xC - homeC), Math.abs(awayC - xC)) * ODDS_X_TIGHTEN * ODDS_GAP_TIGHTEN;
       pill.style.left = `${xC}px`;
       ho.style.left = `${xC - symDist}px`;
       to.style.left = `${xC}px`;
@@ -134,6 +138,13 @@ function BannerMatchSection({ match, config, dense = false }) {
     ro.observe(target);
     return () => ro.disconnect();
   }, [match.home.name, match.away.name, dense, match.date]);
+
+  const oddLabelSx = {
+    fontSize: s.oddsFont * 0.72,
+    fontWeight: 800,
+    color: ODD_LABEL_COLOR,
+    lineHeight: 1,
+  };
 
   return (
     <Box sx={{
@@ -188,15 +199,15 @@ function BannerMatchSection({ match, config, dense = false }) {
         fontSize: s.oddsFont, fontWeight: 700, lineHeight: 1,
       }}>
         <Box ref={homeOddRef} sx={{ position: 'absolute', top: 0, transform: 'translateX(-50%)', display: 'inline-flex', alignItems: 'center', gap: '2px', whiteSpace: 'nowrap', lineHeight: 1 }}>
-          <Box component="span" sx={{ width: s.oddDot, height: s.oddDot, borderRadius: 999, bgcolor: '#FFC107' }} />
+          <Box component="span" sx={oddLabelSx}>{ODD_OUTCOME_LABELS[0]}</Box>
           <Box component="span">{match.odds[0]}</Box>
         </Box>
         <Box ref={tieOddRef} sx={{ position: 'absolute', top: 0, transform: 'translateX(-50%)', display: 'inline-flex', alignItems: 'center', gap: '2px', whiteSpace: 'nowrap', lineHeight: 1 }}>
-          <Box component="span" sx={{ width: s.oddDot, height: s.oddDot, borderRadius: 999, bgcolor: '#FFC107' }} />
+          <Box component="span" sx={oddLabelSx}>{ODD_OUTCOME_LABELS[1]}</Box>
           <Box component="span">{match.odds[1]}</Box>
         </Box>
         <Box ref={awayOddRef} sx={{ position: 'absolute', top: 0, transform: 'translateX(-50%)', display: 'inline-flex', alignItems: 'center', gap: '2px', whiteSpace: 'nowrap', lineHeight: 1 }}>
-          <Box component="span" sx={{ width: s.oddDot, height: s.oddDot, borderRadius: 999, bgcolor: '#FFC107' }} />
+          <Box component="span" sx={oddLabelSx}>{ODD_OUTCOME_LABELS[2]}</Box>
           <Box component="span">{match.odds[2]}</Box>
         </Box>
       </Box>
@@ -282,27 +293,78 @@ function MatchRow({ match, config, d, syncFonts = false }) {
   // from the flex parent and don't react to font-size changes inside.
   const homeRef = React.useRef(null);
   const awayRef = React.useRef(null);
+  const xRef = React.useRef(null);
+  const oddsRowRef = React.useRef(null);
+  const homeOddRef = React.useRef(null);
+  const tieOddRef = React.useRef(null);
+  const awayOddRef = React.useRef(null);
 
   useLayoutEffect(() => {
-    if (syncFonts) return undefined;
-    const home = homeRef.current;
-    const away = awayRef.current;
-    if (!home || !away) return undefined;
-    const base = d.teamFont;
-
-    const fit = () => {
-      const next = neededTeamFont(home, away, base);
-      home.style.fontSize = `${next}px`;
-      away.style.fontSize = `${next}px`;
+    const placeOdds = () => {
+      const home = homeRef.current;
+      const away = awayRef.current;
+      const xEl = xRef.current;
+      const oddsRow = oddsRowRef.current;
+      const ho = homeOddRef.current;
+      const to = tieOddRef.current;
+      const ao = awayOddRef.current;
+      if (!home || !away || !xEl || !oddsRow || !ho || !to || !ao) return;
+      const oddsRect = oddsRow.getBoundingClientRect();
+      const homeRect = home.getBoundingClientRect();
+      const awayRect = away.getBoundingClientRect();
+      const xRect = xEl.getBoundingClientRect();
+      // Align each odd under its team name / X. Clamp so wide "2 · rate"
+      // cells stay inside the row (carousel overflow-x would otherwise clip them).
+      const clamp = (center, el) => {
+        const half = el.offsetWidth / 2;
+        const max = Math.max(half, oddsRow.clientWidth - half);
+        return Math.max(half, Math.min(max, center));
+      };
+      const homeC = homeRect.left + homeRect.width / 2 - oddsRect.left;
+      const awayC = awayRect.left + awayRect.width / 2 - oddsRect.left;
+      const xC = xRect.left + xRect.width / 2 - oddsRect.left;
+      ho.style.left = `${clamp(homeC, ho)}px`;
+      to.style.left = `${clamp(xC, to)}px`;
+      ao.style.left = `${clamp(awayC, ao)}px`;
     };
-    fit();
-    const ro = new ResizeObserver(fit);
-    ro.observe(home.parentElement);
-    ro.observe(away.parentElement);
+
+    if (!syncFonts) {
+      const home = homeRef.current;
+      const away = awayRef.current;
+      if (home && away) {
+        const base = d.teamFont;
+        const fit = () => {
+          const next = neededTeamFont(home, away, base);
+          home.style.fontSize = `${next}px`;
+          away.style.fontSize = `${next}px`;
+          placeOdds();
+        };
+        fit();
+        const fitRo = new ResizeObserver(fit);
+        fitRo.observe(home.parentElement);
+        fitRo.observe(away.parentElement);
+        const card = oddsRowRef.current?.closest('[data-match-card]');
+        const oddsRo = card ? new ResizeObserver(placeOdds) : null;
+        if (card) oddsRo.observe(card);
+        placeOdds();
+        return () => {
+          fitRo.disconnect();
+          if (oddsRo) oddsRo.disconnect();
+        };
+      }
+    }
+
+    placeOdds();
+    const card = oddsRowRef.current?.closest('[data-match-card]');
+    if (!card) return undefined;
+    const ro = new ResizeObserver(placeOdds);
+    ro.observe(card);
     return () => ro.disconnect();
-  }, [match.home.name, match.away.name, d.teamFont, syncFonts]);
+  }, [match.home.name, match.away.name, match.odds, d.teamFont, d.oddsFont, syncFonts]);
 
   const wrapNames = !!d.wrapNames;
+  const nameCrestGap = d.teamsGap;
+  const xSideGap = d.xSideGap ?? Math.round(nameCrestGap * 2);
   const slotSx = (align) => ({
     flex: 1, minWidth: 0,
     textAlign: align,
@@ -319,6 +381,13 @@ function MatchRow({ match, config, d, syncFonts = false }) {
       ? { whiteSpace: 'normal', overflowWrap: 'break-word', wordBreak: 'break-word' }
       : { whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }),
   };
+  const oddLabelSx = {
+    fontSize: Math.round(d.oddsFont * 0.68),
+    fontWeight: 800,
+    color: ODD_LABEL_COLOR,
+    lineHeight: 1,
+  };
+  const oddRefs = [homeOddRef, tieOddRef, awayOddRef];
 
   return (
     <Box data-match-card sx={{
@@ -328,6 +397,7 @@ function MatchRow({ match, config, d, syncFonts = false }) {
       padding: d.cardPad,
       display: 'flex', flexDirection: 'column', gap: `${d.rowGap}px`,
       position: 'relative',
+      overflow: 'visible',
     }}>
       <Box sx={{
         position: 'absolute', top: -d.pillH / 2, left: '50%', transform: 'translateX(-50%)',
@@ -339,21 +409,55 @@ function MatchRow({ match, config, d, syncFonts = false }) {
         display: 'inline-flex', alignItems: 'center', whiteSpace: 'nowrap',
         letterSpacing: '0.02em',
       }}>{match.date}</Box>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: `${d.teamsGap}px`, mt: `${d.pillH / 2}px`, minWidth: 0 }}>
-        <Box sx={slotSx('right')}>
-          <Box ref={homeRef} component="span" data-team-name="home" sx={textSx}>{match.home.name}</Box>
+      {/* Name↔crest gap stays teamsGap; crests sit farther from the centre X. */}
+      <Box sx={{ display: 'flex', alignItems: 'center', mt: `${d.pillH / 2}px`, minWidth: 0 }}>
+        <Box sx={{
+          flex: 1, minWidth: 0, displayContent: 'flex-end',
+          display: 'flex', alignItems: 'center', gap: `${nameCrestGap}px`,
+        }}>
+          <Box sx={slotSx('right')}>
+            <Box ref={homeRef} component="span" data-team-name="home" sx={textSx}>{match.home.name}</Box>
+          </Box>
+          <Box sx={{ flexShrink: 0 }}><TeamCrest team={match.home} size={d.crest} /></Box>
         </Box>
-        <TeamCrest team={match.home} size={d.crest} />
-        <Box sx={{ fontSize: d.xFont, fontWeight: 700, opacity: 0.65, px: `${d.crest * 0.05}px`, flexShrink: 0 }}>X</Box>
-        <TeamCrest team={match.away} size={d.crest} />
-        <Box sx={slotSx('left')}>
-          <Box ref={awayRef} component="span" data-team-name="away" sx={textSx}>{match.away.name}</Box>
+        <Box ref={xRef} sx={{
+          fontSize: d.xFont, fontWeight: 700, opacity: 0.65, flexShrink: 0,
+          mx: `${xSideGap}px`,
+        }}>X</Box>
+        <Box sx={{
+          flex: 1, minWidth: 0,
+          display: 'flex', alignItems: 'center', gap: `${nameCrestGap}px`,
+        }}>
+          <Box sx={{ flexShrink: 0 }}><TeamCrest team={match.away} size={d.crest} /></Box>
+          <Box sx={slotSx('left')}>
+            <Box ref={awayRef} component="span" data-team-name="away" sx={textSx}>{match.away.name}</Box>
+          </Box>
         </Box>
       </Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', gap: `${Math.round(d.oddsGap * ODDS_X_TIGHTEN)}px` }}>
+      <Box ref={oddsRowRef} sx={{
+        position: 'relative',
+        height: d.oddsFont,
+        fontSize: d.oddsFont,
+        fontWeight: 700,
+        lineHeight: 1,
+        overflow: 'visible',
+      }}>
         {match.odds.map((o, i) => (
-          <Box key={i} sx={{ display: 'inline-flex', alignItems: 'center', gap: `${d.oddsDot * 1.2}px`, fontSize: d.oddsFont, fontWeight: 700 }}>
-            <Box component="span" sx={{ width: d.oddsDot, height: d.oddsDot, borderRadius: 999, bgcolor: '#FFC107' }} />
+          <Box
+            key={i}
+            ref={oddRefs[i]}
+            sx={{
+              position: 'absolute',
+              top: 0,
+              transform: 'translateX(-50%)',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '3px',
+              whiteSpace: 'nowrap',
+              lineHeight: 1,
+            }}
+          >
+            <Box component="span" sx={oddLabelSx}>{ODD_OUTCOME_LABELS[i]}</Box>
             <Box component="span">{o}</Box>
           </Box>
         ))}
@@ -662,15 +766,15 @@ export default function AdPreview({
   const renderMPU = () => {
     const d = useBrazilBand
       ? { cardRadius: 11, cardPad: '10px 10px 7px', pillH: 14, pillFont: 8,
-          teamsGap: 5, teamFont: 10, crest: 15, xFont: 10,
+          teamsGap: 5, xSideGap: 10, teamFont: 10, crest: 15, xFont: 10,
           oddsGap: 10, oddsFont: 10, oddsDot: 4, rowGap: 4 }
       : { cardRadius: 12, cardPad: '12px 12px 8px', pillH: 16, pillFont: 9,
-          teamsGap: 6, teamFont: 10, crest: 18, xFont: 11,
+          teamsGap: 6, xSideGap: 12, teamFont: 10, crest: 18, xFont: 11,
           oddsGap: 12, oddsFont: 11, oddsDot: 5, rowGap: 6 };
     const sidePad = useBrazilBand ? MPU_LAYOUT.sidePad.brazil : MPU_LAYOUT.sidePad.default;
     const logoSpec = useBrazilBand ? MPU_LAYOUT.logo.brazil : MPU_LAYOUT.logo.default;
     const pillPad = useBrazilBand ? MPU_LAYOUT.pillPad.brazil : MPU_LAYOUT.pillPad.default;
-    const cardGap = useBrazilBand ? 6 : 10;
+    const cardGap = useBrazilBand ? MPU_LAYOUT.cardGap.brazil : MPU_LAYOUT.cardGap.default;
     const ctaH = useBrazilBand ? 26 : 30;
     const ctaFont = useBrazilBand ? 11 : 12;
     const dotsRowH = 10;
@@ -691,7 +795,7 @@ export default function AdPreview({
       position: 'absolute',
       bottom: '100%',
       left: '50%',
-      transform: 'translateX(-50%)',
+      transform: `translateX(-50%) translateY(${MPU_LAYOUT.logoOffsetY}px)`,
       mb: `${MPU_LAYOUT.logoGap}px`,
     };
     return wrap(
@@ -741,7 +845,7 @@ export default function AdPreview({
     // Cards sit 5px from the template edge; long team names wrap (not ellipsis).
     const sidePad = 5;
     const d = { cardRadius: 36, cardPad: '40px 36px 32px', pillH: 44, pillFont: 22,
-                teamsGap: 18, teamFont: 24, crest: 64, xFont: 28,
+                teamsGap: 18, xSideGap: 36, teamFont: 24, crest: 64, xFont: 28,
                 oddsGap: 32, oddsFont: 30, oddsDot: 12, rowGap: 24, wrapNames: true };
     // Brazil: same element sizes. CTA + dots sit in a flex zone that fills the
     // space between the bottom card and the legal band, centered exactly mid-way.
