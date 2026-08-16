@@ -93,11 +93,15 @@ function formatVersion(v, { uc } = {}) {
  *     tags: [Runtime]
  *     summary: Get a matched promotion
  *     description: >
- *       Returns one promotion version selected by targeting + SOV lottery.
- *       All data is served from an in-memory cache — no per-request DB I/O.
+ *       Returns one promotion as a **flat JSON object** (no `BPMB` wrapper, no `BPMB_Versions` array).
+ *       Fields include `BP_Version_Name`, `Targeting`, `Header`, `Page_Background`, `Legal`, and `Bookies`.
+ *       Selection uses targeting match + SOV lottery. All data is served from an in-memory cache.
  *       All query params are optional — omitting a param widens the match (treated as "All").
- *       Matching uses AND logic across params: a promotion matches when each configured
- *       targeting field equals the request value or is null (wildcard).
+ *       Matching uses AND logic: a promotion matches when each configured targeting field equals
+ *       the request value or is null (wildcard).
+ *
+ *       `Targeting.uc` echoes the request `uc` (null when omitted).
+ *       `Legal.Regulatory_Logos` is included only when request `uc=3` (Italy).
  *
  *       Example:
  *       `GET /api/bp?uc=3&appType=2&lang=10&publisher=147&campaign=summer_promo`
@@ -140,14 +144,18 @@ function formatVersion(v, { uc } = {}) {
  *         example: summer_promo
  *     responses:
  *       200:
- *         description: Matched promotion
+ *         description: Matched promotion (flat top-level object)
  *         headers:
  *           Cache-Control:
  *             schema: { type: string }
  *             description: 'public, max-age=300, stale-while-revalidate=60'
  *         content:
  *           application/json:
- *             schema: { $ref: '#/components/schemas/BPMBResponse' }
+ *             schema:
+ *               $ref: '#/components/schemas/BPRuntimePromotion'
+ *             examples:
+ *               matchedPromotion:
+ *                 $ref: '#/components/examples/BPRuntimeMatchedPromotion'
  *       404:
  *         description: No matching promotion for the given targeting params
  *         content:

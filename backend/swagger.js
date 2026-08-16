@@ -1,13 +1,21 @@
 const swaggerJsdoc = require('swagger-jsdoc');
+const bpRuntimeExample = require('./data/bp_mock_response.json');
 
 const options = {
   definition: {
     openapi: '3.0.3',
     info: {
       title: 'BP Service API',
-      version: '1.0.0',
+      version: '1.1.0',
       description:
-        'Betting Promotion (BPMB) runtime delivery and CMS management API. The GET /api/bp runtime endpoint is served from an in-memory cache (no per-request DB I/O); every CMS write invalidates the cache and triggers a CloudFront edge purge of /api/bp*.',
+        'Betting Promotion (BP) runtime delivery and CMS management API.\n\n' +
+        '**Runtime (`GET /api/bp`)** returns a **flat JSON promotion object** at the top level ' +
+        '(e.g. `BP_Version_Name`, `Targeting`, `Header`, `Bookies`). There is no `BPMB` wrapper ' +
+        'and no `BPMB_Versions` array.\n\n' +
+        '**Targeting.uc** echoes the request `uc` query param (null when omitted). ' +
+        '**Legal.Regulatory_Logos** is included only when the request `uc` is `3` (Italy).\n\n' +
+        'Data is served from an in-memory cache (no per-request DB I/O). Every CMS write invalidates ' +
+        'the cache and triggers a CloudFront edge purge of `/api/bp*`.',
     },
     servers: [{ url: 'http://localhost:3001' }],
     tags: [
@@ -65,20 +73,45 @@ const options = {
           example: 'summer_promo',
         },
       },
+      examples: {
+        BPRuntimeMatchedPromotion: {
+          summary: 'Matched promotion (flat response body)',
+          value: bpRuntimeExample,
+        },
+      },
       schemas: {
-        // ── Runtime response ──────────────────────────────────────────
-        BPMBResponse: { $ref: '#/components/schemas/BPMBVersion' },
-        BPMBVersion: {
+        // ── Runtime response (flat top-level object) ─────────────────
+        BPRuntimePromotion: {
           type: 'object',
+          description:
+            'Matched promotion returned directly as the response body (no wrapper keys). ' +
+            'One version is selected per request via targeting match + SOV lottery.',
+          required: [
+            'BP_Version_Name',
+            'Num_Of_Bookies',
+            'Targeting',
+            'Header',
+            'Page_Background_Color',
+            'Page_Background',
+            'Bookies',
+          ],
           properties: {
-            BP_Version_Name:       { type: 'string' },
-            Num_Of_Bookies:        { type: 'integer' },
+            BP_Version_Name: { type: 'string', example: 'Summer Promo IT' },
+            Num_Of_Bookies:  { type: 'integer', minimum: 1, maximum: 3, example: 3 },
             Targeting: {
               type: 'object',
+              description:
+                'Targeting metadata for the matched promotion. `uc` echoes the request; ' +
+                'other fields come from the promotion config (null = wildcard when matching).',
               properties: {
-                uc: { type: 'integer', nullable: true, description: 'Echoes the request `uc` query param (T_COUNTRIES.COUNTRY_ID). null when `uc` was omitted.' },
-                LID: { type: 'integer', nullable: true },
-                SOV: { type: 'integer', example: 100 },
+                uc: {
+                  type: 'integer',
+                  nullable: true,
+                  description: 'Echoes the request `uc` query param (T_COUNTRIES.COUNTRY_ID). null when `uc` was omitted.',
+                  example: 3,
+                },
+                LID: { type: 'integer', nullable: true, description: 'League ID from promotion config.' },
+                SOV: { type: 'integer', example: 60, description: 'Share of voice (0–100) for SOV lottery.' },
                 Lang: { type: 'integer', nullable: true, description: 'Language ID — null matches any language.' },
                 Publisher: { type: 'integer', nullable: true, description: 'Publisher ID — null matches any publisher.' },
                 Campaign: { type: 'string', nullable: true, description: 'Campaign name — null matches any campaign.' },
@@ -89,7 +122,11 @@ const options = {
               properties: {
                 Main_Title:      { $ref: '#/components/schemas/TextColor' },
                 Secondary_Title: { $ref: '#/components/schemas/TextColor' },
-                ImageURL:        { type: 'string', nullable: true, description: 'null means no header image/badge — clients should render no reserved space above the titles.' },
+                ImageURL:        {
+                  type: 'string',
+                  nullable: true,
+                  description: 'null means no header image — clients should not reserve space above the titles.',
+                },
               },
             },
             Page_Background_Color: { type: 'string', example: '#12193A' },
@@ -107,12 +144,14 @@ const options = {
             Legal: {
               nullable: true,
               type: 'object',
+              description: 'null when legal text is disabled on the promotion.',
               properties: {
                 Text:  { type: 'string' },
                 Color: { type: 'string' },
                 Link:  { type: 'string' },
                 Regulatory_Logos: {
                   type: 'array',
+                  description: 'Present only when the **request** `uc` is `3` (Italy). Omitted otherwise.',
                   items: {
                     type: 'object',
                     properties: {
@@ -125,11 +164,14 @@ const options = {
             },
             Bookies: {
               type: 'array',
-              items: { $ref: '#/components/schemas/BPMBBookie' },
+              minItems: 1,
+              maxItems: 3,
+              items: { $ref: '#/components/schemas/BPRuntimeBookie' },
             },
           },
+          example: bpRuntimeExample,
         },
-        BPMBBookie: {
+        BPRuntimeBookie: {
           type: 'object',
           properties: {
             BMID:                { type: 'integer' },
@@ -140,7 +182,7 @@ const options = {
             Subtitle_Text_Color: { type: 'string', nullable: true },
             CTA_Text:            { type: 'string' },
             CTA_Text_Color:      { type: 'string' },
-            Strip_Colors:        { type: 'array', items: { type: 'string' } },
+            Strip_Colors:        { type: 'array', items: { type: 'string' }, maxItems: 2 },
             Click_URL:           { type: 'string' },
           },
         },
