@@ -1,0 +1,46 @@
+name: Build and Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        type: choice
+        options:
+          - cms-dba-prod
+
+jobs:
+  # environment: cannot be set on a `uses:` job, so a dedicated setup job reads
+  # the GitHub Environment variables and exposes them as outputs.
+  setup:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    outputs:
+      ecr_repo: ${{ vars.ECR_REPO }}
+      ecr_account: ${{ vars.ECR_ACCOUNT }}
+      helm_values_path: ${{ vars.HELM_VALUES_PATH }}
+    steps:
+      - name: Read environment variables
+        run: echo "Reading ECR_REPO, ECR_ACCOUNT and HELM_VALUES_PATH from GitHub Environment"
+
+  # Node service — no csproj. Omit project_path/current_bump_version so v1.1.12
+  # tags the image with github.run_id. ECR_ACCOUNT=PROD -> production account 509962170850.
+  build:
+    needs: [setup]
+    uses: 365Scores/workflows/.github/workflows/BuildNPushContainer.yml@v1.1.12
+    with:
+      dockerfile_path: "./"
+      ecr_repository: ${{ needs.setup.outputs.ecr_repo }}
+      ecr_account: ${{ needs.setup.outputs.ecr_account }}
+    secrets: inherit
+
+  deploy:
+    needs: [setup, build]
+    uses: 365Scores/workflows/.github/workflows/DeployToEKS.yml@v1.1.12
+    with:
+      environment: ${{ inputs.environment }}
+      buildrun_id: ${{ github.run_id }}
+      github_helm_repo_name: CMS.Helm
+      helm_values_file_path: ${{ needs.setup.outputs.helm_values_path }}
+    secrets: inherit
