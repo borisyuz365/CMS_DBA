@@ -30,10 +30,10 @@
 
   var ROOT_SEL = '.matches[data-feed]';
 
-  // Cloudinary team-logo source. 36×36 = 2× retina for the 18 px display box;
+  // Cloudinary team-logo source. 42×42 = 2× retina for the ~21 px MPU crest;
   // c_limit means "no upscale"; d_countries:default.png yields a transparent
   // placeholder when a team has no logo configured.
-  var TEAM_LOGO_BASE = 'https://res.cloudinary.com/scores365/image/upload/w_36,h_36,c_limit,d_countries:default.png/Competitors/';
+  var TEAM_LOGO_BASE = 'https://res.cloudinary.com/scores365/image/upload/w_42,h_42,c_limit,d_countries:default.png/Competitors/';
 
   function el(tag, props, children) {
     var n = document.createElement(tag);
@@ -88,29 +88,28 @@
 
   function teamLogoUrl(id) { return id != null ? (TEAM_LOGO_BASE + id) : null; }
 
-  // One side of the matchup. Layout mirrors across the X divider —
-  // home: [name][logo] · X · away: [logo][name].
+  // One side of the matchup. Crests sit on the OUTER sides of the names:
+  // home: [logo][name] · – · away: [name][logo].
+  // Name sits in a flex slot so long names ellipsize without stretching the ad.
   function teamBlock(comp, side) {
     var name = (comp && (comp.SName || comp.Name || comp.name)) || '';
     var id = comp && (comp.ID != null ? comp.ID : comp.id);
     var url = teamLogoUrl(id);
+    var nameEl = el('span', { 'class': 'dba-team-name', text: name });
+    var nameSlot = el('span', { 'class': 'dba-team-name-slot' }, [nameEl]);
     var children = [];
     var logoEl;
+    if (url) {
+      logoEl = el('img', { 'class': 'dba-team-logo', src: url, alt: '' });
+    }
     if (side === 'home') {
-      children.push(el('span', { 'class': 'dba-team-name', text: name }));
-      if (url) {
-        logoEl = el('img', { 'class': 'dba-team-logo', src: url, alt: '' });
-        children.push(logoEl);
-      }
+      if (logoEl) children.push(logoEl);
+      children.push(nameSlot);
     } else {
-      if (url) {
-        logoEl = el('img', { 'class': 'dba-team-logo', src: url, alt: '' });
-        children.push(logoEl);
-      }
-      children.push(el('span', { 'class': 'dba-team-name', text: name }));
+      children.push(nameSlot);
+      if (logoEl) children.push(logoEl);
     }
     var node = el('div', { 'class': 'dba-teamblock dba-teamblock-' + side }, children);
-    // Hide on 404 so the team name stays clean instead of a broken-image icon.
     if (logoEl) logoEl.onerror = function () { logoEl.style.visibility = 'hidden'; };
     return node;
   }
@@ -124,70 +123,154 @@
     return [];
   }
 
+  // Kickoff millis from live feed (ISO) or preview sample ("dd/MM · HH:mm").
+  function gameStartMs(m) {
+    if (!m) return NaN;
+    var iso = m.ISOStartTime || m.isoStartTime || m.StartTime;
+    if (iso) {
+      var t = Date.parse(iso);
+      if (!isNaN(t)) return t;
+    }
+    var raw = m.date || m.FormatedStartTime || m.STime || '';
+    var match = String(raw).match(/(\d{1,2})\/(\d{1,2})\s*[·.\-]?\s*(\d{1,2}):(\d{2})/);
+    if (!match) return NaN;
+    var day = +match[1];
+    var month = +match[2] - 1;
+    var hour = +match[3];
+    var min = +match[4];
+    var now = new Date();
+    var d = new Date(now.getFullYear(), month, day, hour, min, 0, 0);
+    return d.getTime();
+  }
+
+  // Only future kickoffs (1 min clock skew). Live in-play (Active) stays.
+  function isUpcomingOrLive(m) {
+    if (m && (m.Active === true || m.active === true)) return true;
+    var t = gameStartMs(m);
+    if (isNaN(t)) return false;
+    return t >= Date.now() - 60 * 1000;
+  }
+
+  function filterUpcoming(games) {
+    if (!games || !games.length) return [];
+    return games.filter(isUpcomingOrLive);
+  }
+
   function injectStyles() {
     if (document.getElementById('dba-runtime-styles')) return;
     // Scoped under .matches so the creative's outer .ad styles own
     // positioning/typography. Visual tuning should track AdPreview.jsx's MPU
     // MatchRow and the carousel viewport sizing in mpu-standard.html.
     var css =
-      '.matches .dba-track { display: flex; height: 100%; }' +
-      '.matches .dba-slide { flex: 0 0 100%; width: 100%; display: flex; flex-direction: column; gap: 14px; box-sizing: border-box; }' +
-      '.matches .dba-card { background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 11px 12px 10px; position: relative; overflow: visible; }' +
-      '.matches .dba-pill { position: absolute; top: -8px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.55); color: #fff; padding: 2px 6px; border-radius: 999px; font-size: 9px; font-weight: 600; line-height: 1; white-space: nowrap; }' +
-      '.matches .dba-teams { display: flex; align-items: center; gap: 0; margin-top: 5px; font-size: 10px; font-weight: 600; min-width: 0; }' +
+      '.matches .dba-track { display: flex; height: 100%; will-change: transform; }' +
+      /* Each slide is one viewport wide. Track width is set in JS to
+         (slideCount * 100%) so translateX(-pos/slideCount * 100%) moves
+         exactly one slide — matching AdPreview MatchCarouselViewport. */ +
+      '.matches .dba-slide {' +
+        'flex: 0 0 auto; width: 100%; max-width: 100%;' +
+        'display: flex; flex-direction: column; gap: 8px;' +
+        'box-sizing: border-box; overflow: hidden;' +
+      '}' +
+      '.ad-stack .matches .dba-slide { overflow: hidden; }' +
+      '.matches[data-layout="banner"] .dba-slide { overflow: hidden; }' +
+      '.matches .dba-card {' +
+        'background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.15);' +
+        'border-radius: 12px; padding: 8px 12px 10px; position: relative;' +
+        'display: flex; flex-direction: column; gap: 6px; overflow: hidden;' +
+      '}' +
+      '.matches .dba-pill-anchor { display: flex; justify-content: center; flex-shrink: 0; }' +
+      '.matches .dba-pill {' +
+        'position: static; transform: none; top: auto; left: auto;' +
+        'background: var(--dba-pill-bg, transparent); color: var(--dba-pill-fg, inherit);' +
+        'height: 16px; padding: 0 11px; margin: 0; box-sizing: border-box;' +
+        'border-radius: 999px; font-size: 9px; font-weight: 600; line-height: 1;' +
+        'white-space: nowrap; display: inline-flex; align-items: center; justify-content: center;' +
+      '}' +
+      '.matches .dba-pill-text { display: block; line-height: 1; transform: translateY(0.5px); }' +
+      '.matches .dba-teams { display: flex; align-items: center; gap: 0; margin-top: 0; font-size: 12px; font-weight: 600; min-width: 0; }' +
       '.matches .dba-teamblock { display: flex; align-items: center; gap: 6px; flex: 1; min-width: 0; }' +
       '.matches .dba-teamblock-home { justify-content: flex-end; }' +
       '.matches .dba-teamblock-away { justify-content: flex-start; }' +
-      '.matches .dba-team-logo { width: 18px; height: 18px; flex: 0 0 auto; object-fit: contain; border-radius: 50%; background: rgba(255,255,255,0.08); }' +
-      '.matches .dba-team-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }' +
-      '.matches .dba-x { font-size: 11px; font-weight: 700; opacity: 0.65; flex: 0 0 auto; margin: 0 12px; }' +
-      '.matches .dba-odds { display: flex; align-items: center; margin-top: 5px; min-width: 0; min-height: 14px; font-size: 11px; font-weight: 700; line-height: 1.2; overflow: visible; }' +
+      '.matches .dba-team-logo { width: 20.7px; height: 20.7px; flex: 0 0 auto; object-fit: contain; border-radius: 50%; background: rgba(255,255,255,0.08); }' +
+      /* Slot takes leftover width; name shrink-wraps toward the crest. */ +
+      '.matches .dba-team-name-slot {' +
+        'flex: 0 1 auto; min-width: 0; overflow: hidden;' +
+        'display: flex; align-items: center;' +
+      '}' +
+      '.matches .dba-teamblock-home .dba-team-name-slot { justify-content: flex-end; }' +
+      '.matches .dba-teamblock-away .dba-team-name-slot { justify-content: flex-start; }' +
+      '.matches .dba-team-name {' +
+        'display: block; max-width: 100%; min-width: 0;' +
+        'overflow: hidden; text-overflow: ellipsis; white-space: nowrap;' +
+      '}' +
+      '.matches .dba-x { font-size: 12px; font-weight: 700; opacity: 0.65; flex: 0 0 auto; margin: 0 12px; }' +
+      '.matches .dba-odds { display: flex; align-items: center; margin-top: 0; min-width: 0; min-height: 14px; font-size: 10px; font-weight: 700; line-height: 1.2; overflow: visible; }' +
       '.matches .dba-odd-slot { display: flex; align-items: center; min-width: 0; }' +
       '.matches .dba-odd-slot-home { flex: 1; justify-content: flex-end; padding-right: 24px; }' +
-      '.matches .dba-odd-slot-draw { position: relative; flex: 0 0 auto; margin: 0 12px; font-size: 11px; font-weight: 700; line-height: 1.2; }' +
-      '.matches .dba-odd-slot-draw:before { content: "X"; visibility: hidden; }' +
+      '.matches .dba-odd-slot-draw { position: relative; flex: 0 0 auto; margin: 0 12px; font-size: 10px; font-weight: 700; line-height: 1.2; }' +
+      '.matches .dba-odd-slot-draw:before { content: "\\2013"; visibility: hidden; }' +
       '.matches .dba-odd-slot-draw .dba-odd { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }' +
       '.matches .dba-odd-slot-away { flex: 1; justify-content: flex-start; padding-left: 24px; }' +
       '.matches .dba-odd { display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; line-height: 1.2; }' +
-      '.matches .dba-odd-label { font-size: 7.5px; font-weight: 800; color: #FFC107; line-height: 1.2; }' +
+      '.matches .dba-odd-label { font-size: 7px; font-weight: 800; color: #FFC107; line-height: 1.2; }' +
+      '.matches .dba-v-gap { display: none; }' +
       /* Brazil MPU: slightly denser cards so they clear the CTA (AdPreview). */ +
-      '.ad-shell.legal-band .matches .dba-slide { gap: 12px; }' +
-      '.ad-shell.legal-band .matches .dba-card { border-radius: 11px; padding: 10px 10px 9px; }' +
-      '.ad-shell.legal-band .matches .dba-pill { top: -7px; padding: 2px 5px; font-size: 8px; }' +
-      '.ad-shell.legal-band .matches { flex: 0 0 auto; margin-top: 0; margin-bottom: 4px; padding-top: 7px; overflow-x: hidden; overflow-y: visible; }' +
-      '.ad-stack .matches { margin: 0; padding-top: 8px; overflow-x: hidden; overflow-y: visible; }' +
-      '.ad-shell.legal-band .ad-stack .matches { padding-top: 7px; margin-bottom: 4px; }' +
-      '.ad-shell.legal-band .matches .dba-teams { gap: 0; margin-top: 4px; font-size: 10px; }' +
+      '.ad-shell.legal-band .matches .dba-slide { gap: 6px; }' +
+      '.ad-shell.legal-band .matches .dba-card { border-radius: 11px; padding: 8px 10px 9px; gap: 4px; }' +
+      '.ad-shell.legal-band .matches .dba-pill { padding: 0 10px; height: 14px; font-size: 8px; }' +
+      '.ad-stack .matches { margin: 0; padding-top: 0; overflow: hidden; }' +
+      '.ad-shell.legal-band .matches { flex: 0 0 auto; margin-top: 0; margin-bottom: 4px; padding-top: 0; overflow: hidden; }' +
+      '.ad-shell.legal-band .ad-stack .matches { padding-top: 0; margin-bottom: 4px; }' +
+      '.ad-shell.legal-band .matches .dba-teams { gap: 0; margin-top: 0; font-size: 11px; }' +
       '.ad-shell.legal-band .matches .dba-teamblock { gap: 5px; }' +
-      '.ad-shell.legal-band .matches .dba-team-logo { width: 15px; height: 15px; }' +
-      '.ad-shell.legal-band .matches .dba-x { font-size: 10px; margin: 0 10px; }' +
-      '.ad-shell.legal-band .matches .dba-odds { margin-top: 3px; font-size: 10px; }' +
+      '.ad-shell.legal-band .matches .dba-team-logo { width: 17.25px; height: 17.25px; }' +
+      '.ad-shell.legal-band .matches .dba-x { font-size: 11px; margin: 0 10px; }' +
+      '.ad-shell.legal-band .matches .dba-odds { margin-top: 0; font-size: 9px; }' +
       '.ad-shell.legal-band .matches .dba-odd-slot-home { padding-right: 20px; }' +
       '.ad-shell.legal-band .matches .dba-odd-slot-draw { margin: 0 10px; }' +
       '.ad-shell.legal-band .matches .dba-odd-slot-away { padding-left: 20px; }' +
-      '.ad-shell.legal-band .matches .dba-odd-label { font-size: 7px; }' +
+      '.ad-shell.legal-band .matches .dba-odd-label { font-size: 6px; }' +
       /* Banner (320×50): flat match block — no card chrome. Mirrors AdPreview
          BannerMatchSection. Activated via data-layout="banner" on .matches. */ +
-      '.matches[data-layout="banner"] { display: flex; align-items: center; }' +
-      '.matches[data-layout="banner"] .dba-track { width: 100%; height: auto; }' +
-      '.matches[data-layout="banner"] .dba-slide { gap: 0; justify-content: center; }' +
+      '.matches[data-layout="banner"] { display: flex; align-items: stretch; overflow: hidden; }' +
+      '.matches[data-layout="banner"] .dba-track { height: 100%; }' +
+      '.matches[data-layout="banner"] .dba-slide { gap: 0; justify-content: flex-start; height: 100%; overflow: hidden; }' +
       '.matches[data-layout="banner"] .dba-card {' +
         'background: transparent; border: none; border-radius: 0; padding: 0;' +
-        'display: flex; flex-direction: column; align-items: stretch; gap: 2px;' +
+        'display: flex; flex-direction: column; align-items: stretch;' +
+        'justify-content: flex-start; gap: 3px; height: 100%; box-sizing: border-box;' +
+        'position: relative; overflow: hidden;' +
       '}' +
-      '.matches[data-layout="banner"] .dba-card { position: relative; padding-top: 12px; }' +
+      /* Pill sits in a fixed-height anchor; equal gaps come from card gap (not flex). */ +
+      '.matches[data-layout="banner"] .dba-pill-anchor {' +
+        'display: block; position: relative; height: 14px; flex-shrink: 0;' +
+      '}' +
       '.matches[data-layout="banner"] .dba-pill {' +
         'position: absolute; top: 0; left: 50%; transform: translateX(-50%);' +
-        'padding: 2px 6px; font-size: 8px; white-space: nowrap;' +
+        'height: 100%; box-sizing: border-box; padding: 0 6px; margin: 0;' +
+        'display: inline-flex; align-items: center; justify-content: center;' +
+        'font-size: 8px; font-weight: 600; line-height: 1; white-space: nowrap;' +
       '}' +
+      /* Hide flex spacers on banner — fixed gap on .dba-card equalizes instead. */ +
+      '.matches[data-layout="banner"] .dba-v-gap { display: none; }' +
       '.matches[data-layout="banner"] .dba-teams {' +
-        'justify-content: center; gap: 4px; margin-top: 0; font-size: 10px;' +
+        'position: relative; justify-content: center; gap: 0; margin-top: 0; font-size: 11px;' +
+        'flex-shrink: 0; width: 100%; min-width: 0; min-height: 11px;' +
       '}' +
-      '.matches[data-layout="banner"] .dba-teamblock { flex: 0 1 auto; gap: 4px; }' +
-      '.matches[data-layout="banner"] .dba-team-logo { width: 11px; height: 11px; }' +
-      '.matches[data-layout="banner"] .dba-x { font-size: 10px; opacity: 0.6; margin: 0 1px; }' +
+      /* Absolute halves around a banner-centred X (positions set in JS). */ +
+      '.matches[data-layout="banner"] .dba-teamblock {' +
+        'position: absolute; top: 0; bottom: 0; flex: none; min-width: 0; gap: 4px;' +
+        'overflow: hidden; box-sizing: border-box;' +
+      '}' +
+      '.matches[data-layout="banner"] .dba-teamblock-home { left: 0; right: 50%; }' +
+      '.matches[data-layout="banner"] .dba-teamblock-away { left: 50%; right: 0; }' +
+      '.matches[data-layout="banner"] .dba-team-logo { width: 12.65px; height: 12.65px; flex: 0 0 auto; }' +
+      '.matches[data-layout="banner"] .dba-x {' +
+        'position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);' +
+        'font-size: 11px; opacity: 0.6; margin: 0; flex: 0 0 auto; z-index: 1; line-height: 1;' +
+      '}' +
       '.matches[data-layout="banner"] .dba-odds {' +
-        'position: relative; height: 9px; display: block; margin-top: 0; font-size: 9px;' +
+        'position: relative; height: 11px; display: block; margin-top: 0; font-size: 9px; flex-shrink: 0;' +
       '}' +
       '.matches[data-layout="banner"] .dba-odd-slot { display: contents; }' +
       '.matches[data-layout="banner"] .dba-odd-slot-draw:before { content: none; }' +
@@ -196,41 +279,45 @@
       '}' +
       '.matches[data-layout="banner"] .dba-odd-label { font-size: 6.5px; }' +
       /* Banner + Brazil legal band: denser metrics (BANNER.brazil.match). */ +
-      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-card { gap: 1px; }' +
-      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-pill { padding: 1px 3px; font-size: 6.6px; }' +
-      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-teams { gap: 2px; font-size: 7.7px; }' +
-      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-team-logo { width: 9px; height: 9px; }' +
-      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-x { font-size: 7.7px; }' +
-      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-odds { height: 8px; font-size: 7.7px; }' +
+      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-card { gap: 2px; }' +
+      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-pill-anchor { height: 9px; }' +
+      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-pill { padding: 0 3px; font-size: 6.6px; }' +
+      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-teams { gap: 2px; font-size: 8.5px; }' +
+      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-team-logo { width: 10.35px; height: 10.35px; }' +
+      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-x { font-size: 8.5px; }' +
+      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-odds { height: 9px; font-size: 7px; }' +
       '.ad-shell.legal-band .matches[data-layout="banner"] .dba-odd-label { font-size: 5.5px; }' +
       /* Interstitial (640×1280): large cards, 3 per slide. Mirrors AdPreview
          MatchRow interstitial metrics. data-layout="interstitial". */ +
-      '.matches[data-layout="interstitial"] .dba-slide { gap: 56px; }' +
+      '.matches[data-layout="interstitial"] .dba-slide { gap: 40px; }' +
       '.matches[data-layout="interstitial"] .dba-card {' +
-        'border-radius: 36px; padding: 40px 36px 32px;' +
+        'border-radius: 36px; padding: 16px 20px 24px; gap: 16px;' +
       '}' +
       '.matches[data-layout="interstitial"] .dba-pill {' +
-        'top: -22px; padding: 8px 16px; font-size: 22px;' +
+        'position: static; transform: none; top: auto; left: auto;' +
+        'padding: 0 16px; height: 44px; font-size: 22px;' +
       '}' +
       '.matches[data-layout="interstitial"] .dba-teams {' +
-        'gap: 0; margin-top: 22px; font-size: 24px; align-items: center;' +
+        'gap: 0; margin-top: 0; font-size: 30px; align-items: center;' +
       '}' +
-      '.matches[data-layout="interstitial"] .dba-teamblock { gap: 18px; }' +
-      /* Long team names wrap instead of ellipsizing (AdPreview wrapNames). */ +
+      '.matches[data-layout="interstitial"] .dba-teamblock { gap: 10px; }' +
+      /* Wrap at spaces (max 2 lines). Do not split a single word like Fluminense. */ +
       '.matches[data-layout="interstitial"] .dba-team-name {' +
-        'white-space: normal; overflow: visible; text-overflow: unset;' +
-        'overflow-wrap: break-word; word-break: break-word; line-height: 1.15;' +
+        'display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;' +
+        'overflow: hidden; white-space: normal; text-overflow: ellipsis;' +
+        'overflow-wrap: break-word; word-break: normal; line-height: 1.15;' +
       '}' +
-      '.matches[data-layout="interstitial"] .dba-team-logo { width: 64px; height: 64px; }' +
-      '.matches[data-layout="interstitial"] .dba-x { font-size: 28px; margin: 0 36px; }' +
-      '.matches[data-layout="interstitial"] .dba-odds { margin-top: 24px; font-size: 30px; }' +
-      '.matches[data-layout="interstitial"] .dba-odd-slot-home { padding-right: 82px; }' +
-      '.matches[data-layout="interstitial"] .dba-odd-slot-draw { margin: 0 36px; }' +
-      '.matches[data-layout="interstitial"] .dba-odd-slot-away { padding-left: 82px; }' +
+      '.matches[data-layout="interstitial"] .dba-team-name-slot { flex: 1 1 auto; overflow: hidden; }' +
+      '.matches[data-layout="interstitial"] .dba-team-logo { width: 73.6px; height: 73.6px; }' +
+      '.matches[data-layout="interstitial"] .dba-x { font-size: 30px; margin: 0 12px; }' +
+      '.matches[data-layout="interstitial"] .dba-odds { margin-top: 0; font-size: 24px; }' +
+      '.matches[data-layout="interstitial"] .dba-odd-slot-home { padding-right: 84px; }' +
+      '.matches[data-layout="interstitial"] .dba-odd-slot-draw { margin: 0 12px; }' +
+      '.matches[data-layout="interstitial"] .dba-odd-slot-away { padding-left: 84px; }' +
       '.matches[data-layout="interstitial"] .dba-odd { gap: 8px; }' +
-      '.matches[data-layout="interstitial"] .dba-odd-label { font-size: 20px; }' +
+      '.matches[data-layout="interstitial"] .dba-odd-label { font-size: 16px; }' +
       /* Interstitial + Brazil: spacing only (gap), keep default card metrics. */ +
-      '.ad-shell.legal-band .matches[data-layout="interstitial"] .dba-slide { gap: 40px; }' +
+      '.ad-shell.legal-band .matches[data-layout="interstitial"] .dba-slide { gap: 32px; }' +
       /* Carousel page indicator — on .ad-shell (outside click <a>) for GAM. */ +
       '.ad .dba-dots, .ad-shell > .dba-dots-shell { display: flex; justify-content: center; align-items: center; flex-shrink: 0; pointer-events: none; color: inherit; }' +
       '.ad .dba-dot, .ad-shell > .dba-dots-shell .dba-dot { display: inline-block; border-radius: 999px; background: currentColor; opacity: 0.35; transition: width 0.3s, opacity 0.3s; }' +
@@ -242,7 +329,7 @@
       '.ad .dba-dots[data-layout="mpu"] { position: absolute; left: 0; right: 0; bottom: 12px; height: 10px; margin-top: 0; gap: 6px; z-index: 2; }' +
       '.ad .dba-dots[data-layout="mpu"] .dba-dot { height: 4px; width: 4px; }' +
       '.ad .dba-dots[data-layout="mpu"] .dba-dot-active { width: 9.6px; }' +
-      '.ad-shell.legal-band .ad .cta { position: absolute; left: 12px; right: 12px; bottom: 43px; margin-top: 0; z-index: 2; }' +
+      '.ad-shell.legal-band .ad > .cta { position: absolute; left: 12px; right: 12px; bottom: 43px; margin-top: 0; z-index: 2; }' +
       '.ad .dba-dots[data-layout="interstitial"] { height: 24px; margin-top: 24px; gap: 12px; }' +
       '.ad .dba-dots[data-layout="interstitial"] .dba-dot { height: 10px; width: 10px; }' +
       '.ad .dba-dots[data-layout="interstitial"] .dba-dot-active { width: 24px; }' +
@@ -290,12 +377,18 @@
     });
 
     return el('div', { 'class': 'dba-card' }, [
-      el('div', { 'class': 'dba-pill', text: pillText }),
+      el('div', { 'class': 'dba-pill-anchor' }, [
+        el('div', { 'class': 'dba-pill' }, [
+          el('span', { 'class': 'dba-pill-text', text: pillText }),
+        ]),
+      ]),
+      el('div', { 'class': 'dba-v-gap' }),
       el('div', { 'class': 'dba-teams' }, [
         teamBlock(comps[0], 'home'),
-        el('span', { 'class': 'dba-x', text: 'X' }),
+        el('span', { 'class': 'dba-x', text: '\u2013' }),
         teamBlock(comps[1], 'away'),
       ]),
+      el('div', { 'class': 'dba-v-gap' }),
       el('div', { 'class': 'dba-odds' }, oddNodes),
     ]);
   }
@@ -377,6 +470,11 @@
   // infinite-forward carousel: animate to a clone of slide 0 sitting at the
   // end of the track, then drop the transition and reset translateX(0). The
   // snap is invisible because both endpoints render the same content.
+  //
+  // Transform math (must match AdPreview): track width = slideCount * 100% of
+  // the viewport; each slide is 100/slideCount of the track; translate by
+  // -(pos / slideCount * 100)% of the track (= one viewport per step).
+  // Using translateX(-pos * 100%) is wrong — % is relative to the track itself.
   function mountCarousel(node, slides, intervalMs, transitionMs) {
     while (node.firstChild) node.removeChild(node.firstChild);
     if (!slides.length) {
@@ -391,61 +489,100 @@
     var n = slides.length;
     var dotsEl = mountDots(node, n);
 
-    if (n < 2) return;
+    if (n < 2) {
+      track.style.width = '100%';
+      if (slides[0]) slides[0].style.flex = '0 0 100%';
+      if (slides[0]) slides[0].style.width = '100%';
+      return;
+    }
 
     track.appendChild(slides[0].cloneNode(true));
+
+    var slideCount = n + 1;
+    var slidePct = 100 / slideCount;
+    track.style.width = (slideCount * 100) + '%';
+    var kids = track.children;
+    for (var s = 0; s < kids.length; s++) {
+      kids[s].style.flex = '0 0 ' + slidePct + '%';
+      kids[s].style.width = slidePct + '%';
+      kids[s].style.maxWidth = slidePct + '%';
+      kids[s].style.boxSizing = 'border-box';
+    }
 
     var pos = 0;
     function setActive(idx) {
       updateDots(dotsEl, ((idx % n) + n) % n);
     }
+    function goTo(p, withTransition) {
+      track.style.transition = withTransition
+        ? ('transform ' + transitionMs + 'ms cubic-bezier(0.32, 0.72, 0.24, 1)')
+        : 'none';
+      track.style.transform = 'translate3d(-' + ((p * 100) / slideCount) + '%, 0, 0)';
+    }
     function advance() {
       pos++;
       setActive(pos);
-      track.style.transition = 'transform ' + transitionMs + 'ms cubic-bezier(0.32, 0.72, 0.24, 1)';
-      track.style.transform = 'translate3d(-' + (pos * 100) + '%, 0, 0)';
+      goTo(pos, true);
+      scheduleAlign(node);
       if (pos === n) {
         setTimeout(function () {
           pos = 0;
           setActive(0);
-          track.style.transition = 'none';
-          track.style.transform = 'translate3d(0, 0, 0)';
+          goTo(0, false);
           void track.offsetWidth;
+          scheduleAlign(node);
         }, transitionMs + 30);
       }
     }
     setActive(0);
+    goTo(0, false);
     setInterval(advance, intervalMs);
   }
 
-  // Banner only: pin odds under team names (MPU/interstitial use CSS flex slots).
-  var ODDS_X_TIGHTEN = 0.828;
-  var ODDS_GAP_TIGHTEN = 0.75;
-
+  // Banner only: dash / pill follow this card's centre (ad midline when the
+  // slide is on screen). Odds stay at a fixed offset from that centre — not
+  // under crests — so 1 / X / 2 do not jump when team names change.
   function alignBannerOdds(card) {
+    var homeBlock = card.querySelector('.dba-teamblock-home');
+    var awayBlock = card.querySelector('.dba-teamblock-away');
     var homeName = card.querySelector('.dba-teamblock-home .dba-team-name');
     var awayName = card.querySelector('.dba-teamblock-away .dba-team-name');
+    var teams = card.querySelector('.dba-teams');
     var x = card.querySelector('.dba-x');
     var oddsRow = card.querySelector('.dba-odds');
     var pill = card.querySelector('.dba-pill');
-    if (!homeName || !awayName || !x || !oddsRow) return;
+    if (!homeName || !awayName || !x || !oddsRow || !teams) return;
     var odds = oddsRow.querySelectorAll('.dba-odd');
     if (odds.length < 3) return;
+    if (teams.offsetWidth < 1) return;
+
+    var centerLocal = teams.offsetWidth / 2;
+    var xGap = 2;
+    x.style.left = centerLocal + 'px';
+    var xW = x.offsetWidth || 8;
+    if (homeBlock) {
+      homeBlock.style.left = '0';
+      homeBlock.style.right = Math.max(0, teams.offsetWidth - centerLocal + xW / 2 + xGap) + 'px';
+    }
+    if (awayBlock) {
+      awayBlock.style.left = Math.max(0, centerLocal + xW / 2 + xGap) + 'px';
+      awayBlock.style.right = '0';
+    }
+
     var oddsRect = oddsRow.getBoundingClientRect();
-    var homeRect = homeName.getBoundingClientRect();
-    var awayRect = awayName.getBoundingClientRect();
+    var teamsRect = teams.getBoundingClientRect();
+    var scaleX = teamsRect.width / teams.offsetWidth || 1;
     var xRect = x.getBoundingClientRect();
-    var homeC = homeRect.left + homeRect.width / 2 - oddsRect.left;
-    var awayC = awayRect.left + awayRect.width / 2 - oddsRect.left;
-    var xC = xRect.left + xRect.width / 2 - oddsRect.left;
-    var dist = Math.min(Math.abs(xC - homeC), Math.abs(awayC - xC)) * ODDS_X_TIGHTEN * ODDS_GAP_TIGHTEN;
+    var xC = (xRect.left + xRect.width / 2 - oddsRect.left) / scaleX;
+    var shell = card.closest('.ad-shell');
+    var spread = (shell && shell.classList.contains('legal-band')) ? 28 : 38;
     if (pill) {
       var cardRect = card.getBoundingClientRect();
-      pill.style.left = (xRect.left + xRect.width / 2 - cardRect.left) + 'px';
+      pill.style.left = ((xRect.left + xRect.width / 2 - cardRect.left) / scaleX) + 'px';
     }
-    odds[0].style.left = (xC - dist) + 'px';
+    odds[0].style.left = (xC - spread) + 'px';
     odds[1].style.left = xC + 'px';
-    odds[2].style.left = (xC + dist) + 'px';
+    odds[2].style.left = (xC + spread) + 'px';
   }
 
   function alignMatchLayout(root) {
@@ -462,14 +599,22 @@
     });
   }
 
+  function applyPillTheme(node) {
+    var bg = node.getAttribute('data-pill-bg');
+    var fg = node.getAttribute('data-pill-fg');
+    node.style.setProperty('--dba-pill-bg', bg || 'transparent');
+    if (fg) node.style.setProperty('--dba-pill-fg', fg);
+  }
+
   function render(node, data) {
     injectStyles();
+    applyPillTheme(node);
     var perSlide = parseInt(node.getAttribute('data-per-slide') || node.getAttribute('data-max') || '2', 10);
     if (!isFinite(perSlide) || perSlide <= 0) perSlide = 2;
     var intervalMs = parseInt(node.getAttribute('data-interval') || '3500', 10);
     var transitionMs = parseInt(node.getAttribute('data-transition') || '700', 10);
 
-    var games = extractMatches(data);
+    var games = filterUpcoming(extractMatches(data));
     if (!games.length) return;
     var slides = buildSlides(games, perSlide);
     mountCarousel(node, slides, intervalMs, transitionMs);
@@ -512,7 +657,7 @@
             });
           })
           .then(function (data) {
-            if (data && extractMatches(data).length) render(node, data);
+            if (data && filterUpcoming(extractMatches(data)).length) render(node, data);
           })
           .catch(function (err) {
             if (window.console) console.warn('[dba-runtime] feed failed:', err && err.message);

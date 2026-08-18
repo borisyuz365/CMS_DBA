@@ -1,5 +1,5 @@
 // Build GAM bake values aligned with CMS AdPreview + validate export vs preview.
-const { bgCss, invertText, resolveLogoUrl } = require('../utils/dbaStyle');
+const { bgCss, invertText, resolveLogoUrl, resolveDatePillBg, resolveDatePillFg } = require('../utils/dbaStyle');
 const { brazilDefaultLegalText, BRAZIL_LEGAL_FALLBACK_TEXT, LEGAL_BAND_BG_DEFAULT } = require('../utils/brazilLegal');
 const { countryToLangId } = require('../routes/_dbaLang');
 
@@ -111,6 +111,8 @@ function buildPreviewInlineValues({
     welcome_terms: resolved['config.welcomeOffer.terms'] || cfg.welcomeOffer?.terms || '',
     welcome_cta_text: resolved['config.welcomeOffer.ctaText']
       || cfg.welcomeOffer?.ctaText || ctaLabel,
+    date_pill_bg: resolveDatePillBg(cfg),
+    date_pill_text_color: resolveDatePillFg(cfg),
   };
 }
 

@@ -78,6 +78,17 @@ function resolveLogoUrl(bookmaker, config) {
   return bookmakerLogoUrl(bookmaker.id, { noBg });
 }
 
+const DATE_PILL_FILL_DEFAULT = 'rgba(0,0,0,0.55)';
+
+function resolveDatePillBg(config) {
+  if (!config?.datePillFill) return 'transparent';
+  return config.datePillColor || DATE_PILL_FILL_DEFAULT;
+}
+
+function resolveDatePillFg(config) {
+  return config?.datePillTextColor || config?.text || '#FFFFFF';
+}
+
 module.exports = {
   bgCss,
   hexToRgba,
@@ -86,4 +97,7 @@ module.exports = {
   invertText,
   bookmakerLogoUrl,
   resolveLogoUrl,
+  resolveDatePillBg,
+  resolveDatePillFg,
+  DATE_PILL_FILL_DEFAULT,
 };

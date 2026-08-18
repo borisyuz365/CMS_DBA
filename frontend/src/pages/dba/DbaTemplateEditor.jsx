@@ -464,9 +464,18 @@ function DbaTemplateEditorInner({ initial, allBookmakers, isNew }) {
               <Field label="CTA text" help="Defaults to auto-contrast against the CTA button color">
                 <ColorField value={config.ctaTextColor || invertText(config.cta)} onChange={(v) => set('ctaTextColor', v)} />
               </Field>
-              <Field label="Date pill" help="The date/time badge on each match card">
-                <ColorField value={config.datePillColor || 'rgba(0,0,0,0.55)'} onChange={(v) => set('datePillColor', v)} />
+              <Field label="Date pill fill" help="Off = transparent (default). On = solid colour behind the date/time.">
+                <Toggle
+                  on={!!config.datePillFill}
+                  onChange={(on) => set('datePillFill', on)}
+                  ariaLabel="Toggle date pill fill"
+                />
               </Field>
+              {!!config.datePillFill && (
+                <Field label="Date pill colour">
+                  <ColorField value={config.datePillColor || '#000000'} onChange={(v) => set('datePillColor', v)} />
+                </Field>
+              )}
               <Field label="Date pill text" help="Defaults to the main text color">
                 <ColorField value={config.datePillTextColor || config.text} onChange={(v) => set('datePillTextColor', v)} />
               </Field>

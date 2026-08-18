@@ -86,6 +86,19 @@ export function fmtUptime(s) {
 
 export const SIZE_DIMS = { '300x250': [300, 250], '640x1280': [640, 1280], '320x50': [320, 50] };
 
+/** Default fill used only when the editor's "Date pill fill" toggle is on. */
+export const DATE_PILL_FILL_DEFAULT = 'rgba(0,0,0,0.55)';
+
+/** Transparent unless `datePillFill` is explicitly enabled. */
+export function resolveDatePillBg(config) {
+  if (!config?.datePillFill) return 'transparent';
+  return config.datePillColor || DATE_PILL_FILL_DEFAULT;
+}
+
+export function resolveDatePillFg(config) {
+  return config?.datePillTextColor || config?.text || '#FFFFFF';
+}
+
 /** MPU (300×250) layout anchor — keep in sync with backend/gam/templates/mpu-standard.html */
 export const MPU_LAYOUT = {
   /** Fixed vertical center (px from ad top). Match carousel centers here; logo hangs above. */
@@ -98,9 +111,9 @@ export const MPU_LAYOUT = {
     default: { w: 51, h: 42 },
     brazil: { w: 70, h: 56 },
   },
-  pillPad: { default: 8, brazil: 7 },
-  /** Gap between stacked cards — must clear date-pill overhang (pillH/2) + breathing room. */
-  cardGap: { default: 14, brazil: 12 },
+  pillPad: { default: 0, brazil: 0 },
+  /** Gap between stacked cards. */
+  cardGap: { default: 8, brazil: 6 },
 };
 
 // Relative luminance (0..1) of a #RRGGBB color. Used to decide whether a

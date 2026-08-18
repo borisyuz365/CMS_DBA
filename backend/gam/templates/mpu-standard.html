@@ -64,12 +64,11 @@
   .ad-stack .matches {
     position: relative;
     margin: 0;
-    padding-top: 8px;
-    overflow-x: hidden;
-    overflow-y: visible;
+    padding-top: 0;
+    overflow: hidden;
     box-sizing: border-box;
   }
-  .ad-shell.legal-band .ad-stack .matches { padding-top: 7px; }
+  .ad-shell.legal-band .ad-stack .matches { padding-top: 0; }
   /* Brazil: card→CTA gap is margin-bottom on .matches (4px), not bottom padding. */
   .ad-shell.legal-band .ad-stack .matches { margin-bottom: 4px; }
   .ad-shell.legal-band .ad .cta {
@@ -160,7 +159,7 @@
         <div class="logo-wrap">
           <div class="logo" aria-label="[[bookmaker_name]]"></div>
         </div>
-        <div class="matches" data-feed="[[feed_url]]" data-per-slide="2" data-interval="3500" data-transition="700"></div>
+        <div class="matches" data-feed="[[feed_url]]" data-per-slide="2" data-interval="3500" data-transition="700" data-pill-bg="[[date_pill_bg]]" data-pill-fg="[[date_pill_text_color]]"></div>
       </div>
       <span class="cta">[[cta_text]]</span>
     </a>
