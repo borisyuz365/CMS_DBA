@@ -3,6 +3,7 @@
 Handoff for DevOps: how to provision MySQL on RDS for the DBA CMS backend and load initial data.
 
 **Prod URL:** `https://cms-dba.sportifier.com`  
+**Public BP runtime:** separate microservice — see [`DEVOPS-BP-RUNTIME.md`](./DEVOPS-BP-RUNTIME.md)  
 **Schema:** `backend/db/schema.sql` (idempotent — safe to re-run)  
 **App entry:** `backend/server.js` (Dockerfile runs `node server.js` from `/app/backend`)
 

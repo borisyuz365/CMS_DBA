@@ -25,3 +25,5 @@ Thumbs.db
 # Documentation (local only)
 docs/*
 !docs/DEVOPS-RDS-BOOTSTRAP.md
+!docs/DEVOPS-BP-RUNTIME.md
+!docs/DEVOPS-NEXT-STEPS.md

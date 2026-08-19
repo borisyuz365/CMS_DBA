@@ -8,16 +8,20 @@ const options = {
       title: 'BP Service API',
       version: '1.1.0',
       description:
-        'Betting Promotion (BP) runtime delivery and CMS management API.\n\n' +
-        '**Runtime (`GET /api/bp`)** returns a **flat JSON promotion object** at the top level ' +
-        '(e.g. `BP_Version_Name`, `Targeting`, `Header`, `Bookies`). There is no `BPMB` wrapper ' +
-        'and no `BPMB_Versions` array.\n\n' +
-        '**Targeting.uc** echoes the request `uc` query param (null when omitted). ' +
-        '**Legal.Regulatory_Logos** is included only when the request `uc` is `3` (Italy).\n\n' +
-        'Data is served from an in-memory cache (no per-request DB I/O). Every CMS write invalidates ' +
-        'the cache and triggers a CloudFront edge purge of `/api/bp*`.',
+        'Betting Promotion (BP) API — split across two services.\n\n' +
+        '**Public runtime (mobile clients)** — `bp-service` microservice:\n' +
+        '`GET /api/bp` returns a **flat JSON promotion object** (no `BPMB` wrapper).\n' +
+        'Deploy separately behind CloudFront; see `docs/DEVOPS-BP-RUNTIME.md`.\n\n' +
+        '**CMS (internal)** — this server (`cms-dba`):\n' +
+        '`/api/bp/promotions` CRUD and `/api/bp/countries` for the BP Editor.\n\n' +
+        '**Targeting.uc** echoes the request `uc` (null when omitted). ' +
+        '**Legal.Regulatory_Logos** only when request `uc=3` (Italy).\n\n' +
+        'CMS writes notify the runtime service to reload its cache and purge CloudFront `/api/bp*`.',
     },
-    servers: [{ url: 'http://localhost:3001' }],
+    servers: [
+      { url: 'http://localhost:3002', description: 'BP runtime (mobile) — bp-service' },
+      { url: 'http://localhost:3001', description: 'CMS backend (internal CRUD)' },
+    ],
     tags: [
       { name: 'Runtime',    description: 'Ad-server endpoints consumed by client apps' },
       { name: 'Promotions', description: 'CMS CRUD for BP promotion versions' },
@@ -286,7 +290,7 @@ const options = {
       },
     },
   },
-  apis: ['./routes/bpService.js'],
+  apis: ['./routes/bpPromotions.js', '../bp-service/routes/runtime.js'],
 };
 
 module.exports = swaggerJsdoc(options);
