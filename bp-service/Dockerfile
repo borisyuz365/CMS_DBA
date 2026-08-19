@@ -29,6 +29,6 @@ RUN mkdir -p /app/backend/data/temp
 
 WORKDIR /app/bp-service
 ENV NODE_ENV=production
-EXPOSE 3002
+EXPOSE 3003
 
 CMD ["node", "server.js"]

@@ -110,7 +110,7 @@ Swagger schema: `https://cms-dba.sportifier.com/api-docs` (Runtime section, inte
 | | CMS (internal) | BP runtime (public) |
 |--|----------------|---------------------|
 | **Image** | Root `Dockerfile` | `bp-service/Dockerfile` |
-| **Port** | 3001 | 3002 |
+| **Port** | 3001 | 3003 (local; prod configurable) |
 | **MySQL** | read/write | read |
 | **MSSQL** | yes (geo picker) | no |
 | **Mobile-facing** | no | yes |

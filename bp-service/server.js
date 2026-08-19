@@ -6,7 +6,7 @@ const bpCache = require('../backend/services/bpCache');
 const runtimeRoutes = require('./routes/runtime');
 
 const app = express();
-const PORT = parseInt(process.env.PORT || '3002', 10);
+const PORT = parseInt(process.env.PORT || '3003', 10);
 
 app.use(cors());
 app.use(express.json());
@@ -17,7 +17,7 @@ app.use((req, res, next) => {
 });
 
 // Italy regulatory SVG assets — paths in API responses are prefixed with BP_PUBLIC_BASE_URL.
-const legalLogosPath = path.join(__dirname, '../public/legal-logos');
+const legalLogosPath = path.join(__dirname, '../frontend/public/legal-logos');
 app.use('/legal-logos', express.static(legalLogosPath, {
   maxAge: '7d',
   setHeaders: (res) => {

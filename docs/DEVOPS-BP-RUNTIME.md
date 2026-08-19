@@ -34,7 +34,7 @@ docker build -f bp-service/Dockerfile -t bp-runtime:latest .
 **Do not** run `docker build .` from inside `bp-service/` — you will get  
 `lstat bp-service: no such file or directory`.
 
-**Container port:** `3002`  
+**Container port:** `3003` locally (`3002` is used by DBAManagementService in BettingAdsService docker-compose)  
 **Health check:** `GET /api/health`  
 **Runtime check:** `GET /api/bp/meta` → `ready: true`, `totalVersions > 0`
 
@@ -44,7 +44,7 @@ docker build -f bp-service/Dockerfile -t bp-runtime:latest .
 
 | Variable | Required | Example | Notes |
 |----------|----------|---------|-------|
-| `PORT` | no | `3002` | |
+| `PORT` | no | `3003` (local default) | |
 | `MYSQL_HOST` | yes | RDS endpoint | Read-only user is sufficient |
 | `MYSQL_PORT` | no | `3306` | |
 | `MYSQL_USER` | yes | | |
@@ -131,7 +131,7 @@ curl -sI "https://cms-dba.sportifier.com/api/bp"
 npm run install:all
 docker compose up -d mysql          # optional; or use existing MySQL
 npm run dev:backend                 # CMS :3001
-npm run dev:bp                      # BP runtime :3002
+npm run dev:bp                      # BP runtime :3003
 npm run dev:frontend                # CMS UI :3000
 ```
 
@@ -144,19 +144,19 @@ docker compose up -d
 **Local env (backend `.env`):**
 
 ```
-BP_RUNTIME_INVALIDATE_URL=http://localhost:3002/internal/invalidate
+BP_RUNTIME_INVALIDATE_URL=http://localhost:3003/internal/invalidate
 BP_INVALIDATE_SECRET=dev-invalidate-secret
 ```
 
 **Local env (bp-service `.env` or shell):**
 
 ```
-PORT=3002
+PORT=3003
 MYSQL_HOST=127.0.0.1
 MYSQL_USER=cms
 MYSQL_PASSWORD=cmspass
 MYSQL_DATABASE=dba_cms
-BP_PUBLIC_BASE_URL=http://localhost:3002
+BP_PUBLIC_BASE_URL=http://localhost:3003
 BP_INVALIDATE_SECRET=dev-invalidate-secret
 ```
 

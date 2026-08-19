@@ -19,7 +19,7 @@ const options = {
         'CMS writes notify the runtime service to reload its cache and purge CloudFront `/api/bp*`.',
     },
     servers: [
-      { url: 'http://localhost:3002', description: 'BP runtime (mobile) — bp-service' },
+      { url: 'http://localhost:3003', description: 'BP runtime (mobile) — bp-service' },
       { url: 'http://localhost:3001', description: 'CMS backend (internal CRUD)' },
     ],
     tags: [
