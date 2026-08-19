@@ -23,10 +23,14 @@ This is the ordered checklist to complete production. Detailed runbooks:
 
 ## Phase 2 — Deploy BP runtime microservice (new)
 
-- [ ] Build image from repo root:
+- [ ] Build image from **repo root** (`CMS_PROTOTYPE/`, not `bp-service/`):
   ```bash
+  cd /path/to/CMS_PROTOTYPE
   docker build -f bp-service/Dockerfile -t bp-runtime:latest .
   ```
+  Or: `./scripts/build-bp-runtime.sh`  
+  Or from `bp-service/`: `npm run docker:build`  
+  **Do not** run `docker build .` inside `bp-service/` — context must include `backend/`.
 - [ ] Deploy as separate ECS/K8s service (port **3002**)
 - [ ] Set environment:
 

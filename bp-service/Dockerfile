@@ -1,5 +1,18 @@
 # BP Runtime — public mobile API (read-only).
-# Build context is repo root: docker build -f bp-service/Dockerfile .
+#
+# Build context MUST be the repo root (CMS_PROTOTYPE/), not bp-service/.
+#
+#   cd /path/to/CMS_PROTOTYPE
+#   docker build -f bp-service/Dockerfile -t bp-runtime:latest .
+#
+# Or from bp-service/ (context = parent directory):
+#   cd bp-service && npm run docker:build
+#
+# Or:
+#   ./scripts/build-bp-runtime.sh
+#
+# WRONG (causes "lstat bp-service: no such file"):
+#   cd bp-service && docker build -t bp-runtime .
 FROM node:20-alpine
 WORKDIR /app
 

@@ -22,11 +22,17 @@ After a CMS promotion save:
 ## 1. Build & deploy BP runtime
 
 **Dockerfile:** `bp-service/Dockerfile`  
-**Build context:** repo root
+**Build context:** repo root (`CMS_PROTOTYPE/` — must contain `bp-service/`, `backend/`, `frontend/public/legal-logos`)
 
 ```bash
+cd /path/to/CMS_PROTOTYPE
 docker build -f bp-service/Dockerfile -t bp-runtime:latest .
+# or: ./scripts/build-bp-runtime.sh
+# or: cd bp-service && npm run docker:build
 ```
+
+**Do not** run `docker build .` from inside `bp-service/` — you will get  
+`lstat bp-service: no such file or directory`.
 
 **Container port:** `3002`  
 **Health check:** `GET /api/health`  
