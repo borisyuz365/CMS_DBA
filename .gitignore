@@ -23,4 +23,5 @@ Thumbs.db
 *.swo
 
 # Documentation (local only)
-docs/
+docs/*
+!docs/DEVOPS-RDS-BOOTSTRAP.md
