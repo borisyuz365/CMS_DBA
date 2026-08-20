@@ -7,8 +7,8 @@
   Legal footer sits outside the click <a> (nested anchors break GAM preview).
   Brazil layout uses .ad-shell.legal-band instead of :has() (unsupported in GAM).
 
-  Layout: .ad-stack is pinned to axisY (118px) — match carousel centers there;
-  logo hangs above via .logo-wrap (size changes do not shift the axis).
+  Layout: .ad-stack is pinned to axisY (110px) — match carousel centers there;
+  logo hangs above via .logo-wrap + logoOffsetY so size/axis shifts do not move the logo.
 -->
 <!DOCTYPE html>
 <html>
@@ -39,7 +39,7 @@
   /* Fixed vertical axis — sync with MPU_LAYOUT.axisY in frontend dbaUtils.js */
   .ad-stack {
     position: absolute;
-    top: 118px;
+    top: 110px;
     left: 14px;
     right: 14px;
     transform: translateY(-50%);
@@ -49,7 +49,8 @@
     position: absolute;
     bottom: 100%;
     left: 50%;
-    transform: translateX(-50%);
+    /* logoOffsetY (11px) — axisY compensate + 3px nudge down; cards stay put */
+    transform: translateX(-50%) translateY(11px);
     margin-bottom: 4px;
   }
   .ad .logo {
@@ -63,12 +64,11 @@
   .ad-stack .matches {
     position: relative;
     margin: 0;
-    padding-top: 8px;
-    overflow-x: hidden;
-    overflow-y: visible;
+    padding-top: 0;
+    overflow: hidden;
     box-sizing: border-box;
   }
-  .ad-shell.legal-band .ad-stack .matches { padding-top: 7px; }
+  .ad-shell.legal-band .ad-stack .matches { padding-top: 0; }
   /* Brazil: card→CTA gap is margin-bottom on .matches (4px), not bottom padding. */
   .ad-shell.legal-band .ad-stack .matches { margin-bottom: 4px; }
   .ad-shell.legal-band .ad .cta {
@@ -159,7 +159,7 @@
         <div class="logo-wrap">
           <div class="logo" aria-label="[[bookmaker_name]]"></div>
         </div>
-        <div class="matches" data-feed="[[feed_url]]" data-per-slide="2" data-interval="3500" data-transition="700"></div>
+        <div class="matches" data-feed="[[feed_url]]" data-per-slide="2" data-interval="3500" data-transition="700" data-pill-bg="[[date_pill_bg]]" data-pill-fg="[[date_pill_text_color]]"></div>
       </div>
       <span class="cta">[[cta_text]]</span>
     </a>

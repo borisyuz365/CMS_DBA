@@ -1,5 +1,5 @@
 # Local MySQL for DBA management data.
-# Bring up:   docker compose up -d mysql
+# Bring up:   docker compose up -d
 # Stop:       docker compose down
 # Reset all:  docker compose down -v   (drops the volume)
 #
@@ -27,6 +27,27 @@ services:
       interval: 5s
       timeout: 3s
       retries: 10
+
+  bp-service:
+    build:
+      context: .
+      dockerfile: bp-service/Dockerfile
+    container_name: bp_runtime
+    restart: unless-stopped
+    ports:
+      - "3003:3003"
+    environment:
+      PORT:                 "3003"
+      MYSQL_HOST:           mysql
+      MYSQL_PORT:           "3306"
+      MYSQL_USER:           ${MYSQL_USER:-cms}
+      MYSQL_PASSWORD:       ${MYSQL_PASSWORD:-cmspass}
+      MYSQL_DATABASE:       ${MYSQL_DATABASE:-dba_cms}
+      BP_PUBLIC_BASE_URL:   ${BP_PUBLIC_BASE_URL:-http://localhost:3003}
+      BP_INVALIDATE_SECRET: ${BP_INVALIDATE_SECRET:-dev-invalidate-secret}
+    depends_on:
+      mysql:
+        condition: service_healthy
 
 volumes:
   mysql_data:

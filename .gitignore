@@ -23,4 +23,7 @@ Thumbs.db
 *.swo
 
 # Documentation (local only)
-docs/
+docs/*
+!docs/DEVOPS-RDS-BOOTSTRAP.md
+!docs/DEVOPS-BP-RUNTIME.md
+!docs/DEVOPS-NEXT-STEPS.md

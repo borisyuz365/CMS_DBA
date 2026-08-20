@@ -1,13 +1,8 @@
-// CloudFront cache invalidation helper.
-//
-// Called fire-and-forget after every CMS write to /api/bp/promotions so that
-// the CloudFront edge cache is purged immediately. A failed invalidation is
-// logged but never propagated — the in-memory bpCache already holds fresh
-// data, so the only consequence is that edge nodes continue serving the old
-// response until their TTL expires.
+// CloudFront cache invalidation for the **public BP runtime** distribution.
+// CMS calls this after promotion CRUD; mobile clients hit CloudFront → bp-service.
 //
 // Required env vars:
-//   CLOUDFRONT_DISTRIBUTION_ID  — e.g. "E1PA6795UKMFR9"
+//   CLOUDFRONT_DISTRIBUTION_ID  — public BP distribution (not cms-dba)
 //   AWS_REGION                  — defaults to "us-east-1"
 //   AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY  (or an ECS/EC2 IAM role)
 

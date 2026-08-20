@@ -31,11 +31,16 @@
   }
   .ad-shell.legal-band .ad { padding: 0 6px; column-gap: 5px; }
   .ad-shell.legal-band .ad .logo { width: 52px; height: 52px; }
+  /* Logo + CTA lift for Brazil band; match column stays top-pinned (pill @ 5px). */
   .ad-shell.legal-band .ad .logo-wrap,
-  .ad-shell.legal-band .ad .matches,
   .ad-shell.legal-band .ad .cta-wrap {
-    padding-bottom: 18px;
+    padding-bottom: 16px;
     transform: translateY(-4px);
+  }
+  .ad-shell.legal-band .ad .matches {
+    padding-top: 5px;
+    padding-bottom: 16px;
+    align-items: stretch;
   }
   .ad .logo-wrap {
     display: flex; align-items: center; justify-content: center;
@@ -52,8 +57,15 @@
     position: relative;
     overflow: hidden;
     min-width: 0;
-    display: flex; align-items: center; justify-content: center;
+    display: flex; align-items: stretch; justify-content: center;
     box-sizing: border-box;
+    padding-top: 5px;
+    padding-bottom: 2px;
+  }
+  .ad-shell.legal-strip .ad .matches,
+  .ad-shell.legal-strip .ad .logo-wrap,
+  .ad-shell.legal-strip .ad .cta-wrap {
+    padding-bottom: 13px;
   }
   .ad .cta-wrap {
     display: flex; align-items: center; justify-content: center;
@@ -135,7 +147,9 @@
            data-layout="banner"
            data-per-slide="1"
            data-interval="3500"
-           data-transition="700"></div>
+           data-transition="700"
+           data-pill-bg="[[date_pill_bg]]"
+           data-pill-fg="[[date_pill_text_color]]"></div>
       <div class="cta-wrap">
         <span class="cta">[[cta_text]]</span>
       </div>

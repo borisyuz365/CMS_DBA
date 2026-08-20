@@ -48,6 +48,8 @@ const INLINE_VARIABLE_NAMES = new Set([
   'welcome_subtext',
   'welcome_terms',
   'welcome_cta_text',
+  'date_pill_bg',
+  'date_pill_text_color',
 ]);
 
 // Full authoring macro set (HTML template files use [[name]] for baked fields;
@@ -79,6 +81,8 @@ const ALL_VARIABLE_SCHEMA = [
   { uniqueName: 'welcome_subtext',        label: 'Welcome offer subtext',  description: 'Translated supporting copy on the welcome slide',         type: 'STRING', isRequired: false },
   { uniqueName: 'welcome_terms',          label: 'Welcome offer terms',    description: 'Translated terms / fine-print on the welcome slide',      type: 'STRING', isRequired: false },
   { uniqueName: 'welcome_cta_text',       label: 'Welcome offer CTA text', description: 'Translated CTA on the welcome slide (overrides cta_text)',type: 'STRING', isRequired: false },
+  { uniqueName: 'date_pill_bg',           label: 'Date pill fill',     description: 'Background of the date/time pill (transparent when fill is off)', type: 'STRING', isRequired: false },
+  { uniqueName: 'date_pill_text_color',   label: 'Date pill text',     description: 'Date/time pill text color', type: 'STRING', isRequired: false },
 ];
 
 // Variables actually declared on the GAM CreativeTemplate — cta_url only.
@@ -110,6 +114,8 @@ const RAW_INLINE_NAMES = new Set([
   'disclaimer_url',
   'feed_url',
   'runtime_url',
+  'date_pill_bg',
+  'date_pill_text_color',
 ]);
 
 function applyInlineValues(snippet, inlineValues) {
@@ -151,15 +157,30 @@ function remainingMacros(snippet) {
 }
 
 // Sample matches for GAM preview when the live feed cannot be fetched
-// (SafeFrame / blocked host). Shape matches dba-runtime's React-preview path.
-const SAMPLE_MATCH_FEED = {
-  matches: [
-    { date: '22/05 · 03:30', home: { id: 7766, name: 'Peñarol' }, away: { id: 1267, name: 'Corinthians' }, odds: ['2.62', '3.30', '2.62'] },
-    { date: '24/05 · 01:00', home: { id: 1269, name: 'Mirassol' }, away: { id: 1216, name: 'Fluminense' }, odds: ['2.65', '3.10', '2.55'] },
-    { date: '18/05 · 00:30', home: { id: 1273, name: 'RB Bragantino' }, away: { id: 1228, name: 'Associação Atlética Ponte Preta' }, odds: ['1.62', '3.80', '5.25'] },
-    { date: '17/05 · 17:00', home: { id: 1224, name: 'Santos' }, away: { id: 1212, name: 'Coritiba' }, odds: ['1.66', '3.60', '5.25'] },
-  ],
-};
+// (SafeFrame / blocked host). Kickoffs are generated relative to "now" so
+// baked creatives never ship hard-coded past dates.
+function buildSampleMatchFeed(now = new Date()) {
+  const teams = [
+    { home: { id: 7766, name: 'Peñarol' }, away: { id: 1267, name: 'Corinthians' }, odds: ['2.62', '3.30', '2.62'] },
+    { home: { id: 1269, name: 'Mirassol' }, away: { id: 1216, name: 'Fluminense' }, odds: ['2.65', '3.10', '2.55'] },
+    { home: { id: 1273, name: 'RB Bragantino' }, away: { id: 1228, name: 'Ponte Preta' }, odds: ['1.62', '3.80', '5.25'] },
+    { home: { id: 1224, name: 'Santos' }, away: { id: 1212, name: 'Coritiba' }, odds: ['1.66', '3.60', '5.25'] },
+  ];
+  const matches = teams.map((t, i) => {
+    const kickoff = new Date(now.getTime() + (i + 1) * 24 * 60 * 60 * 1000);
+    kickoff.setHours(15 + (i % 3), 30, 0, 0);
+    const dd = String(kickoff.getDate()).padStart(2, '0');
+    const mm = String(kickoff.getMonth() + 1).padStart(2, '0');
+    const hh = String(kickoff.getHours()).padStart(2, '0');
+    const mi = String(kickoff.getMinutes()).padStart(2, '0');
+    return {
+      ...t,
+      ISOStartTime: kickoff.toISOString(),
+      date: `${dd}/${mm} · ${hh}:${mi}`,
+    };
+  });
+  return { matches };
+}
 
 const DEFAULT_RUNTIME_URL = process.env.DBA_RUNTIME_URL || 'https://cms.365scores.com/dba-runtime.js';
 
@@ -201,8 +222,6 @@ function __dbaGameCount(data) {
 (function () {
   var node = document.querySelector('.matches[data-feed]');
   if (!node || !window.DbaRenderMatches) return;
-  var perSlide = parseInt(node.getAttribute('data-per-slide') || '2', 10);
-  if (!isFinite(perSlide) || perSlide <= 0) perSlide = 2;
   var b64 = node.getAttribute('data-sample-b64');
   var sample = null;
   if (b64) {
@@ -211,17 +230,14 @@ function __dbaGameCount(data) {
       window.DbaRenderMatches(node, sample);
     } catch (e) {}
   }
-  var sampleCount = __dbaGameCount(sample);
   var feed = node.getAttribute('data-feed');
   if (!feed) return;
   fetch(feed, { credentials: 'omit' })
     .then(__dbaParseFeed)
     .then(function (data) {
       if (!data || !window.DbaRenderMatches) return;
-      var feedCount = __dbaGameCount(data);
-      // Keep sample carousel (and dots) when the live feed only fills one slide.
-      if (feedCount <= perSlide && sampleCount > perSlide) return;
-      window.DbaRenderMatches(node, data);
+      // Prefer any live feed over baked sample (sample is offline fallback only).
+      if (__dbaGameCount(data) > 0) window.DbaRenderMatches(node, data);
     })
     .catch(function () {});
 }());
@@ -239,7 +255,7 @@ function makeSnippetSelfContained(snippet) {
 
   snippet = snippet.replace(/<script\s+src="[^"]*"\s*defer\s*><\/script>\s*/i, '');
 
-  const b64 = Buffer.from(JSON.stringify(SAMPLE_MATCH_FEED), 'utf8').toString('base64');
+  const b64 = Buffer.from(JSON.stringify(buildSampleMatchFeed()), 'utf8').toString('base64');
   snippet = snippet.replace(/<div class="matches"([^>]*)>/g, (match, attrs) => {
     if (/\bdata-sample-b64=/.test(attrs)) return match;
     return `<div class="matches"${attrs} data-sample-b64="${b64}">`;

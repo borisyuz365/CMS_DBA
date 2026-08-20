@@ -31,15 +31,17 @@
   }
   .ad-shell.legal-band .ad .logo-wrap { margin-bottom: 16px; }
   .ad-shell.legal-band .ad .matches {
-    flex: 0 0 auto;
-    padding-top: 18px;
+    flex: 1;
+    min-height: 0;
+    padding-top: 8px;
   }
   .ad-shell.legal-band .ad .cta-zone {
-    flex: 1;
+    flex: 0 0 auto;
     min-height: 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    padding-top: 24px;
   }
   .ad-shell.legal-band .ad .cta { margin-top: 0; }
 
@@ -58,10 +60,11 @@
     flex: 1;
     position: relative;
     overflow: hidden;
-    padding-top: 24px;
+    padding-top: 8px;
     box-sizing: border-box;
     min-height: 0;
   }
+  .ad .cta-zone { flex-shrink: 0; }
   .ad .cta {
     background: [[cta_bg_color]];
     color: [[cta_text_color]];
@@ -136,7 +139,9 @@
            data-layout="interstitial"
            data-per-slide="3"
            data-interval="3500"
-           data-transition="700"></div>
+           data-transition="700"
+           data-pill-bg="[[date_pill_bg]]"
+           data-pill-fg="[[date_pill_text_color]]"></div>
       <div class="cta-zone">
         <span class="cta">[[cta_text]]</span>
       </div>
