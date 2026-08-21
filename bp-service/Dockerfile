@@ -23,7 +23,8 @@ COPY bp-service/ ./bp-service/
 COPY backend/services/bpCache.js backend/services/bpTargeting.js ./backend/services/
 COPY backend/services/bp/formatRuntime.js ./backend/services/bp/
 COPY backend/db/mysql.js ./backend/db/
-COPY frontend/public/legal-logos ./public/legal-logos
+# server.js serves ../frontend/public/legal-logos relative to WORKDIR bp-service
+COPY frontend/public/legal-logos ./frontend/public/legal-logos
 
 RUN mkdir -p /app/backend/data/temp
 
