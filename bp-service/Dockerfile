@@ -30,6 +30,9 @@ RUN mkdir -p /app/backend/data/temp
 
 WORKDIR /app/bp-service
 ENV NODE_ENV=production
+# backend/* modules (e.g. db/mysql.js) resolve deps from their own tree;
+# point Node at bp-service/node_modules where npm ci installed them.
+ENV NODE_PATH=/app/bp-service/node_modules
 EXPOSE 3003
 
 CMD ["node", "server.js"]
