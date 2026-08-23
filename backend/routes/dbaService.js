@@ -126,4 +126,28 @@ router.get('/audit-log', async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
+// One-shot: rewrite legacy interstitial size_id 640x1280 → 320x480 in MySQL.
+// Safe to re-run. Does not touch GAM — re-export snippets after migrating.
+router.post('/migrate-interstitial-size', async (req, res, next) => {
+  try {
+    const actor = req.body?.actor || 'system';
+    const [result] = await pool.query(
+      `UPDATE dba_templates
+          SET size_id = '320x480',
+              size_label = 'Interstitial · 320×480',
+              modified = ?,
+              modified_by = ?
+        WHERE size_id = '640x1280'`,
+      [new Date(), actor],
+    );
+    const affected = result.affectedRows || 0;
+    await appendAuditEntry({
+      kind: 'edit',
+      who: actor,
+      text: `Migrated ${affected} interstitial template(s) 640x1280 → 320x480`,
+    });
+    res.json({ ok: true, migrated: affected });
+  } catch (err) { next(err); }
+});
+
 module.exports = router;
