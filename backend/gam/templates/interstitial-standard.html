@@ -81,6 +81,20 @@
     min-height: 0;
   }
   .ad .cta-zone { flex-shrink: 0; }
+  /* Page indicator — mounted on .ad-shell (outside click <a>) by dba-runtime.js */
+  .ad-shell > .dba-dots-shell[data-layout="interstitial"] {
+    position: absolute; left: 0; right: 0; bottom: 2.2em;
+    height: 0.75em; display: flex; justify-content: center; align-items: center;
+    gap: 0.35em; z-index: 5; pointer-events: none; color: inherit;
+  }
+  .ad-shell > .dba-dots-shell[data-layout="interstitial"] .dba-dot {
+    display: inline-block; border-radius: 999px; background: currentColor;
+    height: 0.35em; width: 0.35em; opacity: 0.35;
+  }
+  .ad-shell > .dba-dots-shell[data-layout="interstitial"] .dba-dot-active {
+    width: 0.75em; opacity: 1;
+  }
+  .ad-shell.legal-band > .dba-dots-shell[data-layout="interstitial"] { bottom: 11%; }
   .ad .cta {
     background: [[cta_bg_color]];
     color: [[cta_text_color]];

@@ -97,10 +97,12 @@ export function normalizeSizeId(sizeId) {
   return sizeId;
 }
 
+// CMS preview canvas dims. Interstitial inventory is GAM 320×480 fluid;
+// the editor/list preview stays 640×1280 for design fidelity.
 export const SIZE_DIMS = {
   '300x250': [300, 250],
-  '320x480': [320, 480],
-  '640x1280': [320, 480], // migration alias → AdOps 320×480
+  '320x480': [640, 1280],
+  '640x1280': [640, 1280],
   '320x50': [320, 50],
 };
 

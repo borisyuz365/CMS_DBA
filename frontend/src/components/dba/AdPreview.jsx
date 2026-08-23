@@ -975,33 +975,33 @@ export default function AdPreview({
     );
   };
 
-  // INTERSTITIAL · 320×480
+  // INTERSTITIAL · CMS canvas 640×1280 (GAM inventory remains 320×480 fluid).
   const renderInterstitial = () => {
-    // Cards sit 5px from the template edge; long team names wrap (not ellipsis).
-    const sidePad = 5;
-    const d = { cardRadius: 14, cardPad: '6px 10px 8px', pillH: 18, pillFont: 11,
-                teamsGap: 4, xSideGap: 6, teamFont: 13, crest: 32, xFont: 13,
-                oddsGap: 12, oddsFont: 11, oddsDot: 6, rowGap: 6, wrapNames: true };
-    const cardGap = useBrazilBand ? 10 : 12;
-    const logoMb = useBrazilBand ? 6 : 8;
-    const bottomPad = useBrazilBand ? brazilBandH : 40;
+    // Cards sit near the template edge; long team names wrap (not ellipsis).
+    const sidePad = 10;
+    const d = { cardRadius: 28, cardPad: '12px 20px 16px', pillH: 36, pillFont: 22,
+                teamsGap: 8, xSideGap: 12, teamFont: 26, crest: 64, xFont: 26,
+                oddsGap: 24, oddsFont: 22, oddsDot: 12, rowGap: 12, wrapNames: true };
+    const cardGap = useBrazilBand ? 20 : 24;
+    const logoMb = useBrazilBand ? 12 : 16;
+    const bottomPad = useBrazilBand ? brazilBandH : 80;
     const ctaBtn = (
       <Box component="button" sx={{
         background: config.cta, color: config.ctaTextColor || invertText(config.cta),
-        border: 'none', height: 44, mt: useBrazilBand ? 0 : '16px',
+        border: 'none', height: 88, mt: useBrazilBand ? 0 : '32px',
         position: 'relative', flexShrink: 0,
-        borderRadius: `${Math.min(radius * 1.5, 10)}px`,
-        fontSize: 16, fontWeight: 700, cursor: 'pointer',
+        borderRadius: `${Math.min(radius * 1.5, 20)}px`,
+        fontSize: 32, fontWeight: 700, cursor: 'pointer',
         fontFamily: 'inherit', letterSpacing: '0.01em',
       }}>{config.ctaText}</Box>
     );
-    const dots = renderInAdDots({ rowHeight: 12, dotSize: 5, mt: useBrazilBand ? 0 : 12 });
+    const dots = renderInAdDots({ rowHeight: 24, dotSize: 10, mt: useBrazilBand ? 0 : 24 });
     return wrap(
       <>
-        {/* Interstitial logo: ~22.5% of 320 ≈ 72px. Horizontally centered to
+        {/* Interstitial logo: ~22.5% of 640 ≈ 144px. Horizontally centered to
             match production's flex `align-items: center`. */}
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: '4px', mb: `${logoMb}px`, flexShrink: 0 }}>
-          <LogoThumb bg={bookmaker.logoBg} fg={bookmaker.logoFg} initials={bookmaker.initials} imageUrl={resolveLogoUrl(bookmaker, config)} size={72} radius={12} bare />
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: '8px', mb: `${logoMb}px`, flexShrink: 0 }}>
+          <LogoThumb bg={bookmaker.logoBg} fg={bookmaker.logoFg} initials={bookmaker.initials} imageUrl={resolveLogoUrl(bookmaker, config)} size={144} radius={24} bare />
         </Box>
         {renderMatchCarousel(d, {
           cardGap,
@@ -1017,8 +1017,8 @@ export default function AdPreview({
           <Box sx={{
             flex: '0 0 auto',
             display: 'flex', flexDirection: 'column',
-            alignItems: 'stretch', justifyContent: 'center', gap: '10px',
-            pt: '10px',
+            alignItems: 'stretch', justifyContent: 'center', gap: '20px',
+            pt: '20px',
           }}>
             {ctaBtn}
             {dots}
@@ -1029,12 +1029,12 @@ export default function AdPreview({
             <Box sx={{ flexShrink: 0 }}>{dots}</Box>
           </>
         )}
-        {useBrazilBand ? renderBrazilLegalBand(brazilBandH, 10, 16) : (
+        {useBrazilBand ? renderBrazilLegalBand(brazilBandH, 20, 31) : (
           config.legal && config.legal.enabled ? (
-          <Box sx={{ position: 'absolute', bottom: 10, left: sidePad, right: sidePad, display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 8, color: config.legal.color || config.text, opacity: 0.85 }}>
-            <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-              {config.legal.logo && <Box component="img" src={config.legal.logo} alt="" sx={{ height: 11, width: 'auto' }} />}
-              <Age18PlusBadge size={16} />
+          <Box sx={{ position: 'absolute', bottom: 20, left: sidePad, right: sidePad, display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 16, color: config.legal.color || config.text, opacity: 0.85 }}>
+            <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+              {config.legal.logo && <Box component="img" src={config.legal.logo} alt="" sx={{ height: 22, width: 'auto' }} />}
+              <Age18PlusBadge size={31} />
             </Box>
             <Box component="span" sx={{ maxWidth: '70%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {config.legal.text || 'Jogue com responsabilidade'}
@@ -1043,7 +1043,7 @@ export default function AdPreview({
           ) : null
         )}
       </>,
-      `8px ${sidePad}px ${bottomPad}px`
+      `16px ${sidePad}px ${bottomPad}px`
     );
   };
 
@@ -1155,70 +1155,71 @@ export default function AdPreview({
 
   const renderWelcomeInterstitial = () => {
     // Brazil: CTA + dots centered in the space between offer content and legal band.
-    const bottomPad = useBrazilBand ? brazilBandH : 40;
+    // Canvas is 640×1280 (same as standard interstitial preview).
+    const bottomPad = useBrazilBand ? brazilBandH : 80;
     const ctaBtn = (
       <Box component="button" sx={{
         background: woCtaBg, color: woCtaFg,
-        border: 'none', height: 44, mt: useBrazilBand ? 0 : '14px',
+        border: 'none', height: 88, mt: useBrazilBand ? 0 : '28px',
         position: 'relative', flexShrink: 0,
-        borderRadius: `${Math.min(radius * 1.5, 12)}px`,
-        fontSize: 16, fontWeight: 800, cursor: 'pointer',
+        borderRadius: `${Math.min(radius * 1.5, 24)}px`,
+        fontSize: 32, fontWeight: 800, cursor: 'pointer',
         fontFamily: 'inherit', letterSpacing: '0.01em',
       }}>{woCtaText}</Box>
     );
-    const dots = renderInAdDots({ rowHeight: 12, dotSize: 5, mt: useBrazilBand ? 0 : 12 });
+    const dots = renderInAdDots({ rowHeight: 24, dotSize: 10, mt: useBrazilBand ? 0 : 24 });
     return wrap(
       <>
         {/* Logo centered on its own row; the "Welcome offer" pill stacks below
             so the logo retains its centered alignment instead of being shifted
             off by the pill in a justify-between row. */}
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: '14px', mb: '8px', flexShrink: 0 }}>
-          <LogoThumb bg={bookmaker.logoBg} fg={bookmaker.logoFg} initials={bookmaker.initials} imageUrl={resolveLogoUrl(bookmaker, config)} size={72} radius={12} bare />
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: '28px', mb: '16px', flexShrink: 0 }}>
+          <LogoThumb bg={bookmaker.logoBg} fg={bookmaker.logoFg} initials={bookmaker.initials} imageUrl={resolveLogoUrl(bookmaker, config)} size={144} radius={24} bare />
         </Box>
-        <Box sx={{ display: 'flex', justifyContent: 'center', mb: '10px', flexShrink: 0 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', mb: '20px', flexShrink: 0 }}>
           <Box sx={{
-            padding: '4px 12px', borderRadius: 999,
+            padding: '8px 24px', borderRadius: 999,
             bgcolor: woPillBg, color: woPillFg,
-            fontSize: 11, fontWeight: 800, letterSpacing: '0.08em', textIndent: '0.08em',
+            fontSize: 22, fontWeight: 800, letterSpacing: '0.08em', textIndent: '0.08em',
             textTransform: 'uppercase', textAlign: 'center',
           }}>{woPillText}</Box>
         </Box>
         <Box sx={{
-          display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '12px',
+          display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '24px',
           textAlign: 'center', minHeight: 0,
           ...(useBrazilBand ? { flexShrink: 0 } : { flex: 1 }),
         }}>
           {wo.image && (
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-              <Box component="img" src={wo.image} alt="" sx={{ maxHeight: 100, maxWidth: '100%', objectFit: 'contain' }} />
+              <Box component="img" src={wo.image} alt="" sx={{ maxHeight: 200, maxWidth: '100%', objectFit: 'contain' }} />
             </Box>
           )}
-          <Box sx={{ fontSize: 36, fontWeight: 800, lineHeight: 0.98, letterSpacing: '-0.03em' }}>{woHeadline}</Box>
-          <Box sx={{ fontSize: 14, opacity: 0.85, lineHeight: 1.25, fontWeight: 500 }}>{woSubtext}</Box>
+          <Box sx={{ fontSize: 72, fontWeight: 800, lineHeight: 0.98, letterSpacing: '-0.03em' }}>{woHeadline}</Box>
+          <Box sx={{ fontSize: 28, opacity: 0.85, lineHeight: 1.25, fontWeight: 500 }}>{woSubtext}</Box>
         </Box>
         {useBrazilBand ? (
           <Box sx={{
             flex: 1, minHeight: 0,
             display: 'flex', flexDirection: 'column',
-            alignItems: 'stretch', justifyContent: 'center', gap: '10px',
+            alignItems: 'stretch', justifyContent: 'center', gap: '20px',
           }}>
             {ctaBtn}
-            <Box sx={{ fontSize: 9, opacity: 0.55, textAlign: 'center', lineHeight: 1.3, flexShrink: 0 }}>{woTerms}</Box>
+            <Box sx={{ fontSize: 18, opacity: 0.55, textAlign: 'center', lineHeight: 1.3, flexShrink: 0 }}>{woTerms}</Box>
             {dots}
           </Box>
         ) : (
           <>
             {ctaBtn}
-            <Box sx={{ mt: '10px', fontSize: 9, opacity: 0.55, textAlign: 'center', lineHeight: 1.3, flexShrink: 0 }}>{woTerms}</Box>
+            <Box sx={{ mt: '20px', fontSize: 18, opacity: 0.55, textAlign: 'center', lineHeight: 1.3, flexShrink: 0 }}>{woTerms}</Box>
             <Box sx={{ flexShrink: 0 }}>{dots}</Box>
           </>
         )}
-        {useBrazilBand ? renderBrazilLegalBand(brazilBandH, 10, 16) : (
+        {useBrazilBand ? renderBrazilLegalBand(brazilBandH, 20, 31) : (
           config.legal && config.legal.enabled ? (
-          <Box sx={{ position: 'absolute', bottom: 10, left: 14, right: 14, display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 8, color: config.legal.color || config.text, opacity: 0.85 }}>
-            <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-              {config.legal.logo && <Box component="img" src={config.legal.logo} alt="" sx={{ height: 11, width: 'auto' }} />}
-              <Age18PlusBadge size={16} />
+          <Box sx={{ position: 'absolute', bottom: 20, left: 28, right: 28, display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 16, color: config.legal.color || config.text, opacity: 0.85 }}>
+            <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+              {config.legal.logo && <Box component="img" src={config.legal.logo} alt="" sx={{ height: 22, width: 'auto' }} />}
+              <Age18PlusBadge size={31} />
             </Box>
             <Box component="span" sx={{ maxWidth: '70%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {config.legal.text || 'Jogue com responsabilidade'}
@@ -1227,7 +1228,7 @@ export default function AdPreview({
           ) : null
         )}
       </>,
-      `16px 14px ${bottomPad}px`,
+      `32px 28px ${bottomPad}px`,
       welcomeBg,
     );
   };

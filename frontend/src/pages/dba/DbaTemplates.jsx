@@ -203,7 +203,7 @@ export default function DbaTemplates() {
         <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 2 }}>
           {filtered.map((tpl) => {
             const [pw, ph] = SIZE_DIMS[tpl.sizeId] || [300, 250];
-            const previewScale = isInterstitialSize(tpl.sizeId) ? 0.28
+            const previewScale = isInterstitialSize(tpl.sizeId) ? 0.14
               : tpl.sizeId === '320x50' ? 0.85
               : 0.7;
             const bm = bmForTemplate(tpl);

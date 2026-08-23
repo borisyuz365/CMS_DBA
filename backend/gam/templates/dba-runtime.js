@@ -344,7 +344,16 @@
       '.ad .dba-dots[data-layout="interstitial"] { height: 0.75em; margin-top: 0.5em; gap: 0.35em; }' +
       '.ad .dba-dots[data-layout="interstitial"] .dba-dot { height: 0.35em; width: 0.35em; }' +
       '.ad .dba-dots[data-layout="interstitial"] .dba-dot-active { width: 0.75em; }' +
-      '.ad-shell.legal-band .ad .dba-dots[data-layout="interstitial"] { margin-top: 0; }';
+      '.ad-shell.legal-band .ad .dba-dots[data-layout="interstitial"] { margin-top: 0; }' +
+      /* Shell-mounted interstitial dots (absolute — .ad is height:100%, so flow
+         siblings below it are clipped by overflow:hidden). */ +
+      '.ad-shell > .dba-dots-shell[data-layout="interstitial"] {' +
+        'position: absolute; left: 0; right: 0; bottom: 2.2em;' +
+        'height: 0.75em; margin-top: 0; gap: 0.35em; z-index: 5;' +
+      '}' +
+      '.ad-shell > .dba-dots-shell[data-layout="interstitial"] .dba-dot { height: 0.35em; width: 0.35em; }' +
+      '.ad-shell > .dba-dots-shell[data-layout="interstitial"] .dba-dot-active { width: 0.75em; }' +
+      '.ad-shell.legal-band > .dba-dots-shell[data-layout="interstitial"] { bottom: 11%; }';
     var s = el('style', { id: 'dba-runtime-styles' });
     s.textContent = css;
     (document.head || document.documentElement).appendChild(s);
@@ -447,8 +456,9 @@
       dots.appendChild(el('span', { 'class': 'dba-dot' + (i === 0 ? ' dba-dot-active' : '') }));
     }
 
-    // Mount on the shell (sibling of the click <a>) so GAM / SafeFrame does not
-    // drop dots injected inside the anchor layer.
+    // Always prefer the shell (sibling of the click <a>) so GAM / SafeFrame does
+    // not drop dots injected inside the anchor. MPU + interstitial shell dots
+    // are absolutely positioned (see runtime CSS above).
     if (shell) {
       dots.classList.add('dba-dots-shell');
       var legal = shell.querySelector('.legal');
@@ -460,9 +470,11 @@
           if (c) dots.style.color = c;
         } catch (e) { /* preview iframe */ }
       }
-    } else {
+    } else if (ad) {
+      var ctaZone = ad.querySelector('.cta-zone');
       var cta = ad.querySelector('.cta');
-      if (cta) ad.insertBefore(dots, cta.nextSibling);
+      if (ctaZone) ctaZone.appendChild(dots);
+      else if (cta) ad.insertBefore(dots, cta.nextSibling);
       else ad.appendChild(dots);
     }
     return dots;
