@@ -16,7 +16,9 @@ const options = {
         '`/api/bp/promotions` CRUD and `/api/bp/countries` for the BP Editor.\n\n' +
         '**Targeting.uc** echoes the request `uc` (null when omitted). ' +
         '**Legal.Regulatory_Logos** only when request `uc=3` (Italy).\n\n' +
-        'CMS writes notify the runtime service to reload its cache and purge CloudFront `/api/bp*`.',
+        'CMS writes notify the runtime service to reload its cache and purge CloudFront `/api/bp*`.\n\n' +
+        '**Colours:** every colour field in the runtime response is uppercase `#RRGGBB` hex ' +
+        '(never `rgb()` / `rgba()`). Semi-transparent stored values are composited onto black.',
     },
     servers: [
       { url: 'http://localhost:3003', description: 'BP runtime (mobile) — bp-service' },
@@ -133,14 +135,19 @@ const options = {
                 },
               },
             },
-            Page_Background_Color: { type: 'string', example: '#12193A' },
+            Page_Background_Color: {
+              type: 'string',
+              pattern: '^#[0-9A-Fa-f]{6}$',
+              example: '#12193A',
+              description: 'Always uppercase #RRGGBB hex (never rgb/rgba).',
+            },
             Page_Background: {
               type: 'object',
               properties: {
                 Type:           { type: 'string', enum: ['solid', 'gradient', 'image'] },
-                Color:          { type: 'string' },
-                GradientColor1: { type: 'string', nullable: true },
-                GradientColor2: { type: 'string', nullable: true },
+                Color:          { type: 'string', pattern: '^#[0-9A-Fa-f]{6}$', example: '#12193A' },
+                GradientColor1: { type: 'string', pattern: '^#[0-9A-Fa-f]{6}$', nullable: true, example: '#12193A' },
+                GradientColor2: { type: 'string', pattern: '^#[0-9A-Fa-f]{6}$', nullable: true, example: '#0D3B6E' },
                 GradientAngle:  { type: 'integer', nullable: true },
                 ImageUrl:       { type: 'string', nullable: true },
               },
@@ -151,7 +158,7 @@ const options = {
               description: 'null when legal text is disabled on the promotion.',
               properties: {
                 Text:  { type: 'string' },
-                Color: { type: 'string' },
+                Color: { type: 'string', pattern: '^#[0-9A-Fa-f]{6}$', example: '#90A4AE' },
                 Link:  { type: 'string' },
                 Regulatory_Logos: {
                   type: 'array',
@@ -179,14 +186,19 @@ const options = {
           type: 'object',
           properties: {
             BMID:                { type: 'integer' },
-            Section_BG_Color:    { type: 'string' },
+            Section_BG_Color:    { type: 'string', pattern: '^#[0-9A-Fa-f]{6}$', example: '#1A2340' },
             Title_Text:          { type: 'string' },
-            Title_Text_Color:    { type: 'string' },
+            Title_Text_Color:    { type: 'string', pattern: '^#[0-9A-Fa-f]{6}$', example: '#FFFFFF' },
             Subtitle_Text:       { type: 'string', nullable: true },
-            Subtitle_Text_Color: { type: 'string', nullable: true },
+            Subtitle_Text_Color: { type: 'string', pattern: '^#[0-9A-Fa-f]{6}$', nullable: true, example: '#999999' },
             CTA_Text:            { type: 'string' },
-            CTA_Text_Color:      { type: 'string' },
-            Strip_Colors:        { type: 'array', items: { type: 'string' }, maxItems: 2 },
+            CTA_Text_Color:      { type: 'string', pattern: '^#[0-9A-Fa-f]{6}$', example: '#FFFFFF' },
+            Strip_Colors:        {
+              type: 'array',
+              items: { type: 'string', pattern: '^#[0-9A-Fa-f]{6}$' },
+              maxItems: 2,
+              example: ['#027B5B', '#03A678'],
+            },
             Click_URL:           { type: 'string' },
           },
         },
@@ -194,7 +206,12 @@ const options = {
           type: 'object',
           properties: {
             Text:  { type: 'string' },
-            Color: { type: 'string', example: '#ffffff' },
+            Color: {
+              type: 'string',
+              pattern: '^#[0-9A-Fa-f]{6}$',
+              example: '#FFFFFF',
+              description: 'Always uppercase #RRGGBB hex.',
+            },
           },
         },
 
@@ -271,10 +288,10 @@ const options = {
             titleText:      { type: 'string' },
             titleTextColor: { type: 'string', default: '#ffffff' },
             subtitleText:      { type: 'string', nullable: true },
-            subtitleTextColor: { type: 'string', nullable: true, default: 'rgba(255,255,255,0.6)' },
+            subtitleTextColor: { type: 'string', nullable: true, default: '#999999', pattern: '^#[0-9A-Fa-f]{6}$' },
             ctaText:        { type: 'string' },
-            ctaTextColor:   { type: 'string', default: '#ffffff' },
-            stripColors:    { type: 'array', items: { type: 'string' }, maxItems: 2 },
+            ctaTextColor:   { type: 'string', default: '#FFFFFF', pattern: '^#[0-9A-Fa-f]{6}$' },
+            stripColors:    { type: 'array', items: { type: 'string', pattern: '^#[0-9A-Fa-f]{6}$' }, maxItems: 2 },
             logoImageUrl:   { type: 'string', nullable: true },
             clickUrl:       { type: 'string' },
           },

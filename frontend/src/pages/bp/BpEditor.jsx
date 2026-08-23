@@ -105,7 +105,7 @@ function ColField({ label, help, value, onChange }) {
 
 function BookiePreviewCard({ bookie, index, bookmakerOptions }) {
   const stripBg = (bookie.stripColors || [])[0] || bookmakerBrandColor(bookie.bmid, bookmakerOptions) || '#333333';
-  const contentBg = bookie.sectionBgColor || 'rgba(0,0,0,0.55)';
+  const contentBg = bookie.sectionBgColor || '#000000';
   const logoSrc = bookie.logoImageUrl || bookmakerLogoUrl(bookie.bmid);
 
   return (
@@ -143,7 +143,7 @@ function BookiePreviewCard({ bookie, index, bookmakerOptions }) {
           {bookie.titleText || `Bonus Offer ${index + 1}`}
         </Typography>
         {bookie.subtitleText && (
-          <Typography fontSize={nativePx(20)} fontWeight={400} color={bookie.subtitleTextColor || 'rgba(255,255,255,0.65)'}
+          <Typography fontSize={nativePx(20)} fontWeight={400} color={bookie.subtitleTextColor || '#A6A6A6'}
             lineHeight={1.4} mb={0.25}>
             {bookie.subtitleText}
           </Typography>
@@ -226,7 +226,7 @@ function InterstitialPreview({ form, bookmakerOptions }) {
           letterSpacing="0.01em">
           {header.mainTitle?.text || 'Biggest Signup Bonus'}
         </Typography>
-        <Typography fontSize={nativePx(32)} fontWeight={400} color={header.secondaryTitle?.color || 'rgba(255,255,255,0.8)'} mt={0.4} mb={1}>
+        <Typography fontSize={nativePx(32)} fontWeight={400} color={header.secondaryTitle?.color || '#CCCCCC'} mt={0.4} mb={1}>
           {header.secondaryTitle?.text || 'Compare Offers & Claim Your Bonus'}
         </Typography>
       </Box>
@@ -241,7 +241,7 @@ function InterstitialPreview({ form, bookmakerOptions }) {
         {legal?.enabled && (
           <Box sx={{ pt: 0.75, borderTop: '1px solid rgba(255,255,255,0.08)', flexShrink: 0, display: 'flex', alignItems: 'center', gap: 0.5 }}>
             <Age18PlusBadge size={17} />
-            <Typography fontSize="0.56rem" color={legal.color || 'rgba(255,255,255,0.4)'} lineHeight={1.4} sx={{ flex: 1 }}>
+            <Typography fontSize="0.56rem" color={legal.color || '#666666'} lineHeight={1.4} sx={{ flex: 1 }}>
               {legal.text || 'Gamble responsibly'}
             </Typography>
             {isItalyCid(cid) && (
@@ -323,7 +323,7 @@ function BookieSection({ index, bookie, onChange, bookmakerOptions, descriptionE
             sx={{ '& .MuiOutlinedInput-root': { fontSize: '0.82rem' } }}
           />
         </Field>
-        <ColField label="Description text colour" value={bookie.subtitleTextColor || 'rgba(255,255,255,0.6)'}
+        <ColField label="Description text colour" value={bookie.subtitleTextColor || '#999999'}
           onChange={(v) => set('subtitleTextColor', v)} />
         <Field label="CTA text">
           <TextField size="small" fullWidth value={bookie.ctaText || ''}
@@ -352,8 +352,8 @@ function BookieSection({ index, bookie, onChange, bookmakerOptions, descriptionE
 // ── Default form state ────────────────────────────────────────────────────────
 
 const DEFAULT_BOOKIE = { position: 0, bmid: '', sectionBgColor: '#12193A',
-  titleText: '', titleTextColor: '#ffffff',
-  subtitleText: '', subtitleTextColor: 'rgba(255,255,255,0.6)', ctaText: '', ctaTextColor: '#ffffff',
+  titleText: '', titleTextColor: '#FFFFFF',
+  subtitleText: '', subtitleTextColor: '#999999', ctaText: '', ctaTextColor: '#FFFFFF',
   stripColors: ['', '#000000'], logoImageUrl: '', clickUrl: '' };
 
 const DEFAULT_FORM = {
@@ -395,7 +395,7 @@ const DEFAULT_FORM = {
 function promoToForm(promo) {
   const bookies = [1, 2, 3].map((pos) => {
     const found = promo.bookies?.find((b) => b.position === pos);
-    return found ? { subtitleTextColor: 'rgba(255,255,255,0.6)', ...found } : { ...DEFAULT_BOOKIE, position: pos };
+    return found ? { subtitleTextColor: '#999999', ...found } : { ...DEFAULT_BOOKIE, position: pos };
   });
   return {
     name: promo.name || '',
