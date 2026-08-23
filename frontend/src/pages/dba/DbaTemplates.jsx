@@ -20,7 +20,7 @@ import CreativeTemplateCodeDialog from '../../components/dba/CreativeTemplateCod
 import apiService from '../../services/api';
 import { DBA_COUNTRIES } from '../../data/dbaData';
 import { StatusPill, LogoThumb } from '../../components/dba/DbaPrimitives';
-import { relTime, bgCss, SIZE_DIMS, bookmakerLogoUrl } from '../../components/dba/dbaUtils';
+import { relTime, bgCss, SIZE_DIMS, bookmakerLogoUrl, isInterstitialSize } from '../../components/dba/dbaUtils';
 import AdPreview from '../../components/dba/AdPreview';
 
 // Compact list of country flags + names, with overflow "+N" tail.
@@ -162,7 +162,7 @@ export default function DbaTemplates() {
         <FormControl size="small"><Select value={sizeFilter} onChange={(e) => setSizeFilter(e.target.value)} sx={{ minWidth: 180 }}>
           <MenuItem value="all">All sizes</MenuItem>
           <MenuItem value="300x250">MPU · 300×250</MenuItem>
-          <MenuItem value="640x1280">Interstitial · 640×1280</MenuItem>
+          <MenuItem value="320x480">Interstitial · 320×480</MenuItem>
           <MenuItem value="320x50">Banner · 320×50</MenuItem>
         </Select></FormControl>
         <FormControl size="small"><Select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} sx={{ minWidth: 160 }}>
@@ -203,7 +203,7 @@ export default function DbaTemplates() {
         <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 2 }}>
           {filtered.map((tpl) => {
             const [pw, ph] = SIZE_DIMS[tpl.sizeId] || [300, 250];
-            const previewScale = tpl.sizeId === '640x1280' ? 0.14
+            const previewScale = isInterstitialSize(tpl.sizeId) ? 0.28
               : tpl.sizeId === '320x50' ? 0.85
               : 0.7;
             const bm = bmForTemplate(tpl);

@@ -2,6 +2,7 @@
 const { bgCss, invertText, resolveLogoUrl, resolveDatePillBg, resolveDatePillFg } = require('../utils/dbaStyle');
 const { brazilDefaultLegalText, BRAZIL_LEGAL_FALLBACK_TEXT, LEGAL_BAND_BG_DEFAULT } = require('../utils/brazilLegal');
 const { countryToLangId } = require('../routes/_dbaLang');
+const { placementForSize } = require('../utils/dbaSizes');
 
 const CID_FOR_COUNTRY = {
   AR: 10, BR: 21, CL: 28, CO: 109, EC: 51, MX: 31, PE: 112, PL: 37,
@@ -22,7 +23,7 @@ function buildFeedUrl({ country, bmid, cmsLangId, sizeId, feedBaseUrl }) {
   const cidNumeric = CID_FOR_COUNTRY[country];
   const cidParam = cidNumeric != null ? cidNumeric : country;
   const lang = feedLangForCountry(country, cmsLangId);
-  const placment = ({ '300x250': 'MPU', '320x50': 'Banner', '640x1280': 'Interstitial' })[sizeId] || 'Interstitial';
+  const placment = placementForSize(sizeId);
   return `${base}/GetPayload?cid=${encodeURIComponent(cidParam)}&bmid=${bmid}&lang=${lang}&placment=${placment}`;
 }
 

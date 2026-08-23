@@ -8,6 +8,7 @@
 const fs = require('fs');
 const path = require('path');
 const { mergeInlineValues, validateBakedSnippet, validateFeedUrl } = require('./previewAlign');
+const { isInterstitialSize } = require('../utils/dbaSizes');
 
 const TEMPLATES_DIR = path.join(__dirname, 'templates');
 
@@ -18,6 +19,7 @@ function templateFileFor(dbaTemplate) {
   const hasWelcome = !!(dbaTemplate.config && dbaTemplate.config.welcomeOffer && dbaTemplate.config.welcomeOffer.enabled);
   const map = {
     '300x250':       hasWelcome ? 'mpu-welcome.html'          : 'mpu-standard.html',
+    '320x480':       hasWelcome ? 'interstitial-welcome.html' : 'interstitial-standard.html',
     '640x1280':      hasWelcome ? 'interstitial-welcome.html' : 'interstitial-standard.html',
     '320x50':        hasWelcome ? 'banner-welcome.html'       : 'banner.html',
   };
@@ -310,7 +312,7 @@ function buildCreativeTemplate(dbaTemplate, options = {}) {
     bakeValidation,
     bakedInline: inline,
     // Layout flags GAM exposes on the template record itself:
-    isInterstitial: dbaTemplate.sizeId === '640x1280',
+    isInterstitial: isInterstitialSize(dbaTemplate.sizeId),
     isNativeEligible: false,
     isSafeFrameCompatible: true,
   };

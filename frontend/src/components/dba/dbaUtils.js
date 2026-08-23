@@ -84,7 +84,25 @@ export function fmtUptime(s) {
   return `${m}m`;
 }
 
-export const SIZE_DIMS = { '300x250': [300, 250], '640x1280': [640, 1280], '320x50': [320, 50] };
+/** Canonical interstitial size (AdOps GAM inventory). Legacy `640x1280` aliases to the same dims. */
+export const INTERSTITIAL_SIZE_ID = '320x480';
+export const INTERSTITIAL_SIZE_ALIASES = new Set(['320x480', '640x1280']);
+
+export function isInterstitialSize(sizeId) {
+  return INTERSTITIAL_SIZE_ALIASES.has(sizeId);
+}
+
+export function normalizeSizeId(sizeId) {
+  if (sizeId === '640x1280') return INTERSTITIAL_SIZE_ID;
+  return sizeId;
+}
+
+export const SIZE_DIMS = {
+  '300x250': [300, 250],
+  '320x480': [320, 480],
+  '640x1280': [320, 480], // migration alias → AdOps 320×480
+  '320x50': [320, 50],
+};
 
 /** Default fill used only when the editor's "Date pill fill" toggle is on. */
 export const DATE_PILL_FILL_DEFAULT = 'rgba(0,0,0,0.55)';

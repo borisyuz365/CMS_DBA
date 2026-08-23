@@ -1,5 +1,6 @@
 <!--
-  GAM Creative Template — Interstitial Welcome Offer (640×1280).
+  GAM Creative Template — Interstitial Welcome Offer (320×480 fluid, AdOps 2∶3).
+  Shell fills SafeFrame width; height = width × 1.5. Layout uses em tied to shell width.
   Legal footer is outside the click <a> (nested anchors break GAM preview).
 -->
 <!DOCTYPE html>
@@ -7,13 +8,15 @@
 <head>
 <meta charset="utf-8" />
 <style>
-  html, body { margin: 0; padding: 0; }
+  html, body { margin: 0; padding: 0; width: 100%; height: 100%; }
   .ad-shell {
-    width: 640px; height: 1280px;
+    width: 100%;
+    height: 100%;
     position: relative;
     border-radius: [[ad_border_radius]];
     overflow: hidden;
     box-sizing: border-box;
+    font-size: 5vw;
   }
   .ad {
     width: 100%; height: 100%;
@@ -21,12 +24,12 @@
     color: [[brand_color_2_or_white]];
     font-family: [[ad_font_family]];
     box-sizing: border-box;
-    padding: 64px 56px 80px;
+    padding: 1em 0.9em 2.5em;
     display: flex; flex-direction: column;
     text-decoration: none;
   }
   .ad-shell.legal-band .ad {
-    padding: 64px 56px 128px;
+    padding: 1em 0.9em 3.2em;
   }
   .ad-shell.legal-band .ad .copy { flex: 0 0 auto; }
   /* Welcome interstitial: CTA stays in normal flow (never MPU absolute bottom). */
@@ -44,75 +47,82 @@
     left: auto; right: auto; bottom: auto;
     margin-top: 0;
   }
-  .ad-shell.legal-band .ad .terms { margin-top: 20px; }
+  .ad-shell.legal-band .ad .terms { margin-top: 0.5em; }
 
   .ad .logo-wrap {
     display: flex; align-items: center; justify-content: center;
-    margin-top: 46px; margin-bottom: 20px;
+    margin-top: 0.6em; margin-bottom: 0.4em;
+    flex-shrink: 0;
   }
   .ad .logo {
-    width: 181px; height: 181px;
+    width: 22.5%;
+    aspect-ratio: 1;
+    height: auto;
     background-image: url('[[bookmaker_logo_url]]');
     background-size: contain; background-repeat: no-repeat;
     background-position: center;
-    border-radius: 24px;
+    border-radius: 0.75em;
   }
   .ad .pill-wrap {
-    display: flex; justify-content: center; margin-bottom: 32px;
+    display: flex; justify-content: center; margin-bottom: 0.6em;
+    flex-shrink: 0;
   }
   .ad .pill {
-    padding: 10px 24px; border-radius: 999px;
+    padding: 0.3em 0.7em; border-radius: 999px;
     background: #FFC107; color: #0A0A0A;
-    font-size: 22px; font-weight: 800;
+    font-size: 0.65em; font-weight: 800;
     letter-spacing: 0.08em; text-indent: 0.08em;
     text-transform: uppercase; text-align: center;
   }
   .ad .copy {
     flex: 1;
     display: flex; flex-direction: column;
-    justify-content: center; gap: 40px;
+    justify-content: center; gap: 0.6em;
     text-align: center; min-height: 0;
   }
   .ad .copy .head {
-    font-size: 108px; font-weight: 800;
+    font-size: 2.2em; font-weight: 800;
     line-height: 0.98; letter-spacing: -0.03em;
   }
   .ad .copy .sub {
-    font-size: 36px; opacity: 0.85;
+    font-size: 0.85em; opacity: 0.85;
     line-height: 1.25; font-weight: 500;
   }
   .ad .cta {
     background: [[cta_bg_color]];
     color: [[cta_text_color]];
-    border: none; height: 104px; margin-top: 32px;
+    border: none;
+    height: 2.75em;
+    margin-top: 0.75em;
     position: relative;
-    border-radius: 24px;
-    font-size: 36px; font-weight: 800;
+    border-radius: 0.75em;
+    font-size: 1em;
+    font-weight: 800;
     cursor: pointer;
     font-family: inherit;
     letter-spacing: 0.01em;
     display: flex; align-items: center; justify-content: center;
   }
   .ad .terms {
-    margin-top: 20px;
-    font-size: 18px; opacity: 0.55;
+    margin-top: 0.5em;
+    font-size: 0.5em; opacity: 0.55;
     text-align: center; line-height: 1.3;
   }
 
   .ad-shell .legal { pointer-events: none; z-index: 10; }
   .ad-shell .legal.legal-hidden { display: none; }
   .ad-shell .legal.legal-strip {
-    position: absolute; left: 56px; right: 56px; bottom: 20px;
+    position: absolute; left: 0.9em; right: 0.9em; bottom: 0.5em;
     display: flex; justify-content: space-between; align-items: center;
-    font-size: 16px; opacity: 0.85;
+    font-size: 0.5em; opacity: 0.85;
     color: [[legal_text_color]];
   }
-  .ad-shell .legal.legal-strip .marks { display: inline-flex; align-items: center; gap: 8px; }
+  .ad-shell .legal.legal-strip .marks { display: inline-flex; align-items: center; gap: 0.35em; }
   .ad-shell .legal.legal-strip .age18 {
     display: inline-flex; align-items: center; justify-content: center;
-    width: 31px; height: 31px; border-radius: 50%;
+    width: 1.2em; height: 1.2em; border-radius: 50%;
     background: #0A0A0A; color: #FFFFFF;
-    font-size: 15px; font-weight: 800; line-height: 1;
+    font-size: 0.85em; font-weight: 800; line-height: 1;
     letter-spacing: -0.06em; padding-left: 0.5px;
     flex-shrink: 0;
   }
@@ -122,22 +132,22 @@
   }
   .ad-shell .legal.legal-band {
     position: absolute; left: 0; right: 0; bottom: 0;
-    height: 10%; min-height: 128px;
+    height: 10%; min-height: 2.5em;
     display: flex; align-items: center; justify-content: flex-start;
-    gap: 12px;
+    gap: 0.4em;
     box-sizing: border-box;
-    padding: 8px 24px;
+    padding: 0.25em 0.6em;
     background: [[disclaimer_bg_color]];
     color: [[legal_text_color]];
-    font-size: 20px; font-weight: 700; line-height: 1.2;
+    font-size: 0.55em; font-weight: 700; line-height: 1.2;
     text-align: left;
   }
   .ad-shell .legal.legal-band .marks { display: inline-flex; align-items: center; flex-shrink: 0; }
   .ad-shell .legal.legal-band .age18 {
     display: inline-flex; align-items: center; justify-content: center;
-    width: 31px; height: 31px; border-radius: 50%;
+    width: 1.4em; height: 1.4em; border-radius: 50%;
     background: #0A0A0A; color: #FFFFFF;
-    font-size: 15px; font-weight: 800; line-height: 1;
+    font-size: 0.9em; font-weight: 800; line-height: 1;
     letter-spacing: -0.06em; padding-left: 0.5px;
   }
   .ad-shell .legal.legal-band .text {
@@ -172,5 +182,22 @@
       <span class="text">[[disclaimer_text]]</span>
     </div>
   </div>
+  <script>
+  (function () {
+    var RATIO = 1.5;
+    function fit() {
+      var shell = document.querySelector('.ad-shell');
+      if (!shell) return;
+      var w = shell.clientWidth || (shell.parentElement && shell.parentElement.clientWidth) || window.innerWidth || 320;
+      if (w < 1) w = 320;
+      shell.style.width = '100%';
+      shell.style.height = (w * RATIO) + 'px';
+      shell.style.fontSize = (w / 20) + 'px';
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fit);
+    else fit();
+    window.addEventListener('resize', fit);
+  })();
+  </script>
 </body>
 </html>

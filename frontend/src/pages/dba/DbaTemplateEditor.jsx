@@ -27,7 +27,7 @@ import CreativeTemplateCodeDialog from '../../components/dba/CreativeTemplateCod
 import apiService from '../../services/api';
 import AdPreview from '../../components/dba/AdPreview';
 import { StatusPill, LogoThumb, Toggle } from '../../components/dba/DbaPrimitives';
-import { invertText, SIZE_DIMS, resolveLogoUrl, bookmakerLogoUrl, autoLogoReason, brazilDefaultLegalText } from '../../components/dba/dbaUtils';
+import { invertText, SIZE_DIMS, resolveLogoUrl, bookmakerLogoUrl, autoLogoReason, brazilDefaultLegalText, isInterstitialSize } from '../../components/dba/dbaUtils';
 
 const DEFAULT_CONFIG = {
   bg: '#151E22', text: '#FFFFFF', cta: '#1976D2', ctaText: 'Bet Now',
@@ -132,7 +132,7 @@ function DbaTemplateEditorInner({ initial, allBookmakers, isNew }) {
     }
   };
 
-  const matchesPerSlide = previewSize === '640x1280' ? 3 : previewSize === '320x50' ? 1 : 2;
+  const matchesPerSlide = isInterstitialSize(previewSize) ? 3 : previewSize === '320x50' ? 1 : 2;
   const matchSlideCount = Math.max(1, Math.ceil(DBA_SAMPLE_MATCHES.length / matchesPerSlide));
   const hasWelcome = !!config?.welcomeOffer?.enabled;
   const totalSlides = (hasWelcome ? 1 : 0) + matchSlideCount;
@@ -157,7 +157,7 @@ function DbaTemplateEditorInner({ initial, allBookmakers, isNew }) {
 
   useEffect(() => {
     if (!playing) return;
-    const interval = previewSize === '640x1280' ? 3500 : 3000;
+    const interval = isInterstitialSize(previewSize) ? 3500 : 3000;
     const tid = setInterval(() => {
       // Advance the visual position past the last real slide onto the clone,
       // and bump the logical slideIdx straight to its wrapped successor so
@@ -248,7 +248,7 @@ function DbaTemplateEditorInner({ initial, allBookmakers, isNew }) {
     translations,
     // size label kept for display compatibility on the list screen
     size: previewSize === '300x250' ? 'MPU · 300×250'
-        : previewSize === '640x1280' ? 'Interstitial · 640×1280'
+        : isInterstitialSize(previewSize) ? 'Interstitial · 320×480'
         : 'Banner · 320×50',
     modifiedBy: 'D. Benvelgy',
   });
@@ -412,7 +412,7 @@ function DbaTemplateEditorInner({ initial, allBookmakers, isNew }) {
                 <FormControl size="small" fullWidth>
                   <Select value={previewSize} onChange={(e) => setPreviewSize(e.target.value)}>
                     <MenuItem value="300x250">MPU · 300×250</MenuItem>
-                    <MenuItem value="640x1280">Interstitial · 640×1280</MenuItem>
+                    <MenuItem value="320x480">Interstitial · 320×480</MenuItem>
                     <MenuItem value="320x50">Banner · 320×50</MenuItem>
                   </Select>
                 </FormControl>
@@ -842,7 +842,7 @@ function DbaTemplateEditorInner({ initial, allBookmakers, isNew }) {
             {/* Toolbar: size + carousel controls + bookmaker */}
             <Box sx={{ position: 'absolute', top: 16, left: 16, right: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 1.5 }}>
               <Box sx={{ display: 'flex', gap: 0.5, p: 0.5, bgcolor: 'rgba(255,255,255,0.95)', borderRadius: 1, boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
-                {[{ v: '300x250', l: 'MPU' }, { v: '640x1280', l: 'Interstitial' }, { v: '320x50', l: 'Banner' }].map((opt) => {
+                {[{ v: '300x250', l: 'MPU' }, { v: '320x480', l: 'Interstitial' }, { v: '320x50', l: 'Banner' }].map((opt) => {
                   const active = previewSize === opt.v;
                   return (
                     <Box key={opt.v} onClick={() => setPreviewSize(opt.v)}

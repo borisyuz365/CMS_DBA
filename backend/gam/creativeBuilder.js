@@ -13,6 +13,7 @@ const { countryToLangId, getByPath, TRANSLATABLE_PATHS, termIdPathFor } =
 const { resolveTerm, findTerm } = require('../routes/_dbaTerms');
 const { INLINE_VARIABLE_NAMES } = require('./templateBuilder');
 const { buildPreviewInlineValues, CID_FOR_COUNTRY } = require('./previewAlign');
+const { normalizeSizeId } = require('../utils/dbaSizes');
 
 // Pull a translated value for a given field path. If the template has a
 // *TermId reference at that path, resolve it for the requested language.
@@ -71,7 +72,8 @@ function toNoBgBookmakerLogo(url) {
 // Convert a CMS size id ("300x250") into GAM's Size shape.
 function sizeFor(sizeId) {
   if (!sizeId) return null;
-  const [w, h] = sizeId.split('x').map(Number);
+  const normalized = normalizeSizeId(sizeId);
+  const [w, h] = normalized.split('x').map(Number);
   if (!Number.isFinite(w) || !Number.isFinite(h)) return null;
   return { width: w, height: h, isAspectRatio: false };
 }
@@ -125,7 +127,7 @@ function buildCreative({ dbaTemplate, bookmaker, country, variant, bookieSetting
   const affiliate = useContextLink
     ? buildRedirectUrl({
         baseUrl: linkBaseUrl || feedBaseUrl || 'https://cms.365scores.com',
-        bmid, country, languageId: langId, sizeId: dbaTemplate.sizeId,
+        bmid, country, languageId: langId, sizeId: normalizeSizeId(dbaTemplate.sizeId),
       })
     : ((variant && variant.affiliate) || dbaTemplate.config?.affiliate?.url || '');
 

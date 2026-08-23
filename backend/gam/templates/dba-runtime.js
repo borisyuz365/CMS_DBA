@@ -287,20 +287,20 @@
       '.ad-shell.legal-band .matches[data-layout="banner"] .dba-x { font-size: 8.5px; }' +
       '.ad-shell.legal-band .matches[data-layout="banner"] .dba-odds { height: 9px; font-size: 7px; }' +
       '.ad-shell.legal-band .matches[data-layout="banner"] .dba-odd-label { font-size: 5.5px; }' +
-      /* Interstitial (640×1280): large cards, 3 per slide. Mirrors AdPreview
-         MatchRow interstitial metrics. data-layout="interstitial". */ +
-      '.matches[data-layout="interstitial"] .dba-slide { gap: 40px; }' +
+      /* Interstitial (320×480 fluid): denser 2∶3 cards, 3 per slide. em tied to
+         .ad-shell font-size (width/20). data-layout="interstitial". */ +
+      '.matches[data-layout="interstitial"] .dba-slide { gap: 0.5em; }' +
       '.matches[data-layout="interstitial"] .dba-card {' +
-        'border-radius: 36px; padding: 16px 20px 24px; gap: 16px;' +
+        'border-radius: 0.9em; padding: 0.4em 0.55em 0.5em; gap: 0.4em;' +
       '}' +
       '.matches[data-layout="interstitial"] .dba-pill {' +
         'position: static; transform: none; top: auto; left: auto;' +
-        'padding: 0 16px; height: 44px; font-size: 22px;' +
+        'padding: 0 0.5em; height: 1.2em; font-size: 0.7em;' +
       '}' +
       '.matches[data-layout="interstitial"] .dba-teams {' +
-        'gap: 0; margin-top: 0; font-size: 30px; align-items: center;' +
+        'gap: 0; margin-top: 0; font-size: 0.85em; align-items: center;' +
       '}' +
-      '.matches[data-layout="interstitial"] .dba-teamblock { gap: 10px; }' +
+      '.matches[data-layout="interstitial"] .dba-teamblock { gap: 0.3em; }' +
       /* Wrap at spaces (max 2 lines). Do not split a single word like Fluminense. */ +
       '.matches[data-layout="interstitial"] .dba-team-name {' +
         'display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;' +
@@ -308,20 +308,20 @@
         'overflow-wrap: break-word; word-break: normal; line-height: 1.15;' +
       '}' +
       '.matches[data-layout="interstitial"] .dba-team-name-slot { flex: 1 1 auto; overflow: hidden; }' +
-      '.matches[data-layout="interstitial"] .dba-team-logo { width: 73.6px; height: 73.6px; }' +
-      '.matches[data-layout="interstitial"] .dba-x { font-size: 30px; margin: 0 12px; }' +
-      '.matches[data-layout="interstitial"] .dba-odds { margin-top: 0; font-size: 24px; }' +
-      '.matches[data-layout="interstitial"] .dba-odd-slot-home { padding-right: 84px; }' +
-      '.matches[data-layout="interstitial"] .dba-odd-slot-draw { margin: 0 12px; }' +
-      '.matches[data-layout="interstitial"] .dba-odd-slot-away { padding-left: 84px; }' +
-      '.matches[data-layout="interstitial"] .dba-odd { gap: 8px; }' +
-      '.matches[data-layout="interstitial"] .dba-odd-label { font-size: 16px; }' +
-      /* Interstitial + Brazil: keep 640×1280 flex column (matches grow, CTA
+      '.matches[data-layout="interstitial"] .dba-team-logo { width: 2.1em; height: 2.1em; }' +
+      '.matches[data-layout="interstitial"] .dba-x { font-size: 0.85em; margin: 0 0.35em; }' +
+      '.matches[data-layout="interstitial"] .dba-odds { margin-top: 0; font-size: 0.7em; }' +
+      '.matches[data-layout="interstitial"] .dba-odd-slot-home { padding-right: 2.5em; }' +
+      '.matches[data-layout="interstitial"] .dba-odd-slot-draw { margin: 0 0.35em; }' +
+      '.matches[data-layout="interstitial"] .dba-odd-slot-away { padding-left: 2.5em; }' +
+      '.matches[data-layout="interstitial"] .dba-odd { gap: 0.25em; }' +
+      '.matches[data-layout="interstitial"] .dba-odd-label { font-size: 0.5em; }' +
+      /* Interstitial + Brazil: keep fluid flex column (matches grow, CTA
          in normal flow). Must win over any leftover MPU legal-band rules. */ +
       '.ad-shell.legal-band .matches[data-layout="interstitial"] {' +
-        'flex: 1 1 auto; min-height: 0; margin-bottom: 0; padding-top: 8px; overflow: hidden;' +
+        'flex: 1 1 auto; min-height: 0; margin-bottom: 0; padding-top: 0.25em; overflow: hidden;' +
       '}' +
-      '.ad-shell.legal-band .matches[data-layout="interstitial"] .dba-slide { gap: 32px; }' +
+      '.ad-shell.legal-band .matches[data-layout="interstitial"] .dba-slide { gap: 0.4em; }' +
       '.ad-shell.legal-band .matches[data-layout="interstitial"] ~ .cta-zone {' +
         'flex: 0 0 auto; position: relative;' +
       '}' +
@@ -341,9 +341,9 @@
       '.ad .dba-dots[data-layout="mpu"] .dba-dot-active { width: 9.6px; }' +
       /* MPU-only absolute CTA (sibling of .ad-stack). Interstitial uses .cta-zone. */ +
       '.ad-shell.legal-band .ad-stack ~ .cta { position: absolute; left: 12px; right: 12px; bottom: 43px; margin-top: 0; z-index: 2; }' +
-      '.ad .dba-dots[data-layout="interstitial"] { height: 24px; margin-top: 24px; gap: 12px; }' +
-      '.ad .dba-dots[data-layout="interstitial"] .dba-dot { height: 10px; width: 10px; }' +
-      '.ad .dba-dots[data-layout="interstitial"] .dba-dot-active { width: 24px; }' +
+      '.ad .dba-dots[data-layout="interstitial"] { height: 0.75em; margin-top: 0.5em; gap: 0.35em; }' +
+      '.ad .dba-dots[data-layout="interstitial"] .dba-dot { height: 0.35em; width: 0.35em; }' +
+      '.ad .dba-dots[data-layout="interstitial"] .dba-dot-active { width: 0.75em; }' +
       '.ad-shell.legal-band .ad .dba-dots[data-layout="interstitial"] { margin-top: 0; }';
     var s = el('style', { id: 'dba-runtime-styles' });
     s.textContent = css;
