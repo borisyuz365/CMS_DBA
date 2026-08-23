@@ -51,7 +51,7 @@ function templateRowToJson(row, countries = []) {
   // Legacy interstitial id 640x1280 → AdOps inventory 320x480 (fluid 2∶3).
   const sizeId = normalizeSizeId(row.size_id);
   const sizeLabel = sizeId === INTERSTITIAL_SIZE_ID
-    ? 'Interstitial · 320×480'
+    ? 'Interstitial · 640×1280'
     : (row.size_label || sizeId);
   return {
     id: row.id,

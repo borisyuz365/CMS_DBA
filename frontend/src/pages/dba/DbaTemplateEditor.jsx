@@ -27,7 +27,7 @@ import CreativeTemplateCodeDialog from '../../components/dba/CreativeTemplateCod
 import apiService from '../../services/api';
 import AdPreview from '../../components/dba/AdPreview';
 import { StatusPill, LogoThumb, Toggle } from '../../components/dba/DbaPrimitives';
-import { invertText, SIZE_DIMS, resolveLogoUrl, bookmakerLogoUrl, autoLogoReason, brazilDefaultLegalText, isInterstitialSize } from '../../components/dba/dbaUtils';
+import { invertText, SIZE_DIMS, resolveLogoUrl, bookmakerLogoUrl, autoLogoReason, brazilDefaultLegalText, isInterstitialSize, formatSizeLabel, formatSizeShort } from '../../components/dba/dbaUtils';
 
 const DEFAULT_CONFIG = {
   bg: '#151E22', text: '#FFFFFF', cta: '#1976D2', ctaText: 'Bet Now',
@@ -247,9 +247,7 @@ function DbaTemplateEditorInner({ initial, allBookmakers, isNew }) {
     countries,
     translations,
     // size label kept for display compatibility on the list screen
-    size: previewSize === '300x250' ? 'MPU · 300×250'
-        : isInterstitialSize(previewSize) ? 'Interstitial · 320×480'
-        : 'Banner · 320×50',
+    size: formatSizeLabel(previewSize),
     modifiedBy: 'D. Benvelgy',
   });
 
@@ -300,7 +298,7 @@ function DbaTemplateEditorInner({ initial, allBookmakers, isNew }) {
             sx={{ '& input': { px: 1, py: 0.5, borderRadius: 0.5, '&:focus': { bgcolor: '#F5F5F5' } } }}
           />
           <Box sx={{ fontFamily: 'ui-monospace, monospace', fontSize: 12, px: 1, py: 0.5, bgcolor: '#F5F5F5', borderRadius: 0.5 }}>
-            {previewSize}
+            {formatSizeShort(previewSize)}
           </Box>
           <StatusPill kind={initial?.status === 'live' ? 'live' : 'draft'} label={initial?.status === 'live' ? 'Live' : 'Draft'} />
         </Box>
@@ -412,7 +410,7 @@ function DbaTemplateEditorInner({ initial, allBookmakers, isNew }) {
                 <FormControl size="small" fullWidth>
                   <Select value={previewSize} onChange={(e) => setPreviewSize(e.target.value)}>
                     <MenuItem value="300x250">MPU · 300×250</MenuItem>
-                    <MenuItem value="320x480">Interstitial · 320×480</MenuItem>
+                    <MenuItem value="320x480">Interstitial · 640×1280</MenuItem>
                     <MenuItem value="320x50">Banner · 320×50</MenuItem>
                   </Select>
                 </FormControl>

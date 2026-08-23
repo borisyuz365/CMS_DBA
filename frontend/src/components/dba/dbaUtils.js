@@ -106,6 +106,22 @@ export const SIZE_DIMS = {
   '320x50': [320, 50],
 };
 
+/** User-facing size label (preview canvas dims — not GAM inventory). */
+export function formatSizeLabel(sizeId) {
+  const id = normalizeSizeId(sizeId);
+  if (id === '300x250') return 'MPU · 300×250';
+  if (isInterstitialSize(id)) return 'Interstitial · 640×1280';
+  if (id === '320x50') return 'Banner · 320×50';
+  const [w, h] = SIZE_DIMS[id] || [];
+  return w && h ? `${w}×${h}` : String(sizeId || '');
+}
+
+/** Compact WxH for badges — interstitial shows preview canvas, not inventory id. */
+export function formatSizeShort(sizeId) {
+  const [w, h] = SIZE_DIMS[normalizeSizeId(sizeId)] || SIZE_DIMS[sizeId] || [];
+  return w && h ? `${w}×${h}` : String(sizeId || '');
+}
+
 /** Default fill used only when the editor's "Date pill fill" toggle is on. */
 export const DATE_PILL_FILL_DEFAULT = 'rgba(0,0,0,0.55)';
 

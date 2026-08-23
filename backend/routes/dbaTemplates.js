@@ -18,7 +18,7 @@ const router = express.Router();
 function withCanonicalSize(tpl) {
   const sizeId = normalizeSizeId(tpl.sizeId);
   const size = sizeId === INTERSTITIAL_SIZE_ID
-    ? 'Interstitial · 320×480'
+    ? 'Interstitial · 640×1280'
     : (tpl.size || sizeId);
   return { ...tpl, sizeId, size };
 }

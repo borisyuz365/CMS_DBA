@@ -20,7 +20,7 @@ import CreativeTemplateCodeDialog from '../../components/dba/CreativeTemplateCod
 import apiService from '../../services/api';
 import { DBA_COUNTRIES } from '../../data/dbaData';
 import { StatusPill, LogoThumb } from '../../components/dba/DbaPrimitives';
-import { relTime, bgCss, SIZE_DIMS, bookmakerLogoUrl, isInterstitialSize } from '../../components/dba/dbaUtils';
+import { relTime, bgCss, SIZE_DIMS, bookmakerLogoUrl, isInterstitialSize, formatSizeLabel } from '../../components/dba/dbaUtils';
 import AdPreview from '../../components/dba/AdPreview';
 
 // Compact list of country flags + names, with overflow "+N" tail.
@@ -162,7 +162,7 @@ export default function DbaTemplates() {
         <FormControl size="small"><Select value={sizeFilter} onChange={(e) => setSizeFilter(e.target.value)} sx={{ minWidth: 180 }}>
           <MenuItem value="all">All sizes</MenuItem>
           <MenuItem value="300x250">MPU · 300×250</MenuItem>
-          <MenuItem value="320x480">Interstitial · 320×480</MenuItem>
+          <MenuItem value="320x480">Interstitial · 640×1280</MenuItem>
           <MenuItem value="320x50">Banner · 320×50</MenuItem>
         </Select></FormControl>
         <FormControl size="small"><Select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} sx={{ minWidth: 160 }}>
@@ -218,7 +218,7 @@ export default function DbaTemplates() {
                     <AdPreview config={tpl.config} sizeId={tpl.sizeId} bookmaker={bm} scale={previewScale} />
                   </Box>
                   <Box sx={{ position: 'absolute', top: 8, left: 8, bgcolor: 'rgba(255,255,255,0.95)', borderRadius: 0.5, px: 1, py: 0.25, fontSize: 11, fontFamily: 'ui-monospace, monospace', fontWeight: 500 }}>
-                    {tpl.size}
+                    {formatSizeLabel(tpl.sizeId) || tpl.size}
                   </Box>
                 </Box>
                 <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 1.25 }}>
@@ -296,7 +296,7 @@ export default function DbaTemplates() {
                       </Stack>
                     </TableCell>
                     <TableCell><CountryChips codes={tpl.countries} max={5} /></TableCell>
-                    <TableCell><Box component="span" sx={{ fontFamily: 'ui-monospace, monospace', fontSize: 13 }}>{tpl.size}</Box></TableCell>
+                    <TableCell><Box component="span" sx={{ fontFamily: 'ui-monospace, monospace', fontSize: 13 }}>{formatSizeLabel(tpl.sizeId) || tpl.size}</Box></TableCell>
                     <TableCell><StatusPill kind={tpl.status === 'live' ? 'live' : 'draft'} label={tpl.status === 'live' ? 'Live' : 'Draft'} /></TableCell>
                     <TableCell>
                       <Typography sx={{ fontSize: 13 }}>{relTime(tpl.modified)}</Typography>

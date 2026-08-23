@@ -181,7 +181,7 @@ export const DBA_BOOKMAKERS = [
 
 export const DBA_AD_SIZES = [
   { id: '300x250',  kind: 'MPU',          label: 'MPU · 300×250',          short: '300×250',  w: 300, h: 250 },
-  { id: '320x480', kind: 'Interstitial', label: 'Interstitial · 320×480', short: '320×480', w: 320, h: 480 },
+  { id: '320x480', kind: 'Interstitial', label: 'Interstitial · 640×1280', short: '640×1280', w: 640, h: 1280 },
   { id: '320x50',   kind: 'Banner',       label: 'Banner · 320×50',         short: '320×50',   w: 320, h: 50 },
 ];
 
@@ -190,7 +190,7 @@ export const DBA_TEMPLATES = [
   { id: 'tpl_mpu_v3', name: 'MPU Standard', sizeId: '300x250', size: 'MPU · 300×250', status: 'live',
     modified: '2026-04-30T10:30:00Z', modifiedBy: 'D. Benvelgy', bookmakerId: 'bk_14', // Bet365
     config: { bg: '#151E22', text: '#FFFFFF', cta: '#1976D2', ctaText: 'Bet Now', radius: 8, oddsFormat: 'decimal' } },
-  { id: 'tpl_interstitial_v2', name: 'Interstitial Match Promo', sizeId: '320x480', size: 'Interstitial · 320×480', status: 'live',
+  { id: 'tpl_interstitial_v2', name: 'Interstitial Match Promo', sizeId: '320x480', size: 'Interstitial · 640×1280', status: 'live',
     modified: '2026-04-29T15:45:00Z', modifiedBy: 'M. Cohen', bookmakerId: 'bk_4', // BWIN
     config: { bg: '#0B1419', text: '#FFFFFF', cta: '#FFCC00', ctaText: 'Bet Now', radius: 16, oddsFormat: 'decimal' } },
   { id: 'tpl_banner_v1', name: 'Mobile Banner', sizeId: '320x50', size: 'Banner · 320×50', status: 'live',
@@ -204,7 +204,7 @@ export const DBA_TEMPLATES = [
   { id: 'tpl_mpu_minimal', name: 'MPU Minimal', sizeId: '300x250', size: 'MPU · 300×250', status: 'draft',
     modified: '2026-04-26T17:30:00Z', modifiedBy: 'D. Benvelgy', bookmakerId: 'bk_42', // Betsson
     config: { bg: '#FAFAFA', text: '#0A0A0A', cta: '#2E7D32', ctaText: 'Bet Now', radius: 4, oddsFormat: 'american' } },
-  { id: 'tpl_interstitial_welcome', name: 'Interstitial Welcome Bonus', sizeId: '320x480', size: 'Interstitial · 320×480',
+  { id: 'tpl_interstitial_welcome', name: 'Interstitial Welcome Bonus', sizeId: '320x480', size: 'Interstitial · 640×1280',
     status: 'draft', modified: '2026-04-24T11:15:00Z', modifiedBy: 'M. Cohen', bookmakerId: 'bk_14', // Bet365
     config: { bg: '#1976D2', text: '#FFFFFF', cta: '#FFCC00', ctaText: 'Claim £30 Bonus', radius: 20, oddsFormat: 'decimal',
       welcomeOffer: { enabled: true, headline: 'Get £30 in Free Bets', subtext: 'Bet £10 · Get £30 in Free Bets',

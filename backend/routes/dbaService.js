@@ -134,7 +134,7 @@ router.post('/migrate-interstitial-size', async (req, res, next) => {
     const [result] = await pool.query(
       `UPDATE dba_templates
           SET size_id = '320x480',
-              size_label = 'Interstitial · 320×480',
+              size_label = 'Interstitial · 640×1280',
               modified = ?,
               modified_by = ?
         WHERE size_id = '640x1280'`,
