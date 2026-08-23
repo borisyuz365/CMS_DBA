@@ -341,19 +341,12 @@
       '.ad .dba-dots[data-layout="mpu"] .dba-dot-active { width: 9.6px; }' +
       /* MPU-only absolute CTA (sibling of .ad-stack). Interstitial uses .cta-zone. */ +
       '.ad-shell.legal-band .ad-stack ~ .cta { position: absolute; left: 12px; right: 12px; bottom: 43px; margin-top: 0; z-index: 2; }' +
-      '.ad .dba-dots[data-layout="interstitial"] { height: 0.75em; margin-top: 0.5em; gap: 0.35em; }' +
+      /* Interstitial dots sit in-flow between match cards and the CTA. */ +
+      '.ad .dba-dots[data-layout="interstitial"] { height: 0.75em; margin: 0.5em 0; gap: 0.35em; }' +
       '.ad .dba-dots[data-layout="interstitial"] .dba-dot { height: 0.35em; width: 0.35em; }' +
       '.ad .dba-dots[data-layout="interstitial"] .dba-dot-active { width: 0.75em; }' +
-      '.ad-shell.legal-band .ad .dba-dots[data-layout="interstitial"] { margin-top: 0; }' +
-      /* Shell-mounted interstitial dots (absolute — .ad is height:100%, so flow
-         siblings below it are clipped by overflow:hidden). */ +
-      '.ad-shell > .dba-dots-shell[data-layout="interstitial"] {' +
-        'position: absolute; left: 0; right: 0; bottom: 2.2em;' +
-        'height: 0.75em; margin-top: 0; gap: 0.35em; z-index: 5;' +
-      '}' +
-      '.ad-shell > .dba-dots-shell[data-layout="interstitial"] .dba-dot { height: 0.35em; width: 0.35em; }' +
-      '.ad-shell > .dba-dots-shell[data-layout="interstitial"] .dba-dot-active { width: 0.75em; }' +
-      '.ad-shell.legal-band > .dba-dots-shell[data-layout="interstitial"] { bottom: 11%; }';
+      '.ad .cta-zone > .dba-dots[data-layout="interstitial"] + .cta { margin-top: 0; }' +
+      '.ad-shell.legal-band .ad .dba-dots[data-layout="interstitial"] { margin: 0.5em 0; }';
     var s = el('style', { id: 'dba-runtime-styles' });
     s.textContent = css;
     (document.head || document.documentElement).appendChild(s);
@@ -456,10 +449,18 @@
       dots.appendChild(el('span', { 'class': 'dba-dot' + (i === 0 ? ' dba-dot-active' : '') }));
     }
 
-    // Always prefer the shell (sibling of the click <a>) so GAM / SafeFrame does
-    // not drop dots injected inside the anchor. MPU + interstitial shell dots
-    // are absolutely positioned (see runtime CSS above).
-    if (shell) {
+    // MPU: shell (absolute) so SafeFrame does not drop dots inside the click <a>.
+    // Interstitial: in-flow before the CTA (between match cards and button).
+    if (layoutKey === 'interstitial' && ad) {
+      var ctaZone = ad.querySelector('.cta-zone');
+      var cta = ad.querySelector('.cta');
+      var matches = ad.querySelector('.matches');
+      if (ctaZone && cta) ctaZone.insertBefore(dots, cta);
+      else if (matches) ad.insertBefore(dots, matches.nextSibling);
+      else if (ctaZone) ad.insertBefore(dots, ctaZone);
+      else if (cta) ad.insertBefore(dots, cta);
+      else ad.appendChild(dots);
+    } else if (shell) {
       dots.classList.add('dba-dots-shell');
       var legal = shell.querySelector('.legal');
       if (legal) shell.insertBefore(dots, legal);
@@ -471,10 +472,8 @@
         } catch (e) { /* preview iframe */ }
       }
     } else if (ad) {
-      var ctaZone = ad.querySelector('.cta-zone');
-      var cta = ad.querySelector('.cta');
-      if (ctaZone) ctaZone.appendChild(dots);
-      else if (cta) ad.insertBefore(dots, cta.nextSibling);
+      var ctaEl = ad.querySelector('.cta');
+      if (ctaEl) ad.insertBefore(dots, ctaEl.nextSibling);
       else ad.appendChild(dots);
     }
     return dots;

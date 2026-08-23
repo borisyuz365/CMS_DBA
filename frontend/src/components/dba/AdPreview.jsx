@@ -1020,13 +1020,14 @@ export default function AdPreview({
             alignItems: 'stretch', justifyContent: 'center', gap: '20px',
             pt: '20px',
           }}>
-            {ctaBtn}
+            {/* Dots between last card and CTA (matches GAM interstitial order). */}
             {dots}
+            {ctaBtn}
           </Box>
         ) : (
           <>
-            {ctaBtn}
             <Box sx={{ flexShrink: 0 }}>{dots}</Box>
+            {ctaBtn}
           </>
         )}
         {useBrazilBand ? renderBrazilLegalBand(brazilBandH, 20, 31) : (
@@ -1203,15 +1204,15 @@ export default function AdPreview({
             display: 'flex', flexDirection: 'column',
             alignItems: 'stretch', justifyContent: 'center', gap: '20px',
           }}>
+            {dots}
             {ctaBtn}
             <Box sx={{ fontSize: 18, opacity: 0.55, textAlign: 'center', lineHeight: 1.3, flexShrink: 0 }}>{woTerms}</Box>
-            {dots}
           </Box>
         ) : (
           <>
+            <Box sx={{ flexShrink: 0 }}>{dots}</Box>
             {ctaBtn}
             <Box sx={{ mt: '20px', fontSize: 18, opacity: 0.55, textAlign: 'center', lineHeight: 1.3, flexShrink: 0 }}>{woTerms}</Box>
-            <Box sx={{ flexShrink: 0 }}>{dots}</Box>
           </>
         )}
         {useBrazilBand ? renderBrazilLegalBand(brazilBandH, 20, 31) : (
