@@ -1,6 +1,7 @@
 // Helpers that convert between MySQL row shapes and the JSON shapes the
 // frontend already consumes. Keeps the column-name ↔ camelCase translation
 // in one place so the routes stay readable.
+const { normalizeSizeId, INTERSTITIAL_SIZE_ID } = require('../utils/dbaSizes');
 
 function isoOrNull(d) {
   if (!d) return null;
@@ -47,11 +48,16 @@ function bookmakerRowToJson(row, variantRows) {
 }
 
 function templateRowToJson(row, countries = []) {
+  // Legacy interstitial id 640x1280 → AdOps inventory 320x480 (fluid 2∶3).
+  const sizeId = normalizeSizeId(row.size_id);
+  const sizeLabel = sizeId === INTERSTITIAL_SIZE_ID
+    ? 'Interstitial · 320×480'
+    : (row.size_label || sizeId);
   return {
     id: row.id,
     name: row.name,
-    sizeId: row.size_id,
-    size: row.size_label,
+    sizeId,
+    size: sizeLabel,
     status: row.status,
     bookmakerId: row.bookmaker_id,
     config: parseMaybeJson(row.config) || {},

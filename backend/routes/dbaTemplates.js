@@ -10,8 +10,18 @@ const {
   TRANSLATABLE_PATHS, countryToLangId, getByPath, setByPath, termIdPathFor,
 } = require('./_dbaLang');
 const { upsertTerm, readTranslations, resolveTerm, findTerm } = require('./_dbaTerms');
+const { normalizeSizeId, INTERSTITIAL_SIZE_ID } = require('../utils/dbaSizes');
 
 const router = express.Router();
+
+/** Persist canonical size id + label (legacy 640x1280 → 320x480). */
+function withCanonicalSize(tpl) {
+  const sizeId = normalizeSizeId(tpl.sizeId);
+  const size = sizeId === INTERSTITIAL_SIZE_ID
+    ? 'Interstitial · 320×480'
+    : (tpl.size || sizeId);
+  return { ...tpl, sizeId, size };
+}
 
 // ---- helpers --------------------------------------------------------------
 
@@ -133,7 +143,9 @@ router.post('/', async (req, res, next) => {
     const id = body.id || `tpl_${Math.random().toString(36).slice(2, 8)}`;
     // Persist translations first, then save the template with the resulting
     // *TermId references already wired into config/name.
-    const withTerms = applyTranslationsToTemplate({ ...body, id }, body.translations);
+    const withTerms = withCanonicalSize(
+      applyTranslationsToTemplate({ ...body, id }, body.translations),
+    );
     await conn.beginTransaction();
     await conn.query(
       `INSERT INTO dba_templates
@@ -175,7 +187,9 @@ router.put('/:id', async (req, res, next) => {
     if (!prev) { conn.release(); return res.status(404).json({ error: 'Template not found' }); }
     const prevJson = templateRowToJson(prev);
     const merged = { ...prevJson, ...req.body, id: prev.id };
-    const withTerms = applyTranslationsToTemplate(merged, req.body.translations);
+    const withTerms = withCanonicalSize(
+      applyTranslationsToTemplate(merged, req.body.translations),
+    );
     await conn.beginTransaction();
     await conn.query(
       `UPDATE dba_templates
