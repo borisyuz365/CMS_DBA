@@ -654,6 +654,14 @@ export default function AdPreview({
   // ~10% of ad height; floor so the two-line SPA/MF copy stays readable.
   const brazilBandH = Math.max(isBanner ? 12 : 25, Math.round(h * 0.1));
 
+  const isMpu = !isBanner && !isInterstitial;
+  const mpuStackRef = useRef(null);
+  const mpuAdRef = useRef(null);
+  // Height (px) of the empty band from ad top → top edge of the match stack.
+  // Logo is flex-centered inside that band so it sits exactly mid-gap.
+  const [mpuGapH, setMpuGapH] = useState(0);
+  const mpuLogoH = useBrazilBand ? MPU_LAYOUT.logo.brazil.h : MPU_LAYOUT.logo.default.h;
+
   // Brazil (SPA/MF): full-width disclaimer band (~10% of ad).
   // 18+ is a badge; copy is the Ministério da Fazenda sentence only.
   const brazilLegalText = (() => {
@@ -698,6 +706,42 @@ export default function AdPreview({
     || displayPos === 0
     || (displayPos != null && displayPos === totalSlides)
   );
+
+  // MPU logo: flex-center in the measured band between ad top and top card.
+  useLayoutEffect(() => {
+    if (!isMpu || showWelcome) {
+      setMpuGapH(0);
+      return undefined;
+    }
+
+    const measure = () => {
+      const stack = mpuStackRef.current;
+      const ad = mpuAdRef.current;
+      if (!stack || !ad) return;
+      const adRect = ad.getBoundingClientRect();
+      const stackRect = stack.getBoundingClientRect();
+      // wrap uses transform: scale(scale) — convert screen px → local layout px.
+      const sy = ad.offsetHeight ? (adRect.height / ad.offsetHeight) : 1;
+      const cardTop = Math.max(0, (stackRect.top - adRect.top) / (sy || 1));
+      setMpuGapH((prev) => (Math.abs(prev - cardTop) < 0.5 ? prev : cardTop));
+    };
+
+    measure();
+    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(measure) : null;
+    if (mpuStackRef.current) ro?.observe(mpuStackRef.current);
+    const t1 = requestAnimationFrame(measure);
+    const t2 = window.setTimeout(measure, 50);
+    const t3 = window.setTimeout(measure, 250);
+    return () => {
+      ro?.disconnect();
+      cancelAnimationFrame(t1);
+      window.clearTimeout(t2);
+      window.clearTimeout(t3);
+    };
+  }, [isMpu, showWelcome, mpuLogoH, slideIdx, sizeId, useBrazilBand, scale]);
+
+
+
   const matchSlideIdx = hasWelcome ? safeIdx - 1 : safeIdx;
 
   const carouselPos = displayPos != null
@@ -722,8 +766,8 @@ export default function AdPreview({
 
   // `customBg` lets a render function (welcome variants) override the main
   // bgCss(config) without otherwise duplicating the wrap layout.
-  const wrap = (children, pad, customBg) => (
-    <Box sx={{
+  const wrap = (children, pad, customBg, rootRef = null) => (
+    <Box ref={rootRef} sx={{
       width: w, height: h,
       background: customBg || bgCss(config), color: config.text,
       borderRadius: `${radius}px`, overflow: 'hidden',
@@ -897,7 +941,7 @@ export default function AdPreview({
     );
   };
 
-  // MPU · 300×250 — match carousel pinned to MPU_LAYOUT.axisY; logo hangs above it.
+  // MPU · 300×250 — logo fixed at top-center; match cards centered in the band below.
   const renderMPU = () => {
     const d = useBrazilBand
       ? { cardRadius: 11, cardPad: '8px 10px 9px', pillH: 14, pillFont: 8,
@@ -919,6 +963,21 @@ export default function AdPreview({
     const dotsBottom = useBrazilBand ? brazilBandH + dotsGap : (hasLegalStrip ? 12 : 6);
     const ctaBottom = dotsBottom + dotsRowH + ctaGapAboveDots;
     const bottomPad = ctaBottom + ctaH;
+    // MPU logo: hard 28px image height, centered in the mid-gap band.
+    // Position with top offset (no flex height clamp) so nothing can shrink it.
+    const logoFitH = 28;
+    const logoUrl = resolveLogoUrl(bookmaker, config);
+    const logoWrapSx = {
+      position: 'absolute',
+      top: Math.max(0, (mpuGapH - logoFitH) / 2),
+      left: 0,
+      right: 0,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      pointerEvents: 'none',
+      zIndex: 2,
+    };
     const stackSx = {
       position: 'absolute',
       top: MPU_LAYOUT.axisY,
@@ -926,26 +985,35 @@ export default function AdPreview({
       right: sidePad,
       transform: 'translateY(-50%)',
     };
-    const logoWrapSx = {
-      position: 'absolute',
-      bottom: '100%',
-      left: '50%',
-      transform: `translateX(-50%) translateY(${MPU_LAYOUT.logoOffsetY}px)`,
-      mb: `${MPU_LAYOUT.logoGap}px`,
-    };
     return wrap(
       <>
-        <Box sx={stackSx}>
-          <Box sx={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <Box sx={logoWrapSx}>
-              <LogoThumb bg={bookmaker.logoBg} fg={bookmaker.logoFg} initials={bookmaker.initials} imageUrl={resolveLogoUrl(bookmaker, config)} size={logoSpec.w} height={logoSpec.h} radius={6} bare />
-            </Box>
-            {renderMatchCarousel(d, {
-              cardGap,
-              columnSx: { flexShrink: 0, width: '100%' },
-              pillPad,
-            })}
-          </Box>
+        <Box sx={logoWrapSx}>
+          {logoUrl ? (
+            <Box
+              component="img"
+              src={logoUrl}
+              alt=""
+              style={{ height: 28, width: 'auto', display: 'block', flexShrink: 0 }}
+              sx={{
+                height: '28px !important',
+                width: 'auto',
+                minHeight: '28px',
+                objectFit: 'contain',
+                objectPosition: 'center',
+                display: 'block',
+                flexShrink: 0,
+              }}
+            />
+          ) : (
+            <LogoThumb bg={bookmaker.logoBg} fg={bookmaker.logoFg} initials={bookmaker.initials} size={34} height={28} radius={6} bare />
+          )}
+        </Box>
+        <Box ref={mpuStackRef} sx={stackSx}>
+          {renderMatchCarousel(d, {
+            cardGap,
+            columnSx: { flexShrink: 0, width: '100%' },
+            pillPad,
+          })}
         </Box>
         <Box component="button" sx={{
           background: config.cta, color: config.ctaTextColor || invertText(config.cta),
@@ -970,8 +1038,11 @@ export default function AdPreview({
           )
         )}
       </>,
+      // No horizontal pad (GAM .ad padding:0). sidePad is on stack/CTA only.
       // Bottom pad reserves the pinned CTA + dots stack above the legal footer.
-      `0px ${sidePad}px ${bottomPad}px`
+      `0px 0px ${bottomPad}px`,
+      null,
+      mpuAdRef,
     );
   };
 
