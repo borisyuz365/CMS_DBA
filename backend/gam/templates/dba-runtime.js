@@ -214,22 +214,22 @@
       '.matches .dba-odd { display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; line-height: 1.2; }' +
       '.matches .dba-odd-label { font-size: 7px; font-weight: 800; color: #FFC107; line-height: 1.2; }' +
       '.matches .dba-v-gap { display: none; }' +
-      /* Brazil MPU: slightly denser cards so they clear the CTA (AdPreview). */ +
-      '.ad-shell.legal-band .matches .dba-slide { gap: 6px; }' +
-      '.ad-shell.legal-band .matches .dba-card { border-radius: 11px; padding: 8px 10px 9px; gap: 4px; }' +
-      '.ad-shell.legal-band .matches .dba-pill { padding: 0 10px; height: 14px; font-size: 8px; }' +
+      /* Brazil MPU densify — scoped under .ad-stack so interstitial/banner
+         legal-band creatives are not crushed by MPU flex/CTA rules. */ +
       '.ad-stack .matches { margin: 0; padding-top: 0; overflow: hidden; }' +
-      '.ad-shell.legal-band .matches { flex: 0 0 auto; margin-top: 0; margin-bottom: 4px; padding-top: 0; overflow: hidden; }' +
-      '.ad-shell.legal-band .ad-stack .matches { padding-top: 0; margin-bottom: 4px; }' +
-      '.ad-shell.legal-band .matches .dba-teams { gap: 0; margin-top: 0; font-size: 11px; }' +
-      '.ad-shell.legal-band .matches .dba-teamblock { gap: 5px; }' +
-      '.ad-shell.legal-band .matches .dba-team-logo { width: 17.25px; height: 17.25px; }' +
-      '.ad-shell.legal-band .matches .dba-x { font-size: 11px; margin: 0 10px; }' +
-      '.ad-shell.legal-band .matches .dba-odds { margin-top: 0; font-size: 9px; }' +
-      '.ad-shell.legal-band .matches .dba-odd-slot-home { padding-right: 20px; }' +
-      '.ad-shell.legal-band .matches .dba-odd-slot-draw { margin: 0 10px; }' +
-      '.ad-shell.legal-band .matches .dba-odd-slot-away { padding-left: 20px; }' +
-      '.ad-shell.legal-band .matches .dba-odd-label { font-size: 6px; }' +
+      '.ad-shell.legal-band .ad-stack .matches .dba-slide { gap: 6px; }' +
+      '.ad-shell.legal-band .ad-stack .matches .dba-card { border-radius: 11px; padding: 8px 10px 9px; gap: 4px; }' +
+      '.ad-shell.legal-band .ad-stack .matches .dba-pill { padding: 0 10px; height: 14px; font-size: 8px; }' +
+      '.ad-shell.legal-band .ad-stack .matches { flex: 0 0 auto; margin-top: 0; margin-bottom: 4px; padding-top: 0; overflow: hidden; }' +
+      '.ad-shell.legal-band .ad-stack .matches .dba-teams { gap: 0; margin-top: 0; font-size: 11px; }' +
+      '.ad-shell.legal-band .ad-stack .matches .dba-teamblock { gap: 5px; }' +
+      '.ad-shell.legal-band .ad-stack .matches .dba-team-logo { width: 17.25px; height: 17.25px; }' +
+      '.ad-shell.legal-band .ad-stack .matches .dba-x { font-size: 11px; margin: 0 10px; }' +
+      '.ad-shell.legal-band .ad-stack .matches .dba-odds { margin-top: 0; font-size: 9px; }' +
+      '.ad-shell.legal-band .ad-stack .matches .dba-odd-slot-home { padding-right: 20px; }' +
+      '.ad-shell.legal-band .ad-stack .matches .dba-odd-slot-draw { margin: 0 10px; }' +
+      '.ad-shell.legal-band .ad-stack .matches .dba-odd-slot-away { padding-left: 20px; }' +
+      '.ad-shell.legal-band .ad-stack .matches .dba-odd-label { font-size: 6px; }' +
       /* Banner (320×50): flat match block — no card chrome. Mirrors AdPreview
          BannerMatchSection. Activated via data-layout="banner" on .matches. */ +
       '.matches[data-layout="banner"] { display: flex; align-items: stretch; overflow: hidden; }' +
@@ -316,8 +316,18 @@
       '.matches[data-layout="interstitial"] .dba-odd-slot-away { padding-left: 84px; }' +
       '.matches[data-layout="interstitial"] .dba-odd { gap: 8px; }' +
       '.matches[data-layout="interstitial"] .dba-odd-label { font-size: 16px; }' +
-      /* Interstitial + Brazil: spacing only (gap), keep default card metrics. */ +
+      /* Interstitial + Brazil: keep 640×1280 flex column (matches grow, CTA
+         in normal flow). Must win over any leftover MPU legal-band rules. */ +
+      '.ad-shell.legal-band .matches[data-layout="interstitial"] {' +
+        'flex: 1 1 auto; min-height: 0; margin-bottom: 0; padding-top: 8px; overflow: hidden;' +
+      '}' +
       '.ad-shell.legal-band .matches[data-layout="interstitial"] .dba-slide { gap: 32px; }' +
+      '.ad-shell.legal-band .matches[data-layout="interstitial"] ~ .cta-zone {' +
+        'flex: 0 0 auto; position: relative;' +
+      '}' +
+      '.ad-shell.legal-band .matches[data-layout="interstitial"] ~ .cta-zone .cta {' +
+        'position: relative; left: auto; right: auto; bottom: auto; margin-top: 0;' +
+      '}' +
       /* Carousel page indicator — on .ad-shell (outside click <a>) for GAM. */ +
       '.ad .dba-dots, .ad-shell > .dba-dots-shell { display: flex; justify-content: center; align-items: center; flex-shrink: 0; pointer-events: none; color: inherit; }' +
       '.ad .dba-dot, .ad-shell > .dba-dots-shell .dba-dot { display: inline-block; border-radius: 999px; background: currentColor; opacity: 0.35; transition: width 0.3s, opacity 0.3s; }' +
@@ -329,7 +339,8 @@
       '.ad .dba-dots[data-layout="mpu"] { position: absolute; left: 0; right: 0; bottom: 12px; height: 10px; margin-top: 0; gap: 6px; z-index: 2; }' +
       '.ad .dba-dots[data-layout="mpu"] .dba-dot { height: 4px; width: 4px; }' +
       '.ad .dba-dots[data-layout="mpu"] .dba-dot-active { width: 9.6px; }' +
-      '.ad-shell.legal-band .ad > .cta { position: absolute; left: 12px; right: 12px; bottom: 43px; margin-top: 0; z-index: 2; }' +
+      /* MPU-only absolute CTA (sibling of .ad-stack). Interstitial uses .cta-zone. */ +
+      '.ad-shell.legal-band .ad-stack ~ .cta { position: absolute; left: 12px; right: 12px; bottom: 43px; margin-top: 0; z-index: 2; }' +
       '.ad .dba-dots[data-layout="interstitial"] { height: 24px; margin-top: 24px; gap: 12px; }' +
       '.ad .dba-dots[data-layout="interstitial"] .dba-dot { height: 10px; width: 10px; }' +
       '.ad .dba-dots[data-layout="interstitial"] .dba-dot-active { width: 24px; }' +

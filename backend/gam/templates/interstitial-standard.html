@@ -30,20 +30,29 @@
     padding: 24px 5px 128px;
   }
   .ad-shell.legal-band .ad .logo-wrap { margin-bottom: 16px; }
-  .ad-shell.legal-band .ad .matches {
-    flex: 1;
+  /* Brazil interstitial: matches fill the column; never adopt MPU flex:0 / absolute CTA. */
+  .ad-shell.legal-band .ad .matches,
+  .ad-shell.legal-band .ad .matches[data-layout="interstitial"] {
+    flex: 1 1 auto;
     min-height: 0;
+    margin-bottom: 0;
     padding-top: 8px;
+    overflow: hidden;
   }
   .ad-shell.legal-band .ad .cta-zone {
     flex: 0 0 auto;
     min-height: 0;
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
     padding-top: 24px;
   }
-  .ad-shell.legal-band .ad .cta { margin-top: 0; }
+  .ad-shell.legal-band .ad .cta-zone .cta {
+    position: relative;
+    left: auto; right: auto; bottom: auto;
+    margin-top: 0;
+  }
 
   .ad .logo-wrap {
     display: flex; align-items: center; justify-content: center;
