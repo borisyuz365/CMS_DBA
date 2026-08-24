@@ -5,13 +5,25 @@
 // rgb/rgba (and short hex) are converted; semi-transparent rgba is composited
 // onto black so clients (e.g. Android Color.parseColor) always get opaque hex.
 //
-// Strip_Color and Logo_Image_URL fall back to the bookmaker's primary colour /
-// CDN logo from T_BET_BOOKMAKERS when the CMS has not stored an override.
-
-const bookmakerBrandCache = require('../bookmakerBrandCache');
+// Logo_Image_URL defaults to the bookmaker CDN round logo (no DB required).
+// Strip_Color uses the CMS override when set; optional brand-colour fallback
+// from bookmakerBrandCache when that module is available (CMS process only —
+// bp-service intentionally has no MSSQL; do not hard-require the cache here).
 
 const ITALY_CID = 3;
 const PLATFORM_BY_APP_TYPE = { '1': 'iOS', '2': 'Android' };
+
+// Same CDN pattern as the BP Editor preview / bookmakerBrandCache.
+const LOGO_BASE =
+  'https://imagecache.365scores.com/image/upload/f_webp,w_80,c_limit,q_auto,dpr_2,d_Bookmakers:Round:default.png/v101/Bookmakers/';
+
+let brandCache = null;
+try {
+  // Optional — present in CMS image; absent from lean bp-service image.
+  brandCache = require('../bookmakerBrandCache');
+} catch {
+  brandCache = null;
+}
 
 function parseOptionalInt(val) {
   if (val == null || val === '') return null;
@@ -102,16 +114,25 @@ function toHexColorOrNull(input) {
   return null;
 }
 
+function defaultLogoUrl(bmid) {
+  if (bmid == null || bmid === '') return null;
+  const id = Number(bmid);
+  if (!Number.isFinite(id)) return null;
+  return `${LOGO_BASE}${id}`;
+}
+
 function resolveStripColor(bookie) {
   const override = bookie.stripColor
     || (Array.isArray(bookie.stripColors) ? bookie.stripColors[0] : null);
-  return toHexColorOrNull(override) || bookmakerBrandCache.brandColor(bookie.bmid) || null;
+  const fromCms = toHexColorOrNull(override);
+  if (fromCms) return fromCms;
+  return brandCache?.brandColor(bookie.bmid) || null;
 }
 
 function resolveLogoUrl(bookie) {
   const override = bookie.logoImageUrl ? String(bookie.logoImageUrl).trim() : '';
   if (override) return absolutizeAssetUrl(override);
-  return bookmakerBrandCache.logoUrl(bookie.bmid);
+  return brandCache?.logoUrl(bookie.bmid) || defaultLogoUrl(bookie.bmid);
 }
 
 function formatVersion(v, { uc } = {}) {

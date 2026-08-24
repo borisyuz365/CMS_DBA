@@ -55,7 +55,8 @@ app.use((req, res) => {
 });
 
 bpCache.start();
-require('../backend/services/bookmakerBrandCache').start();
+// Brand strip/logo defaults: logos are CDN-derived in formatRuntime (no MSSQL).
+// Strip colour comes from MySQL overrides; CMS (not this service) owns T_BET_BOOKMAKERS.
 app.listen(PORT, () => {
   console.log(`BP runtime service listening on port ${PORT}`);
   console.log(`Health:  http://localhost:${PORT}/api/health`);

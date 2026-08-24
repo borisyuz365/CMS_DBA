@@ -132,8 +132,18 @@ const { toHexColor, toHexColorOrNull } = require('../services/bp/formatRuntime')
 
 async function insertBookies(conn, promotionId, bookies) {
   if (!Array.isArray(bookies) || bookies.length === 0) return;
+  // CMS has MSSQL — persist brand primary as strip when editor left it blank.
+  let brandCache = null;
+  try {
+    brandCache = require('../services/bookmakerBrandCache');
+  } catch {
+    brandCache = null;
+  }
   const values = bookies.map((b) => {
-    const strip = toHexColorOrNull(b.stripColor || b.stripColors?.[0] || null);
+    let strip = toHexColorOrNull(b.stripColor || b.stripColors?.[0] || null);
+    if (!strip && brandCache && b.bmid != null) {
+      strip = brandCache.brandColor(b.bmid);
+    }
     return [
       promotionId,
       b.position,
