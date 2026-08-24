@@ -55,6 +55,7 @@ app.use((req, res) => {
 });
 
 bpCache.start();
+require('../backend/services/bookmakerBrandCache').start();
 app.listen(PORT, () => {
   console.log(`BP runtime service listening on port ${PORT}`);
   console.log(`Health:  http://localhost:${PORT}/api/health`);

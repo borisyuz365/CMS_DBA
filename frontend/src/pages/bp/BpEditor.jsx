@@ -79,22 +79,55 @@ function Field({ label, help, children }) {
   );
 }
 
+/** Normalise colour input to #RRGGBB (handles rgb/rgba, including truncated rgba). */
+function toHexColor(input) {
+  if (input == null) return '';
+  const raw = String(input).trim();
+  if (!raw) return '';
+  const hexMatch = raw.match(/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/);
+  if (hexMatch) {
+    let h = hexMatch[1];
+    if (h.length === 3) h = h.split('').map((c) => c + c).join('');
+    if (h.length === 8) h = h.slice(0, 6);
+    return `#${h.toUpperCase()}`;
+  }
+  const rgbMatch = raw.match(
+    /^rgba?\(\s*([0-9.]+%?)\s*,\s*([0-9.]+%?)\s*,\s*([0-9.]+%?)\s*(?:,\s*([0-9.]+)\s*)?\)?\s*$/i
+  );
+  if (rgbMatch) {
+    const ch = (v) => (String(v).endsWith('%') ? (parseFloat(v) / 100) * 255 : parseFloat(v));
+    let r = ch(rgbMatch[1]); let g = ch(rgbMatch[2]); let b = ch(rgbMatch[3]);
+    if ([r, g, b].some((n) => !Number.isFinite(n))) return raw.toUpperCase();
+    if (rgbMatch[4] != null && rgbMatch[4] !== '') {
+      const a = Math.max(0, Math.min(1, parseFloat(rgbMatch[4])));
+      r *= a; g *= a; b *= a;
+    }
+    const byte = (n) => Math.max(0, Math.min(255, Math.round(n))).toString(16).padStart(2, '0').toUpperCase();
+    return `#${byte(r)}${byte(g)}${byte(b)}`;
+  }
+  return raw.toUpperCase();
+}
+
 function ColField({ label, help, value, onChange }) {
+  const hex = toHexColor(value) || '#000000';
+  const pickerValue = /^#[0-9A-F]{6}$/.test(hex) ? hex : '#000000';
   return (
     <Field label={label} help={help}>
       <Stack direction="row" spacing={1} alignItems="center">
         <input
           type="color"
-          value={value || '#000000'}
+          value={pickerValue}
           onChange={(e) => onChange(e.target.value.toUpperCase())}
           style={{ width: 36, height: 36, border: 'none', padding: 0, borderRadius: 4, cursor: 'pointer' }}
         />
         <TextField
           size="small"
           value={value || ''}
-          onChange={(e) => onChange(e.target.value.toUpperCase())}
-          inputProps={{ maxLength: 9, style: { fontFamily: 'monospace', fontSize: '0.82rem' } }}
+          onChange={(e) => onChange(toHexColor(e.target.value))}
+          onBlur={(e) => onChange(toHexColor(e.target.value))}
+          inputProps={{ maxLength: 32, style: { fontFamily: 'monospace', fontSize: '0.82rem' } }}
           sx={{ flex: 1 }}
+          placeholder="#RRGGBB"
         />
       </Stack>
     </Field>
@@ -104,7 +137,8 @@ function ColField({ label, help, value, onChange }) {
 // ── Interstitial preview ──────────────────────────────────────────────────────
 
 function BookiePreviewCard({ bookie, index, bookmakerOptions }) {
-  const stripBg = (bookie.stripColors || [])[0] || bookmakerBrandColor(bookie.bmid, bookmakerOptions) || '#333333';
+  const stripBg = bookie.stripColor || (bookie.stripColors || [])[0]
+    || bookmakerBrandColor(bookie.bmid, bookmakerOptions) || '#333333';
   const contentBg = bookie.sectionBgColor || '#000000';
   const logoSrc = bookie.logoImageUrl || bookmakerLogoUrl(bookie.bmid);
 
@@ -260,15 +294,19 @@ function InterstitialPreview({ form, bookmakerOptions }) {
 
 // ── Bookie section ────────────────────────────────────────────────────────────
 
-function BookieSection({ index, bookie, onChange, bookmakerOptions, descriptionError }) {
+function BookieSection({ index, bookie, onChange, bookmakerOptions, clickUrlError }) {
   const set = (key, val) => onChange({ ...bookie, [key]: val });
-  const setStrip = (idx, val) => {
-    const colors = [...(bookie.stripColors || ['#000000', '#000000'])];
-    colors[idx] = val;
-    onChange({ ...bookie, stripColors: colors });
-  };
-
   const selectedOption = bookmakerOptions.find((o) => o.bmid === bookie.bmid) || null;
+  // Empty stripColor / logoImageUrl = use bookmaker DB defaults at runtime.
+  const setStripColor = (val) => {
+    const hex = toHexColor(val);
+    const brand = toHexColor(selectedOption?.brandColor || '');
+    // Matching the bookmaker primary colour (or empty) = no override.
+    const isDefault = !hex || (brand && hex === brand);
+    onChange({ ...bookie, stripColor: isDefault ? '' : hex, stripColors: isDefault ? [] : [hex] });
+  };
+  const stripOverride = bookie.stripColor || (bookie.stripColors || [])[0] || '';
+  const stripDisplay = stripOverride || selectedOption?.brandColor || '#000000';
 
   return (
     <Box sx={{ border: '1px solid #E5E5E5', borderRadius: 2, p: 2 }}>
@@ -281,7 +319,14 @@ function BookieSection({ index, bookie, onChange, bookmakerOptions, descriptionE
             size="small"
             options={bookmakerOptions}
             value={selectedOption}
-            onChange={(_, opt) => set('bmid', opt?.bmid ?? null)}
+            onChange={(_, opt) => onChange({
+              ...bookie,
+              bmid: opt?.bmid ?? null,
+              // Clear overrides so strip/logo re-default from the new bookmaker.
+              stripColor: '',
+              stripColors: [],
+              logoImageUrl: '',
+            })}
             getOptionLabel={(o) => `${o.name} (BMID ${o.bmid})`}
             isOptionEqualToValue={(o, v) => o.bmid === v.bmid}
             renderOption={(props, o) => (
@@ -311,12 +356,9 @@ function BookieSection({ index, bookie, onChange, bookmakerOptions, descriptionE
         </Field>
         <ColField label="Title text colour" value={bookie.titleTextColor || '#ffffff'}
           onChange={(v) => set('titleTextColor', v)} />
-        <Field label="Description *" help="Mandatory — smaller text below the title. Also carries bonus terms/T&Cs (Italian regulation) — no separate terms field.">
+        <Field label="Description" help="Optional — smaller text below the title. Can also carry bonus terms/T&Cs (Italian regulation).">
           <TextField
             size="small" fullWidth multiline minRows={2} maxRows={6}
-            required
-            error={!!descriptionError}
-            helperText={descriptionError ? 'Description is required' : ''}
             value={bookie.subtitleText || ''}
             onChange={(e) => set('subtitleText', e.target.value)}
             placeholder="e.g. Fino a 50€ sul deposito + 25€ Scommesse + fino a 2.000€ Scommesse. T&C Lottomatica."
@@ -331,18 +373,35 @@ function BookieSection({ index, bookie, onChange, bookmakerOptions, descriptionE
         </Field>
         <ColField label="CTA text colour" value={bookie.ctaTextColor || '#ffffff'}
           onChange={(v) => set('ctaTextColor', v)} />
-        <ColField label="Strip bg colour" help="Auto-filled from the bookmaker's brand colour — only set this to override."
-          value={(bookie.stripColors || [])[0] || selectedOption?.brandColor || '#000000'}
-          onChange={(v) => setStrip(0, v)} />
-        <Field label="Logo image URL (override)" help="Auto-filled from the selected bookmaker's BMID — only set this to use a different image.">
-          <TextField size="small" fullWidth placeholder={bookmakerLogoUrl(bookie.bmid) || 'https://…'}
+        <ColField
+          label="Strip colour"
+          help="Defaults to the bookmaker's primary colour from the DB — only set this to override. Clear the field to use the default."
+          value={stripDisplay}
+          onChange={setStripColor}
+        />
+        <Field
+          label="Logo image URL"
+          help="Defaults to the bookmaker logo from the DB — only set this to override. Leave blank to use the default."
+        >
+          <TextField
+            size="small"
+            fullWidth
+            placeholder={bookmakerLogoUrl(bookie.bmid) || 'https://…'}
             value={bookie.logoImageUrl || ''}
-            onChange={(e) => set('logoImageUrl', e.target.value)} />
+            onChange={(e) => set('logoImageUrl', e.target.value)}
+          />
         </Field>
-        <Field label="Click URL">
-          <TextField size="small" fullWidth placeholder="https://…"
+        <Field label="Click URL *" help="Mandatory — destination URL when the bookmaker card is tapped.">
+          <TextField
+            size="small"
+            fullWidth
+            required
+            error={!!clickUrlError}
+            helperText={clickUrlError ? 'Click URL is required' : ''}
+            placeholder="https://…"
             value={bookie.clickUrl || ''}
-            onChange={(e) => set('clickUrl', e.target.value)} />
+            onChange={(e) => set('clickUrl', e.target.value)}
+          />
         </Field>
       </Stack>
     </Box>
@@ -354,7 +413,7 @@ function BookieSection({ index, bookie, onChange, bookmakerOptions, descriptionE
 const DEFAULT_BOOKIE = { position: 0, bmid: '', sectionBgColor: '#12193A',
   titleText: '', titleTextColor: '#FFFFFF',
   subtitleText: '', subtitleTextColor: '#999999', ctaText: '', ctaTextColor: '#FFFFFF',
-  stripColors: ['', '#000000'], logoImageUrl: '', clickUrl: '' };
+  stripColor: '', stripColors: [], logoImageUrl: '', clickUrl: '' };
 
 const DEFAULT_FORM = {
   name: '',
@@ -395,34 +454,48 @@ const DEFAULT_FORM = {
 function promoToForm(promo) {
   const bookies = [1, 2, 3].map((pos) => {
     const found = promo.bookies?.find((b) => b.position === pos);
-    return found ? { subtitleTextColor: '#999999', ...found } : { ...DEFAULT_BOOKIE, position: pos };
+    if (!found) return { ...DEFAULT_BOOKIE, position: pos };
+    const stripOverride = found.stripColor || (found.stripColors || [])[0] || '';
+    return {
+      ...DEFAULT_BOOKIE,
+      ...found,
+      position: pos,
+      subtitleTextColor: toHexColor(found.subtitleTextColor) || '#999999',
+      titleTextColor: toHexColor(found.titleTextColor) || '#FFFFFF',
+      ctaTextColor: toHexColor(found.ctaTextColor) || '#FFFFFF',
+      sectionBgColor: toHexColor(found.sectionBgColor) || '#12193A',
+      stripColor: toHexColor(stripOverride) || '',
+      stripColors: toHexColor(stripOverride) ? [toHexColor(stripOverride)] : [],
+      logoImageUrl: found.logoImageUrl || '',
+    };
   });
   return {
     name: promo.name || '',
     cid: promo.cid ?? '',
     platform: promo.platform || 'All',
-    lid: promo.lid ?? null,
+    // lid 0 / null / undefined all mean "no league targeting"
+    lid: (promo.lid != null && Number(promo.lid) > 0) ? Number(promo.lid) : null,
     lang: promo.lang ?? '',
     publisher: promo.publisher ?? '',
     campaign: promo.campaign ?? '',
     sov: promo.sov ?? 100,
     active: promo.active !== false,
-    pageBgColor:      promo.pageBgColor || '#0a1628',
+    pageBgColor:      toHexColor(promo.pageBgColor) || '#0a1628',
     bgType:           promo.bgType || 'solid',
-    bgGradientColor1: promo.bgGradientColor1 || '#0a1628',
-    bgGradientColor2: promo.bgGradientColor2 || '#1a3060',
+    bgGradientColor1: toHexColor(promo.bgGradientColor1) || '#0a1628',
+    bgGradientColor2: toHexColor(promo.bgGradientColor2) || '#1a3060',
     bgGradientAngle:  promo.bgGradientAngle ?? 135,
     bgImageUrl:       promo.bgImageUrl || '',
     header: {
-      mainTitle:      { text: promo.header?.mainTitle?.text || '',      color: promo.header?.mainTitle?.color || '#ffffff' },
-      secondaryTitle: { text: promo.header?.secondaryTitle?.text || '', color: promo.header?.secondaryTitle?.color || '#ffffff' },
+      mainTitle:      { text: promo.header?.mainTitle?.text || '',      color: toHexColor(promo.header?.mainTitle?.color) || '#ffffff' },
+      secondaryTitle: { text: promo.header?.secondaryTitle?.text || '', color: toHexColor(promo.header?.secondaryTitle?.color) || '#ffffff' },
       imageUrl:    promo.header?.imageUrl || '',
       imageHeight: promo.header?.imageHeight ?? 110,
     },
     legal: {
       enabled: !!promo.legal?.enabled,
       text:    promo.legal?.text  || '',
-      color:   promo.legal?.color || '#ffffff',
+      color:   toHexColor(promo.legal?.color) || '#ffffff',
       link:    promo.legal?.link  || '',
       regulatoryLogos: [
         { src: '/legal-logos/italia-gambling-full.svg', link: promo.legal?.regulatoryLogos?.[0]?.link || '' },
@@ -437,16 +510,44 @@ function formToPayload(form) {
   return {
     ...form,
     cid: form.cid !== '' ? Number(form.cid) : null,
-    lid: form.lid !== '' ? Number(form.lid) : null,
+    lid: (form.lid !== '' && form.lid != null && Number(form.lid) > 0) ? Number(form.lid) : null,
     lang: form.lang !== '' ? Number(form.lang) : null,
     publisher: form.publisher !== '' ? Number(form.publisher) : null,
     campaign: form.campaign?.trim() || null,
     sov: Number(form.sov),
-    bookies: form.bookies.map((b, i) => ({
-      ...b,
-      position: i + 1,
-      bmid: b.bmid !== '' ? Number(b.bmid) : null,
-    })),
+    pageBgColor: toHexColor(form.pageBgColor) || '#0a1628',
+    bgGradientColor1: toHexColor(form.bgGradientColor1) || null,
+    bgGradientColor2: toHexColor(form.bgGradientColor2) || null,
+    header: {
+      ...form.header,
+      mainTitle: {
+        text: form.header?.mainTitle?.text || '',
+        color: toHexColor(form.header?.mainTitle?.color) || '#ffffff',
+      },
+      secondaryTitle: {
+        text: form.header?.secondaryTitle?.text || '',
+        color: toHexColor(form.header?.secondaryTitle?.color) || '#ffffff',
+      },
+    },
+    legal: form.legal ? {
+      ...form.legal,
+      color: toHexColor(form.legal.color) || '#ffffff',
+    } : form.legal,
+    bookies: form.bookies.map((b, i) => {
+      const strip = toHexColor(b.stripColor || (b.stripColors || [])[0] || '') || null;
+      return {
+        ...b,
+        position: i + 1,
+        bmid: b.bmid !== '' ? Number(b.bmid) : null,
+        sectionBgColor: toHexColor(b.sectionBgColor) || '#12193A',
+        titleTextColor: toHexColor(b.titleTextColor) || '#ffffff',
+        subtitleTextColor: toHexColor(b.subtitleTextColor) || null,
+        ctaTextColor: toHexColor(b.ctaTextColor) || '#ffffff',
+        stripColor: strip,
+        stripColors: strip ? [strip] : [],
+        logoImageUrl: (b.logoImageUrl || '').trim() || null,
+      };
+    }),
   };
 }
 
@@ -458,7 +559,12 @@ function BpEditorInner({ initial, isNew, bookmakerOptions, countries, languages,
   const [form, setForm] = useState(() => {
     try {
       const saved = localStorage.getItem(draftKey);
-      if (saved) return JSON.parse(saved);
+      if (saved) {
+        const draft = JSON.parse(saved);
+        // Normalise legacy lid: 0 meant "no league" but turned the LID switch on.
+        if (!(draft.lid != null && Number(draft.lid) > 0)) draft.lid = null;
+        return draft;
+      }
     } catch {}
     return initial ? promoToForm(initial) : { ...DEFAULT_FORM };
   });
@@ -468,7 +574,7 @@ function BpEditorInner({ initial, isNew, bookmakerOptions, countries, languages,
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState(null);
   const [zoom, setZoom] = useState(1.4);
-  const [errors, setErrors] = useState({ name: false, bookieDescriptions: [false, false, false] });
+  const [errors, setErrors] = useState({ name: false, bookieClickUrls: [false, false, false] });
 
   useEffect(() => {
     try { localStorage.setItem(draftKey, JSON.stringify(form)); } catch {}
@@ -489,17 +595,17 @@ function BpEditorInner({ initial, isNew, bookmakerOptions, countries, languages,
 
   const handleSave = async () => {
     const nameError = !form.name.trim();
-    const bookieDescriptionErrors = form.bookies.map((b) => !b.subtitleText?.trim());
-    if (nameError || bookieDescriptionErrors.some(Boolean)) {
-      setErrors({ name: nameError, bookieDescriptions: bookieDescriptionErrors });
-      const missingDescriptions = bookieDescriptionErrors.map((err, i) => (err ? i + 1 : null)).filter(Boolean);
+    const bookieClickUrlErrors = form.bookies.map((b) => !b.clickUrl?.trim());
+    if (nameError || bookieClickUrlErrors.some(Boolean)) {
+      setErrors({ name: nameError, bookieClickUrls: bookieClickUrlErrors });
+      const missingClickUrls = bookieClickUrlErrors.map((err, i) => (err ? i + 1 : null)).filter(Boolean);
       const msgs = [];
       if (nameError) msgs.push('Name is required');
-      if (missingDescriptions.length) msgs.push(`Description is required for bookmaker${missingDescriptions.length > 1 ? 's' : ''} ${missingDescriptions.join(', ')}`);
+      if (missingClickUrls.length) msgs.push(`Click URL is required for bookmaker${missingClickUrls.length > 1 ? 's' : ''} ${missingClickUrls.join(', ')}`);
       setToast({ kind: 'error', msg: msgs.join(' · ') });
       return;
     }
-    setErrors({ name: false, bookieDescriptions: [false, false, false] });
+    setErrors({ name: false, bookieClickUrls: [false, false, false] });
     setSaving(true);
     try {
       const payload = formToPayload(form);
@@ -699,16 +805,16 @@ function BpEditorInner({ initial, isNew, bookmakerOptions, countries, languages,
               <BookieSection key={i} index={i} bookie={form.bookies[i] || {}}
                 onChange={(val) => {
                   setBookie(i, val);
-                  if (errors.bookieDescriptions[i]) {
+                  if (errors.bookieClickUrls[i]) {
                     setErrors((er) => {
-                      const next = [...er.bookieDescriptions];
+                      const next = [...er.bookieClickUrls];
                       next[i] = false;
-                      return { ...er, bookieDescriptions: next };
+                      return { ...er, bookieClickUrls: next };
                     });
                   }
                 }}
                 bookmakerOptions={bookmakerOptions}
-                descriptionError={errors.bookieDescriptions[i]} />
+                clickUrlError={errors.bookieClickUrls[i]} />
             ))}
           </Section>
 
@@ -784,7 +890,7 @@ function BpEditorInner({ initial, isNew, bookmakerOptions, countries, languages,
               control={
                 <Switch
                   size="small"
-                  checked={form.lid !== '' && form.lid !== null}
+                  checked={form.lid !== null}
                   onChange={(e) => set('lid', e.target.checked ? '' : null)}
                 />
               }

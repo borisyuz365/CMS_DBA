@@ -57,7 +57,7 @@
             "Subtitle_Text_Color": "#B0BEC5",
             "CTA_Text": "Claim Offer",
             "CTA_Text_Color": "#FFFFFF",
-            "Strip_Colors": ["#027B5B", "#03A678"],
+            "Strip_Color": "#027B5B",
             "Click_URL": "https://www.bet365.it/?affiliate=365_00000001"
           }
         ]
@@ -106,7 +106,7 @@
             "Subtitle_Text_Color": "#B0BEC5",
             "CTA_Text": "Apostar agora",
             "CTA_Text_Color": "#FFFFFF",
-            "Strip_Colors": ["#027B5B"],
+            "Strip_Color": "#027B5B",
             "Click_URL": "https://www.bet365.bet.br/?ref=365_br"
           },
           {
@@ -118,7 +118,7 @@
             "Subtitle_Text_Color": null,
             "CTA_Text": "Cadastre-se",
             "CTA_Text_Color": "#FFFFFF",
-            "Strip_Colors": ["#C0392B", "#E74C3C"],
+            "Strip_Color": "#C0392B",
             "Click_URL": "https://www.betano.bet.br/?ref=365_br"
           }
         ]
@@ -163,7 +163,7 @@
             "Subtitle_Text_Color": null,
             "CTA_Text": "Bet Now",
             "CTA_Text_Color": "#FFFFFF",
-            "Strip_Colors": ["#027B5B", "#03A678"],
+            "Strip_Color": "#027B5B",
             "Click_URL": "https://www.bet365.com/?ref=365_global"
           }
         ]

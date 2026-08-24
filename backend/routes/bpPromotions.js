@@ -84,7 +84,8 @@ function groupRows(rows) {
         subtitleTextColor: r.subtitle_text_color || null,
         ctaText:        r.cta_text,
         ctaTextColor:   r.cta_text_color,
-        stripColors:    [r.strip_color_1, r.strip_color_2].filter(Boolean),
+        stripColor:     r.strip_color_1 || null,
+        stripColors:    [r.strip_color_1].filter(Boolean),
         logoImageUrl:   r.logo_image_url,
         clickUrl:       r.click_url,
       });
@@ -127,24 +128,29 @@ function promoParams(body) {
   ];
 }
 
+const { toHexColor, toHexColorOrNull } = require('../services/bp/formatRuntime');
+
 async function insertBookies(conn, promotionId, bookies) {
   if (!Array.isArray(bookies) || bookies.length === 0) return;
-  const values = bookies.map((b) => [
-    promotionId,
-    b.position,
-    b.sectionBgColor || '#12193A',
-    b.bmid,
-    b.titleText       || '',
-    b.titleTextColor  || '#ffffff',
-    b.subtitleText    || null,
-    b.subtitleTextColor|| null,
-    b.ctaText         || '',
-    b.ctaTextColor    || '#ffffff',
-    b.stripColors?.[0]|| null,
-    b.stripColors?.[1]|| null,
-    b.logoImageUrl    || null,
-    b.clickUrl        || '',
-  ]);
+  const values = bookies.map((b) => {
+    const strip = toHexColorOrNull(b.stripColor || b.stripColors?.[0] || null);
+    return [
+      promotionId,
+      b.position,
+      toHexColor(b.sectionBgColor) || '#12193A',
+      b.bmid,
+      b.titleText       || '',
+      toHexColor(b.titleTextColor) || '#ffffff',
+      b.subtitleText    || null,
+      toHexColorOrNull(b.subtitleTextColor),
+      b.ctaText         || '',
+      toHexColor(b.ctaTextColor) || '#ffffff',
+      strip,
+      null, // strip_color_2 unused — single Strip_Color in runtime API
+      (b.logoImageUrl || '').trim() || null,
+      b.clickUrl        || '',
+    ];
+  });
   await conn.query(
     `INSERT INTO bp_bookies
        (promotion_id, position, section_bg_color, bmid,
@@ -307,6 +313,57 @@ router.post('/migrate-lang-ids', async (req, res, next) => {
     }
     if (total > 0) await afterPromotionMutation();
     res.json({ ok: true, migrated: total, details });
+  } catch (err) { next(err); }
+});
+
+// One-shot: normalise bookie colour columns to #RRGGBB hex and clear junk
+// strip defaults (#000000) so runtime can fall back to bookmaker primary colour.
+// Safe to re-run.
+router.post('/migrate-colors', async (req, res, next) => {
+  try {
+    const [rows] = await pool.query(
+      `SELECT id, title_text_color, subtitle_text_color, cta_text_color,
+              section_bg_color, strip_color_1, strip_color_2
+         FROM bp_bookies`
+    );
+    let updated = 0;
+    let stripsCleared = 0;
+    for (const r of rows) {
+      const next = {
+        title_text_color:    toHexColor(r.title_text_color) || r.title_text_color,
+        subtitle_text_color: toHexColorOrNull(r.subtitle_text_color),
+        cta_text_color:      toHexColor(r.cta_text_color) || r.cta_text_color,
+        section_bg_color:    toHexColor(r.section_bg_color) || r.section_bg_color,
+        strip_color_1:       toHexColorOrNull(r.strip_color_1),
+        strip_color_2:       null,
+      };
+      // Treat pure black strip as the old dual-colour default junk, not an override.
+      if (next.strip_color_1 === '#000000') {
+        next.strip_color_1 = null;
+        stripsCleared += 1;
+      }
+      const changed =
+        next.title_text_color !== r.title_text_color
+        || next.subtitle_text_color !== r.subtitle_text_color
+        || next.cta_text_color !== r.cta_text_color
+        || next.section_bg_color !== r.section_bg_color
+        || next.strip_color_1 !== r.strip_color_1
+        || r.strip_color_2 != null;
+      if (!changed) continue;
+      await pool.query(
+        `UPDATE bp_bookies SET
+           title_text_color = ?, subtitle_text_color = ?, cta_text_color = ?,
+           section_bg_color = ?, strip_color_1 = ?, strip_color_2 = ?
+         WHERE id = ?`,
+        [
+          next.title_text_color, next.subtitle_text_color, next.cta_text_color,
+          next.section_bg_color, next.strip_color_1, next.strip_color_2, r.id,
+        ],
+      );
+      updated += 1;
+    }
+    if (updated > 0) await afterPromotionMutation();
+    res.json({ ok: true, updated, stripsCleared });
   } catch (err) { next(err); }
 });
 

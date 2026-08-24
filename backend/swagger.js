@@ -193,13 +193,21 @@ const options = {
             Subtitle_Text_Color: { type: 'string', pattern: '^#[0-9A-Fa-f]{6}$', nullable: true, example: '#999999' },
             CTA_Text:            { type: 'string' },
             CTA_Text_Color:      { type: 'string', pattern: '^#[0-9A-Fa-f]{6}$', example: '#FFFFFF' },
-            Strip_Colors:        {
-              type: 'array',
-              items: { type: 'string', pattern: '^#[0-9A-Fa-f]{6}$' },
-              maxItems: 2,
-              example: ['#027B5B', '#03A678'],
+            Strip_Color:         {
+              type: 'string',
+              pattern: '^#[0-9A-Fa-f]{6}$',
+              nullable: true,
+              example: '#027B5B',
+              description:
+                'Single strip colour. Defaults to the bookmaker primary colour from T_BET_BOOKMAKERS.COLOR when not overridden in the CMS.',
             },
             Click_URL:           { type: 'string' },
+            Logo_Image_URL:      {
+              type: 'string',
+              nullable: true,
+              description:
+                'Bookmaker logo URL. Defaults to the CDN logo for the BMID when not overridden in the CMS.',
+            },
           },
         },
         TextColor: {

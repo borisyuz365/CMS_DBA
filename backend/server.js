@@ -146,6 +146,7 @@ app.use((req, res) => {
 // Start server
 countryCache.start();
 languageCache.start();
+require('./services/bookmakerBrandCache').start();
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
   console.log(`Health check: http://localhost:${PORT}/api/health`);

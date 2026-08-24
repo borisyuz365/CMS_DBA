@@ -99,7 +99,7 @@ function buildVersions(rows) {
         subtitleTextColor: r.subtitle_text_color|| null,
         ctaText:           r.cta_text,
         ctaTextColor:   r.cta_text_color,
-        stripColors:    [r.strip_color_1, r.strip_color_2].filter(Boolean),
+        stripColors:    [r.strip_color_1].filter(Boolean),
         logoImageUrl:   r.logo_image_url,
         clickUrl:       r.click_url,
       });

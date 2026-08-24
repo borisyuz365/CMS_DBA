@@ -4,6 +4,11 @@
 // All colour fields are normalised to uppercase #RRGGBB hex before return.
 // rgb/rgba (and short hex) are converted; semi-transparent rgba is composited
 // onto black so clients (e.g. Android Color.parseColor) always get opaque hex.
+//
+// Strip_Color and Logo_Image_URL fall back to the bookmaker's primary colour /
+// CDN logo from T_BET_BOOKMAKERS when the CMS has not stored an override.
+
+const bookmakerBrandCache = require('../bookmakerBrandCache');
 
 const ITALY_CID = 3;
 const PLATFORM_BY_APP_TYPE = { '1': 'iOS', '2': 'Android' };
@@ -47,6 +52,9 @@ const NAMED_HEX = {
  * Normalise any CSS colour string to uppercase #RRGGBB.
  * Returns null for null/empty input. Unrecognised values are returned unchanged
  * (trimmed) so we never invent a colour silently.
+ *
+ * Tolerates truncated rgba strings (legacy colour-field maxLength bugs),
+ * e.g. "rgba(255,255,255,0.6" without a closing paren.
  */
 function toHexColor(input) {
   if (input == null) return null;
@@ -65,9 +73,9 @@ function toHexColor(input) {
     return `#${h.toUpperCase()}`;
   }
 
-  // rgb(r,g,b) / rgba(r,g,b,a) — integers or percentages
+  // rgb(r,g,b) / rgba(r,g,b,a) — optional closing paren (truncated legacy values)
   const rgbMatch = raw.match(
-    /^rgba?\(\s*([0-9.]+%?)\s*,\s*([0-9.]+%?)\s*,\s*([0-9.]+%?)\s*(?:,\s*([0-9.]+)\s*)?\)$/i
+    /^rgba?\(\s*([0-9.]+%?)\s*,\s*([0-9.]+%?)\s*,\s*([0-9.]+%?)\s*(?:,\s*([0-9.]+)\s*)?\)?\s*$/i
   );
   if (rgbMatch) {
     const channel = (v) => {
@@ -87,9 +95,23 @@ function toHexColor(input) {
   return raw;
 }
 
+/** Like toHexColor, but returns null unless the result is a real #RRGGBB hex. */
 function toHexColorOrNull(input) {
   const hex = toHexColor(input);
-  return hex || null;
+  if (hex && /^#[0-9A-F]{6}$/.test(hex)) return hex;
+  return null;
+}
+
+function resolveStripColor(bookie) {
+  const override = bookie.stripColor
+    || (Array.isArray(bookie.stripColors) ? bookie.stripColors[0] : null);
+  return toHexColorOrNull(override) || bookmakerBrandCache.brandColor(bookie.bmid) || null;
+}
+
+function resolveLogoUrl(bookie) {
+  const override = bookie.logoImageUrl ? String(bookie.logoImageUrl).trim() : '';
+  if (override) return absolutizeAssetUrl(override);
+  return bookmakerBrandCache.logoUrl(bookie.bmid);
 }
 
 function formatVersion(v, { uc } = {}) {
@@ -145,9 +167,9 @@ function formatVersion(v, { uc } = {}) {
       Subtitle_Text_Color: toHexColorOrNull(b.subtitleTextColor),
       CTA_Text:         b.ctaText,
       CTA_Text_Color:   toHexColor(b.ctaTextColor),
-      Strip_Colors:     (b.stripColors || []).map(toHexColor).filter(Boolean),
+      Strip_Color:      resolveStripColor(b),
       Click_URL:        b.clickUrl,
-      Logo_Image_URL:   absolutizeAssetUrl(b.logoImageUrl),
+      Logo_Image_URL:   resolveLogoUrl(b),
     })),
   };
 }
@@ -158,5 +180,6 @@ module.exports = {
   parseOptionalInt,
   absolutizeAssetUrl,
   toHexColor,
+  toHexColorOrNull,
   formatVersion,
 };
