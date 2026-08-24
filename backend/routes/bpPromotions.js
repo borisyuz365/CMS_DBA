@@ -3,6 +3,7 @@
 
 const router = require('express').Router();
 const countryCache = require('../services/countryCache');
+const languageCache = require('../services/languageCache');
 const { notifyBpRuntimeInvalidate } = require('../services/bpRuntimeClient');
 const { invalidateBpCache } = require('../services/cloudfront');
 const { pool } = require('../db/mysql');
@@ -179,6 +180,24 @@ router.get('/countries', (req, res) => {
 
 /**
  * @openapi
+ * /api/bp/languages:
+ *   get:
+ *     tags: [Promotions]
+ *     summary: List UI languages for the Language picker
+ *     description: >
+ *       { id, name } pairs sourced from production T_LANGUAGES (MSSQL SportifierDB),
+ *       filtered to UI languages (LANG_TYPE = 1). Same LANGUAGE_ID values used by
+ *       mobile targeting — not the local languages.json ID space.
+ *     responses:
+ *       200:
+ *         description: UI languages, sorted by name
+ */
+router.get('/languages', (req, res) => {
+  res.json(languageCache.listLanguages());
+});
+
+/**
+ * @openapi
  * /api/bp/promotions:
  *   get:
  *     tags: [Promotions]
@@ -266,6 +285,28 @@ router.delete('/promotions/:id', async (req, res, next) => {
     if (!result.affectedRows) return res.status(404).json({ error: 'Not found' });
     await afterPromotionMutation();
     res.json({ success: true });
+  } catch (err) { next(err); }
+});
+
+// One-shot: remap legacy languages.json IDs → production T_LANGUAGES IDs on
+// bp_promotions.lang. Safe to re-run (no-ops once values are already new).
+// Map: Spanish 5→29, Italian 8→12, Portuguese BR 9→31. 1/7 unchanged.
+router.post('/migrate-lang-ids', async (req, res, next) => {
+  const MAP = { 5: 29, 8: 12, 9: 31 };
+  try {
+    const details = [];
+    let total = 0;
+    for (const [from, to] of Object.entries(MAP)) {
+      const [result] = await pool.query(
+        'UPDATE bp_promotions SET lang = ? WHERE lang = ?',
+        [to, Number(from)],
+      );
+      const n = result.affectedRows || 0;
+      total += n;
+      details.push({ from: Number(from), to, updated: n });
+    }
+    if (total > 0) await afterPromotionMutation();
+    res.json({ ok: true, migrated: total, details });
   } catch (err) { next(err); }
 });
 

@@ -1,24 +1,31 @@
 // Country→language and translatable-field helpers for DBA templates.
 //
-// The CMS local terms.json uses the language IDs defined in backend/data/languages.json
-// (English=1, Spanish=5, German=7, Italian=8, Portuguese=9, ...). This is a *separate*
-// ID space from the BettingAdsService Sheets, which use different IDs (e.g. Brazilian
-// Portuguese = 31). When/if we unify, the map below is the single place to update.
+// Language IDs are production T_LANGUAGES.LANGUAGE_ID values (UI languages,
+// LANG_TYPE = 1) — the same space as mobile / BP targeting. Do NOT use
+// backend/data/languages.json IDs (those diverge, e.g. Italian 8 vs 12).
+//
+// Live resolution goes through languageCache when MSSQL is available; the
+// static map below is the offline fallback (also production IDs).
 
-// Country code → CMS-local language id.
+const languageCache = require('../services/languageCache');
+
+// Country code → production LANGUAGE_ID (fallback when cache is empty).
 const COUNTRY_TO_LANG = {
   GLOBAL: 1, US: 1, UK: 1, AU: 1, CA: 1,
   DE: 7,
-  ES: 5,
-  IT: 8,
-  BR: 9,
-  AR: 5, MX: 5, CL: 5, CO: 5, EC: 5, PE: 5,
-  PL: 1, // Polish not in languages.json yet; fall back to English.
+  ES: 29,
+  IT: 12,
+  BR: 31,
+  AR: 29, MX: 29, CL: 29, CO: 29, EC: 29, PE: 29,
+  PL: 35,
 };
 
 function countryToLangId(cc) {
   if (!cc) return null;
-  return COUNTRY_TO_LANG[String(cc).toUpperCase()] || null;
+  const code = String(cc).toUpperCase();
+  const live = languageCache.langIdForCountry(code);
+  if (live != null) return live;
+  return COUNTRY_TO_LANG[code] || null;
 }
 
 // Field paths (relative to the template object) that can carry translations.

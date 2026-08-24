@@ -2358,6 +2358,11 @@ class ApiService {
     return this.fetch('/dba/bookmaker-pool');
   }
 
+  /** UI languages from production T_LANGUAGES (DBA translations + shared with BP). */
+  async getDbaLanguages() {
+    return this.fetch('/dba/languages');
+  }
+
   // ── Betting Promotions (BPMB) ──────────────────────────────────────────────
 
   async getBpPromotions() {
@@ -2366,6 +2371,11 @@ class ApiService {
 
   async getBpCountries() {
     return this.fetch('/bp/countries');
+  }
+
+  /** UI languages from production T_LANGUAGES (not local languages.json). */
+  async getBpLanguages() {
+    return this.fetch('/bp/languages');
   }
 
   async getBpPromotion(id) {

@@ -13,7 +13,7 @@ const options = {
         '`GET /api/bp` returns a **flat JSON promotion object** (no `BPMB` wrapper).\n' +
         'Deploy separately behind CloudFront; see `docs/DEVOPS-BP-RUNTIME.md`.\n\n' +
         '**CMS (internal)** — this server (`cms-dba`):\n' +
-        '`/api/bp/promotions` CRUD and `/api/bp/countries` for the BP Editor.\n\n' +
+        '`/api/bp/promotions` CRUD plus `/api/bp/countries` and `/api/bp/languages` for the BP Editor.\n\n' +
         '**Targeting.uc** echoes the request `uc` (null when omitted). ' +
         '**Legal.Regulatory_Logos** only when request `uc=3` (Italy).\n\n' +
         'CMS writes notify the runtime service to reload its cache and purge CloudFront `/api/bp*`.\n\n' +

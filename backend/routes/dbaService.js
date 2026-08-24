@@ -150,4 +150,48 @@ router.post('/migrate-interstitial-size', async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
+// One-shot: remap DBA Templates term languageIds from legacy languages.json
+// IDs → production T_LANGUAGES (5→29, 8→12, 9→31). Safe to re-run.
+router.post('/migrate-lang-ids', async (req, res, next) => {
+  const MAP = { 5: 29, 8: 12, 9: 31 };
+  try {
+    const actor = req.body?.actor || 'system';
+    const dictionaryStorage = require('../utils/dictionaryStorage');
+    const terms = dictionaryStorage.readTerms();
+    let changedTerms = 0;
+    let changedValues = 0;
+    for (const t of terms) {
+      const isDba = t.category === 'DBA Templates'
+        || String(t.aliasName || '').startsWith('dba_template:');
+      if (!isDba) continue;
+      const values = t.values || [];
+      const byNew = {};
+      let touched = false;
+      for (const v of values) {
+        const old = v.languageId;
+        const neu = MAP[old] != null ? MAP[old] : old;
+        if (neu !== old) {
+          touched = true;
+          changedValues += 1;
+        }
+        byNew[neu] = { ...v, languageId: neu };
+      }
+      if (touched) {
+        t.values = Object.values(byNew);
+        t.valsCount = t.values.length;
+        changedTerms += 1;
+      }
+    }
+    if (changedTerms > 0) {
+      dictionaryStorage.writeTerms(terms);
+      await appendAuditEntry({
+        kind: 'edit',
+        who: actor,
+        text: `Migrated ${changedTerms} DBA term(s) (${changedValues} values) to T_LANGUAGES IDs`,
+      });
+    }
+    res.json({ ok: true, migratedTerms: changedTerms, migratedValues: changedValues });
+  } catch (err) { next(err); }
+});
+
 module.exports = router;

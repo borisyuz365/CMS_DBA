@@ -62712,13 +62712,13 @@
         "status": "Approved"
       },
       {
-        "languageId": 5,
+        "languageId": 29,
         "value": "Apuesta ahora",
         "isDefault": false,
         "status": "Approved"
       },
       {
-        "languageId": 9,
+        "languageId": 31,
         "value": "Aposte Agora",
         "isDefault": false,
         "status": "Approved"
@@ -62742,13 +62742,13 @@
         "status": "Approved"
       },
       {
-        "languageId": 5,
+        "languageId": 29,
         "value": "Reclama tu bono de $200",
         "isDefault": false,
         "status": "Approved"
       },
       {
-        "languageId": 9,
+        "languageId": 31,
         "value": "Receba R$50 Bônus",
         "isDefault": false,
         "status": "Approved"
@@ -62772,13 +62772,13 @@
         "status": "Approved"
       },
       {
-        "languageId": 5,
+        "languageId": 29,
         "value": "Apuesta $30, obten $200",
         "isDefault": false,
         "status": "Approved"
       },
       {
-        "languageId": 9,
+        "languageId": 31,
         "value": "Aposte R$10, receba R$50",
         "isDefault": false,
         "status": "Approved"

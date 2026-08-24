@@ -876,7 +876,7 @@ export default function BpEditor() {
   useEffect(() => {
     let cancelled = false;
     const promoPromise = isNew ? Promise.resolve(null) : apiService.getBpPromotion(id);
-    Promise.all([promoPromise, apiService.getDbaBookmakerPool(), apiService.getBpCountries(), apiService.getLanguages()])
+    Promise.all([promoPromise, apiService.getDbaBookmakerPool(), apiService.getBpCountries(), apiService.getBpLanguages()])
       .then(([promo, bms, cids, langs]) => {
         if (cancelled) return;
         setInitial(promo);
@@ -891,6 +891,7 @@ export default function BpEditor() {
         setBookmakerOptions(opts);
         // Countries response: { id, name } — real T_COUNTRIES CIDs, not backend/data/countries.json.
         setCountries(Array.isArray(cids) ? cids : []);
+        // Languages: { id, name } from production T_LANGUAGES (UI only) — not languages.json.
         setLanguages(Array.isArray(langs) ? langs : []);
         setReady(true);
       })

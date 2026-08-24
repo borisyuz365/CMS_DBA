@@ -6,22 +6,43 @@
 // is treated as canonical and stays synced with the parent's regular TextField
 // value.
 //
-// To keep moving parts down, the supported language set is hardcoded here.
-// When the CMS needs more, swap to /api/languages.
+// Language IDs come from production T_LANGUAGES (UI only) via /api/dba/languages
+// — the same source as BP targeting. English (id=1) is always listed first.
 import React, { useEffect, useMemo, useState } from 'react';
 import {
   Dialog, DialogTitle, DialogContent, DialogActions, IconButton, Stack, TextField,
-  Typography, Button, Box, Tooltip, Chip,
+  Typography, Button, Box, Tooltip, Chip, CircularProgress,
 } from '@mui/material';
 import TranslateIcon from '@mui/icons-material/Translate';
+import apiService from '../../services/api';
 
-export const SUPPORTED_LANGUAGES = [
-  { id: 1, code: 'en', label: 'English',           flag: '🇬🇧', defaultForEnglish: true },
-  { id: 9, code: 'pt', label: 'Portuguese (BR)',   flag: '🇧🇷' },
-  { id: 5, code: 'es', label: 'Spanish (LATAM)',   flag: '🇲🇽' },
-  { id: 7, code: 'de', label: 'German',            flag: '🇩🇪' },
-  { id: 8, code: 'it', label: 'Italian',           flag: '🇮🇹' },
+const FLAG_BY_ISO2 = {
+  en: '🇬🇧', he: '🇮🇱', ar: '🇸🇦', ru: '🇷🇺', es: '🇲🇽', fr: '🇫🇷',
+  de: '🇩🇪', it: '🇮🇹', pt: '🇧🇷', tr: '🇹🇷', pl: '🇵🇱', ro: '🇷🇴',
+};
+
+// Offline fallback when /api/dba/languages has not loaded yet (production IDs).
+const FALLBACK_LANGUAGES = [
+  { id: 1, name: 'English', iso2: 'en' },
+  { id: 31, name: 'Portuguese', iso2: 'pt' },
+  { id: 29, name: 'Spanish', iso2: 'es' },
+  { id: 7, name: 'German', iso2: 'de' },
+  { id: 12, name: 'Italian', iso2: 'it' },
 ];
+
+function normalizeLangList(list) {
+  const rows = (Array.isArray(list) ? list : []).map((l) => ({
+    id: Number(l.id),
+    name: l.name || `Language ${l.id}`,
+    iso2: l.iso2 ? String(l.iso2).toLowerCase() : null,
+  })).filter((l) => Number.isFinite(l.id));
+  rows.sort((a, b) => {
+    if (a.id === 1) return -1;
+    if (b.id === 1) return 1;
+    return a.name.localeCompare(b.name);
+  });
+  return rows;
+}
 
 // Count language entries that have a non-empty value (excluding English, which
 // is the canonical / TextField value).
@@ -43,6 +64,22 @@ export function countTranslations(translations) {
 export default function TranslationPopover({ fieldLabel, canonical = '', translations, onChange, multiline = false }) {
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState({});
+  const [languages, setLanguages] = useState(FALLBACK_LANGUAGES);
+  const [langsLoading, setLangsLoading] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    setLangsLoading(true);
+    apiService.getDbaLanguages()
+      .then((list) => {
+        if (cancelled) return;
+        const next = normalizeLangList(list);
+        if (next.length) setLanguages(next);
+      })
+      .catch(() => { /* keep fallback */ })
+      .finally(() => { if (!cancelled) setLangsLoading(false); });
+    return () => { cancelled = true; };
+  }, []);
 
   // Seed the dialog state from the parent. English defaults to the canonical
   // TextField value so the user doesn't have to retype it.
@@ -109,23 +146,30 @@ export default function TranslationPopover({ fieldLabel, canonical = '', transla
           </Typography>
         </DialogTitle>
         <DialogContent>
-          <Stack spacing={2} sx={{ pt: 1 }}>
-            {SUPPORTED_LANGUAGES.map((lang) => (
-              <Stack key={lang.id} direction="row" spacing={1.5} alignItems="flex-start">
-                <Box sx={{ width: 140, pt: multiline ? 1 : 1.5, display: 'flex', alignItems: 'center', gap: 0.75 }}>
-                  <Box component="span" sx={{ fontSize: 16 }}>{lang.flag}</Box>
-                  <Typography sx={{ fontSize: 13, fontWeight: 500 }}>{lang.label}</Typography>
-                  {lang.defaultForEnglish && <Chip label="canonical" size="small" sx={{ height: 18, fontSize: 10 }} />}
-                </Box>
-                <TextField
-                  fullWidth size="small" multiline={multiline} minRows={multiline ? 2 : 1}
-                  value={draft[lang.id] || ''}
-                  onChange={(e) => setLang(lang.id, e.target.value)}
-                  placeholder={lang.defaultForEnglish ? 'English value' : `Translate to ${lang.label}…`}
-                />
-              </Stack>
-            ))}
-          </Stack>
+          {langsLoading && languages === FALLBACK_LANGUAGES ? (
+            <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}><CircularProgress size={28} /></Box>
+          ) : (
+            <Stack spacing={2} sx={{ pt: 1 }}>
+              {languages.map((lang) => (
+                <Stack key={lang.id} direction="row" spacing={1.5} alignItems="flex-start">
+                  <Box sx={{ width: 160, pt: multiline ? 1 : 1.5, display: 'flex', alignItems: 'center', gap: 0.75 }}>
+                    <Box component="span" sx={{ fontSize: 16 }}>{FLAG_BY_ISO2[lang.iso2] || '🏳️'}</Box>
+                    <Typography sx={{ fontSize: 13, fontWeight: 500 }}>
+                      {lang.name}
+                      <Box component="span" sx={{ ml: 0.5, color: 'text.secondary', fontWeight: 400 }}>({lang.id})</Box>
+                    </Typography>
+                    {lang.id === 1 && <Chip label="canonical" size="small" sx={{ height: 18, fontSize: 10 }} />}
+                  </Box>
+                  <TextField
+                    fullWidth size="small" multiline={multiline} minRows={multiline ? 2 : 1}
+                    value={draft[lang.id] || ''}
+                    onChange={(e) => setLang(lang.id, e.target.value)}
+                    placeholder={lang.id === 1 ? 'English value' : `Translate to ${lang.name}…`}
+                  />
+                </Stack>
+              ))}
+            </Stack>
+          )}
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpen(false)}>Cancel</Button>
