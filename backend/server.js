@@ -36,6 +36,7 @@ const dbaLanguagesRoutes = require('./routes/dbaLanguages');
 const bpPromotionsRoutes = require('./routes/bpPromotions');
 const countryCache = require('./services/countryCache');
 const languageCache = require('./services/languageCache');
+const networkCache = require('./services/networkCache');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -116,7 +117,9 @@ if (fs.existsSync(frontendDistPath)) {
     'Serving CMS UI from frontend/dist. For live template preview edits, use Vite at http://localhost:3000 (npm run both).',
   );
   app.use(express.static(frontendDistPath));
-  app.get('*', (req, res) => {
+  app.get('*', (req, res, next) => {
+    // Unmatched API routes must not fall through to the SPA shell (breaks JSON clients).
+    if (req.path.startsWith('/api/')) return next();
     res.sendFile(path.join(frontendDistPath, 'index.html'));
   });
 }
@@ -146,6 +149,7 @@ app.use((req, res) => {
 // Start server
 countryCache.start();
 languageCache.start();
+networkCache.start();
 require('./services/bookmakerBrandCache').start();
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

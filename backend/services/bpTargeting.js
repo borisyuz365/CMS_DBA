@@ -8,21 +8,30 @@
 //   platform  — exact match OR version.platform === 'All'
 //   lid       — exact match OR version.lid === null (all leagues)
 //   lang      — exact match OR version.lang === null (all languages)
-//   publisher — exact match OR version.publisher === null (all publishers)
-//   campaign  — exact match OR version.campaign === null (all campaigns)
+//   publisher — network name string (T_PUBLISHERS.ALIAS_NAME); case-insensitive match OR null (all)
+//   campaign  — case-insensitive match OR version.campaign === null (all campaigns)
 //
 // SOV selection: weighted random lottery among the matching candidates.
 // Versions with higher SOV are proportionally more likely to be served.
 
+function normKey(val) {
+  if (val == null || val === '') return null;
+  const s = String(val).trim();
+  return s === '' ? null : s.toLowerCase();
+}
+
 function selectVersion(versions, { cid, platform, lid, lang, publisher, campaign } = {}) {
-  const campaignNorm = campaign == null ? null : String(campaign).trim();
+  const campaignKey = normKey(campaign);
+  const publisherKey = normKey(publisher);
   const candidates = versions.filter((v) => {
     const cidMatch       = cid == null || v.cid == null       || v.cid       === Number(cid);
     const platformMatch  = !platform || v.platform === 'All'  || v.platform === platform;
     const lidMatch       = lid == null || v.lid == null        || v.lid       === Number(lid);
     const langMatch      = lang == null || v.lang == null      || v.lang      === Number(lang);
-    const publisherMatch = publisher == null || v.publisher == null || v.publisher === Number(publisher);
-    const campaignMatch  = campaignNorm == null || !v.campaign || v.campaign === campaignNorm;
+    const publisherMatch = publisherKey == null || v.publisher == null
+      || normKey(v.publisher) === publisherKey;
+    const campaignMatch  = campaignKey == null || !v.campaign
+      || normKey(v.campaign) === campaignKey;
     return cidMatch && platformMatch && lidMatch && langMatch && publisherMatch && campaignMatch;
   });
 

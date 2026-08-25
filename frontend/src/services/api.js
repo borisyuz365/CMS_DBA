@@ -2378,6 +2378,11 @@ class ApiService {
     return this.fetch('/bp/languages');
   }
 
+  /** Attribution networks from production T_PUBLISHERS (ALIAS_NAME). */
+  async getBpNetworks() {
+    return this.fetch('/bp/networks');
+  }
+
   async getBpPromotion(id) {
     return this.fetch(`/bp/promotions/${id}`);
   }

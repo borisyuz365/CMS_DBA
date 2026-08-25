@@ -476,7 +476,7 @@ function promoToForm(promo) {
     // lid 0 / null / undefined all mean "no league targeting"
     lid: (promo.lid != null && Number(promo.lid) > 0) ? Number(promo.lid) : null,
     lang: promo.lang ?? '',
-    publisher: promo.publisher ?? '',
+    publisher: promo.publisher != null ? String(promo.publisher) : '',
     campaign: promo.campaign ?? '',
     sov: promo.sov ?? 100,
     active: promo.active !== false,
@@ -512,7 +512,7 @@ function formToPayload(form) {
     cid: form.cid !== '' ? Number(form.cid) : null,
     lid: (form.lid !== '' && form.lid != null && Number(form.lid) > 0) ? Number(form.lid) : null,
     lang: form.lang !== '' ? Number(form.lang) : null,
-    publisher: form.publisher !== '' ? Number(form.publisher) : null,
+    publisher: form.publisher?.trim() || null,
     campaign: form.campaign?.trim() || null,
     sov: Number(form.sov),
     pageBgColor: toHexColor(form.pageBgColor) || '#0a1628',
@@ -553,7 +553,7 @@ function formToPayload(form) {
 
 // ── Inner editor ──────────────────────────────────────────────────────────────
 
-function BpEditorInner({ initial, isNew, bookmakerOptions, countries, languages, draftKey }) {
+function BpEditorInner({ initial, isNew, bookmakerOptions, countries, languages, networks, draftKey }) {
   const navigate = useNavigate();
 
   const [form, setForm] = useState(() => {
@@ -718,11 +718,18 @@ function BpEditorInner({ initial, isNew, bookmakerOptions, countries, languages,
                 </Select>
               </FormControl>
             </Field>
-            <Field label="Publisher" help="Publisher ID — leave blank to match all">
-              <TextField size="small" fullWidth type="number" inputProps={{ min: 1 }}
-                value={form.publisher}
-                onChange={(e) => set('publisher', e.target.value)}
-                placeholder="e.g. 147" />
+            <Field label="Network" help="Attribution network (mobile API publisher param) — leave blank to match all">
+              <FormControl size="small" fullWidth>
+                <Select value={form.publisher} onChange={(e) => set('publisher', e.target.value)}>
+                  <MenuItem value="">All networks</MenuItem>
+                  {form.publisher && !networks.some((n) => n.name === form.publisher) && (
+                    <MenuItem value={form.publisher}>{form.publisher} (legacy)</MenuItem>
+                  )}
+                  {networks.map((n) => (
+                    <MenuItem key={n.name} value={n.name}>{n.name}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Field>
             <Field label="Campaign" help="Leave blank to match all campaigns">
               <TextField size="small" fullWidth
@@ -976,14 +983,19 @@ export default function BpEditor() {
   const [bookmakerOptions, setBookmakerOptions] = useState([]);
   const [countries, setCountries] = useState([]);
   const [languages, setLanguages] = useState([]);
+  const [networks, setNetworks] = useState([]);
   const [loadError, setLoadError] = useState(null);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
     const promoPromise = isNew ? Promise.resolve(null) : apiService.getBpPromotion(id);
-    Promise.all([promoPromise, apiService.getDbaBookmakerPool(), apiService.getBpCountries(), apiService.getBpLanguages()])
-      .then(([promo, bms, cids, langs]) => {
+    const networksPromise = apiService.getBpNetworks().catch((err) => {
+      console.warn('[BpEditor] networks unavailable:', err.message);
+      return [];
+    });
+    Promise.all([promoPromise, apiService.getDbaBookmakerPool(), apiService.getBpCountries(), apiService.getBpLanguages(), networksPromise])
+      .then(([promo, bms, cids, langs, nets]) => {
         if (cancelled) return;
         setInitial(promo);
         // Pool response: { id: "bk_47", name, brandColor, defaultLogo: { bg, fg, initials } }
@@ -999,6 +1011,7 @@ export default function BpEditor() {
         setCountries(Array.isArray(cids) ? cids : []);
         // Languages: { id, name } from production T_LANGUAGES (UI only) — not languages.json.
         setLanguages(Array.isArray(langs) ? langs : []);
+        setNetworks(Array.isArray(nets) ? nets : []);
         setReady(true);
       })
       .catch((err) => { if (!cancelled) setLoadError(err.message); });
@@ -1009,5 +1022,5 @@ export default function BpEditor() {
   if (!ready) return <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}><CircularProgress /></Box>;
 
   const draftKey = isNew ? 'bp_draft_new' : `bp_draft_${id}`;
-  return <BpEditorInner key={id || 'new'} initial={initial} isNew={isNew} bookmakerOptions={bookmakerOptions} countries={countries} languages={languages} draftKey={draftKey} />;
+  return <BpEditorInner key={id || 'new'} initial={initial} isNew={isNew} bookmakerOptions={bookmakerOptions} countries={countries} languages={languages} networks={networks} draftKey={draftKey} />;
 }

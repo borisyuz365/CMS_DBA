@@ -4,6 +4,7 @@
 const router = require('express').Router();
 const countryCache = require('../services/countryCache');
 const languageCache = require('../services/languageCache');
+const networkCache = require('../services/networkCache');
 const { notifyBpRuntimeInvalidate } = require('../services/bpRuntimeClient');
 const { invalidateBpCache } = require('../services/cloudfront');
 const { pool } = require('../db/mysql');
@@ -103,7 +104,7 @@ function promoParams(body) {
     body.platform  || 'All',
     body.lid       != null ? Number(body.lid) : null,
     body.lang      != null && body.lang !== '' ? Number(body.lang) : null,
-    body.publisher != null && body.publisher !== '' ? Number(body.publisher) : null,
+    body.publisher != null && String(body.publisher).trim() !== '' ? String(body.publisher).trim() : null,
     body.campaign?.trim() || null,
     body.sov       != null ? Number(body.sov) : 100,
     body.pageBgColor || '#000000',
@@ -214,6 +215,24 @@ router.get('/languages', (req, res) => {
 
 /**
  * @openapi
+ * /api/bp/networks:
+ *   get:
+ *     tags: [Promotions]
+ *     summary: List attribution networks for the Publisher picker
+ *     description: >
+ *       { id, name } pairs sourced from production T_PUBLISHERS (MSSQL SportifierDB).
+ *       `name` is ALIAS_NAME — the same string the mobile API sends as the `publisher`
+ *       query param (the network the user came from).
+ *     responses:
+ *       200:
+ *         description: Active networks, sorted by name
+ */
+router.get('/networks', (req, res) => {
+  res.json(networkCache.listNetworks());
+});
+
+/**
+ * @openapi
  * /api/bp/promotions:
  *   get:
  *     tags: [Promotions]
@@ -301,6 +320,48 @@ router.delete('/promotions/:id', async (req, res, next) => {
     if (!result.affectedRows) return res.status(404).json({ error: 'Not found' });
     await afterPromotionMutation();
     res.json({ success: true });
+  } catch (err) { next(err); }
+});
+
+// One-shot: widen publisher column to VARCHAR (if still INT) and remap legacy
+// numeric publisher IDs → T_PUBLISHERS.ALIAS_NAME strings. Safe to re-run.
+router.post('/migrate-publisher-ids', async (req, res, next) => {
+  try {
+    const [cols] = await pool.query(
+      `SELECT DATA_TYPE AS dataType
+         FROM information_schema.COLUMNS
+        WHERE TABLE_SCHEMA = DATABASE()
+          AND TABLE_NAME = 'bp_promotions'
+          AND COLUMN_NAME = 'publisher'`
+    );
+    let columnMigrated = false;
+    if (cols[0]?.dataType === 'int') {
+      await pool.query(
+        'ALTER TABLE bp_promotions MODIFY COLUMN publisher VARCHAR(255) DEFAULT NULL'
+      );
+      columnMigrated = true;
+    }
+
+    const [rows] = await pool.query(
+      'SELECT id, publisher FROM bp_promotions WHERE publisher IS NOT NULL'
+    );
+    let updated = 0;
+    const details = [];
+    for (const row of rows) {
+      const raw = String(row.publisher).trim();
+      if (!/^\d+$/.test(raw)) continue;
+      const name = networkCache.nameById(raw);
+      if (!name) {
+        details.push({ id: row.id, from: raw, to: null, skipped: true });
+        continue;
+      }
+      if (name === raw) continue;
+      await pool.query('UPDATE bp_promotions SET publisher = ? WHERE id = ?', [name, row.id]);
+      updated += 1;
+      details.push({ id: row.id, from: raw, to: name });
+    }
+    if (columnMigrated || updated > 0) await afterPromotionMutation();
+    res.json({ ok: true, columnMigrated, updated, details });
   } catch (err) { next(err); }
 });
 
