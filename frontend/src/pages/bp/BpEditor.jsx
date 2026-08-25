@@ -440,8 +440,8 @@ const DEFAULT_FORM = {
   legal: {
     enabled: false, text: '', color: '#ffffff', link: '',
     regulatoryLogos: [
-      { src: '/legal-logos/italia-gambling-full.svg', link: '' },
-      { src: '/legal-logos/italia-gambling-gauge.svg', link: '' },
+      { src: '/legal-logos/italia-gambling-full.png', link: '' },
+      { src: '/legal-logos/italia-gambling-gauge.png', link: '' },
     ],
   },
   bookies: [
@@ -498,8 +498,8 @@ function promoToForm(promo) {
       color:   toHexColor(promo.legal?.color) || '#ffffff',
       link:    promo.legal?.link  || '',
       regulatoryLogos: [
-        { src: '/legal-logos/italia-gambling-full.svg', link: promo.legal?.regulatoryLogos?.[0]?.link || '' },
-        { src: '/legal-logos/italia-gambling-gauge.svg', link: promo.legal?.regulatoryLogos?.[1]?.link || '' },
+        { src: '/legal-logos/italia-gambling-full.png', link: promo.legal?.regulatoryLogos?.[0]?.link || '' },
+        { src: '/legal-logos/italia-gambling-gauge.png', link: promo.legal?.regulatoryLogos?.[1]?.link || '' },
       ],
     },
     bookies,
@@ -867,8 +867,8 @@ function BpEditorInner({ initial, isNew, bookmakerOptions, countries, languages,
                   <Field label="Regulatory logos" help="Both logos appear on the right of the footer — set each link">
                     <Stack spacing={1}>
                       {[
-                        { idx: 0, src: '/legal-logos/italia-gambling-full.svg', placeholder: 'Italia Gioco Legale URL' },
-                        { idx: 1, src: '/legal-logos/italia-gambling-gauge.svg', placeholder: 'ADM gauge URL' },
+                        { idx: 0, src: '/legal-logos/italia-gambling-full.png', placeholder: 'Italia Gioco Legale URL' },
+                        { idx: 1, src: '/legal-logos/italia-gambling-gauge.png', placeholder: 'ADM gauge URL' },
                       ].map(({ idx, src, placeholder }) => (
                         <Stack key={idx} direction="row" spacing={1} alignItems="center">
                           <Box sx={{ bgcolor: '#1A2340', borderRadius: 0.5, px: 0.5, py: 0.25, flexShrink: 0 }}>

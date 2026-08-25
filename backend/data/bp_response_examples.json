@@ -43,8 +43,8 @@
           "Color": "#90A4AE",
           "Link": "https://www.adm.gov.it",
           "Regulatory_Logos": [
-            { "Src": "/legal-logos/italia-gambling-full.svg", "Link": "https://www.adm.gov.it" },
-            { "Src": "/legal-logos/italia-gambling-gauge.svg", "Link": "https://www.adm.gov.it" }
+            { "Src": "/legal-logos/italia-gambling-full.png", "Link": "https://www.adm.gov.it" },
+            { "Src": "/legal-logos/italia-gambling-gauge.png", "Link": "https://www.adm.gov.it" }
           ]
         },
         "Bookies": [

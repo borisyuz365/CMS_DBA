@@ -65,8 +65,8 @@ function groupRows(rows) {
           color:   r.legal_color || '#ffffff',
           link:    r.legal_link  || '',
           regulatoryLogos: [
-            { src: '/legal-logos/italia-gambling-full.svg',  link: r.legal_reg_logo1_link || '' },
-            { src: '/legal-logos/italia-gambling-gauge.svg', link: r.legal_reg_logo2_link || '' },
+            { src: '/legal-logos/italia-gambling-full.png',  link: r.legal_reg_logo1_link || '' },
+            { src: '/legal-logos/italia-gambling-gauge.png', link: r.legal_reg_logo2_link || '' },
           ],
         },
         createdAt: r.created_at,

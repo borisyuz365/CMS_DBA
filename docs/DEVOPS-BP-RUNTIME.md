@@ -112,7 +112,7 @@ curl -s https://bp-api.example.com/api/bp/meta
 curl -s "https://bp-api.example.com/api/bp?uc=3&appType=2&lang=10"
 # expect flat promotion JSON, not 404
 
-curl -sI "https://bp-api.example.com/legal-logos/italia-gambling-full.svg"
+curl -sI "https://bp-api.example.com/legal-logos/italia-gambling-full.png"
 # expect HTTP 200
 
 # CMS internal — runtime should NOT be on public CMS host (or return 404)
