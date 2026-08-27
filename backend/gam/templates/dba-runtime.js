@@ -298,7 +298,10 @@
       '.matches[data-layout="interstitial"] .dba-card {' +
         'flex: 0 0 auto; min-height: 0; margin: 0;' +
         'box-sizing: border-box;' +
-        'border-radius: 1.4em; padding: 0.7em 3.5% 0.75em; gap: 0.65em; overflow: hidden;' +
+        /* Top padding trimmed so the date/time pill sits closer to the card's
+           top edge; that space (plus the odds-row padding below) is what
+           funds the doubled teams↔odds gap — same card height throughout. */ +
+        'border-radius: 1.4em; padding: 0.15em 3.5% 0.3em; gap: 0.65em; overflow: hidden;' +
         'display: flex; flex-direction: column; justify-content: center;' +
       '}' +
       /* Spacers (not margins) — GAM WebViews let margin-top overflow under the CTA. */ +
@@ -315,7 +318,7 @@
       '}' +
       '.matches[data-layout="interstitial"] .dba-teams {' +
         'flex: 0 0 auto; min-height: var(--dba-int-crest, 48px); gap: 0; margin-top: 0;' +
-        'font-size: var(--dba-int-team, 8em); font-weight: 600; align-items: center;' +
+        'font-size: var(--dba-int-team, 8em); font-weight: 500; align-items: center;' +
         'display: flex; width: 100%; line-height: 1.15; overflow: visible;' +
       '}' +
       '.matches[data-layout="interstitial"] .dba-teamblock {' +
@@ -351,13 +354,13 @@
         'max-width: 100%; min-width: 0; font-size: 1em; color: inherit; text-align: center;' +
       '}' +
       '.matches[data-layout="interstitial"] .dba-x {' +
-        'flex: 0 0 auto; font-size: 0.85em; font-weight: 700;' +
+        'flex: 0 0 auto; font-size: 0.6em; font-weight: 800;' +
         'margin: 0 1.5%; opacity: 0.75; letter-spacing: 0.02em;' +
-        'text-transform: lowercase; line-height: 1;' +
+        'text-transform: uppercase; line-height: 1;' +
       '}' +
-      /* Odds mirror teams row: same 1fr | vs | 1fr centre column so X sits under vs. */ +
+      /* Odds mirror teams row: same 1fr | VS | 1fr centre column so X sits under VS. */ +
       '.matches[data-layout="interstitial"] .dba-odds {' +
-        'margin-top: 0.2em; font-size: var(--dba-int-odds, 4.8em); flex: 0 0 auto; font-weight: 700;' +
+        'margin-top: 2em; font-size: var(--dba-int-odds, 4.8em); flex: 0 0 auto; font-weight: 700;' +
         'display: flex; align-items: center; width: 100%; min-width: 0;' +
         'overflow: visible;' +
       '}' +
@@ -375,10 +378,10 @@
         'font-size: inherit; font-weight: 700; line-height: 1;' +
       '}' +
       '.matches[data-layout="interstitial"] .dba-odd-slot-draw:before {' +
-        'content: "vs"; visibility: hidden; display: inline-block;' +
-        /* vs spacer tracks --dba-int-team / --dba-int-odds */ +
-        'font-size: 1.35em; font-weight: 700; letter-spacing: 0.02em;' +
-        'text-transform: lowercase; line-height: 1;' +
+        'content: "VS"; visibility: hidden; display: inline-block;' +
+        /* VS spacer tracks --dba-int-team / --dba-int-odds */ +
+        'font-size: 0.95em; font-weight: 800; letter-spacing: 0.02em;' +
+        'text-transform: uppercase; line-height: 1;' +
       '}' +
       '.matches[data-layout="interstitial"] .dba-odd-slot-draw .dba-odd {' +
         'position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);' +
@@ -465,7 +468,9 @@
       ]);
     });
 
-    var vsText = layout === 'interstitial' ? 'vs' : '\u2013';
+    // Interstitial shows a stylized "VS" (smaller, heavier \u2014 see .dba-x CSS);
+    // MPU/banner keep the plain en-dash.
+    var vsText = layout === 'interstitial' ? 'VS' : '\u2013';
 
     return el('div', { 'class': 'dba-card' }, [
       el('div', { 'class': 'dba-pill-anchor' }, [
@@ -706,13 +711,15 @@
 
   function applyInterstitialTypeScale(shell, cardH, w) {
     if (!shell || cardH < 1 || w < 1) return 0;
-    /* Width-primary type; odds always smaller than team names. */
-    var team = Math.round(w * 0.046);
-    team = Math.max(20, Math.min(team, Math.round(cardH * 0.155)));
+    /* Team names 10% smaller, odds 10% larger than the previous pass — sized
+       independently now (odds is no longer capped below team). */
+    var team = Math.round(w * 0.0342);
+    team = Math.max(16, Math.min(team, Math.round(cardH * 0.117)));
     var crest = Math.round(w * 0.057);
     crest = Math.max(29, Math.min(crest, Math.round(cardH * 0.24)));
     var pill = Math.max(13, Math.round(w * 0.026));
-    var odds = Math.max(15, Math.min(Math.round(team * 0.74), team - 3));
+    var odds = Math.round(w * 0.0406);
+    odds = Math.max(22, Math.min(odds, Math.round(cardH * 0.145)));
     shell.style.setProperty('--dba-int-team', team + 'px');
     shell.style.setProperty('--dba-int-crest', crest + 'px');
     shell.style.setProperty('--dba-int-pill', pill + 'px');
@@ -739,22 +746,34 @@
     }
   }
 
-  function applyInterstitialLogoLayout(shell, w) {
+  function applyInterstitialLogoLayout(shell, w, trueW) {
     if (!shell || w < 1) return;
     var ad = shell.querySelector('.ad');
     if (!ad) return;
     var logoWrap = ad.querySelector('.logo-wrap');
     var logo = ad.querySelector('.logo');
-    var logoSize = Math.round(w * 0.33);
+    // Height-driven, not a forced square: real bookmaker logos are usually
+    // wide wordmarks (see design ref), and boxing them at width=height wasted
+    // vertical space that belongs to the match cards below. `w` here is the
+    // design-scaled effective width (see applyShellMetrics) so the logo grows
+    // with the rest of the ad on taller-than-2:3 slots; `trueW` (the real
+    // render width) caps it so it can never overflow the actual ad width.
+    var cap = (trueW && trueW > 0 ? trueW : w) * 0.92;
+    var logoH = Math.max(26, Math.round(w * 0.09));
+    var logoW = Math.min(cap, Math.round(w * 0.62));
     if (logoWrap) {
       logoWrap.style.flex = '0 0 auto';
-      logoWrap.style.minHeight = logoSize + 'px';
+      logoWrap.style.minHeight = logoH + 'px';
       logoWrap.style.overflow = 'visible';
     }
     if (logo) {
-      logo.style.width = logoSize + 'px';
-      logo.style.height = logoSize + 'px';
-      logo.style.maxWidth = logoSize + 'px';
+      logo.style.width = logoW + 'px';
+      logo.style.height = logoH + 'px';
+      logo.style.maxWidth = logoW + 'px';
+      // Override the CSS max-height:64px fallback (a pre-JS-paint sanity cap
+      // for the untouched case) — it would otherwise silently clip logoH back
+      // down on scaled-up (tall) slots since max-height wins over height.
+      logo.style.maxHeight = logoH + 'px';
       logo.style.flexShrink = '0';
     }
   }
@@ -764,7 +783,7 @@
     var minLegal = Math.round(h * 0.10);
     shell.style.setProperty('--dba-shell-h', h + 'px');
     shell.style.setProperty('--dba-legal-h', minLegal + 'px');
-    shell.style.setProperty('--dba-legal-font', Math.max(14, Math.round(h * 0.016)) + 'px');
+    shell.style.setProperty('--dba-legal-font', Math.max(12, Math.round(h * 0.012)) + 'px');
     var legal = shell.querySelector('.legal');
     if (legal) {
       legal.style.minHeight = minLegal + 'px';
@@ -782,17 +801,33 @@
     if (w < 1) w = 320;
     if (h < 1) h = Math.round(w * 1.5);
     var interstitial = !!document.querySelector('.matches[data-layout="interstitial"]');
-    var unit = interstitial ? (w * 0.0105) : (Math.min(w, h / 1.5) * 0.01);
+    // Interstitial content (logo/cards/CTA) is designed for a 2:3 (w:h) box.
+    // Real ad slots vary — some are much taller (e.g. 640x1280 = 1:2). Rather
+    // than leaving that extra height as dead space below the cards, scale the
+    // whole ad up as if it were authored at a wider "effective" width, so
+    // logo/crests/text/CTA all grow together to fill more of the slot.
+    // Clamped so extreme ratios don't run away (or shrink content) too far.
+    var designScale = 1;
+    if (interstitial) {
+      var designH = w * 1.5;
+      designScale = Math.max(0.85, Math.min(2.2, h / designH));
+    }
+    var we = w * designScale;
+    var unit = interstitial ? (we * 0.0105) : (Math.min(w, h / 1.5) * 0.01);
     shell.style.fontSize = unit + 'px';
     var cardGapPx = Math.round(h * 0.045);
     var tightGapPx = Math.round(h * 0.034);
     shell.style.setProperty('--dba-card-gap', cardGapPx + 'px');
     shell.style.setProperty('--dba-card-gap-tight', tightGapPx + 'px');
-    if (interstitial) applyInterstitialLogoLayout(shell, w);
+    if (interstitial) applyInterstitialLogoLayout(shell, we, w);
     if (shell.classList.contains('legal-band')) {
       applyLegalBandMetrics(shell, h);
     }
-    return { cardGapPx: cardGapPx, tightGapPx: tightGapPx, legalBand: shell.classList.contains('legal-band'), shellH: h, shellW: w };
+    return {
+      cardGapPx: cardGapPx, tightGapPx: tightGapPx,
+      legalBand: shell.classList.contains('legal-band'),
+      shellH: h, shellW: w, designScale: designScale,
+    };
   }
 
   function applyInterstitialShellLayout(root) {
@@ -883,12 +918,17 @@
     var gapPx = 0;
     var cardH = 0;
     var n = 0;
-    /* Cards ~27% of width (bwin reference +10%); gaps scale with cards. */
-    var maxCardH = Math.round(shellW * 0.27);
+    // Design-scaled effective width (see applyShellMetrics): on a taller-
+    // than-2:3 slot this is bigger than shellW, so the max card height and
+    // gap grow with it instead of capping cards to a fixed fraction of the
+    // real (narrow) width and dumping the leftover height as dead space.
+    var we = shellW * (metrics.designScale || 1);
+    /* Cards ~27% of (effective) width (bwin reference +10%); gaps scale with cards. */
+    var maxCardH = Math.round(we * 0.27);
 
     if (slides.length) {
       n = slides[0].querySelectorAll('.dba-card').length;
-      gapPx = n > 1 ? Math.max(18, Math.min(28, Math.round(shellW * 0.038))) : 0;
+      gapPx = n > 1 ? Math.max(18, Math.round(we * 0.038)) : 0;
       cardH = Math.max(64, Math.min(maxCardH, Math.floor((avail - gapPx * Math.max(0, n - 1)) / Math.max(1, n))));
       appliedGap = gapPx;
     }
@@ -899,7 +939,7 @@
     root.style.minHeight = '0';
     root.style.margin = '0';
 
-    if (n > 0) crestPx = applyInterstitialTypeScale(shell, cardH, shellW);
+    if (n > 0) crestPx = applyInterstitialTypeScale(shell, cardH, we);
 
     for (var s = 0; s < slides.length; s++) {
       var slide = slides[s];

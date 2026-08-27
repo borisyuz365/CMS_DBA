@@ -413,6 +413,8 @@ function MatchRow({ match, config, d, syncFonts = false, fillHeight = false, out
   }, [match.home.name, match.away.name, d.teamFont, syncFonts]);
 
   const wrapNames = !!d.wrapNames;
+  // Interstitial shows a stylized "VS" (smaller, heavier); MPU keeps the plain dash.
+  const vsText = wrapNames ? 'VS' : TEAM_VS;
   const nameCrestGap = d.teamsGap;
   const xSideGap = d.xSideGap ?? Math.round(nameCrestGap * 2);
   // Push 1 / 2 outward (toward the crests) so they don't sit on the dash.
@@ -427,14 +429,18 @@ function MatchRow({ match, config, d, syncFonts = false, fillHeight = false, out
   });
   const textSx = {
     maxWidth: '100%',
-    fontSize: d.teamFont, fontWeight: 600, lineHeight: 1.15,
+    fontSize: d.teamFont, fontWeight: wrapNames ? 500 : 600, lineHeight: 1.15,
     ...(wrapNames
       ? {
-          display: 'block',
-          whiteSpace: 'nowrap',
+          // bwin reference: wrap long names to 2 lines, then ellipsize.
+          display: '-webkit-box',
+          WebkitBoxOrient: 'vertical',
+          WebkitLineClamp: 2,
+          whiteSpace: 'normal',
+          overflowWrap: 'break-word',
+          wordBreak: 'normal',
           overflow: 'hidden',
           textOverflow: 'ellipsis',
-          textAlign: 'center',
         }
       : {
           display: 'inline-block',
@@ -502,7 +508,7 @@ function MatchRow({ match, config, d, syncFonts = false, fillHeight = false, out
       }}>
         <Box sx={{
           flex: 1, minWidth: 0, width: 0,
-          justifyContent: wrapNames ? 'flex-start' : 'flex-end',
+          justifyContent: 'flex-end',
           display: 'flex', alignItems: 'center', overflow: 'hidden',
         }}>
           <Box sx={{
@@ -514,27 +520,27 @@ function MatchRow({ match, config, d, syncFonts = false, fillHeight = false, out
             <Box sx={{ flexShrink: 0 }}><TeamCrest team={match.home} size={d.crest} /></Box>
             <Box sx={wrapNames
               ? {
+                  // Name hugs the centre dash (bwin): right-aligned in its slot.
                   flex: '1 1 0', minWidth: 0, overflow: 'hidden',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  textAlign: 'center', px: `${Math.max(4, Math.round(nameCrestGap * 0.5))}px`,
+                  display: 'flex', alignItems: 'center', justifyContent: 'flex-end',
+                  textAlign: 'right', px: `${Math.max(4, Math.round(nameCrestGap * 0.5))}px`,
                 }
               : slotSx('right')}>
               <Box ref={homeRef} component="span" data-team-name="home" sx={{
                 ...textSx,
-                ...(wrapNames ? { textAlign: 'center' } : {}),
+                ...(wrapNames ? { textAlign: 'right' } : {}),
               }}>{match.home.name}</Box>
             </Box>
           </Box>
         </Box>
         <Box sx={{
-          fontSize: wrapNames ? Math.max(12, Math.round(d.xFont * 0.9)) : d.xFont,
-          fontWeight: 700, opacity: 0.75, flexShrink: 0,
+          fontSize: wrapNames ? Math.max(10, Math.round(d.xFont * 0.65)) : d.xFont,
+          fontWeight: wrapNames ? 800 : 700, opacity: 0.75, flexShrink: 0,
           mx: `${xSideGap}px`, letterSpacing: '0.02em', lineHeight: 1,
-          textTransform: wrapNames ? 'lowercase' : 'none',
-        }}>{wrapNames ? 'vs' : TEAM_VS}</Box>
+        }}>{vsText}</Box>
         <Box sx={{
           flex: 1, minWidth: 0, width: 0,
-          justifyContent: wrapNames ? 'flex-end' : 'flex-start',
+          justifyContent: 'flex-start',
           display: 'flex', alignItems: 'center', overflow: 'hidden',
         }}>
           <Box sx={{
@@ -546,13 +552,13 @@ function MatchRow({ match, config, d, syncFonts = false, fillHeight = false, out
             <Box sx={wrapNames
               ? {
                   flex: '1 1 0', minWidth: 0, overflow: 'hidden',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  textAlign: 'center', px: `${Math.max(4, Math.round(nameCrestGap * 0.5))}px`,
+                  display: 'flex', alignItems: 'center', justifyContent: 'flex-start',
+                  textAlign: 'left', px: `${Math.max(4, Math.round(nameCrestGap * 0.5))}px`,
                 }
               : slotSx('left')}>
               <Box ref={awayRef} component="span" data-team-name="away" sx={{
                 ...textSx,
-                ...(wrapNames ? { textAlign: 'center' } : {}),
+                ...(wrapNames ? { textAlign: 'left' } : {}),
               }}>{match.away.name}</Box>
             </Box>
             <Box sx={{ flexShrink: 0 }}><TeamCrest team={match.away} size={d.crest} /></Box>
@@ -577,10 +583,10 @@ function MatchRow({ match, config, d, syncFonts = false, fillHeight = false, out
         <Box sx={{
           position: 'relative', flexShrink: 0, mx: `${xSideGap}px`,
           /* Same footprint as the teams-row separator so X odds sit under it. */
-          fontSize: wrapNames ? Math.max(12, Math.round(d.xFont * 0.9)) : d.xFont,
-          fontWeight: 700, lineHeight: 1, letterSpacing: '0.02em',
+          fontSize: wrapNames ? Math.max(10, Math.round(d.xFont * 0.65)) : d.xFont,
+          fontWeight: wrapNames ? 800 : 700, lineHeight: 1, letterSpacing: '0.02em',
         }}>
-          <Box sx={{ visibility: 'hidden' }} aria-hidden>{wrapNames ? 'vs' : TEAM_VS}</Box>
+          <Box sx={{ visibility: 'hidden' }} aria-hidden>{vsText}</Box>
           <Box sx={{
             position: 'absolute', left: '50%', top: '50%',
             transform: 'translate(-50%, -50%)',
@@ -724,13 +730,13 @@ export default function AdPreview({
     const raw = (config.legal?.text || BRAZIL_LEGAL_FALLBACK_TEXT).trim();
     return raw.replace(/^\s*18\+?\s*JOGUE COM RESPONSABILIDADE\.?\s*/i, '').trim() || BRAZIL_LEGAL_FALLBACK_TEXT;
   })();
-  const renderBrazilLegalBand = (heightPx, fontSize, badgeSize) => (
+  const renderBrazilLegalBand = (heightPx, fontSize, badgeSize, fontWeight = 700) => (
     <Box sx={{
       position: 'absolute', left: 0, right: 0, bottom: 0, height: heightPx, zIndex: 2,
       display: 'flex', alignItems: 'center', justifyContent: 'center', gap: `${Math.max(4, heightPx * 0.14)}px`,
       px: `${Math.max(3, heightPx * 0.12)}px`, py: `${Math.max(1, heightPx * 0.06)}px`, boxSizing: 'border-box',
       bgcolor: config.legal?.bgColor || LEGAL_BAND_BG_DEFAULT, color: config.legal?.color || '#FFFFFF',
-      fontSize, lineHeight: 1.15, fontWeight: 700, textAlign: 'left',
+      fontSize, lineHeight: 1.15, fontWeight, textAlign: 'left',
       pointerEvents: 'none',
     }}>
       <Age18PlusBadge size={badgeSize} />
@@ -1118,51 +1124,73 @@ export default function AdPreview({
   // Cards ~27% of width (bwin reference +10%) with roomy inner date/teams/odds gaps.
   const renderInterstitial = () => {
     const vw = (pct) => Math.round(w * (pct / 100));
-    const interstitialLogo = Math.round(w * 0.33);
-    const logoTop = Math.round(w * 0.03);
-    const logoBlock = logoTop + interstitialLogo;
-    const ctaH = Math.max(44, Math.round(w * 0.0875));
-    const dotsH = Math.max(14, Math.round(w * 0.028));
-    const ctaBlock = dotsH + ctaH + Math.round(w * 0.03);
+    // Interstitial content (logo/cards/CTA) is designed for a 2:3 (w:h) box.
+    // Real ad slots vary — some are much taller (e.g. 640x1280 = 1:2). Rather
+    // than leaving that extra height as dead space below the cards, scale the
+    // whole ad up as if it were authored at a wider "effective" width `we`,
+    // so logo/crests/text/CTA all grow together to fill more of the slot.
+    // Purely horizontal/positional values (side padding, card width) stay
+    // tied to the true render width `w` so nothing overflows sideways.
+    const designScale = Math.max(0.85, Math.min(2.2, h / (w * 1.5)));
+    const we = w * designScale;
+    const vwe = (pct) => Math.round(we * (pct / 100));
+    // Height-driven, not a forced square: real bookmaker logos are usually wide
+    // wordmarks (see design ref), and boxing them at width=height wasted
+    // vertical space that belongs to the match cards below.
+    const interstitialLogoW = Math.min(vw(92), vwe(62));
+    const interstitialLogoH = Math.max(26, vwe(9));
+    const logoTop = vwe(3);
+    const logoBlock = logoTop + interstitialLogoH;
+    const ctaH = Math.max(50, vwe(10));
+    const dotsH = Math.max(14, vwe(2.8));
+    const ctaBlock = dotsH + ctaH + vwe(3);
     const bottomPad = useBrazilBand ? brazilBandH : (config.legal?.enabled ? 48 : 0);
     const legalH = useBrazilBand ? brazilBandH : 0;
     const sidePad = Math.round(w * 0.05);
-    const matchesEst = Math.max(200, h - logoBlock - ctaBlock - legalH - Math.round(w * 0.02));
+    const matchesEst = Math.max(200, h - logoBlock - ctaBlock - legalH - vwe(2));
     const cardsPerSlide = 3;
-    const maxCardH = Math.round(w * 0.27);
-    const cardGap = Math.max(18, Math.min(28, Math.round(w * 0.038)));
+    const maxCardH = vwe(27);
+    const cardGap = Math.max(18, vwe(3.8));
     const cardH = Math.max(72, Math.min(maxCardH, Math.floor((matchesEst - cardGap * (cardsPerSlide - 1)) / cardsPerSlide)));
-    const teamFont = Math.max(20, Math.min(Math.round(w * 0.046), Math.round(cardH * 0.155)));
-    const crest = Math.max(29, Math.min(Math.round(w * 0.057), Math.round(cardH * 0.24)));
-    const oddsFont = Math.max(15, Math.min(Math.round(teamFont * 0.74), teamFont - 3));
-    const innerGap = Math.max(12, Math.round(teamFont * 0.55));
+    // Team names 10% smaller, odds 10% larger than the previous pass — sized
+    // independently now (odds is no longer capped below team).
+    const teamFont = Math.max(16, Math.min(vwe(3.42), Math.round(cardH * 0.117)));
+    const crest = Math.max(29, Math.min(vwe(5.7), Math.round(cardH * 0.24)));
+    const oddsFont = Math.max(22, Math.min(vwe(4.06), Math.round(cardH * 0.145)));
+    // Teams↔odds gap doubled; the date/time pill's top padding is trimmed so
+    // it sits closer to the card edge, funding that gap without growing cardH.
+    // Capped to a share of cardH too — on a short card the font-driven value
+    // alone would overflow the fixed card box.
+    const innerGap = Math.max(14, Math.min(Math.round(teamFont * 2.2), Math.round(cardH * 0.18)));
+    const cardPadTop = Math.max(3, Math.round(cardH * 0.02));
+    const cardPadBottom = Math.max(6, Math.round(cardH * 0.04));
     const d = {
-      cardRadius: Math.round(w * 0.025),
-      cardPad: `${Math.max(14, Math.round(cardH * 0.11))}px ${Math.round(w * 0.04)}px`,
-      pillH: Math.max(20, Math.round(w * 0.026)), pillFont: Math.round(w * 0.024),
-      teamsGap: vw(1.2), xSideGap: vw(1.6), teamFont,
+      cardRadius: vwe(2.5),
+      cardPad: `${cardPadTop}px ${Math.round(w * 0.04)}px ${cardPadBottom}px`,
+      pillH: Math.max(20, vwe(2.6)), pillFont: vwe(2.4),
+      teamsGap: vwe(1.2), xSideGap: vwe(1.6), teamFont,
       crest, xFont: Math.round(teamFont * 0.8),
-      oddsGap: vw(1.5), oddsFont, oddsDot: 10,
+      oddsGap: vwe(1.5), oddsFont, oddsDot: 10,
       rowGap: innerGap,
       wrapNames: true,
     };
-    const ctaFont = vw(4.2);
-    const dots = renderInAdDots({ rowHeight: dotsH, dotSize: Math.max(5, vw(0.7)), mt: 0 });
+    const ctaFont = vwe(4.6);
+    const dots = renderInAdDots({ rowHeight: dotsH, dotSize: Math.max(5, vwe(0.7)), mt: 0 });
     const ctaZone = (
       <Box sx={{
         flexShrink: 0,
         mt: 'auto',
-        pt: `${Math.round(w * 0.02)}px`,
-        pb: `${Math.round(w * 0.025)}px`,
+        pt: `${vwe(2)}px`,
+        pb: `${vwe(6)}px`,
         display: 'flex', flexDirection: 'column', alignItems: 'center',
-        width: '100%', gap: `${Math.round(w * 0.018)}px`,
+        width: '100%', gap: `${vwe(1.8)}px`,
       }}>
         {dots}
         <Box component="button" sx={{
           background: config.cta, color: config.ctaTextColor || invertText(config.cta),
-          border: 'none', width: '90%', height: ctaH, minHeight: 44,
+          border: 'none', width: '95%', height: ctaH, minHeight: 50,
           position: 'relative', flexShrink: 0,
-          borderRadius: '10px',
+          borderRadius: `${vwe(1.2)}px`,
           fontSize: ctaFont, fontWeight: 700, cursor: 'pointer',
           fontFamily: 'inherit', letterSpacing: '0.01em',
           boxShadow: '0 2px 4px 0 rgba(0, 32, 27, 0.69)',
@@ -1175,7 +1203,7 @@ export default function AdPreview({
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           mt: `${logoTop}px`, mb: `${Math.round(w * 0.015)}px`, flexShrink: 0,
         }}>
-          <LogoThumb bg={bookmaker.logoBg} fg={bookmaker.logoFg} initials={bookmaker.initials} imageUrl={resolveLogoUrl(bookmaker, config)} size={interstitialLogo} radius={vw(2)} bare />
+          <LogoThumb bg={bookmaker.logoBg} fg={bookmaker.logoFg} initials={bookmaker.initials} imageUrl={resolveLogoUrl(bookmaker, config)} size={interstitialLogoW} height={interstitialLogoH} radius={vw(2)} bare />
         </Box>
         {renderMatchCarousel(d, {
           fillCards: false,
@@ -1193,7 +1221,7 @@ export default function AdPreview({
           pillPad: 0,
         })}
         {ctaZone}
-        {useBrazilBand ? renderBrazilLegalBand(brazilBandH, vw(2.6), 31) : (
+        {useBrazilBand ? renderBrazilLegalBand(brazilBandH, vw(2.0), 31, 600) : (
           config.legal && config.legal.enabled ? (
           <Box sx={{ position: 'absolute', bottom: '0.5%', left: '1%', right: '1%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: vw(2.4), color: config.legal.color || config.text, opacity: 0.85 }}>
             <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
@@ -1340,7 +1368,7 @@ export default function AdPreview({
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           mt: `${Math.round(w * 0.03)}px`, flexShrink: 0,
         }}>
-          <LogoThumb bg={bookmaker.logoBg} fg={bookmaker.logoFg} initials={bookmaker.initials} imageUrl={resolveLogoUrl(bookmaker, config)} size={Math.round(w * 0.33)} radius={vw(2)} bare />
+          <LogoThumb bg={bookmaker.logoBg} fg={bookmaker.logoFg} initials={bookmaker.initials} imageUrl={resolveLogoUrl(bookmaker, config)} size={Math.round(w * 0.62)} height={Math.max(26, Math.min(64, Math.round(w * 0.09)))} radius={vw(2)} bare />
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'center', my: `${vw(3)}px`, flexShrink: 0 }}>
           <Box sx={{
@@ -1369,7 +1397,7 @@ export default function AdPreview({
           {ctaBtn}
           <Box sx={{ mt: `${vw(2)}px`, fontSize: vw(2.5), opacity: 0.55, textAlign: 'center', lineHeight: 1.3 }}>{woTerms}</Box>
         </Box>
-        {useBrazilBand ? renderBrazilLegalBand(brazilBandH, vw(2.6), 31) : (
+        {useBrazilBand ? renderBrazilLegalBand(brazilBandH, vw(2.0), 31, 600) : (
           config.legal && config.legal.enabled ? (
           <Box sx={{ position: 'absolute', bottom: '0.5%', left: '1%', right: '1%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: vw(2.4), color: config.legal.color || config.text, opacity: 0.85 }}>
             <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>

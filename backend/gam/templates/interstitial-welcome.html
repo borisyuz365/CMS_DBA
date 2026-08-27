@@ -33,7 +33,7 @@
     color: [[brand_color_2_or_white]];
     font-family: [[ad_font_family]];
     box-sizing: border-box;
-    padding: 0 2.5% 2%;
+    padding: 0 2.5% 5%;
     display: flex; flex-direction: column;
     overflow: hidden;
     text-decoration: none;
@@ -49,10 +49,12 @@
     margin-top: 10px; margin-bottom: 0;
     flex: 0 0 auto;
   }
+  /* Height-driven, not a forced square — see interstitial-standard.html for why. */
   .ad .logo {
-    width: 33%;
-    aspect-ratio: 1;
-    height: auto;
+    width: 62%;
+    height: 9em;
+    min-height: 26px;
+    max-height: 64px;
     flex-shrink: 0;
     background-image: url('[[bookmaker_logo_url]]');
     background-size: contain; background-repeat: no-repeat;
@@ -95,14 +97,14 @@
     background: [[cta_bg_color]];
     color: [[cta_text_color]];
     border: none;
-    width: 92%;
-    height: 10.138%;
-    max-height: 56px;
-    min-height: 28px;
+    width: 95%;
+    height: 12%;
+    max-height: 64px;
+    min-height: 44px;
     margin-top: 0;
     position: relative;
-    border-radius: 10px;
-    font-size: 4.4em;
+    border-radius: 1.2em;
+    font-size: 4.8em;
     font-weight: 800;
     cursor: pointer;
     font-family: inherit;
@@ -151,7 +153,7 @@
     padding: 0.8em 0.8em;
     background: [[disclaimer_bg_color]];
     color: [[legal_text_color]];
-    font-size: 2.2em; font-weight: 700; line-height: 1.15;
+    font-size: 2.2em; font-weight: 600; line-height: 1.15;
     text-align: left;
   }
   .ad-shell .legal.legal-band .marks { display: inline-flex; align-items: center; flex-shrink: 0; }

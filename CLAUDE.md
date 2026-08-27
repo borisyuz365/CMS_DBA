@@ -1,6 +1,6 @@
 # CMS_PROTOTYPE
 
-Internal sports-content CMS used at 365Scores to curate athletes, competitors, competitions, games, venues, TV networks, and a multilingual term dictionary. Prototype stage: JSON files for persistence, no auth, no Docker.
+Internal sports-content CMS used at 365Scores to curate athletes, competitors, competitions, games, venues, TV networks, and a multilingual term dictionary. Core entities are still prototype stage: JSON files for persistence, no auth. The newer DBA/BP ad-template features (`dba_templates`, `bp_promotions`, etc.) have since moved to MySQL and gained a real Docker + CI/CD deploy pipeline to production — see Deploy below.
 
 ## Tech stack
 
@@ -123,7 +123,13 @@ They parse with `xlsx`, transform, and stage to `data/temp/` before promoting to
 
 ## Deploy
 
-Not yet deployed. There is **no** `Dockerfile`, **no** `.github/workflows/`, **no** Helm chart. Productionising requires:
-1. Replacing JSON files with a real database
-2. Adding auth
-3. Containerising and shipping (the sister project `Betting Request Simulator` is a good template — Express serves both the API and the built `dist/`)
+Has a real pipeline now — don't take "prototype" at face value here. The DBA/BP ad-template features ship a Docker + CI/CD deploy that builds and deploys this repo's backend + frontend as one image, alongside a second, split-out microservice:
+
+- **Two Dockerfiles**: root `Dockerfile` (multi-stage — builds the Vite frontend, bakes `dist/` into the Express image; `server.js` serves it via static + SPA fallback) and `bp-service/Dockerfile` (the split-out public BP runtime microservice, port 3003 — build context must be the repo root, so use `scripts/build-bp-runtime.sh` rather than `docker build` from inside `bp-service/`).
+- **Two manual GitHub Actions workflows**, both `workflow_dispatch`-only (no auto-deploy on push/merge — every prod deploy is a human picking an environment and clicking "Run workflow"): `.github/workflows/build-and-deploy-dba.yml` → GitHub Environment `cms-dba-prod`, and `build-and-deploy-bp.yml` → `cms-bp-prod`.
+- **Target: AWS EKS via Helm, not ECS.** Both push to ECR and deploy via reusable workflows from the org repo `365Scores/workflows` (`BuildNPushContainer.yml` + `DeployToEKS.yml`, pinned `@v1.1.12`). The Helm chart itself lives in a separate repo, **`CMS.Helm`** — it is not in this repo. Prod AWS account `509962170850`, region `us-east-1`.
+- **MySQL (RDS)** now backs the DBA/BP tables (`dba_templates`, `bp_promotions`, `bp_bookies`, `dba_service_state`, `dba_audit_log`, ...) — a real DB, separate from the legacy JSON-file entities below. Schema/seed are **not** applied automatically on boot; see `docs/DEVOPS-RDS-BOOTSTRAP.md`.
+- Runbooks: `docs/DEVOPS-NEXT-STEPS.md` (rollout checklist), `docs/DEVOPS-RDS-BOOTSTRAP.md` (MySQL provisioning), `docs/DEVOPS-BP-RUNTIME.md` (BP env vars, network rules — includes an explicit "never expose `GET /api/bp` publicly on the CMS hostname" guardrail).
+- Still genuinely missing: app-level auth (relies entirely on network/VPN perimeter), CI test/lint gating before deploy, DB migration automation, and a finalized public hostname + CloudFront distribution for BP (still TBD in the docs as of the last deploy-infra work).
+
+The **core entity CRUD** (athletes/competitors/competitions/etc.) is unaffected by any of this — it still has no auth and no real DB of its own. Productionising *that* part still requires replacing its JSON files with a real database and adding auth.

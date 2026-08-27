@@ -37,7 +37,7 @@
     color: [[brand_color_2_or_white]];
     font-family: [[ad_font_family]];
     box-sizing: border-box;
-    padding: 0 2.5% 2%;
+    padding: 0 2.5% 5%;
     display: flex; flex-direction: column;
     text-decoration: none;
   }
@@ -56,10 +56,15 @@
     overflow: visible;
     min-height: 0;
   }
+  /* Height-driven, not a forced square: real bookmaker logos are usually wide
+     wordmarks (see design ref), and a fixed 1:1 box wasted vertical space that
+     belonged to the match cards below. background-size:contain still keeps
+     square/circular badge logos correctly proportioned inside this box. */
   .ad .logo {
-    width: 33%;
-    aspect-ratio: 1;
-    height: auto;
+    width: 62%;
+    height: 9em;
+    min-height: 26px;
+    max-height: 64px;
     flex-shrink: 0;
     overflow: visible;
     background-image: url('[[bookmaker_logo_url]]');
@@ -107,14 +112,14 @@
     background: [[cta_bg_color]];
     color: [[cta_text_color]];
     border: none;
-    width: 92%;
+    width: 95%;
     height: auto;
-    min-height: 36px;
-    padding: 2.4% 0;
+    min-height: 44px;
+    padding: 3.4% 0;
     margin-top: 0;
     position: relative;
-    border-radius: 10px;
-    font-size: 4em;
+    border-radius: 1.2em;
+    font-size: 4.6em;
     font-weight: 700;
     cursor: pointer;
     font-family: inherit;
@@ -162,7 +167,7 @@
     padding: 0.6em 0.8em;
     background: [[disclaimer_bg_color]];
     color: [[legal_text_color]];
-    font-size: var(--dba-legal-font, 2.2em); font-weight: 700; line-height: 1.15;
+    font-size: var(--dba-legal-font, 2.2em); font-weight: 600; line-height: 1.15;
     text-align: left;
     overflow: hidden;
   }
