@@ -378,7 +378,7 @@ function neededTeamFont(homeEl, awayEl, base) {
   return maxRatio > 1.005 ? Math.max(floor, base / maxRatio) : base;
 }
 
-function MatchRow({ match, config, d, syncFonts = false }) {
+function MatchRow({ match, config, d, syncFonts = false, fillHeight = false, outerSx }) {
   // Pair-coordinated font fitting. Home and away render at the SAME size: we
   // measure both at the base size, then shrink both to the size that lets the
   // longer-rendered one fit. Matches the reference where both names visibly
@@ -430,13 +430,11 @@ function MatchRow({ match, config, d, syncFonts = false }) {
     fontSize: d.teamFont, fontWeight: 600, lineHeight: 1.15,
     ...(wrapNames
       ? {
-          display: '-webkit-box',
-          WebkitBoxOrient: 'vertical',
-          WebkitLineClamp: 2,
+          display: 'block',
+          whiteSpace: 'nowrap',
           overflow: 'hidden',
-          overflowWrap: 'break-word',
-          wordBreak: 'normal',
-          whiteSpace: 'normal',
+          textOverflow: 'ellipsis',
+          textAlign: 'center',
         }
       : {
           display: 'inline-block',
@@ -469,12 +467,22 @@ function MatchRow({ match, config, d, syncFonts = false }) {
   return (
     <Box data-match-card sx={{
       bgcolor: 'rgba(255,255,255,0.06)',
-      border: '1px solid rgba(255,255,255,0.1)',
+      border: wrapNames ? 'none' : '1px solid rgba(255,255,255,0.1)',
       borderRadius: `${d.cardRadius}px`,
       padding: d.cardPad,
-      display: 'flex', flexDirection: 'column', gap: `${d.rowGap}px`,
+      display: 'flex', flexDirection: 'column',
+      gap: wrapNames ? 0 : `${d.rowGap}px`,
       position: 'relative',
       overflow: 'hidden',
+      boxSizing: 'border-box',
+      ...(fillHeight ? {
+        flex: '1 1 0', minHeight: 0, height: 0,
+        justifyContent: 'center',
+      } : {}),
+      ...(wrapNames && !fillHeight ? {
+        justifyContent: 'space-between',
+      } : {}),
+      ...outerSx,
     }}>
       <Box sx={{ display: 'flex', justifyContent: 'center', flexShrink: 0 }}>
         <Box sx={datePillSx({
@@ -485,38 +493,67 @@ function MatchRow({ match, config, d, syncFonts = false }) {
           color: resolveDatePillFg(config),
         })}><Box component="span">{match.date}</Box></Box>
       </Box>
-      {/* Crests sit on the outer sides of the names; dash is the centre. */}
-      <Box sx={{ display: 'flex', alignItems: 'center', minWidth: 0 }}>
+      {/* Crests on the outer sides; interstitial names centred between crest and vs.
+          MPU pulls names toward the centre dash. */}
+      <Box sx={{
+        display: 'flex', alignItems: 'center', minWidth: 0, flexShrink: 0,
+        width: '100%',
+        ...(wrapNames ? { my: `${d.rowGap}px` } : {}),
+      }}>
         <Box sx={{
-          flex: 1, minWidth: 0, justifyContent: 'flex-end',
+          flex: 1, minWidth: 0, width: 0,
+          justifyContent: wrapNames ? 'flex-start' : 'flex-end',
           display: 'flex', alignItems: 'center', overflow: 'hidden',
         }}>
           <Box sx={{
-            display: 'flex', alignItems: 'center', gap: `${nameCrestGap}px`,
+            display: 'flex', alignItems: 'center',
+            gap: wrapNames ? 0 : `${nameCrestGap}px`,
             maxWidth: '100%', minWidth: 0,
-            ...(wrapNames ? { flex: 1 } : {}),
+            width: '100%',
           }}>
             <Box sx={{ flexShrink: 0 }}><TeamCrest team={match.home} size={d.crest} /></Box>
-            <Box sx={slotSx('right')}>
-              <Box ref={homeRef} component="span" data-team-name="home" sx={textSx}>{match.home.name}</Box>
+            <Box sx={wrapNames
+              ? {
+                  flex: '1 1 0', minWidth: 0, overflow: 'hidden',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  textAlign: 'center', px: `${Math.max(4, Math.round(nameCrestGap * 0.5))}px`,
+                }
+              : slotSx('right')}>
+              <Box ref={homeRef} component="span" data-team-name="home" sx={{
+                ...textSx,
+                ...(wrapNames ? { textAlign: 'center' } : {}),
+              }}>{match.home.name}</Box>
             </Box>
           </Box>
         </Box>
         <Box sx={{
-          fontSize: d.xFont, fontWeight: 700, opacity: 0.65, flexShrink: 0,
-          mx: `${xSideGap}px`,
-        }}>{TEAM_VS}</Box>
+          fontSize: wrapNames ? Math.max(12, Math.round(d.xFont * 0.9)) : d.xFont,
+          fontWeight: 700, opacity: 0.75, flexShrink: 0,
+          mx: `${xSideGap}px`, letterSpacing: '0.02em', lineHeight: 1,
+          textTransform: wrapNames ? 'lowercase' : 'none',
+        }}>{wrapNames ? 'vs' : TEAM_VS}</Box>
         <Box sx={{
-          flex: 1, minWidth: 0,
+          flex: 1, minWidth: 0, width: 0,
+          justifyContent: wrapNames ? 'flex-end' : 'flex-start',
           display: 'flex', alignItems: 'center', overflow: 'hidden',
         }}>
           <Box sx={{
-            display: 'flex', alignItems: 'center', gap: `${nameCrestGap}px`,
+            display: 'flex', alignItems: 'center',
+            gap: wrapNames ? 0 : `${nameCrestGap}px`,
             maxWidth: '100%', minWidth: 0,
-            ...(wrapNames ? { flex: 1 } : {}),
+            width: '100%',
           }}>
-            <Box sx={slotSx('left')}>
-              <Box ref={awayRef} component="span" data-team-name="away" sx={textSx}>{match.away.name}</Box>
+            <Box sx={wrapNames
+              ? {
+                  flex: '1 1 0', minWidth: 0, overflow: 'hidden',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  textAlign: 'center', px: `${Math.max(4, Math.round(nameCrestGap * 0.5))}px`,
+                }
+              : slotSx('left')}>
+              <Box ref={awayRef} component="span" data-team-name="away" sx={{
+                ...textSx,
+                ...(wrapNames ? { textAlign: 'center' } : {}),
+              }}>{match.away.name}</Box>
             </Box>
             <Box sx={{ flexShrink: 0 }}><TeamCrest team={match.away} size={d.crest} /></Box>
           </Box>
@@ -527,9 +564,11 @@ function MatchRow({ match, config, d, syncFonts = false }) {
         display: 'flex', alignItems: 'center', minWidth: 0,
         minHeight: Math.ceil(d.oddsFont * 1.2),
         overflow: 'visible',
+        flexShrink: 0,
+        width: '100%',
       }}>
         <Box sx={{
-          flex: 1, minWidth: 0,
+          flex: 1, minWidth: 0, width: 0,
           display: 'flex', justifyContent: 'flex-end',
           pr: `${oddsInset}px`,
         }}>
@@ -537,9 +576,11 @@ function MatchRow({ match, config, d, syncFonts = false }) {
         </Box>
         <Box sx={{
           position: 'relative', flexShrink: 0, mx: `${xSideGap}px`,
-          fontSize: d.xFont, fontWeight: 700, lineHeight: 1,
+          /* Same footprint as the teams-row separator so X odds sit under it. */
+          fontSize: wrapNames ? Math.max(12, Math.round(d.xFont * 0.9)) : d.xFont,
+          fontWeight: 700, lineHeight: 1, letterSpacing: '0.02em',
         }}>
-          <Box sx={{ visibility: 'hidden' }} aria-hidden>{TEAM_VS}</Box>
+          <Box sx={{ visibility: 'hidden' }} aria-hidden>{wrapNames ? 'vs' : TEAM_VS}</Box>
           <Box sx={{
             position: 'absolute', left: '50%', top: '50%',
             transform: 'translate(-50%, -50%)',
@@ -548,7 +589,7 @@ function MatchRow({ match, config, d, syncFonts = false }) {
           </Box>
         </Box>
         <Box sx={{
-          flex: 1, minWidth: 0,
+          flex: 1, minWidth: 0, width: 0,
           display: 'flex', justifyContent: 'flex-start',
           pl: `${oddsInset}px`,
         }}>
@@ -560,11 +601,25 @@ function MatchRow({ match, config, d, syncFonts = false }) {
 }
 
 /** Column of match cards — same teamFont on every card (no per-card shrink). */
-function MatchCardColumn({ matches, config, d, sx }) {
+function MatchCardColumn({ matches, config, d, sx, fillCards = false, legacyCard }) {
   return (
     <Box sx={sx}>
       {matches.map((m, i) => (
-        <MatchRow key={i} match={m} config={config} d={d} syncFonts />
+        <MatchRow
+          key={i}
+          match={m}
+          config={config}
+          d={d}
+          syncFonts
+          fillHeight={fillCards === true}
+          outerSx={legacyCard ? {
+            height: legacyCard.height,
+            flexShrink: 0,
+            // px string — numeric margins get multiplied by MUI theme spacing (×8)
+            marginBottom: i < matches.length - 1 ? `${legacyCard.gap}px` : 0,
+            boxSizing: 'border-box',
+          } : undefined}
+        />
       ))}
     </Box>
   );
@@ -584,6 +639,7 @@ function MatchCarouselViewport({
     overflow: 'hidden',
     width: '100%',
     minWidth: 0,
+    minHeight: 0,
     flexShrink: 0,
     pt: `${pillPad}px`,
     boxSizing: 'border-box',
@@ -806,7 +862,7 @@ export default function AdPreview({
     ) : null
   );
 
-  const renderMatchCarousel = (d, { cardGap, columnSx, bannerDense, pillPad } = {}) => (
+  const renderMatchCarousel = (d, { cardGap, columnSx, bannerDense, pillPad, fillCards, legacyCard } = {}) => (
     <MatchCarouselViewport
       matchSlideCount={matchSlideCount}
       matchesPerSlide={matchesPerSlide}
@@ -835,9 +891,21 @@ export default function AdPreview({
             matches={matches}
             config={config}
             d={d}
+            fillCards={fillCards}
+            legacyCard={legacyCard}
             sx={{
-              display: 'flex', flexDirection: 'column', gap: `${cardGap ?? d.rowGap}px`,
+              display: 'flex', flexDirection: 'column',
+              gap: legacyCard ? 0 : `${cardGap ?? d.rowGap}px`,
               ...innerSx,
+              ...(fillCards ? { height: '100%', minHeight: 0, flex: '1 1 auto' } : {}),
+              ...(legacyCard ? {
+                flex: '1 1 auto',
+                minHeight: 0,
+                height: '100%',
+                justifyContent: 'flex-start',
+                gap: 0,
+                boxSizing: 'border-box',
+              } : {}),
             }}
           />
         )
@@ -1046,64 +1114,88 @@ export default function AdPreview({
     );
   };
 
-  // INTERSTITIAL · CMS canvas 640×1280 (GAM inventory remains 320×480 fluid).
+  // INTERSTITIAL · preview canvas 640×1280 (tall device slot; inventory is 320×480).
+  // Cards ~27% of width (bwin reference +10%) with roomy inner date/teams/odds gaps.
   const renderInterstitial = () => {
-    // Cards sit near the template edge; long team names wrap (not ellipsis).
-    const sidePad = 10;
-    const d = { cardRadius: 28, cardPad: '12px 20px 16px', pillH: 36, pillFont: 22,
-                teamsGap: 8, xSideGap: 12, teamFont: 26, crest: 64, xFont: 26,
-                oddsGap: 24, oddsFont: 22, oddsDot: 12, rowGap: 12, wrapNames: true };
-    const cardGap = useBrazilBand ? 20 : 24;
-    const logoMb = useBrazilBand ? 12 : 16;
-    const bottomPad = useBrazilBand ? brazilBandH : 80;
-    const ctaBtn = (
-      <Box component="button" sx={{
-        background: config.cta, color: config.ctaTextColor || invertText(config.cta),
-        border: 'none', height: 88, mt: useBrazilBand ? 0 : '32px',
-        position: 'relative', flexShrink: 0,
-        borderRadius: `${Math.min(radius * 1.5, 20)}px`,
-        fontSize: 32, fontWeight: 700, cursor: 'pointer',
-        fontFamily: 'inherit', letterSpacing: '0.01em',
-      }}>{config.ctaText}</Box>
+    const vw = (pct) => Math.round(w * (pct / 100));
+    const interstitialLogo = Math.round(w * 0.33);
+    const logoTop = Math.round(w * 0.03);
+    const logoBlock = logoTop + interstitialLogo;
+    const ctaH = Math.max(44, Math.round(w * 0.0875));
+    const dotsH = Math.max(14, Math.round(w * 0.028));
+    const ctaBlock = dotsH + ctaH + Math.round(w * 0.03);
+    const bottomPad = useBrazilBand ? brazilBandH : (config.legal?.enabled ? 48 : 0);
+    const legalH = useBrazilBand ? brazilBandH : 0;
+    const sidePad = Math.round(w * 0.05);
+    const matchesEst = Math.max(200, h - logoBlock - ctaBlock - legalH - Math.round(w * 0.02));
+    const cardsPerSlide = 3;
+    const maxCardH = Math.round(w * 0.27);
+    const cardGap = Math.max(18, Math.min(28, Math.round(w * 0.038)));
+    const cardH = Math.max(72, Math.min(maxCardH, Math.floor((matchesEst - cardGap * (cardsPerSlide - 1)) / cardsPerSlide)));
+    const teamFont = Math.max(20, Math.min(Math.round(w * 0.046), Math.round(cardH * 0.155)));
+    const crest = Math.max(29, Math.min(Math.round(w * 0.057), Math.round(cardH * 0.24)));
+    const oddsFont = Math.max(15, Math.min(Math.round(teamFont * 0.74), teamFont - 3));
+    const innerGap = Math.max(12, Math.round(teamFont * 0.55));
+    const d = {
+      cardRadius: Math.round(w * 0.025),
+      cardPad: `${Math.max(14, Math.round(cardH * 0.11))}px ${Math.round(w * 0.04)}px`,
+      pillH: Math.max(20, Math.round(w * 0.026)), pillFont: Math.round(w * 0.024),
+      teamsGap: vw(1.2), xSideGap: vw(1.6), teamFont,
+      crest, xFont: Math.round(teamFont * 0.8),
+      oddsGap: vw(1.5), oddsFont, oddsDot: 10,
+      rowGap: innerGap,
+      wrapNames: true,
+    };
+    const ctaFont = vw(4.2);
+    const dots = renderInAdDots({ rowHeight: dotsH, dotSize: Math.max(5, vw(0.7)), mt: 0 });
+    const ctaZone = (
+      <Box sx={{
+        flexShrink: 0,
+        mt: 'auto',
+        pt: `${Math.round(w * 0.02)}px`,
+        pb: `${Math.round(w * 0.025)}px`,
+        display: 'flex', flexDirection: 'column', alignItems: 'center',
+        width: '100%', gap: `${Math.round(w * 0.018)}px`,
+      }}>
+        {dots}
+        <Box component="button" sx={{
+          background: config.cta, color: config.ctaTextColor || invertText(config.cta),
+          border: 'none', width: '90%', height: ctaH, minHeight: 44,
+          position: 'relative', flexShrink: 0,
+          borderRadius: '10px',
+          fontSize: ctaFont, fontWeight: 700, cursor: 'pointer',
+          fontFamily: 'inherit', letterSpacing: '0.01em',
+          boxShadow: '0 2px 4px 0 rgba(0, 32, 27, 0.69)',
+        }}>{config.ctaText}</Box>
+      </Box>
     );
-    const dots = renderInAdDots({ rowHeight: 24, dotSize: 10, mt: useBrazilBand ? 0 : 24 });
     return wrap(
       <>
-        {/* Interstitial logo: ~22.5% of 640 ≈ 144px. Horizontally centered to
-            match production's flex `align-items: center`. */}
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: '8px', mb: `${logoMb}px`, flexShrink: 0 }}>
-          <LogoThumb bg={bookmaker.logoBg} fg={bookmaker.logoFg} initials={bookmaker.initials} imageUrl={resolveLogoUrl(bookmaker, config)} size={144} radius={24} bare />
+        <Box sx={{
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          mt: `${logoTop}px`, mb: `${Math.round(w * 0.015)}px`, flexShrink: 0,
+        }}>
+          <LogoThumb bg={bookmaker.logoBg} fg={bookmaker.logoFg} initials={bookmaker.initials} imageUrl={resolveLogoUrl(bookmaker, config)} size={interstitialLogo} radius={vw(2)} bare />
         </Box>
         {renderMatchCarousel(d, {
+          fillCards: false,
           cardGap,
+          legacyCard: { height: cardH, gap: cardGap },
           columnSx: {
-            flex: 1,
+            flex: '1 1 0',
             minHeight: 0,
+            height: 'auto',
             overflow: 'hidden',
+            flexShrink: 1,
             justifyContent: 'flex-start',
+            pt: `${Math.max(4, Math.round(w * 0.008))}px`,
           },
           pillPad: 0,
         })}
-        {useBrazilBand ? (
-          <Box sx={{
-            flex: '0 0 auto',
-            display: 'flex', flexDirection: 'column',
-            alignItems: 'stretch', justifyContent: 'center', gap: '20px',
-            pt: '20px',
-          }}>
-            {/* Dots between last card and CTA (matches GAM interstitial order). */}
-            {dots}
-            {ctaBtn}
-          </Box>
-        ) : (
-          <>
-            <Box sx={{ flexShrink: 0 }}>{dots}</Box>
-            {ctaBtn}
-          </>
-        )}
-        {useBrazilBand ? renderBrazilLegalBand(brazilBandH, 20, 31) : (
+        {ctaZone}
+        {useBrazilBand ? renderBrazilLegalBand(brazilBandH, vw(2.6), 31) : (
           config.legal && config.legal.enabled ? (
-          <Box sx={{ position: 'absolute', bottom: 20, left: sidePad, right: sidePad, display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 16, color: config.legal.color || config.text, opacity: 0.85 }}>
+          <Box sx={{ position: 'absolute', bottom: '0.5%', left: '1%', right: '1%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: vw(2.4), color: config.legal.color || config.text, opacity: 0.85 }}>
             <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
               {config.legal.logo && <Box component="img" src={config.legal.logo} alt="" sx={{ height: 22, width: 'auto' }} />}
               <Age18PlusBadge size={31} />
@@ -1115,7 +1207,7 @@ export default function AdPreview({
           ) : null
         )}
       </>,
-      `16px ${sidePad}px ${bottomPad}px`
+      `0 ${sidePad}px ${bottomPad}px`
     );
   };
 
@@ -1220,75 +1312,66 @@ export default function AdPreview({
           )
         )}
       </>,
-      `${topPad}px 14px ${bottomPad}px`,
+      `0 2.5% ${bottomPad}px`,
       welcomeBg,
     );
   };
 
   const renderWelcomeInterstitial = () => {
-    // Brazil: CTA + dots centered in the space between offer content and legal band.
-    // Canvas is 640×1280 (same as standard interstitial preview).
-    const bottomPad = useBrazilBand ? brazilBandH : 80;
+    const vw = (pct) => Math.round(w * (pct / 100));
+    const bottomPad = useBrazilBand ? brazilBandH : 48;
+    const ctaH = Math.max(44, Math.round(w * 0.0875));
+    const dotsH = Math.max(14, Math.round(w * 0.028));
     const ctaBtn = (
       <Box component="button" sx={{
         background: woCtaBg, color: woCtaFg,
-        border: 'none', height: 88, mt: useBrazilBand ? 0 : '28px',
+        border: 'none', width: '92%', height: ctaH, minHeight: 40,
         position: 'relative', flexShrink: 0,
-        borderRadius: `${Math.min(radius * 1.5, 24)}px`,
-        fontSize: 32, fontWeight: 800, cursor: 'pointer',
+        borderRadius: '10px',
+        fontSize: vw(4.2), fontWeight: 800, cursor: 'pointer',
         fontFamily: 'inherit', letterSpacing: '0.01em',
+        boxShadow: '0 2px 4px 0 rgba(0, 32, 27, 0.69)',
       }}>{woCtaText}</Box>
     );
-    const dots = renderInAdDots({ rowHeight: 24, dotSize: 10, mt: useBrazilBand ? 0 : 24 });
+    const dots = renderInAdDots({ rowHeight: dotsH, dotSize: Math.max(5, vw(0.7)), mt: 0 });
     return wrap(
       <>
-        {/* Logo centered on its own row; the "Welcome offer" pill stacks below
-            so the logo retains its centered alignment instead of being shifted
-            off by the pill in a justify-between row. */}
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: '28px', mb: '16px', flexShrink: 0 }}>
-          <LogoThumb bg={bookmaker.logoBg} fg={bookmaker.logoFg} initials={bookmaker.initials} imageUrl={resolveLogoUrl(bookmaker, config)} size={144} radius={24} bare />
+        <Box sx={{
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          mt: `${Math.round(w * 0.03)}px`, flexShrink: 0,
+        }}>
+          <LogoThumb bg={bookmaker.logoBg} fg={bookmaker.logoFg} initials={bookmaker.initials} imageUrl={resolveLogoUrl(bookmaker, config)} size={Math.round(w * 0.33)} radius={vw(2)} bare />
         </Box>
-        <Box sx={{ display: 'flex', justifyContent: 'center', mb: '20px', flexShrink: 0 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', my: `${vw(3)}px`, flexShrink: 0 }}>
           <Box sx={{
-            padding: '8px 24px', borderRadius: 999,
+            padding: `${vw(1)}px ${vw(2.5)}px`, borderRadius: 999,
             bgcolor: woPillBg, color: woPillFg,
-            fontSize: 22, fontWeight: 800, letterSpacing: '0.08em', textIndent: '0.08em',
+            fontSize: vw(2.5), fontWeight: 800, letterSpacing: '0.08em', textIndent: '0.08em',
             textTransform: 'uppercase', textAlign: 'center',
           }}>{woPillText}</Box>
         </Box>
         <Box sx={{
-          display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '24px',
+          flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: `${vw(2)}px`,
           textAlign: 'center', minHeight: 0,
-          ...(useBrazilBand ? { flexShrink: 0 } : { flex: 1 }),
         }}>
           {wo.image && (
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-              <Box component="img" src={wo.image} alt="" sx={{ maxHeight: 200, maxWidth: '100%', objectFit: 'contain' }} />
+              <Box component="img" src={wo.image} alt="" sx={{ maxHeight: vw(30), maxWidth: '100%', objectFit: 'contain' }} />
             </Box>
           )}
-          <Box sx={{ fontSize: 72, fontWeight: 800, lineHeight: 0.98, letterSpacing: '-0.03em' }}>{woHeadline}</Box>
-          <Box sx={{ fontSize: 28, opacity: 0.85, lineHeight: 1.25, fontWeight: 500 }}>{woSubtext}</Box>
+          <Box sx={{ fontSize: vw(6.2), fontWeight: 800, lineHeight: 0.98, letterSpacing: '-0.03em' }}>{woHeadline}</Box>
+          <Box sx={{ fontSize: vw(4), opacity: 0.85, lineHeight: 1.25, fontWeight: 500 }}>{woSubtext}</Box>
         </Box>
-        {useBrazilBand ? (
-          <Box sx={{
-            flex: 1, minHeight: 0,
-            display: 'flex', flexDirection: 'column',
-            alignItems: 'stretch', justifyContent: 'center', gap: '20px',
-          }}>
-            {dots}
-            {ctaBtn}
-            <Box sx={{ fontSize: 18, opacity: 0.55, textAlign: 'center', lineHeight: 1.3, flexShrink: 0 }}>{woTerms}</Box>
-          </Box>
-        ) : (
-          <>
-            <Box sx={{ flexShrink: 0 }}>{dots}</Box>
-            {ctaBtn}
-            <Box sx={{ mt: '20px', fontSize: 18, opacity: 0.55, textAlign: 'center', lineHeight: 1.3, flexShrink: 0 }}>{woTerms}</Box>
-          </>
-        )}
-        {useBrazilBand ? renderBrazilLegalBand(brazilBandH, 20, 31) : (
+        <Box sx={{
+          flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%',
+        }}>
+          {dots}
+          {ctaBtn}
+          <Box sx={{ mt: `${vw(2)}px`, fontSize: vw(2.5), opacity: 0.55, textAlign: 'center', lineHeight: 1.3 }}>{woTerms}</Box>
+        </Box>
+        {useBrazilBand ? renderBrazilLegalBand(brazilBandH, vw(2.6), 31) : (
           config.legal && config.legal.enabled ? (
-          <Box sx={{ position: 'absolute', bottom: 20, left: 28, right: 28, display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 16, color: config.legal.color || config.text, opacity: 0.85 }}>
+          <Box sx={{ position: 'absolute', bottom: '0.5%', left: '1%', right: '1%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: vw(2.4), color: config.legal.color || config.text, opacity: 0.85 }}>
             <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
               {config.legal.logo && <Box component="img" src={config.legal.logo} alt="" sx={{ height: 22, width: 'auto' }} />}
               <Age18PlusBadge size={31} />
@@ -1300,7 +1383,7 @@ export default function AdPreview({
           ) : null
         )}
       </>,
-      `32px 28px ${bottomPad}px`,
+      `0 2.5% ${bottomPad}px`,
       welcomeBg,
     );
   };

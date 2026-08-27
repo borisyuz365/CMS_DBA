@@ -1,15 +1,22 @@
 <!--
-  GAM Creative Template — Interstitial Standard (320×480 fluid, AdOps 2∶3).
-  Shell fills SafeFrame width; height = width × 1.5. Layout uses em tied to shell width.
+  GAM Creative Template — Interstitial Standard (320×480 inventory).
+  Edge-to-edge SafeFrame/MRAID fill. Type unit = 1% of min(width, height/1.5)
+  so tall 640×1280 slots do not inflate team names. Legal band is in-flow
+  (not absolute) so the CTA cannot sit underneath it.
   Legal footer is outside the click <a> (nested anchors break GAM preview).
 -->
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <script src="[[runtime_url]]" defer></script>
 <style>
-  html, body { margin: 0; padding: 0; width: 100%; height: 100%; }
+  html, body {
+    margin: 0; padding: 0;
+    width: 100%; height: 100%;
+    overflow: hidden;
+  }
   .ad-shell {
     width: 100%;
     height: 100%;
@@ -17,106 +24,115 @@
     border-radius: [[ad_border_radius]];
     overflow: hidden;
     box-sizing: border-box;
-    /* 1em = 5% of shell width (16px at 320). Set/updated by fluid bootstrap. */
-    font-size: 5vw;
+    display: flex;
+    flex-direction: column;
+    font-size: 1vw; /* boot script overrides from shell size */
   }
   .ad {
-    width: 100%; height: 100%;
+    flex: 1 1 0;
+    width: 100%;
+    min-height: 0;
+    overflow: hidden;
     background: [[ad_background]];
     color: [[brand_color_2_or_white]];
     font-family: [[ad_font_family]];
     box-sizing: border-box;
-    padding: 0.5em 0.15em 2.5em;
+    padding: 0 2.5% 2%;
     display: flex; flex-direction: column;
     text-decoration: none;
   }
   .ad-shell.legal-band .ad {
-    padding: 0.5em 0.15em 3.2em;
-  }
-  .ad-shell.legal-band .ad .logo-wrap { margin-bottom: 0.4em; }
-  /* Brazil interstitial: matches fill the column; never adopt MPU flex:0 / absolute CTA. */
-  .ad-shell.legal-band .ad .matches,
-  .ad-shell.legal-band .ad .matches[data-layout="interstitial"] {
-    flex: 1 1 auto;
+    flex: 1 1 0;
     min-height: 0;
-    margin-bottom: 0;
-    padding-top: 0.25em;
-    overflow: hidden;
+    max-height: calc(100% - var(--dba-legal-h, 72px));
+    padding-bottom: 0.5%;
   }
-  .ad-shell.legal-band .ad .cta-zone {
-    flex: 0 0 auto;
-    min-height: 0;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding-top: 0.5em;
-  }
-  .ad-shell.legal-band .ad .cta-zone .cta {
-    position: relative;
-    left: auto; right: auto; bottom: auto;
-    margin-top: 0;
-  }
+  .ad-shell.legal-band .ad .logo-wrap { margin-bottom: 0; }
 
   .ad .logo-wrap {
     display: flex; align-items: center; justify-content: center;
-    margin-top: 0.25em; margin-bottom: 0.5em;
-    flex-shrink: 0;
-  }
-  .ad .logo {
-    width: 22.5%;
-    aspect-ratio: 1;
-    height: auto;
-    background-image: url('[[bookmaker_logo_url]]');
-    background-size: contain; background-repeat: no-repeat;
-    background-position: center;
-    border-radius: 0.75em;
-  }
-  .ad .matches {
-    flex: 1;
-    position: relative;
-    overflow: hidden;
-    padding-top: 0.25em;
-    box-sizing: border-box;
+    margin-top: 10px; margin-bottom: 0;
+    flex: 0 0 auto;
+    overflow: visible;
     min-height: 0;
   }
-  .ad .cta-zone { flex-shrink: 0; }
-  /* Page indicator — in-flow between match cards and CTA (dba-runtime.js). */
+  .ad .logo {
+    width: 33%;
+    aspect-ratio: 1;
+    height: auto;
+    flex-shrink: 0;
+    overflow: visible;
+    background-image: url('[[bookmaker_logo_url]]');
+    background-size: contain; background-repeat: no-repeat;
+    background-position: center center;
+    border-radius: 2em;
+  }
+  .ad .matches {
+    flex: 1 1 0;
+    position: relative;
+    overflow: hidden;
+    box-sizing: border-box;
+    min-height: 0;
+    width: 100%;
+    margin: 0;
+  }
+  .ad .cta-zone {
+    flex: 0 0 auto;
+    flex-shrink: 0;
+    display: flex; flex-direction: column; align-items: center;
+    width: 100%;
+    min-height: 0;
+    margin-top: 0;
+    padding-top: 0;
+    padding-bottom: 1%;
+    position: relative;
+    z-index: 2;
+    background: inherit; /* cover any bleed from matches */
+  }
   .ad .dba-dots[data-layout="interstitial"] {
-    height: 0.75em; margin: 0.5em 0; display: flex;
-    justify-content: center; align-items: center;
-    gap: 0.35em; flex-shrink: 0; pointer-events: none; color: inherit;
+    height: 2.8em; min-height: 10px; max-height: 4%;
+    margin: 0.6% 0;
+    display: flex; justify-content: center; align-items: center;
+    gap: 0.8em; flex: 0 0 auto; pointer-events: none; color: inherit;
   }
   .ad .dba-dots[data-layout="interstitial"] .dba-dot {
     display: inline-block; border-radius: 999px; background: currentColor;
-    height: 0.35em; width: 0.35em; opacity: 0.35;
+    height: 0.8em; width: 0.8em; min-height: 4px; min-width: 4px; opacity: 0.35;
   }
   .ad .dba-dots[data-layout="interstitial"] .dba-dot-active {
-    width: 0.75em; opacity: 1;
+    width: 1.6em; min-width: 8px; opacity: 1;
   }
   .ad .cta-zone > .dba-dots[data-layout="interstitial"] + .cta { margin-top: 0; }
   .ad .cta {
     background: [[cta_bg_color]];
     color: [[cta_text_color]];
     border: none;
-    height: 2.75em;
-    margin-top: 1em;
+    width: 92%;
+    height: auto;
+    min-height: 36px;
+    padding: 2.4% 0;
+    margin-top: 0;
     position: relative;
-    border-radius: 0.625em;
-    font-size: 1em;
+    border-radius: 10px;
+    font-size: 4em;
     font-weight: 700;
     cursor: pointer;
     font-family: inherit;
     letter-spacing: 0.01em;
     display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 4px 0 rgba(0, 32, 27, 0.69);
+    flex: 0 0 auto;
+    box-sizing: border-box;
   }
 
-  .ad-shell .legal { pointer-events: none; z-index: 10; }
+  .ad-shell .legal { pointer-events: none; z-index: 3; flex-shrink: 0; }
   .ad-shell .legal.legal-hidden { display: none; }
   .ad-shell .legal.legal-strip {
-    position: absolute; left: 0.15em; right: 0.15em; bottom: 0.5em;
+    flex: 0 0 auto;
+    position: relative;
+    margin: 0 1% 0.5%;
     display: flex; justify-content: space-between; align-items: center;
-    font-size: 0.5em; opacity: 0.85;
+    font-size: 2.2em; opacity: 0.85;
     color: [[legal_text_color]];
   }
   .ad-shell .legal.legal-strip .marks { display: inline-flex; align-items: center; gap: 0.35em; }
@@ -132,17 +148,23 @@
     color: inherit; text-decoration: underline;
     max-width: 70%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
+  /* Brazil SPA/MF: legal band must occupy 10% of total ad height. */
   .ad-shell .legal.legal-band {
-    position: absolute; left: 0; right: 0; bottom: 0;
-    height: 10%; min-height: 2.5em;
+    flex: 0 0 10%;
+    flex-shrink: 0;
+    min-height: 10%;
+    height: 10%;
+    position: relative;
+    width: 100%;
     display: flex; align-items: center; justify-content: flex-start;
     gap: 0.4em;
     box-sizing: border-box;
-    padding: 0.25em 0.6em;
+    padding: 0.6em 0.8em;
     background: [[disclaimer_bg_color]];
     color: [[legal_text_color]];
-    font-size: 0.55em; font-weight: 700; line-height: 1.2;
+    font-size: var(--dba-legal-font, 2.2em); font-weight: 700; line-height: 1.15;
     text-align: left;
+    overflow: hidden;
   }
   .ad-shell .legal.legal-band .marks { display: inline-flex; align-items: center; flex-shrink: 0; }
   .ad-shell .legal.legal-band .age18 {
@@ -186,19 +208,41 @@
   </div>
   <script>
   (function () {
-    var RATIO = 1.5;
-    function fit() {
+    // 1em = 1% of the limiting dimension (width vs height/1.5) so tall
+    // full-screen slots do not oversize type relative to card height.
+    function apply() {
       var shell = document.querySelector('.ad-shell');
       if (!shell) return;
-      var w = shell.clientWidth || (shell.parentElement && shell.parentElement.clientWidth) || window.innerWidth || 320;
+      var w = shell.clientWidth || document.documentElement.clientWidth || 320;
+      var h = shell.clientHeight || document.documentElement.clientHeight || Math.round(w * 1.5);
       if (w < 1) w = 320;
-      shell.style.width = '100%';
-      shell.style.height = (w * RATIO) + 'px';
-      shell.style.fontSize = (w / 20) + 'px';
+      if (h < 1) h = Math.round(w * 1.5);
+      var unit = Math.min(w, h / 1.5) * 0.01;
+      if (document.querySelector('.matches[data-layout="interstitial"]')) unit = w * 0.01;
+      var next = unit + 'px';
+      if (shell.style.fontSize !== next) shell.style.fontSize = next;
+      var legal = shell.querySelector('.legal');
+      if (legal && shell.classList.contains('legal-band')) {
+        var lh = legal.offsetHeight;
+        if (lh < 1) lh = Math.round(h * 0.09);
+        shell.style.setProperty('--dba-legal-h', lh + 'px');
+      }
+      /* Legacy gap cap — runtime re-measures .matches and may shrink further. */
+      var cardGap = Math.round(h * 0.045) + 'px';
+      var tightGap = Math.round(h * 0.034) + 'px';
+      shell.style.setProperty('--dba-card-gap', cardGap);
+      shell.style.setProperty('--dba-card-gap-tight', tightGap);
     }
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fit);
-    else fit();
-    window.addEventListener('resize', fit);
+    function boot() {
+      apply();
+      requestAnimationFrame(function () {
+        apply();
+        if (window.DbaApplyShellMetrics) window.DbaApplyShellMetrics();
+      });
+      window.addEventListener('resize', apply);
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+    else boot();
   })();
   </script>
 </body>

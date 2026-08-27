@@ -48,7 +48,7 @@ function bookmakerRowToJson(row, variantRows) {
 }
 
 function templateRowToJson(row, countries = []) {
-  // Legacy interstitial id 640x1280 → AdOps inventory 320x480 (fluid 2∶3).
+  // Legacy interstitial id 640x1280 → AdOps inventory 320x480 (preview canvas 640×1280).
   const sizeId = normalizeSizeId(row.size_id);
   const sizeLabel = sizeId === INTERSTITIAL_SIZE_ID
     ? 'Interstitial · 640×1280'

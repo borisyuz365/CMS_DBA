@@ -27,7 +27,7 @@ import CreativeTemplateCodeDialog from '../../components/dba/CreativeTemplateCod
 import apiService from '../../services/api';
 import AdPreview from '../../components/dba/AdPreview';
 import { StatusPill, LogoThumb, Toggle } from '../../components/dba/DbaPrimitives';
-import { invertText, SIZE_DIMS, resolveLogoUrl, bookmakerLogoUrl, autoLogoReason, brazilDefaultLegalText, isInterstitialSize, formatSizeLabel, formatSizeShort } from '../../components/dba/dbaUtils';
+import { invertText, SIZE_DIMS, resolveLogoUrl, bookmakerLogoUrl, autoLogoReason, brazilDefaultLegalText, isInterstitialSize, formatSizeLabel, formatSizeShort, bgImageGuidelinesForSize } from '../../components/dba/dbaUtils';
 
 const DEFAULT_CONFIG = {
   bg: '#151E22', text: '#FFFFFF', cta: '#1976D2', ctaText: 'Bet Now',
@@ -447,8 +447,18 @@ function DbaTemplateEditorInner({ initial, allBookmakers, isNew }) {
 
               {config.bgType === 'image' && (
                 <>
-                  <Field label="Image"><ImageUploadField value={config.bgImage} onChange={(v) => set('bgImage', v)} /></Field>
-                  <Field label="Overlay tint"><ColorField value={config.bg} onChange={(v) => set('bg', v)} /></Field>
+                  <Field
+                    label="Image"
+                    help={<BgImageGuidelinesHelp sizeId={previewSize} />}
+                  >
+                    <ImageUploadField value={config.bgImage} onChange={(v) => set('bgImage', v)} />
+                  </Field>
+                  <Field
+                    label="Overlay tint"
+                    help="Solid brand colour used as the overlay tint and as a fallback while the image loads. Match the dominant colour of the image."
+                  >
+                    <ColorField value={config.bg} onChange={(v) => set('bg', v)} />
+                  </Field>
                   <Field label={`Overlay opacity · ${Math.round((config.bgOverlay ?? 0.35) * 100)}%`}>
                     <Slider min={0} max={100} value={Math.round((config.bgOverlay ?? 0.35) * 100)} onChange={(_, v) => set('bgOverlay', v / 100)} />
                   </Field>
@@ -751,10 +761,16 @@ function DbaTemplateEditorInner({ initial, allBookmakers, isNew }) {
 
                       {config.welcomeOffer?.bgType === 'image' && (
                         <>
-                          <Field label="Image">
+                          <Field
+                            label="Image"
+                            help={<BgImageGuidelinesHelp sizeId={previewSize} />}
+                          >
                             <ImageUploadField value={config.welcomeOffer?.bgImage} onChange={(v) => set('welcomeOffer', { ...(config.welcomeOffer || {}), bgImage: v })} />
                           </Field>
-                          <Field label="Overlay tint">
+                          <Field
+                            label="Overlay tint"
+                            help="Solid brand colour used as the overlay tint and as a fallback while the image loads. Match the dominant colour of the image."
+                          >
                             <ColorField value={config.welcomeOffer?.bg || '#000000'} onChange={(v) => set('welcomeOffer', { ...(config.welcomeOffer || {}), bg: v })} />
                           </Field>
                           <Field label={`Overlay opacity · ${Math.round((config.welcomeOffer?.bgOverlay ?? 0.35) * 100)}%`}>
@@ -984,7 +1000,43 @@ function Field({ label, help, children }) {
     <Box>
       <Typography sx={{ fontSize: 13, fontWeight: 500, mb: 0.75 }}>{label}</Typography>
       {children}
-      {help && <Typography sx={{ fontSize: 12, color: 'text.secondary', mt: 0.5 }}>{help}</Typography>}
+      {help && (
+        typeof help === 'string'
+          ? <Typography sx={{ fontSize: 12, color: 'text.secondary', mt: 0.5 }}>{help}</Typography>
+          : <Box sx={{ mt: 0.75 }}>{help}</Box>
+      )}
+    </Box>
+  );
+}
+
+function BgImageGuidelinesHelp({ sizeId }) {
+  const lines = bgImageGuidelinesForSize(sizeId);
+  const interstitial = isInterstitialSize(sizeId);
+  return (
+    <Box
+      sx={{
+        px: 1.25,
+        py: 1,
+        borderRadius: 1,
+        bgcolor: 'action.hover',
+        border: '1px solid',
+        borderColor: 'divider',
+      }}
+    >
+      <Typography sx={{ fontSize: 12, fontWeight: 600, color: 'text.primary', mb: 0.5 }}>
+        {interstitial ? 'Interstitial background guidelines' : 'Background image guidelines'}
+      </Typography>
+      <Box component="ul" sx={{ m: 0, pl: 2.25 }}>
+        {lines.map((line) => (
+          <Typography
+            key={line}
+            component="li"
+            sx={{ fontSize: 12, color: 'text.secondary', lineHeight: 1.45, mb: 0.35 }}
+          >
+            {line}
+          </Typography>
+        ))}
+      </Box>
     </Box>
   );
 }

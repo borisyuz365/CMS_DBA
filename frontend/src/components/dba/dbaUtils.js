@@ -88,6 +88,28 @@ export function fmtUptime(s) {
 export const INTERSTITIAL_SIZE_ID = '320x480';
 export const INTERSTITIAL_SIZE_ALIASES = new Set(['320x480', '640x1280']);
 
+/**
+ * Background-image guidelines shown in the DBA template editor.
+ * Interstitial art is designed at 2:3; GAM may deliver taller slots that crop via cover.
+ */
+export const INTERSTITIAL_BG_IMAGE_GUIDELINES = [
+  'Preview canvas is 640×1280 (tall device slot). GAM inventory remains 320×480 fluid.',
+  'Ratio for art masters: 2:3 (e.g. 640×960 or 1280×1920). Do not rely on full-phone screenshots as the master — tall slots crop via cover.',
+  'Format: WebP or JPEG preferred; avoid huge PNGs. Aim under 150–200 KB (ideally under 100 KB).',
+  'Applied as center / cover — keep critical art in the middle ~70%. Bottom ~10% is covered by the Brazil legal band.',
+  'Set Overlay tint to a solid brand colour that matches the image (fallback while loading + text readability).',
+];
+
+export const DEFAULT_BG_IMAGE_GUIDELINES = [
+  'Format: WebP or JPEG preferred; avoid huge PNGs. Aim under 150–200 KB.',
+  'Applied as center / cover — edges may crop depending on slot size.',
+  'Set Overlay tint to a solid brand colour that matches the image (fallback + readability).',
+];
+
+export function bgImageGuidelinesForSize(sizeId) {
+  return isInterstitialSize(sizeId) ? INTERSTITIAL_BG_IMAGE_GUIDELINES : DEFAULT_BG_IMAGE_GUIDELINES;
+}
+
 export function isInterstitialSize(sizeId) {
   return INTERSTITIAL_SIZE_ALIASES.has(sizeId);
 }
@@ -97,8 +119,9 @@ export function normalizeSizeId(sizeId) {
   return sizeId;
 }
 
-// CMS preview canvas dims. Interstitial inventory is GAM 320×480 fluid;
-// the editor/list preview stays 640×1280 for design fidelity.
+// CMS preview canvas dims. Interstitial inventory is 320×480 (fluid); the
+// editor previews a tall device slot at 640×1280 so layout matches Android
+// delivery. Legacy `640x1280` sizeId aliases to the same interstitial preview.
 export const SIZE_DIMS = {
   '300x250': [300, 250],
   '320x480': [640, 1280],

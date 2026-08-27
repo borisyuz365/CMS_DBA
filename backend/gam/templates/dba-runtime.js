@@ -287,46 +287,124 @@
       '.ad-shell.legal-band .matches[data-layout="banner"] .dba-x { font-size: 8.5px; }' +
       '.ad-shell.legal-band .matches[data-layout="banner"] .dba-odds { height: 9px; font-size: 7px; }' +
       '.ad-shell.legal-band .matches[data-layout="banner"] .dba-odd-label { font-size: 5.5px; }' +
-      /* Interstitial (320×480 fluid): denser 2∶3 cards, 3 per slide. em tied to
-         .ad-shell font-size (width/20). data-layout="interstitial". */ +
-      '.matches[data-layout="interstitial"] .dba-slide { gap: 0.5em; }' +
-      '.matches[data-layout="interstitial"] .dba-card {' +
-        'border-radius: 0.9em; padding: 0.4em 0.55em 0.5em; gap: 0.4em;' +
+      /* Interstitial — fill middle band; card type scales with computed card height. */ +
+      '.matches[data-layout="interstitial"] { flex: 1 1 0; min-height: 0; }' +
+      '.matches[data-layout="interstitial"] .dba-track { min-height: 0; height: 100%; }' +
+      '.matches[data-layout="interstitial"] .dba-slide {' +
+        'height: 100%; min-height: 0; box-sizing: border-box;' +
+        'display: flex; flex-direction: column; justify-content: flex-start;' +
+        'align-items: stretch; gap: 0; overflow: hidden;' +
       '}' +
+      '.matches[data-layout="interstitial"] .dba-card {' +
+        'flex: 0 0 auto; min-height: 0; margin: 0;' +
+        'box-sizing: border-box;' +
+        'border-radius: 1.4em; padding: 0.7em 3.5% 0.75em; gap: 0.65em; overflow: hidden;' +
+        'display: flex; flex-direction: column; justify-content: center;' +
+      '}' +
+      /* Spacers (not margins) — GAM WebViews let margin-top overflow under the CTA. */ +
+      '.matches[data-layout="interstitial"] .dba-card-sep {' +
+        'flex: 0 0 auto; width: 100%; margin: 0; padding: 0; border: 0;' +
+        'height: var(--dba-card-gap, 16px); min-height: 10px; pointer-events: none;' +
+      '}' +
+      '.matches[data-layout="interstitial"] .dba-card + .dba-card { margin-top: 0; }' +
+      '.matches[data-layout="interstitial"] .dba-card:last-child { margin-bottom: 0; }' +
       '.matches[data-layout="interstitial"] .dba-pill {' +
         'position: static; transform: none; top: auto; left: auto;' +
-        'padding: 0 0.5em; height: 1.2em; font-size: 0.7em;' +
+        'height: auto; min-height: 0; padding: 0.3em 1.4em; font-size: var(--dba-int-pill, 4.2em);' +
+        'flex: 0 0 auto;' +
       '}' +
       '.matches[data-layout="interstitial"] .dba-teams {' +
-        'gap: 0; margin-top: 0; font-size: 0.85em; align-items: center;' +
+        'flex: 0 0 auto; min-height: var(--dba-int-crest, 48px); gap: 0; margin-top: 0;' +
+        'font-size: var(--dba-int-team, 8em); font-weight: 600; align-items: center;' +
+        'display: flex; width: 100%; line-height: 1.15; overflow: visible;' +
       '}' +
-      '.matches[data-layout="interstitial"] .dba-teamblock { gap: 0.3em; }' +
-      /* Wrap at spaces (max 2 lines). Do not split a single word like Fluminense. */ +
+      '.matches[data-layout="interstitial"] .dba-teamblock {' +
+        'flex: 1 1 0; min-width: 0; width: 0; gap: 0;' +
+        'display: flex; align-items: center;' +
+      '}' +
+      /* Name sits in the free space between crest and vs, centred. */ +
+      '.matches[data-layout="interstitial"] .dba-teamblock-home { justify-content: flex-start; }' +
+      '.matches[data-layout="interstitial"] .dba-teamblock-away { justify-content: flex-end; }' +
+      /* Crests: fixed px from card height (not % — collapses / clips in GAM WebViews). */ +
+      '.ad-shell .matches[data-layout="interstitial"] .dba-team-logo {' +
+        'flex: 0 0 var(--dba-int-crest, 48px) !important; width: var(--dba-int-crest, 48px) !important;' +
+        'height: var(--dba-int-crest, 48px) !important; max-width: var(--dba-int-crest, 48px) !important;' +
+        'max-height: var(--dba-int-crest, 48px) !important;' +
+        'object-fit: contain; border-radius: 50%; background: rgba(255,255,255,0.08);' +
+      '}' +
+      '.matches[data-layout="interstitial"] .dba-team-logo {' +
+        'flex: 0 0 var(--dba-int-crest, 48px); width: var(--dba-int-crest, 48px); height: var(--dba-int-crest, 48px);' +
+        'max-width: var(--dba-int-crest, 48px); max-height: var(--dba-int-crest, 48px);' +
+        'object-fit: contain; border-radius: 50%; background: rgba(255,255,255,0.08);' +
+      '}' +
+      '.matches[data-layout="interstitial"] .dba-teamblock-home .dba-team-logo { margin-right: 0; }' +
+      '.matches[data-layout="interstitial"] .dba-teamblock-away .dba-team-logo { margin-left: 0; }' +
+      '.matches[data-layout="interstitial"] .dba-team-name-slot {' +
+        'flex: 1 1 0; min-width: 0; overflow: hidden;' +
+        'display: flex; align-items: center; justify-content: center; text-align: center;' +
+      '}' +
+      '.matches[data-layout="interstitial"] .dba-teamblock-home .dba-team-name-slot { justify-content: center; text-align: center; }' +
+      '.matches[data-layout="interstitial"] .dba-teamblock-away .dba-team-name-slot { justify-content: center; text-align: center; }' +
       '.matches[data-layout="interstitial"] .dba-team-name {' +
-        'display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;' +
-        'overflow: hidden; white-space: normal; text-overflow: ellipsis;' +
-        'overflow-wrap: break-word; word-break: normal; line-height: 1.15;' +
+        'display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;' +
+        'overflow-wrap: normal; word-break: normal; line-height: 1.15;' +
+        'max-width: 100%; min-width: 0; font-size: 1em; color: inherit; text-align: center;' +
       '}' +
-      '.matches[data-layout="interstitial"] .dba-team-name-slot { flex: 1 1 auto; overflow: hidden; }' +
-      '.matches[data-layout="interstitial"] .dba-team-logo { width: 2.1em; height: 2.1em; }' +
-      '.matches[data-layout="interstitial"] .dba-x { font-size: 0.85em; margin: 0 0.35em; }' +
-      '.matches[data-layout="interstitial"] .dba-odds { margin-top: 0; font-size: 0.7em; }' +
-      '.matches[data-layout="interstitial"] .dba-odd-slot-home { padding-right: 2.5em; }' +
-      '.matches[data-layout="interstitial"] .dba-odd-slot-draw { margin: 0 0.35em; }' +
-      '.matches[data-layout="interstitial"] .dba-odd-slot-away { padding-left: 2.5em; }' +
-      '.matches[data-layout="interstitial"] .dba-odd { gap: 0.25em; }' +
-      '.matches[data-layout="interstitial"] .dba-odd-label { font-size: 0.5em; }' +
-      /* Interstitial + Brazil: keep fluid flex column (matches grow, CTA
-         in normal flow). Must win over any leftover MPU legal-band rules. */ +
+      '.matches[data-layout="interstitial"] .dba-x {' +
+        'flex: 0 0 auto; font-size: 0.85em; font-weight: 700;' +
+        'margin: 0 1.5%; opacity: 0.75; letter-spacing: 0.02em;' +
+        'text-transform: lowercase; line-height: 1;' +
+      '}' +
+      /* Odds mirror teams row: same 1fr | vs | 1fr centre column so X sits under vs. */ +
+      '.matches[data-layout="interstitial"] .dba-odds {' +
+        'margin-top: 0.2em; font-size: var(--dba-int-odds, 4.8em); flex: 0 0 auto; font-weight: 700;' +
+        'display: flex; align-items: center; width: 100%; min-width: 0;' +
+        'overflow: visible;' +
+      '}' +
+      '.matches[data-layout="interstitial"] .dba-odd-slot {' +
+        'font-size: inherit; min-width: 0; overflow: visible;' +
+      '}' +
+      '.matches[data-layout="interstitial"] .dba-odd-slot-home {' +
+        'flex: 1 1 0; justify-content: flex-end;' +
+        'padding-right: calc(var(--dba-int-crest, 32px) + 6px); padding-left: 0;' +
+        'box-sizing: border-box;' +
+      '}' +
+      /* Hidden "vs" spacer matches .dba-x width/margins; X odds centred on it. */ +
+      '.matches[data-layout="interstitial"] .dba-odd-slot-draw {' +
+        'position: relative; flex: 0 0 auto; margin: 0 1.5%;' +
+        'font-size: inherit; font-weight: 700; line-height: 1;' +
+      '}' +
+      '.matches[data-layout="interstitial"] .dba-odd-slot-draw:before {' +
+        'content: "vs"; visibility: hidden; display: inline-block;' +
+        /* vs spacer tracks --dba-int-team / --dba-int-odds */ +
+        'font-size: 1.35em; font-weight: 700; letter-spacing: 0.02em;' +
+        'text-transform: lowercase; line-height: 1;' +
+      '}' +
+      '.matches[data-layout="interstitial"] .dba-odd-slot-draw .dba-odd {' +
+        'position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);' +
+      '}' +
+      '.matches[data-layout="interstitial"] .dba-odd-slot-away {' +
+        'flex: 1 1 0; justify-content: flex-start;' +
+        'padding-left: calc(var(--dba-int-crest, 32px) + 6px); padding-right: 0;' +
+        'box-sizing: border-box;' +
+      '}' +
+      '.matches[data-layout="interstitial"] .dba-odd {' +
+        'gap: 0.35em; font-size: 1em; white-space: nowrap;' +
+      '}' +
+      '.matches[data-layout="interstitial"] .dba-odd-label { font-size: 0.62em; font-weight: 800; color: #FFC107; }' +
       '.ad-shell.legal-band .matches[data-layout="interstitial"] {' +
-        'flex: 1 1 auto; min-height: 0; margin-bottom: 0; padding-top: 0.25em; overflow: hidden;' +
+        'flex: 1 1 0; min-height: 0; margin: 0; padding-top: 0; overflow: hidden;' +
       '}' +
-      '.ad-shell.legal-band .matches[data-layout="interstitial"] .dba-slide { gap: 0.4em; }' +
+      '.ad-shell.legal-band .matches[data-layout="interstitial"] .dba-card-sep {' +
+        'height: var(--dba-card-gap-tight, 18px);' +
+      '}' +
+      '.ad-shell.legal-band .matches[data-layout="interstitial"] .dba-card + .dba-card { margin-top: 0; }' +
       '.ad-shell.legal-band .matches[data-layout="interstitial"] ~ .cta-zone {' +
-        'flex: 0 0 auto; position: relative;' +
+        'flex: 0 0 auto; flex-shrink: 0; position: relative; z-index: 2;' +
       '}' +
       '.ad-shell.legal-band .matches[data-layout="interstitial"] ~ .cta-zone .cta {' +
         'position: relative; left: auto; right: auto; bottom: auto; margin-top: 0;' +
+        'border-radius: 10px;' +
       '}' +
       /* Carousel page indicator — on .ad-shell (outside click <a>) for GAM. */ +
       '.ad .dba-dots, .ad-shell > .dba-dots-shell { display: flex; justify-content: center; align-items: center; flex-shrink: 0; pointer-events: none; color: inherit; }' +
@@ -339,20 +417,18 @@
       '.ad .dba-dots[data-layout="mpu"] { position: absolute; left: 0; right: 0; bottom: 12px; height: 10px; margin-top: 0; gap: 6px; z-index: 2; }' +
       '.ad .dba-dots[data-layout="mpu"] .dba-dot { height: 4px; width: 4px; }' +
       '.ad .dba-dots[data-layout="mpu"] .dba-dot-active { width: 9.6px; }' +
-      /* MPU-only absolute CTA (sibling of .ad-stack). Interstitial uses .cta-zone. */ +
       '.ad-shell.legal-band .ad-stack ~ .cta { position: absolute; left: 12px; right: 12px; bottom: 43px; margin-top: 0; z-index: 2; }' +
-      /* Interstitial dots sit in-flow between match cards and the CTA. */ +
-      '.ad .dba-dots[data-layout="interstitial"] { height: 0.75em; margin: 0.5em 0; gap: 0.35em; }' +
-      '.ad .dba-dots[data-layout="interstitial"] .dba-dot { height: 0.35em; width: 0.35em; }' +
-      '.ad .dba-dots[data-layout="interstitial"] .dba-dot-active { width: 0.75em; }' +
+      '.ad .dba-dots[data-layout="interstitial"] { height: 2.8em; min-height: 10px; max-height: 4%; margin: 0.6% 0; gap: 0.8em; }' +
+      '.ad .dba-dots[data-layout="interstitial"] .dba-dot { height: 0.8em; width: 0.8em; min-height: 4px; min-width: 4px; }' +
+      '.ad .dba-dots[data-layout="interstitial"] .dba-dot-active { width: 1.6em; min-width: 8px; }' +
       '.ad .cta-zone > .dba-dots[data-layout="interstitial"] + .cta { margin-top: 0; }' +
-      '.ad-shell.legal-band .ad .dba-dots[data-layout="interstitial"] { margin: 0.5em 0; }';
+      '.ad-shell.legal-band .ad .dba-dots[data-layout="interstitial"] { margin: 0.6% 0; }';
     var s = el('style', { id: 'dba-runtime-styles' });
     s.textContent = css;
     (document.head || document.documentElement).appendChild(s);
   }
 
-  function renderCard(m) {
+  function renderCard(m, layout) {
     // Primary shape (AdsGeneratorService /GetPayload).
     var comps = Array.isArray(m.Comps) ? m.Comps : null;
     var lines = Array.isArray(m.Lines) ? m.Lines : null;
@@ -389,6 +465,8 @@
       ]);
     });
 
+    var vsText = layout === 'interstitial' ? 'vs' : '\u2013';
+
     return el('div', { 'class': 'dba-card' }, [
       el('div', { 'class': 'dba-pill-anchor' }, [
         el('div', { 'class': 'dba-pill' }, [
@@ -398,7 +476,7 @@
       el('div', { 'class': 'dba-v-gap' }),
       el('div', { 'class': 'dba-teams' }, [
         teamBlock(comps[0], 'home'),
-        el('span', { 'class': 'dba-x', text: '\u2013' }),
+        el('span', { 'class': 'dba-x', text: vsText }),
         teamBlock(comps[1], 'away'),
       ]),
       el('div', { 'class': 'dba-v-gap' }),
@@ -406,12 +484,12 @@
     ]);
   }
 
-  function buildSlides(games, perSlide) {
+  function buildSlides(games, perSlide, layout) {
     var slides = [];
     for (var i = 0; i < games.length; i += perSlide) {
       var slide = el('div', { 'class': 'dba-slide' });
       var page = games.slice(i, i + perSlide);
-      for (var j = 0; j < page.length; j++) slide.appendChild(renderCard(page[j]));
+      for (var j = 0; j < page.length; j++) slide.appendChild(renderCard(page[j], layout));
       slides.push(slide);
     }
     return slides;
@@ -513,8 +591,11 @@
 
     if (n < 2) {
       track.style.width = '100%';
-      if (slides[0]) slides[0].style.flex = '0 0 100%';
-      if (slides[0]) slides[0].style.width = '100%';
+      if (slides[0]) {
+        slides[0].style.flex = '0 0 100%';
+        slides[0].style.width = '100%';
+        if (node.getAttribute('data-layout') === 'interstitial') slides[0].style.height = '100%';
+      }
       return;
     }
 
@@ -607,17 +688,289 @@
     odds[2].style.left = (xC + spread) + 'px';
   }
 
+  function interstitialDesignH(w) {
+    return Math.round((w || 320) * 1.5);
+  }
+
+  function applyInterstitialCrestSizes(root, crestPx) {
+    if (!root || crestPx < 1) return;
+    var logos = root.querySelectorAll('.dba-team-logo');
+    for (var i = 0; i < logos.length; i++) {
+      logos[i].style.width = crestPx + 'px';
+      logos[i].style.height = crestPx + 'px';
+      logos[i].style.flex = '0 0 ' + crestPx + 'px';
+      logos[i].style.maxWidth = crestPx + 'px';
+      logos[i].style.maxHeight = crestPx + 'px';
+    }
+  }
+
+  function applyInterstitialTypeScale(shell, cardH, w) {
+    if (!shell || cardH < 1 || w < 1) return 0;
+    /* Width-primary type; odds always smaller than team names. */
+    var team = Math.round(w * 0.046);
+    team = Math.max(20, Math.min(team, Math.round(cardH * 0.155)));
+    var crest = Math.round(w * 0.057);
+    crest = Math.max(29, Math.min(crest, Math.round(cardH * 0.24)));
+    var pill = Math.max(13, Math.round(w * 0.026));
+    var odds = Math.max(15, Math.min(Math.round(team * 0.74), team - 3));
+    shell.style.setProperty('--dba-int-team', team + 'px');
+    shell.style.setProperty('--dba-int-crest', crest + 'px');
+    shell.style.setProperty('--dba-int-pill', pill + 'px');
+    shell.style.setProperty('--dba-int-odds', odds + 'px');
+    return crest;
+  }
+
+  function applyInterstitialCtaPlacement(ad) {
+    if (!ad) return;
+    var ctaZone = ad.querySelector('.cta-zone');
+    if (ctaZone) ctaZone.style.marginTop = 'auto';
+
+    var bottomSpacer = ad.querySelector('.dba-int-spacer');
+    if (bottomSpacer) {
+      bottomSpacer.style.display = 'none';
+      bottomSpacer.style.flex = '0 0 0';
+      bottomSpacer.style.height = '0';
+    }
+    var topSpacer = ad.querySelector('.dba-int-spacer-top');
+    if (topSpacer) {
+      topSpacer.style.display = 'none';
+      topSpacer.style.flex = '0 0 0';
+      topSpacer.style.height = '0';
+    }
+  }
+
+  function applyInterstitialLogoLayout(shell, w) {
+    if (!shell || w < 1) return;
+    var ad = shell.querySelector('.ad');
+    if (!ad) return;
+    var logoWrap = ad.querySelector('.logo-wrap');
+    var logo = ad.querySelector('.logo');
+    var logoSize = Math.round(w * 0.33);
+    if (logoWrap) {
+      logoWrap.style.flex = '0 0 auto';
+      logoWrap.style.minHeight = logoSize + 'px';
+      logoWrap.style.overflow = 'visible';
+    }
+    if (logo) {
+      logo.style.width = logoSize + 'px';
+      logo.style.height = logoSize + 'px';
+      logo.style.maxWidth = logoSize + 'px';
+      logo.style.flexShrink = '0';
+    }
+  }
+
+  function applyLegalBandMetrics(shell, h) {
+    if (!shell || !shell.classList.contains('legal-band')) return 0;
+    var minLegal = Math.round(h * 0.10);
+    shell.style.setProperty('--dba-shell-h', h + 'px');
+    shell.style.setProperty('--dba-legal-h', minLegal + 'px');
+    shell.style.setProperty('--dba-legal-font', Math.max(14, Math.round(h * 0.016)) + 'px');
+    var legal = shell.querySelector('.legal');
+    if (legal) {
+      legal.style.minHeight = minLegal + 'px';
+      legal.style.height = minLegal + 'px';
+      legal.style.flex = '0 0 ' + minLegal + 'px';
+    }
+    return minLegal;
+  }
+
+  function applyShellMetrics() {
+    var shell = document.querySelector('.ad-shell');
+    if (!shell) return null;
+    var w = shell.clientWidth || document.documentElement.clientWidth || 320;
+    var h = shell.clientHeight || document.documentElement.clientHeight || Math.round(w * 1.5);
+    if (w < 1) w = 320;
+    if (h < 1) h = Math.round(w * 1.5);
+    var interstitial = !!document.querySelector('.matches[data-layout="interstitial"]');
+    var unit = interstitial ? (w * 0.0105) : (Math.min(w, h / 1.5) * 0.01);
+    shell.style.fontSize = unit + 'px';
+    var cardGapPx = Math.round(h * 0.045);
+    var tightGapPx = Math.round(h * 0.034);
+    shell.style.setProperty('--dba-card-gap', cardGapPx + 'px');
+    shell.style.setProperty('--dba-card-gap-tight', tightGapPx + 'px');
+    if (interstitial) applyInterstitialLogoLayout(shell, w);
+    if (shell.classList.contains('legal-band')) {
+      applyLegalBandMetrics(shell, h);
+    }
+    return { cardGapPx: cardGapPx, tightGapPx: tightGapPx, legalBand: shell.classList.contains('legal-band'), shellH: h, shellW: w };
+  }
+
+  function applyInterstitialShellLayout(root) {
+    var shell = root ? root.closest('.ad-shell') : document.querySelector('.ad-shell');
+    if (!shell) return 0;
+    var ad = shell.querySelector('.ad');
+    var legalH = interstitialLegalHeight(shell);
+    if (legalH > 0) shell.style.setProperty('--dba-legal-h', legalH + 'px');
+    if (ad && shell.classList.contains('legal-band')) {
+      var budget = Math.max(0, shell.clientHeight - legalH);
+      ad.style.flex = '1 1 0';
+      ad.style.minHeight = '0';
+      ad.style.maxHeight = budget + 'px';
+      ad.style.overflow = 'hidden';
+      return budget;
+    }
+    return ad ? ad.clientHeight : shell.clientHeight;
+  }
+
+  /* Lock .matches to leftover space above CTA + below legal band. */
+  function interstitialLegalHeight(shell) {
+    if (!shell || !shell.classList.contains('legal-band')) return 0;
+    var shellH = shell.clientHeight || 0;
+    var minLegal = Math.round(shellH * 0.10);
+    var legal = shell.querySelector('.legal');
+    if (!legal) return minLegal;
+    var h = legal.offsetHeight;
+    if (h > 0) return Math.max(h, minLegal);
+    try {
+      var cs = window.getComputedStyle(legal);
+      h = parseFloat(cs.height) || 0;
+      if (h > 0) return Math.max(h, minLegal);
+    } catch (e) { /* preview iframe */ }
+    return minLegal;
+  }
+
+  function interstitialCtaBlockHeight(ad, legalBand) {
+    if (!ad) return legalBand ? 96 : 72;
+    var ctaZone = ad.querySelector('.cta-zone');
+    var dots = ad.querySelector('.dba-dots[data-layout="interstitial"]');
+    var cta = ad.querySelector('.cta');
+    var h = ctaZone ? ctaZone.offsetHeight : 0;
+    if (h < 24) {
+      h = (dots ? dots.offsetHeight : 0) + (cta ? cta.offsetHeight : 0);
+      try {
+        var cs = ctaZone ? window.getComputedStyle(ctaZone) : null;
+        if (cs) h += (parseFloat(cs.marginTop) || 0) + (parseFloat(cs.paddingTop) || 0) + (parseFloat(cs.paddingBottom) || 0);
+      } catch (e2) { /* preview iframe */ }
+    }
+    var floor = legalBand ? 96 : 72;
+    return Math.max(h, cta ? cta.offsetHeight + 16 : floor, floor);
+  }
+
+  function applyInterstitialCardGaps(root) {
+    if (root.getAttribute('data-layout') !== 'interstitial') return false;
+    var metrics = applyShellMetrics();
+    if (!metrics) return false;
+    applyInterstitialShellLayout(root);
+
+    var ad = root.closest('.ad');
+    var shell = root.closest('.ad-shell');
+    var legalH = interstitialLegalHeight(shell);
+    var matchesH = root.clientHeight;
+    var avail = matchesH;
+
+    if (ad && shell) {
+      var logo = ad.querySelector('.logo-wrap');
+      var padY = 0;
+      try {
+        var cs = window.getComputedStyle(ad);
+        padY = (parseFloat(cs.paddingTop) || 0) + (parseFloat(cs.paddingBottom) || 0);
+      } catch (e) { /* preview iframe */ }
+      var shellW = metrics.shellW || shell.clientWidth || 320;
+      var shellH = metrics.shellH || shell.clientHeight || interstitialDesignH(shellW);
+      var adBudget = Math.max(0, shellH - legalH);
+      var ctaBlock = interstitialCtaBlockHeight(ad, shell.classList.contains('legal-band'));
+      var logoH = logo ? logo.offsetHeight : 0;
+      avail = Math.floor(adBudget - logoH - ctaBlock - padY - 4);
+      applyInterstitialCtaPlacement(ad);
+    }
+
+    if (avail < 40) return false;
+
+    var slides = root.querySelectorAll('.dba-slide');
+    var appliedGap = 0;
+    var shellW = metrics.shellW || (shell ? shell.clientWidth : 320);
+    var crestPx = 0;
+    var gapPx = 0;
+    var cardH = 0;
+    var n = 0;
+    /* Cards ~27% of width (bwin reference +10%); gaps scale with cards. */
+    var maxCardH = Math.round(shellW * 0.27);
+
+    if (slides.length) {
+      n = slides[0].querySelectorAll('.dba-card').length;
+      gapPx = n > 1 ? Math.max(18, Math.min(28, Math.round(shellW * 0.038))) : 0;
+      cardH = Math.max(64, Math.min(maxCardH, Math.floor((avail - gapPx * Math.max(0, n - 1)) / Math.max(1, n))));
+      appliedGap = gapPx;
+    }
+
+    root.style.flex = '1 1 0';
+    root.style.height = 'auto';
+    root.style.maxHeight = 'none';
+    root.style.minHeight = '0';
+    root.style.margin = '0';
+
+    if (n > 0) crestPx = applyInterstitialTypeScale(shell, cardH, shellW);
+
+    for (var s = 0; s < slides.length; s++) {
+      var slide = slides[s];
+      var cards = slide.querySelectorAll('.dba-card');
+      var slideN = cards.length;
+      if (slideN === 0) continue;
+
+      var fitKey = avail + ':' + gapPx + ':' + slideN + ':' + cardH;
+      if (slide.getAttribute('data-dba-fit') === fitKey) continue;
+
+      var oldSeps = slide.querySelectorAll('.dba-card-sep');
+      for (var o = 0; o < oldSeps.length; o++) {
+        if (oldSeps[o].parentNode) oldSeps[o].parentNode.removeChild(oldSeps[o]);
+      }
+      slide.style.justifyContent = 'flex-start';
+      slide.style.paddingTop = Math.max(6, Math.round(shellW * 0.01)) + 'px';
+      slide.style.paddingBottom = '0';
+
+      for (var i = 0; i < cards.length; i++) {
+        cards[i].style.flex = '0 0 ' + cardH + 'px';
+        cards[i].style.height = cardH + 'px';
+        cards[i].style.maxHeight = cardH + 'px';
+        cards[i].style.minHeight = '0';
+        cards[i].style.margin = '0';
+        if (i < slideN - 1 && gapPx > 0) {
+          var sep = el('div', { 'class': 'dba-card-sep' });
+          sep.style.flex = '0 0 ' + gapPx + 'px';
+          sep.style.height = gapPx + 'px';
+          sep.style.minHeight = gapPx + 'px';
+          if (cards[i].nextSibling) slide.insertBefore(sep, cards[i].nextSibling);
+          else slide.appendChild(sep);
+        }
+      }
+      slide.setAttribute('data-dba-fit', fitKey);
+    }
+
+    if (crestPx) applyInterstitialCrestSizes(root, crestPx);
+
+    if (shell && appliedGap) {
+      shell.style.setProperty('--dba-card-gap', appliedGap + 'px');
+      shell.style.setProperty('--dba-card-gap-tight', Math.max(6, Math.round(appliedGap * 0.75)) + 'px');
+    }
+    applyInterstitialShellLayout(root);
+    return true;
+  }
+
   function alignMatchLayout(root) {
-    if (root.getAttribute('data-layout') !== 'banner') return;
-    var cards = root.querySelectorAll('.dba-card');
-    for (var i = 0; i < cards.length; i++) alignBannerOdds(cards[i]);
+    if (root.getAttribute('data-layout') === 'banner') {
+      var cards = root.querySelectorAll('.dba-card');
+      for (var i = 0; i < cards.length; i++) alignBannerOdds(cards[i]);
+      return;
+    }
+    if (root.getAttribute('data-layout') === 'interstitial') applyInterstitialCardGaps(root);
   }
 
   function scheduleAlign(root) {
     alignMatchLayout(root);
     requestAnimationFrame(function () {
-      alignMatchLayout(root);
-      requestAnimationFrame(function () { alignMatchLayout(root); });
+      if (root.getAttribute('data-layout') === 'interstitial') applyInterstitialCardGaps(root);
+      else alignMatchLayout(root);
+      requestAnimationFrame(function () {
+        if (root.getAttribute('data-layout') === 'interstitial') applyInterstitialCardGaps(root);
+        else alignMatchLayout(root);
+        /* Dots mount into cta-zone and change its height — reflow once more. */
+        setTimeout(function () {
+          if (root.getAttribute('data-layout') === 'interstitial') applyInterstitialCardGaps(root);
+        }, 50);
+        setTimeout(function () {
+          if (root.getAttribute('data-layout') === 'interstitial') applyInterstitialCardGaps(root);
+        }, 200);
+      });
     });
   }
 
@@ -630,6 +983,7 @@
 
   function render(node, data) {
     injectStyles();
+    applyShellMetrics();
     applyPillTheme(node);
     var perSlide = parseInt(node.getAttribute('data-per-slide') || node.getAttribute('data-max') || '2', 10);
     if (!isFinite(perSlide) || perSlide <= 0) perSlide = 2;
@@ -638,11 +992,38 @@
 
     var games = filterUpcoming(extractMatches(data));
     if (!games.length) return;
-    var slides = buildSlides(games, perSlide);
+    var layout = node.getAttribute('data-layout') || '';
+    var slides = buildSlides(games, perSlide, layout);
     mountCarousel(node, slides, intervalMs, transitionMs);
     scheduleAlign(node);
   }
   window.DbaRenderMatches = render;
+  window.DbaApplyShellMetrics = applyShellMetrics;
+
+  if (!window.__dbaShellMetricsBound) {
+    window.__dbaShellMetricsBound = true;
+    window.addEventListener('resize', function () {
+      applyShellMetrics();
+      var nodes = document.querySelectorAll('.matches[data-layout="interstitial"]');
+      for (var i = 0; i < nodes.length; i++) applyInterstitialCardGaps(nodes[i]);
+    });
+    if (typeof ResizeObserver !== 'undefined') {
+      var ro = new ResizeObserver(function () {
+        var nodes = document.querySelectorAll('.matches[data-layout="interstitial"]');
+        for (var i = 0; i < nodes.length; i++) applyInterstitialCardGaps(nodes[i]);
+      });
+      function observeShell() {
+        var shell = document.querySelector('.ad-shell');
+        var ad = document.querySelector('.ad-shell .ad');
+        var legal = document.querySelector('.ad-shell .legal');
+        if (shell) ro.observe(shell);
+        if (ad) ro.observe(ad);
+        if (legal) ro.observe(legal);
+      }
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', observeShell);
+      else observeShell();
+    }
+  }
 
   // Optional base64 JSON blob baked into the creative for GAM preview /
   // offline fallback when the live feed cannot be fetched.
