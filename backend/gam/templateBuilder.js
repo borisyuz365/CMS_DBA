@@ -27,7 +27,8 @@ function templateFileFor(dbaTemplate) {
 }
 
 // Macros that are resolved into the HTML snippet when exporting to GAM —
-// NOT declared as CreativeTemplate variables. Per-creative var: cta_url only.
+// NOT declared as CreativeTemplate variables.
+// Remaining GAM vars: cta_url (static BMs) or OS_Type (Bet365 / payload-link).
 const INLINE_VARIABLE_NAMES = new Set([
   'bookmaker_logo_url',
   'bookmaker_name',
@@ -55,6 +56,8 @@ const INLINE_VARIABLE_NAMES = new Set([
   'odds_box_bg',
   'odds_text_color',
   'card_bg',
+  'ad_href',
+  'ad_attrs',
 ]);
 
 // Full authoring macro set (HTML template files use [[name]] for baked fields;
@@ -73,7 +76,8 @@ const ALL_VARIABLE_SCHEMA = [
   { uniqueName: 'cta_bg_color',           label: 'CTA background color',description: 'CTA button background, hex',                                 type: 'STRING', isRequired: true },
   { uniqueName: 'cta_text_color',         label: 'CTA text color',      description: 'CTA button text color, hex',                                 type: 'STRING', isRequired: true },
   { uniqueName: 'cta_text',               label: 'CTA text',            description: 'Translated CTA button label for the target country',         type: 'STRING', isRequired: true },
-  { uniqueName: 'cta_url',                label: 'CTA / affiliate URL', description: 'Affiliate landing page for this (bookmaker, country)',       type: 'URL',    isRequired: true },
+  { uniqueName: 'cta_url',                label: 'CTA / affiliate URL', description: 'Static affiliate landing URL (non-Bet365 bookmakers)',       type: 'URL',    isRequired: true },
+  { uniqueName: 'OS_Type',                label: 'OS Type',             description: 'Device OS for GetPayload/LinksManager (ios, android, web). Required for Bet365 payload-link creatives.', type: 'STRING', isRequired: true },
   { uniqueName: 'disclaimer_text',        label: 'Legal disclaimer',    description: 'Responsible-gaming text shown in the footer (Brazil: full SPA/MF copy)', type: 'STRING', isRequired: false },
   { uniqueName: 'disclaimer_url',         label: 'Disclaimer URL',      description: 'Link target for the legal disclaimer',                       type: 'URL',    isRequired: false },
   { uniqueName: 'disclaimer_layout',      label: 'Disclaimer layout',   description: 'CSS class: legal-band (~10% Brazil) or legal-strip (default)', type: 'STRING', isRequired: false },
@@ -93,8 +97,17 @@ const ALL_VARIABLE_SCHEMA = [
   { uniqueName: 'card_bg',                label: 'Game card fill',     description: 'Background of each match card on interstitial (hex or rgba)', type: 'STRING', isRequired: false },
 ];
 
-// Variables actually declared on the GAM CreativeTemplate — cta_url only.
-const VARIABLE_SCHEMA = ALL_VARIABLE_SCHEMA.filter((v) => !INLINE_VARIABLE_NAMES.has(v.uniqueName));
+// Variables actually declared on the GAM CreativeTemplate depend on bookmaker:
+//   Bet365 (payload-link): OS_Type only
+//   Others: cta_url only
+const CTA_URL_VAR = ALL_VARIABLE_SCHEMA.find((v) => v.uniqueName === 'cta_url');
+const OS_TYPE_VAR = ALL_VARIABLE_SCHEMA.find((v) => v.uniqueName === 'OS_Type');
+const VARIABLE_SCHEMA = [CTA_URL_VAR].filter(Boolean);
+
+function variableSchemaFor({ payloadLink } = {}) {
+  if (payloadLink) return [OS_TYPE_VAR].filter(Boolean);
+  return [CTA_URL_VAR].filter(Boolean);
+}
 
 function escapeHtml(value) {
   return String(value)
@@ -127,6 +140,8 @@ const RAW_INLINE_NAMES = new Set([
   'odds_box_bg',
   'odds_text_color',
   'card_bg',
+  'ad_href',
+  'ad_attrs',
 ]);
 
 function applyInlineValues(snippet, inlineValues) {
@@ -247,6 +262,7 @@ function __dbaGameCount(data) {
     .then(__dbaParseFeed)
     .then(function (data) {
       if (!data || !window.DbaRenderMatches) return;
+      if (window.DbaOnFeedPayload) window.DbaOnFeedPayload(node, data);
       // Prefer any live feed over baked sample (sample is offline fallback only).
       if (__dbaGameCount(data) > 0) window.DbaRenderMatches(node, data);
     })
@@ -281,8 +297,9 @@ function makeSnippetSelfContained(snippet) {
 // Build the CreativeTemplate payload (the "what HTML + variable schema does GAM
 // store" view). Mirrors GAM's CreativeTemplate schema:
 //   https://developers.google.com/ad-manager/api/reference/v202508/CreativeTemplateService.CreativeTemplate
-// Remaining variable macro: GAM's `[%cta_url%]`.
+// Remaining GAM macros: [%cta_url%] (static BMs) or [%OS_Type%] (Bet365).
 // `options.inlineValues` — map of name→value for macros that are baked in.
+// `options.payloadLink` — Bet365-style CreativeTemplate (OS_Type, no cta_url).
 // Throws if the layout HTML file is missing.
 function buildCreativeTemplate(dbaTemplate, options = {}) {
   const file = templateFileFor(dbaTemplate);
@@ -300,27 +317,29 @@ function buildCreativeTemplate(dbaTemplate, options = {}) {
   snippet = makeSnippetSelfContained(snippet);
   const macrosLeft = remainingMacros(snippet);
   const bakeValidation = validateBakedSnippet(snippet, inline);
+  const payloadLink = !!options.payloadLink;
+  const vars = variableSchemaFor({ payloadLink });
   const bakedFor = options.bakedMarket
     ? ` Branding/feed/disclaimer inlined for ${options.bakedMarket.bookmakerId}/${options.bakedMarket.country}.`
     : ' Branding/feed/disclaimer macros cleared (no market sample to bake).';
+  const varHint = payloadLink
+    ? ' Declared GAM variable: OS_Type (Bet365 Bookie.Link via GetPayload).'
+    : ' Declared GAM variable: cta_url.';
   return {
     // Operation hint for the (future) sync layer.
     operation: dbaTemplate.gam_creative_template_id ? 'UPDATE' : 'CREATE',
     id: dbaTemplate.gam_creative_template_id || null,
     name: `DBA: ${dbaTemplate.name} (${dbaTemplate.sizeId})`,
-    description: `Auto-generated from CMS template ${dbaTemplate.id}. Layout file: ${file}.${bakedFor} Body-end feed bootstrap + sample matches for GAM preview.`,
+    description: `Auto-generated from CMS template ${dbaTemplate.id}. Layout file: ${file}.${bakedFor}${varHint} Body-end feed bootstrap + sample matches for GAM preview.`,
     sourceFile: file,
     status: 'ACTIVE',
-    // GAM CreativeTemplateType: USER_DEFINED = publisher template (us);
-    // SYSTEM_DEFINED is reserved for Google-shipped templates.
     type: 'USER_DEFINED',
     snippet,
-    // Declared GAM variable: cta_url only. `remainingMacros` must match.
-    variables: VARIABLE_SCHEMA,
+    variables: vars,
     remainingMacros: macrosLeft,
     bakeValidation,
     bakedInline: inline,
-    // Layout flags GAM exposes on the template record itself:
+    payloadLink,
     isInterstitial: isInterstitialSize(dbaTemplate.sizeId),
     isNativeEligible: false,
     isSafeFrameCompatible: true,
@@ -332,6 +351,7 @@ module.exports = {
   VARIABLE_SCHEMA,
   ALL_VARIABLE_SCHEMA,
   INLINE_VARIABLE_NAMES,
+  variableSchemaFor,
   applyInlineValues,
   mergeInlineValues,
   validateBakedSnippet,

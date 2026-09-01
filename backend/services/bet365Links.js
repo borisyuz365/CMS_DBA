@@ -69,7 +69,9 @@ function normalizePlatform(p) {
 }
 
 // Best-match strategy:
-//   1. Filter rows that "match" the context, treating -1 / '' as wildcards.
+//   1. Filter rows that "match" the context, treating -1 / 0 / '' as wildcards.
+//      (Sportifier uses PLATFORM=0 and sometimes PUBLISHER_ID=0 for "any",
+//      not only -1 — confirmed against T_BET_BOOKMAKER_COUNTRIES for Bet365/BR.)
 //   2. Score each row by how many context fields are an EXACT match (not wildcard).
 //   3. Tie-break by ROW_NUMBER ascending (table order, lowest wins).
 //
@@ -91,12 +93,12 @@ function buildBookmakerCountryQuery() {
     FROM ${CFG.table}
     WHERE ${c.bmid} = @bmid
       AND ${c.cid}  = @cid
-      AND (${c.publisherId} = @publisherId  OR ${c.publisherId} = -1)
-      AND (${c.platform}    = @platform     OR ${c.platform} = -1)
+      AND (${c.publisherId} = @publisherId  OR ${c.publisherId} IN (-1, 0))
+      AND (${c.platform}    = @platform     OR ${c.platform} IN (-1, 0))
       AND (${c.adCampaign}  = @adCampaign   OR ${c.adCampaign} IN ('', N''))
     ORDER BY
-      (CASE WHEN ${c.publisherId} = @publisherId AND ${c.publisherId} <> -1 THEN 1 ELSE 0 END +
-       CASE WHEN ${c.platform}    = @platform    AND ${c.platform}    <> -1 THEN 1 ELSE 0 END +
+      (CASE WHEN ${c.publisherId} = @publisherId AND ${c.publisherId} NOT IN (-1, 0) THEN 1 ELSE 0 END +
+       CASE WHEN ${c.platform}    = @platform    AND ${c.platform}    NOT IN (-1, 0) THEN 1 ELSE 0 END +
        CASE WHEN ${c.adCampaign}  = @adCampaign  AND ${c.adCampaign}  <> ''  THEN 1 ELSE 0 END) DESC
   `;
 }

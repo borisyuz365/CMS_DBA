@@ -31,31 +31,17 @@ function resolveText(dbaTemplate, path, langId, terms) {
   return canonical;
 }
 
-// bmids whose affiliate URL is resolved at click time by /api/dba/links/click.
-// Today only Bet365 (14); env override mirrors backend/routes/dbaLinks.js.
-const CONTEXT_AWARE_BMIDS = new Set(
-  (process.env.CONTEXT_AWARE_BMIDS || '14')
+// bmids whose live affiliate URL comes from AdsGenerator GetPayload
+// (Bookie.Link via LinksManager) — option B: no cta_url; OS_Type + JS click.
+// Today only Bet365 (14).
+const PAYLOAD_LINK_BMIDS = new Set(
+  (process.env.PAYLOAD_LINK_BMIDS || process.env.CONTEXT_AWARE_BMIDS || '14')
     .split(',').map((s) => parseInt(s.trim(), 10)).filter(Number.isFinite),
 );
 
-// CMS country codes (BR, AR, …) → numeric CID for /GetPayload and link resolver.
-// Re-exported via previewAlign.js — kept here for validation messages.
+// CMS country codes (BR, AR, …) → numeric CID for /GetPayload.
 const CID_FOR_COUNTRY_REEXPORT = CID_FOR_COUNTRY;
-
-// Build the redirect URL the GAM Creative emits for click-time-resolved
-// bookmakers. `%%PLATFORM%%` is a placeholder for whatever the publisher /
-// AdsGeneratorService can inject at serve time (or 'all' fallback).
-function buildRedirectUrl({ baseUrl, bmid, country, languageId, sizeId }) {
-  const cid = CID_FOR_COUNTRY_REEXPORT[country];
-  const params = new URLSearchParams();
-  params.set('bmid', String(bmid));
-  if (cid != null) params.set('cid', String(cid));
-  if (languageId) params.set('lang', String(languageId));
-  if (sizeId) params.set('format', sizeId);
-  // Platform left unfilled so publishers can append &platform=android etc;
-  // a missing platform resolves to the 'all' row in the link table.
-  return `${baseUrl}/api/dba/links/click?${params.toString()}`;
-}
+void CID_FOR_COUNTRY_REEXPORT;
 
 // Rewrite a Cloudinary BookMakers/<id> URL to its NoBG sibling.
 //   /BookMakers/14            → /BookMakers/NoBG/14
@@ -118,41 +104,46 @@ function buildCreative({ dbaTemplate, bookmaker, country, variant, bookieSetting
   // bmid extracted from "bk_<N>" — needed below for both Bet365 dispatch and
   // the feed URL.
   const bmid = parseInt(String(bookmaker.id).replace(/^bk_/, ''), 10);
-  const useContextLink = Number.isFinite(bmid) && CONTEXT_AWARE_BMIDS.has(bmid);
+  const usePayloadLink = Number.isFinite(bmid) && PAYLOAD_LINK_BMIDS.has(bmid);
 
-  // For context-aware bookmakers (Bet365), the variant.affiliate field is
-  // stale-by-design — the link is resolved at click time. Emit a redirect URL
-  // pointing at our /api/dba/links/click endpoint so monthly external updates
-  // propagate without re-publishing to GAM.
-  const affiliate = useContextLink
-    ? buildRedirectUrl({
-        baseUrl: linkBaseUrl || feedBaseUrl || 'https://cms.365scores.com',
-        bmid, country, languageId: langId, sizeId: normalizeSizeId(dbaTemplate.sizeId),
-      })
+  // Bet365 (payload-link): no baked cta_url — live URL is Bookie.Link from
+  // GetPayload; dba-runtime opens %%CLICK_URL%% + encodeURIComponent(link) on click.
+  // Other bookmakers: CMS variant (or template) affiliate as [%cta_url%].
+  const affiliate = usePayloadLink
+    ? ''
     : ((variant && variant.affiliate) || dbaTemplate.config?.affiliate?.url || '');
+
+  void linkBaseUrl;
 
   // Full resolved map (includes values that are baked into the HTML snippet).
   const allVariableValues = [
     ...Object.entries(previewInline).map(([uniqueName, value]) => ({ uniqueName, value })),
-    { uniqueName: 'cta_url', value: affiliate },
   ];
+  if (!usePayloadLink) {
+    allVariableValues.push({ uniqueName: 'cta_url', value: affiliate });
+  }
   // Only values that remain real GAM CreativeTemplate variables.
+  // Bet365: OS_Type is filled by AdOps in GAM (not baked here).
   const variables = allVariableValues.filter((v) => !INLINE_VARIABLE_NAMES.has(v.uniqueName));
   const inlineValues = Object.fromEntries(
     allVariableValues
       .filter((v) => INLINE_VARIABLE_NAMES.has(v.uniqueName))
       .map((v) => [v.uniqueName, v.value]),
   );
+  // Ensure ad_href / ad_attrs / feed_url from previewInline are in inlineValues
+  Object.assign(inlineValues, {
+    ad_href: previewInline.ad_href,
+    ad_attrs: previewInline.ad_attrs,
+    feed_url: previewInline.feed_url,
+  });
 
-  // Surface validation hits so the dry-run can flag missing fields without
-  // throwing — easier to spot N issues at once than fix-and-retry.
   const validation = [];
   if (!logoUrl)   validation.push('bookmaker_logo_url is empty');
-  if (!affiliate) validation.push('cta_url (affiliate) is empty for this (bookmaker, country) pair');
+  if (!usePayloadLink && !affiliate) validation.push('cta_url (affiliate) is empty for this (bookmaker, country) pair');
   if (!resolved['config.ctaText']) validation.push('cta_text has no translation for this country language');
   if (cidNumeric == null) validation.push(`feed_url cid falls back to country code "${country}" — no entry in CID_FOR_COUNTRY; AdsGeneratorService expects a numeric cid (e.g. BR→21)`);
-  if (useContextLink) {
-    validation.push(`cta_url is a click-time redirect (bmid=${bmid} is context-aware via /api/dba/links/click; actual URL resolved against the external link table per impression)`);
+  if (usePayloadLink) {
+    validation.push(`Bet365 payload-link: no cta_url — declare GAM variable OS_Type; live CTA from GetPayload Bookie.Link via dba-runtime click handler`);
   }
 
   return {

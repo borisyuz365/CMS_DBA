@@ -318,19 +318,20 @@ function BannerMatchSection({ match, config, dense = false, alignKey = 0 }) {
 // Render the real team crest from Cloudinary when an id is supplied. The
 // colored circle stays as a graceful fallback: shown until the image loads,
 // and permanently when the image 404s or `team.id` is missing.
-function TeamCrest({ team, size }) {
+// `flat` — interstitial: no circular halo / drop-shadow behind the crest.
+function TeamCrest({ team, size, flat = false }) {
   const logoUrl = team?.id != null ? competitorLogoUrl(team.id) : null;
   const [imageOk, setImageOk] = useState(!!logoUrl);
 
   const initialsCircle = (
     <Box sx={{
-      width: size, height: size, borderRadius: '50%',
-      bgcolor: team.bg, color: team.fg,
+      width: size, height: size, borderRadius: flat ? 0 : '50%',
+      bgcolor: flat ? 'transparent' : team.bg, color: team.fg,
       display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
       fontSize: Math.max(7, size * 0.36), fontWeight: 800,
       letterSpacing: '-0.02em', flexShrink: 0,
-      border: team.bg === '#FFFFFF' ? '1px solid rgba(0,0,0,0.15)' : 'none',
-      boxShadow: '0 1px 2px rgba(0,0,0,0.18)',
+      border: (!flat && team.bg === '#FFFFFF') ? '1px solid rgba(0,0,0,0.15)' : 'none',
+      boxShadow: flat ? 'none' : '0 1px 2px rgba(0,0,0,0.18)',
     }}>{team.short}</Box>
   );
 
@@ -345,7 +346,7 @@ function TeamCrest({ team, size }) {
       sx={{
         width: size, height: size,
         objectFit: 'contain', flexShrink: 0,
-        filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.25))',
+        filter: flat ? 'none' : 'drop-shadow(0 1px 2px rgba(0,0,0,0.25))',
       }}
     />
   );
@@ -504,7 +505,7 @@ function MatchRow({ match, config, d, syncFonts = false, fillHeight = false, out
           display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: 0,
           flexShrink: 0, width: '100%', minHeight: d.crest, gap: '3%',
         }}>
-          <Box sx={{ flexShrink: 0 }}><TeamCrest team={match.home} size={d.crest} /></Box>
+          <Box sx={{ flexShrink: 0 }}><TeamCrest team={match.home} size={d.crest} flat /></Box>
           {[0, 1, 2].map((i) => (
             <Box key={i} sx={{
               flex: '1 1 0', minWidth: 0, boxSizing: 'border-box',
@@ -518,7 +519,7 @@ function MatchRow({ match, config, d, syncFonts = false, fillHeight = false, out
               </Box>
             </Box>
           ))}
-          <Box sx={{ flexShrink: 0 }}><TeamCrest team={match.away} size={d.crest} /></Box>
+          <Box sx={{ flexShrink: 0 }}><TeamCrest team={match.away} size={d.crest} flat /></Box>
         </Box>
       ) : (
         <>

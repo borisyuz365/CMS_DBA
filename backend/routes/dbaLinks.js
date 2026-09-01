@@ -8,12 +8,23 @@
 // Both accept the same query params:
 //   bmid               required, integer
 //   cid                required, integer (country id, NOT the ISO code)
-//   platform           optional, default 'all'
-//   lang               optional, integer (CMS-local language id)
+//   platform           optional (ios/android/…); empty/'all' → match LinksManager empty P
+//   publisher          optional publisher / network name
+//   lang               optional, integer (language id)
 //   campaign           optional
-//   format             optional (ad format)
-//   at                 optional, ISO date (defaults to now)
+//   format             optional (ad format / placement, e.g. Interstitial)
+//   offer              optional, default '1x2'
+//   price              optional
+//   ordering           optional
+//   maturity           optional integer (weeks)
+//   scope              optional
+//   at                 optional, ISO date (defaults to now; reserved)
+//
+// Resolve order for Bet365 (14):
+//   1. Targetings ExtraLinks (production LinksManager parity)
+//   2. Sportifier T_BET_BOOKMAKER_COUNTRIES + T_DICT_VALUES
 const express = require('express');
+const { resolveFromTargetings } = require('../services/bet365TargetingsLinks');
 const { resolveBet365Link } = require('../services/bet365Links');
 
 const router = express.Router();
@@ -30,34 +41,56 @@ function parseContext(query) {
     bmid:           parseInt(query.bmid, 10),
     cid:            parseInt(query.cid, 10),
     platform:       (query.platform || 'all').toString(),
+    publisher:      query.publisher != null ? String(query.publisher) : '',
     languageId:     query.lang ? parseInt(query.lang, 10) : null,
-    campaignSource: query.campaign || null,
-    adFormat:       query.format || null,
+    campaignSource: query.campaign != null ? String(query.campaign) : '',
+    adFormat:       query.format != null ? String(query.format) : '',
+    offer:          query.offer != null ? String(query.offer) : '1x2',
+    price:          query.price != null ? String(query.price) : '',
+    ordering:       query.ordering != null ? String(query.ordering) : '',
+    maturity:       query.maturity != null ? parseInt(query.maturity, 10) : -1,
+    scope:          query.scope != null ? String(query.scope) : '',
     at:             query.at ? new Date(query.at) : new Date(),
   };
 }
 
 async function resolve(ctx) {
   if (!Number.isFinite(ctx.bmid) || !Number.isFinite(ctx.cid)) {
-    return { url: null, reason: 'missing or invalid bmid/cid' };
+    return { url: null, source: null, reason: 'missing or invalid bmid/cid' };
   }
   if (!CONTEXT_AWARE_BMIDS.has(ctx.bmid)) {
-    return { url: null, reason: `bmid=${ctx.bmid} is not context-aware (CONTEXT_AWARE_BMIDS=${[...CONTEXT_AWARE_BMIDS].join(',')})` };
+    return {
+      url: null,
+      source: null,
+      reason: `bmid=${ctx.bmid} is not context-aware (CONTEXT_AWARE_BMIDS=${[...CONTEXT_AWARE_BMIDS].join(',')})`,
+    };
   }
-  // Today only Bet365 (14). Add per-bmid dispatch here if others join.
-  const url = await resolveBet365Link(ctx);
-  return { url, reason: url ? null : 'no resolvable row in T_BET_BOOKMAKER_COUNTRIES + T_DICT_VALUES for this context (all candidate term ids returned empty values)' };
+
+  // 1. Production Targetings ExtraLinks (LinksManager parity)
+  const fromTargetings = await resolveFromTargetings(ctx);
+  if (fromTargetings) {
+    return { url: fromTargetings, source: 'targetings', reason: null };
+  }
+
+  // 2. Sportifier MSSQL fallback (monthly dict rows)
+  const fromSportifier = await resolveBet365Link(ctx);
+  if (fromSportifier) {
+    return { url: fromSportifier, source: 'sportifier', reason: null };
+  }
+
+  return {
+    url: null,
+    source: null,
+    reason: 'no resolvable Targetings ExtraLink or Sportifier row for this context',
+  };
 }
 
 router.get('/click', async (req, res, next) => {
   try {
     const ctx = parseContext(req.query);
-    const { url, reason } = await resolve(ctx);
+    const { url, reason, source } = await resolve(ctx);
     if (!url) {
-      // We can't redirect anywhere. Returning 404 is honest, but ad-click
-      // flows usually prefer a sensible-looking fallback so the user doesn't
-      // see a bare error page. For now: 404 with a helpful JSON body.
-      return res.status(404).json({ error: 'No matching link', context: ctx, reason });
+      return res.status(404).json({ error: 'No matching link', context: ctx, reason, source });
     }
     return res.redirect(302, url);
   } catch (err) { next(err); }
@@ -69,7 +102,11 @@ router.get('/resolve', async (req, res, next) => {
     const result = await resolve(ctx);
     res.json({ context: ctx, ...result });
   } catch (err) {
-    res.status(500).json({ error: err.message, code: err.code, hint: 'Likely DB connectivity (VPN) or wrong table/column names — see backend/services/bet365Links.js' });
+    res.status(500).json({
+      error: err.message,
+      code: err.code,
+      hint: 'Targetings network failure or Sportifier DB connectivity (VPN) — see backend/services/bet365TargetingsLinks.js and bet365Links.js',
+    });
   }
 });
 

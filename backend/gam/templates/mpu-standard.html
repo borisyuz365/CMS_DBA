@@ -1,8 +1,9 @@
 <!--
   GAM Creative Template — MPU Standard (300×250).
   At export, branding / feed / disclaimer placeholders are baked into this
-  HTML. The only remaining CreativeTemplate variable is cta_url (plus
-  %%CLICK_URL_UNESC%% for the GAM click tracker).
+  HTML. Remaining CreativeTemplate variable (avoid bracket-percent macros in comments — GAM scans them):
+    - non-Bet365: cta_url
+    - Bet365 (payload-link): OS_Type — CTA uses Bookie.Link via JS click
 
   Legal footer sits outside the click <a> (nested anchors break GAM preview).
   Brazil layout uses .ad-shell.legal-band instead of :has() (unsupported in GAM).
@@ -154,7 +155,7 @@
 </head>
 <body>
   <div class="ad-shell [[disclaimer_layout]]">
-    <a class="ad" href="%%CLICK_URL_UNESC%%[%cta_url%]" target="_blank">
+    <a class="ad" href="[[ad_href]]" [[ad_attrs]] target="_blank">
       <div class="ad-stack">
         <div class="logo-wrap">
           <div class="logo" aria-label="[[bookmaker_name]]"></div>

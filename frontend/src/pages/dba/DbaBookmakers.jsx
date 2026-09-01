@@ -264,7 +264,7 @@ export default function DbaBookmakers() {
                       </TableCell>
                       <TableCell>
                         {r.bm.id === 'bk_14' ? (
-                          <Tooltip title="Bet365 links are resolved at click time against an external monthly table. The ad serves a redirect via /api/dba/links/click.">
+                          <Tooltip title="Bet365: no cta_url in GAM. Declare OS_Type; live affiliate is GetPayload Bookie.Link opened via JS click (legacy 1X2 parity).">
                             <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.75, fontSize: 12, color: 'text.secondary', fontStyle: 'italic' }}>
                               <LinkIcon sx={{ fontSize: 13 }} />
                               <Box component="span">managed externally</Box>
@@ -487,10 +487,9 @@ function BookmakerForm({ open, mode, initial, defaultCountry, configuredBookmake
     setTouched(true);
   };
 
-  // Bookmakers whose affiliate URLs are not entered by hand — they're resolved
-  // at click time against an external link table (see backend/services/bet365Links.js
-  // and backend/routes/dbaLinks.js). For these, the per-country URL field in
-  // the editor is read-only and validation is skipped.
+  // Bookmakers whose live affiliate comes from GetPayload Bookie.Link
+  // (no [%cta_url%] in the GAM snippet — declare OS_Type instead).
+  // Field below is read-only / unused for trafficking.
   const CONTEXT_LINKED_BOOKMAKER_IDS = new Set(['bk_14']); // Bet365
   const isContextLinked = !!(selectedBookmaker && CONTEXT_LINKED_BOOKMAKER_IDS.has(selectedBookmaker.id));
 
@@ -846,7 +845,7 @@ function BookmakerForm({ open, mode, initial, defaultCountry, configuredBookmake
                 helperText={
                   variantErrors.affiliate
                   || (isContextLinked
-                    ? `Bet365 links are written monthly by an external system (context: country × platform × language × month). The ad serves a redirect via /api/dba/links/click that resolves to the live URL at click time.`
+                    ? `Bet365 creatives have no cta_url. In GAM declare OS_Type (ios/android/web). Live CTA = GetPayload Bookie.Link via click handler.`
                     : `Used when the user's market is ${activeCC}.`)
                 }
                 placeholder={isContextLinked ? 'Resolved at click time — not edited here' : `https://… (specific to ${activeCC})`}

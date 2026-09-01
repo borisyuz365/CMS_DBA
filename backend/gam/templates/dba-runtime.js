@@ -315,12 +315,12 @@
         'flex: 0 0 var(--dba-int-crest, 48px) !important; width: var(--dba-int-crest, 48px) !important;' +
         'height: var(--dba-int-crest, 48px) !important; max-width: var(--dba-int-crest, 48px) !important;' +
         'max-height: var(--dba-int-crest, 48px) !important;' +
-        'object-fit: contain; border-radius: 50%; background: rgba(255,255,255,0.08);' +
+        'object-fit: contain; border-radius: 0 !important; background: transparent !important;' +
       '}' +
       '.matches[data-layout="interstitial"] .dba-team-logo {' +
         'flex: 0 0 var(--dba-int-crest, 48px); width: var(--dba-int-crest, 48px); height: var(--dba-int-crest, 48px);' +
         'max-width: var(--dba-int-crest, 48px); max-height: var(--dba-int-crest, 48px);' +
-        'object-fit: contain; border-radius: 50%; background: rgba(255,255,255,0.08);' +
+        'object-fit: contain; border-radius: 0; background: transparent;' +
       '}' +
       '.matches[data-layout="interstitial"] .dba-odds {' +
         'flex: 0 0 auto; min-height: var(--dba-int-crest, 48px);' +
@@ -1060,16 +1060,91 @@
     }
   }
 
+  // Find the clickable .ad anchor that wraps this matches node.
+  function findAdAnchor(node) {
+    var n = node;
+    while (n && n !== document.body) {
+      if (n.tagName === 'A' && n.classList && n.classList.contains('ad')) return n;
+      n = n.parentNode;
+    }
+    return null;
+  }
+
+  // Payload-link creatives (Bet365 / legacy getClickURL case 14): store
+  // Bookie.Link; click handler opens tracker + encodeURIComponent(link).
+  // Static cta_url creatives keep baked href unless this is an older Bet365
+  // snippet that still used data-cta-url (href rewrite below).
+  function applyBookieLinkFromPayload(node, data) {
+    if (!data || !data.Bookie) return;
+    var bookie = data.Bookie;
+    var bmid = parseInt(bookie.ID, 10);
+    var link = bookie.Link;
+    if (!link) return;
+
+    var ad = findAdAnchor(node);
+    if (!ad) return;
+
+    if (ad.getAttribute('data-payload-link') === '1') {
+      ad.setAttribute('data-bookie-link', link);
+      return;
+    }
+
+    // Legacy Bet365 snippets that still bake a static cta_url.
+    if (bmid !== 14) return;
+    ad.setAttribute('data-bookie-link', link);
+    if (ad.getAttribute('data-cta-url') != null) {
+      var fallback = ad.getAttribute('data-cta-url') || '';
+      var href = ad.getAttribute('href') || '';
+      var tracker = '';
+      if (fallback && href.indexOf(fallback) !== -1) {
+        tracker = href.substring(0, href.lastIndexOf(fallback));
+      }
+      ad.setAttribute('href', tracker ? (tracker + encodeURIComponent(link)) : link);
+    }
+  }
+
+  function wirePayloadLinkClicks() {
+    var ads = document.querySelectorAll('a.ad[data-payload-link="1"]');
+    for (var i = 0; i < ads.length; i++) {
+      (function (ad) {
+        if (ad.__dbaPayloadClickWired) return;
+        ad.__dbaPayloadClickWired = true;
+        ad.addEventListener('click', function (e) {
+          var link = ad.getAttribute('data-bookie-link');
+          if (!link) return; // feed not ready yet — ignore / keep #
+          e.preventDefault();
+          e.stopPropagation();
+          var tracker = ad.getAttribute('data-click-tracker') || '';
+          window.open(tracker + encodeURIComponent(link), '_blank');
+        });
+      }(ads[i]));
+    }
+  }
+
+  function onFeedPayload(node, data) {
+    applyBookieLinkFromPayload(node, data);
+    wirePayloadLinkClicks();
+  }
+  window.DbaOnFeedPayload = onFeedPayload;
+  window.DbaWirePayloadLinkClicks = wirePayloadLinkClicks;
+
   function autoRender() {
-    if (window.__DBA_SKIP_AUTORENDER) return;
+    if (window.__DBA_SKIP_AUTORENDER) {
+      wirePayloadLinkClicks();
+      return;
+    }
     var nodes = document.querySelectorAll(ROOT_SEL);
-    if (!nodes.length) return;
+    if (!nodes.length) {
+      wirePayloadLinkClicks();
+      return;
+    }
     for (var i = 0; i < nodes.length; i++) {
       (function (node) {
         var sample = loadSample(node);
-        // Paint sample immediately so GAM / SafeFrame previews show cards
-        // even when the live feed is blocked or slow.
-        if (sample) render(node, sample);
+        if (sample) {
+          render(node, sample);
+          onFeedPayload(node, sample);
+        }
 
         var feed = node.getAttribute('data-feed');
         if (!feed) return;
@@ -1082,7 +1157,9 @@
             });
           })
           .then(function (data) {
-            if (data && filterUpcoming(extractMatches(data)).length) render(node, data);
+            if (!data) return;
+            onFeedPayload(node, data);
+            if (filterUpcoming(extractMatches(data)).length) render(node, data);
           })
           .catch(function (err) {
             if (window.console) console.warn('[dba-runtime] feed failed:', err && err.message);
@@ -1090,6 +1167,7 @@
           });
       }(nodes[i]));
     }
+    wirePayloadLinkClicks();
   }
 
   if (document.readyState === 'loading') {

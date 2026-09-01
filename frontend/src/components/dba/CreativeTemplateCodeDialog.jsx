@@ -179,10 +179,10 @@ export default function CreativeTemplateCodeDialog({ open, onClose, templateId }
           </Box>
         )}
 
-        {!loading && !error && ct && (ct.remainingMacros || []).some((m) => m !== 'cta_url') && (
+        {!loading && !error && ct && (ct.remainingMacros || []).some((m) => m !== 'cta_url' && m !== 'OS_Type') && (
           <Alert severity="error" sx={{ mb: 2 }}>
             <strong>Snippet not fully baked:</strong> GAM will reject placeholders{' '}
-            {(ct.remainingMacros || []).filter((m) => m !== 'cta_url').map((m) => `[${m}]`).join(', ')}.
+            {(ct.remainingMacros || []).filter((m) => m !== 'cta_url' && m !== 'OS_Type').map((m) => `[${m}]`).join(', ')}.
             Assign a bookmaker and countries, then re-open this dialog and copy again.
           </Alert>
         )}
@@ -191,6 +191,13 @@ export default function CreativeTemplateCodeDialog({ open, onClose, templateId }
           <Alert severity="info" sx={{ mb: 2 }}>
             Paste into GAM with one template variable: <Box component="code" sx={{ fontSize: 12 }}>cta_url</Box> (URL, required).
             All colors and legal copy are already baked into the HTML.
+          </Alert>
+        )}
+
+        {!loading && !error && ct && (ct.remainingMacros || []).length === 1 && ct.remainingMacros[0] === 'OS_Type' && (
+          <Alert severity="info" sx={{ mb: 2 }}>
+            Bet365 payload-link template — declare <Box component="code" sx={{ fontSize: 12 }}>OS_Type</Box> (String, required: ios / android / web).
+            No <Box component="code" sx={{ fontSize: 12 }}>cta_url</Box>; live CTA is GetPayload <Box component="code" sx={{ fontSize: 12 }}>Bookie.Link</Box>.
           </Alert>
         )}
 
@@ -249,7 +256,9 @@ export default function CreativeTemplateCodeDialog({ open, onClose, templateId }
               <Box>
                 <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 1 }}>
                   <Typography variant="caption" color="text.secondary">
-                    Variables declared on the CreativeTemplate (only cta_url — colors, legal, and branding are baked into the HTML)
+                    {(ct.variables || []).some((v) => v.uniqueName === 'OS_Type')
+                      ? 'Variables declared on the CreativeTemplate (OS_Type for Bet365 — no cta_url; Bookie.Link is applied at click time)'
+                      : 'Variables declared on the CreativeTemplate (only cta_url — colors, legal, and branding are baked into the HTML)'}
                   </Typography>
                   <CopyButton getText={() => JSON.stringify(ct.variables, null, 2)} label="Copy JSON" />
                 </Stack>

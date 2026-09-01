@@ -18,13 +18,53 @@ function feedLangForCountry(country, cmsLangId) {
   return cmsLangId || 1;
 }
 
-function buildFeedUrl({ country, bmid, cmsLangId, sizeId, feedBaseUrl }) {
+function buildFeedUrl({ country, bmid, cmsLangId, sizeId, feedBaseUrl, payloadLink }) {
   const base = feedBaseUrl || process.env.FEED_BASE_URL || 'https://bettingads.365scores.com';
   const cidNumeric = CID_FOR_COUNTRY[country];
   const cidParam = cidNumeric != null ? cidNumeric : country;
   const lang = feedLangForCountry(country, cmsLangId);
   const placment = placementForSize(sizeId);
-  return `${base}/GetPayload?cid=${encodeURIComponent(cidParam)}&bmid=${bmid}&lang=${lang}&placment=${placment}`;
+  // Core feed params. Extra macros match the legacy 1X2 creative so
+  // AdsGenerator LinksManager (Bet365 Bookie.Link) and team filtering get context.
+  let url = `${base}/GetPayload?cid=${encodeURIComponent(cidParam)}`
+    + `&bmid=${bmid}`
+    + `&lang=${lang}`
+    + `&placment=${encodeURIComponent(placment)}`
+    + `&network=%%PATTERN:AttNw%%`
+    + `&campaign=%%PATTERN:AttCmp%%`
+    + `&maturity=%%PATTERN:UserMaturity_Weeks%%`
+    + `&scope=%%PATTERN:Scope%%`
+    + `&competitors=%%PATTERN:FollowedTeams_DBA%%`;
+  // Bet365: OS is a real CreativeTemplate variable [%OS_Type%] (legacy parity).
+  // Other bookmakers: optional pattern only (no declared variable).
+  if (payloadLink) {
+    url += '&os=[%OS_Type%]';
+  } else {
+    url += '&os=%%PATTERN:OS_Type%%';
+  }
+  return url;
+}
+
+/** Anchor markup for GAM snippets — Bet365 uses JS click + Bookie.Link (no cta_url). */
+function buildAdAnchorInline(payloadLink) {
+  if (payloadLink) {
+    return {
+      ad_href: '#',
+      ad_attrs: 'data-payload-link="1" data-click-tracker="%%CLICK_URL_UNESC%%"',
+    };
+  }
+  return {
+    ad_href: '%%CLICK_URL_UNESC%%[%cta_url%]',
+    ad_attrs: 'data-cta-url="[%cta_url%]"',
+  };
+}
+
+function isPayloadLinkBmid(bmid) {
+  const set = new Set(
+    (process.env.PAYLOAD_LINK_BMIDS || process.env.CONTEXT_AWARE_BMIDS || '14')
+      .split(',').map((s) => parseInt(s.trim(), 10)).filter(Number.isFinite),
+  );
+  return Number.isFinite(bmid) && set.has(bmid);
 }
 
 function stripLegacyBrazilPrefix(text) {
@@ -86,8 +126,11 @@ function buildPreviewInlineValues({
       cmsLangId,
       sizeId: dbaTemplate.sizeId,
       feedBaseUrl,
+      payloadLink: isPayloadLinkBmid(bmid),
     })
     : '';
+
+  const anchor = buildAdAnchorInline(isPayloadLinkBmid(bmid));
 
   return {
     bookmaker_name: bookmaker?.name || '',
@@ -117,6 +160,8 @@ function buildPreviewInlineValues({
     odds_box_bg: resolveOddsBoxBg(cfg),
     odds_text_color: resolveOddsTextColor(cfg),
     card_bg: resolveCardBg(cfg),
+    ad_href: anchor.ad_href,
+    ad_attrs: anchor.ad_attrs,
   };
 }
 
@@ -237,6 +282,8 @@ async function validateFeedUrl(feedUrl, { timeoutMs = 8000 } = {}) {
 module.exports = {
   CID_FOR_COUNTRY,
   buildFeedUrl,
+  buildAdAnchorInline,
+  isPayloadLinkBmid,
   feedLangForCountry,
   buildPreviewInlineValues,
   mergeInlineValues,

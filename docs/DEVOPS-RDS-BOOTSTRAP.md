@@ -71,7 +71,18 @@ Default in script: `../../BettingAdsService/ConfigurationManager/credentials.jso
 
 | Variable | Purpose |
 |----------|---------|
-| `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD` | SportifierDB — bookmaker pool picker, etc. |
+| `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD` | SportifierDB — bookmaker pool picker, Bet365 link **fallback** |
+
+### Bet365 click resolution (DBA Management)
+
+Bet365 live CTAs use **GetPayload `Bookie.Link`** (AdsGenerator LinksManager) — option B: no `cta_url`, declare `OS_Type`.
+
+| Variable | Purpose |
+|----------|---------|
+| `PAYLOAD_LINK_BMIDS` | Default `14` — bmids that take Bookie.Link from GetPayload via dba-runtime |
+| `FEED_BASE_URL` | AdsGenerator host for creative `data-feed` |
+| `CONTEXT_AWARE_BMIDS` | Legacy alias accepted by `PAYLOAD_LINK_BMIDS` |
+| `LINK_BASE_URL` / Targetings env | Optional debug `/api/dba/links/*` only |
 
 ---
 

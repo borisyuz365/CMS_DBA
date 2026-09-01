@@ -121,6 +121,25 @@ They parse with `xlsx`, transform, and stage to `data/temp/` before promoting to
 - Frontend: hardcoded `/api` base in `services/api.js`; Vite proxies it to `:3001` in dev
 - No environment-specific config files committed
 
+### Bet365 / context-aware affiliate links
+
+GAM creatives for Bet365 (`bmid=14`) use **payload-time** resolution (legacy 1X2 parity) — **option B**:
+
+1. **No `cta_url`** in the CreativeTemplate. Declare **`OS_Type`** (ios / android / web) instead.
+2. Anchor is `href="#"` + `data-payload-link` + `data-click-tracker="%%CLICK_URL_UNESC%%"`.
+3. `data-feed` calls AdsGenerator `/GetPayload` with `&os=[%OS_Type%]` plus pattern macros (`AttNw`, `AttCmp`, maturity, scope, followed teams).
+4. `dba-runtime.js` stores `Bookie.Link` and on click opens `CLICK_URL + encodeURIComponent(Bookie.Link)`.
+
+Non-Bet365 creatives keep a static CMS variant affiliate as `[%cta_url%]` — unchanged.
+
+| Variable | Purpose | Default |
+|----------|---------|---------|
+| `PAYLOAD_LINK_BMIDS` | Bmids that take `Bookie.Link` from GetPayload (falls back to `CONTEXT_AWARE_BMIDS`) | `14` |
+| `FEED_BASE_URL` | AdsGenerator host for `data-feed` | `https://bettingads.365scores.com` |
+| `LINK_BASE_URL` | Optional host for debug `/api/dba/links/*` only (not used on Bet365 CTA export) | — |
+
+Debug (optional Sportifier/Targetings tools, not the live CTA path): `GET /api/dba/links/resolve?bmid=14&cid=21&lang=1`.
+
 ## Deploy
 
 Has a real pipeline now — don't take "prototype" at face value here. The DBA/BP ad-template features ship a Docker + CI/CD deploy that builds and deploys this repo's backend + frontend as one image, alongside a second, split-out microservice:

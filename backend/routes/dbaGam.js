@@ -5,6 +5,7 @@ const { pool } = require('../db/mysql');
 const { templateRowToJson } = require('./_dbaShape');
 const { buildCreativeTemplate, validateFeedUrl } = require('../gam/templateBuilder');
 const { buildCreative } = require('../gam/creativeBuilder');
+const { isPayloadLinkBmid } = require('../gam/previewAlign');
 
 const router = express.Router();
 
@@ -102,9 +103,13 @@ router.get('/templates/:id/preview', async (req, res, next) => {
     let creativeTemplate = null;
     const sample = creatives[0] || null;
     try {
+      const sampleBmid = sample && sample.market
+        ? parseInt(String(sample.market.bookmakerId).replace(/^bk_/, ''), 10)
+        : parseInt(String(dbaTemplate.bookmakerId || '').replace(/^bk_/, ''), 10);
       creativeTemplate = buildCreativeTemplate(dbaTemplate, {
         inlineValues: sample ? sample.inlineValues : null,
         bakedMarket: sample ? sample.market : null,
+        payloadLink: isPayloadLinkBmid(sampleBmid),
       });
     } catch (err) {
       errors.push(err.message);
