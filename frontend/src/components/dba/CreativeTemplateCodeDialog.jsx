@@ -196,8 +196,10 @@ export default function CreativeTemplateCodeDialog({ open, onClose, templateId }
 
         {!loading && !error && ct && (ct.remainingMacros || []).length === 1 && ct.remainingMacros[0] === 'OS_Type' && (
           <Alert severity="info" sx={{ mb: 2 }}>
-            Bet365 payload-link template — declare <Box component="code" sx={{ fontSize: 12 }}>OS_Type</Box> (String, required: ios / android / web).
-            No <Box component="code" sx={{ fontSize: 12 }}>cta_url</Box>; live CTA is GetPayload <Box component="code" sx={{ fontSize: 12 }}>Bookie.Link</Box>.
+            Bet365 payload-link — declare <Box component="code" sx={{ fontSize: 12 }}>OS_Type</Box> only (android / ios; optional if User_OS pattern is present).
+            Pricing=Sponsorship and Top_Order_Logic=Popularity are baked; AttNw / AttCmp / maturity come from pattern key-values.
+            Scope is forwarded only for InList AS / TopList AS (placement labels like GameCenter are ignored so ExtraLinks still match).
+            Runtime encodes them into GetPayload; CTA is Bookie.Link.
           </Alert>
         )}
 
@@ -257,7 +259,7 @@ export default function CreativeTemplateCodeDialog({ open, onClose, templateId }
                 <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 1 }}>
                   <Typography variant="caption" color="text.secondary">
                     {(ct.variables || []).some((v) => v.uniqueName === 'OS_Type')
-                      ? 'Variables declared on the CreativeTemplate (OS_Type for Bet365 — no cta_url; Bookie.Link is applied at click time)'
+                      ? 'Variables declared on the CreativeTemplate (OS_Type only — Pricing/Ordering baked; AttNw/AttCmp via patterns; Bookie.Link on click)'
                       : 'Variables declared on the CreativeTemplate (only cta_url — colors, legal, and branding are baked into the HTML)'}
                   </Typography>
                   <CopyButton getText={() => JSON.stringify(ct.variables, null, 2)} label="Copy JSON" />

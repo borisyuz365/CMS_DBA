@@ -46,6 +46,7 @@ const INLINE_VARIABLE_NAMES = new Set([
   'disclaimer_text',
   'disclaimer_url',
   'feed_url',
+  'feed_extra_attrs',
   'runtime_url',
   'welcome_headline',
   'welcome_subtext',
@@ -77,7 +78,7 @@ const ALL_VARIABLE_SCHEMA = [
   { uniqueName: 'cta_text_color',         label: 'CTA text color',      description: 'CTA button text color, hex',                                 type: 'STRING', isRequired: true },
   { uniqueName: 'cta_text',               label: 'CTA text',            description: 'Translated CTA button label for the target country',         type: 'STRING', isRequired: true },
   { uniqueName: 'cta_url',                label: 'CTA / affiliate URL', description: 'Static affiliate landing URL (non-Bet365 bookmakers)',       type: 'URL',    isRequired: true },
-  { uniqueName: 'OS_Type',                label: 'OS Type',             description: 'Device OS for GetPayload/LinksManager (ios, android, web). Required for Bet365 payload-link creatives.', type: 'STRING', isRequired: true },
+  { uniqueName: 'OS_Type',                label: 'OS Type',             description: 'Device OS for GetPayload/LinksManager (android / ios). Required for Bet365.', type: 'STRING', isRequired: true },
   { uniqueName: 'disclaimer_text',        label: 'Legal disclaimer',    description: 'Responsible-gaming text shown in the footer (Brazil: full SPA/MF copy)', type: 'STRING', isRequired: false },
   { uniqueName: 'disclaimer_url',         label: 'Disclaimer URL',      description: 'Link target for the legal disclaimer',                       type: 'URL',    isRequired: false },
   { uniqueName: 'disclaimer_layout',      label: 'Disclaimer layout',   description: 'CSS class: legal-band (~10% Brazil) or legal-strip (default)', type: 'STRING', isRequired: false },
@@ -98,7 +99,7 @@ const ALL_VARIABLE_SCHEMA = [
 ];
 
 // Variables actually declared on the GAM CreativeTemplate depend on bookmaker:
-//   Bet365 (payload-link): OS_Type only
+//   Bet365 (payload-link): OS_Type only (Pricing/ordering baked; AttNw/AttCmp via patterns)
 //   Others: cta_url only
 const CTA_URL_VAR = ALL_VARIABLE_SCHEMA.find((v) => v.uniqueName === 'cta_url');
 const OS_TYPE_VAR = ALL_VARIABLE_SCHEMA.find((v) => v.uniqueName === 'OS_Type');
@@ -134,6 +135,7 @@ const RAW_INLINE_NAMES = new Set([
   'legal_text_color',
   'disclaimer_url',
   'feed_url',
+  'feed_extra_attrs',
   'runtime_url',
   'date_pill_bg',
   'date_pill_text_color',
@@ -256,7 +258,9 @@ function __dbaGameCount(data) {
       window.DbaRenderMatches(node, sample);
     } catch (e) {}
   }
-  var feed = node.getAttribute('data-feed');
+  var feed = (window.DbaResolveFeedUrl
+    ? window.DbaResolveFeedUrl(node)
+    : node.getAttribute('data-feed'));
   if (!feed) return;
   fetch(feed, { credentials: 'omit' })
     .then(__dbaParseFeed)
@@ -323,7 +327,7 @@ function buildCreativeTemplate(dbaTemplate, options = {}) {
     ? ` Branding/feed/disclaimer inlined for ${options.bakedMarket.bookmakerId}/${options.bakedMarket.country}.`
     : ' Branding/feed/disclaimer macros cleared (no market sample to bake).';
   const varHint = payloadLink
-    ? ' Declared GAM variable: OS_Type (Bet365 Bookie.Link via GetPayload).'
+    ? ' Declared GAM variable: OS_Type (Pricing=Sponsorship, Ordering=Popularity baked; AttNw/AttCmp via patterns → Bookie.Link).'
     : ' Declared GAM variable: cta_url.';
   return {
     // Operation hint for the (future) sync layer.

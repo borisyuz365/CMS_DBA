@@ -1060,6 +1060,86 @@
     }
   }
 
+  // Strip unresolved GAM macros left in data-* attrs (preview / misconfigured line).
+  function cleanTargetingValue(v) {
+    if (v == null) return '';
+    v = String(v).trim();
+    if (!v) return '';
+    if (/^\[%[\w]+%\]$/.test(v)) return '';
+    if (/^%%PATTERN:[\w]+%%$/.test(v)) return '';
+    return v;
+  }
+
+  // ExtraLinks store Scope per format: Banner→InList AS, MPU→TopList AS,
+  // Interstitial→(none). App often sets Scope to placement labels
+  // (GameCenter, News, …) or the wrong list for the format — either miss
+  // makes LinksManager return FALLBACK_BOOKIE_LINK_14 (e.g. 365_03387682).
+  function placementFromFeed(base) {
+    try {
+      var m = String(base || '').match(/[?&]placment=([^&]*)/i);
+      return m ? decodeURIComponent(m[1]).toLowerCase() : '';
+    } catch (e) {
+      return '';
+    }
+  }
+
+  function normalizeScope(v, placement) {
+    var s = cleanTargetingValue(v);
+    if (!s) return '';
+    var lower = s.toLowerCase();
+    var p = String(placement || '').toLowerCase();
+    if (p === 'mpu') return lower === 'toplist as' ? s : '';
+    if (p === 'banner') return lower === 'inlist as' ? s : '';
+    // Interstitial ExtraLinks have no Scope — never forward.
+    if (p === 'interstitial') return '';
+    if (lower === 'inlist as' || lower === 'toplist as') return s;
+    return '';
+  }
+
+  // Prefer creative var OS_Type when set; else app key-value User_OS (always
+  // sent as Android/iOS on device). LinksManager lowercases platform.
+  function resolveOs(node) {
+    var os = cleanTargetingValue(node.getAttribute('data-os'));
+    if (!os) os = cleanTargetingValue(node.getAttribute('data-user-os'));
+    if (!os) return '';
+    var lower = os.toLowerCase();
+    if (lower === '1' || lower === 'android') return 'android';
+    if (lower === '2' || lower === 'ios' || lower === 'iphone' || lower === 'ipad') return 'ios';
+    return os;
+  }
+
+  /**
+   * Build GetPayload URL for Bet365 payload-feed creatives.
+   * Encodes each targeting value (legacy dba_service_url parity) so AttNw /
+   * AttCmp with spaces/parens still match LinksManager ExtraLinks.
+   */
+  function resolveFeedUrl(node) {
+    var base = node.getAttribute('data-feed') || '';
+    if (!base) return '';
+    if (node.getAttribute('data-payload-feed') !== '1') return base;
+
+    function add(url, name, value, skipEmpty) {
+      var v = value == null ? '' : String(value);
+      if (skipEmpty && !v) return url;
+      var sep = url.indexOf('?') >= 0 ? '&' : '?';
+      return url + sep + name + '=' + encodeURIComponent(v);
+    }
+
+    var url = base;
+    url = add(url, 'os', resolveOs(node));
+    url = add(url, 'network', cleanTargetingValue(node.getAttribute('data-network')));
+    url = add(url, 'campaign', cleanTargetingValue(node.getAttribute('data-campaign')));
+    url = add(url, 'price', cleanTargetingValue(node.getAttribute('data-price')));
+    // ExtraLinks Ordering is Popularity|Live — default Popularity when unset.
+    var order = cleanTargetingValue(node.getAttribute('data-order')) || 'Popularity';
+    url = add(url, 'top_order_logic', order);
+    url = add(url, 'maturity', cleanTargetingValue(node.getAttribute('data-maturity')));
+    url = add(url, 'scope', normalizeScope(node.getAttribute('data-scope'), placementFromFeed(base)), true);
+    url = add(url, 'competitors', cleanTargetingValue(node.getAttribute('data-competitors')));
+    return url;
+  }
+  window.DbaResolveFeedUrl = resolveFeedUrl;
+
   // Find the clickable .ad anchor that wraps this matches node.
   function findAdAnchor(node) {
     var n = node;
@@ -1146,7 +1226,7 @@
           onFeedPayload(node, sample);
         }
 
-        var feed = node.getAttribute('data-feed');
+        var feed = resolveFeedUrl(node);
         if (!feed) return;
         fetch(feed, { credentials: 'omit' })
           .then(function (r) {

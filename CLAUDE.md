@@ -125,10 +125,10 @@ They parse with `xlsx`, transform, and stage to `data/temp/` before promoting to
 
 GAM creatives for Bet365 (`bmid=14`) use **payload-time** resolution (legacy 1X2 parity) — **option B**:
 
-1. **No `cta_url`** in the CreativeTemplate. Declare **`OS_Type`** (ios / android / web) instead.
+1. **No `cta_url`.** Declare **`OS_Type`** only (optional if `User_OS` pattern is present). `Pricing=Sponsorship` and `Top_Order_Logic=Popularity` are baked.
 2. Anchor is `href="#"` + `data-payload-link` + `data-click-tracker="%%CLICK_URL_UNESC%%"`.
-3. `data-feed` calls AdsGenerator `/GetPayload` with `&os=[%OS_Type%]` plus pattern macros (`AttNw`, `AttCmp`, maturity, scope, followed teams).
-4. `dba-runtime.js` stores `Bookie.Link` and on click opens `CLICK_URL + encodeURIComponent(Bookie.Link)`.
+3. `.matches` gets a baked `data-feed` base (`cid`/`bmid`/`lang`/`placment`) plus targeting `data-*` attrs (`os` / `user-os`, `network=%%PATTERN:AttNw%%`, `campaign`, baked price/order, `maturity`, `scope`, `competitors`).
+4. `dba-runtime` builds GetPayload with `encodeURIComponent` per value (legacy `dba_service_url` parity), prefers `User_OS` when `OS_Type` is empty, and only forwards `Scope` when it matches the placement (MPU→`TopList AS`, Banner→`InList AS`, Interstitial→never). Then stores `Bookie.Link` and opens `CLICK_URL + encodeURIComponent(link)` on click.
 
 Non-Bet365 creatives keep a static CMS variant affiliate as `[%cta_url%]` — unchanged.
 

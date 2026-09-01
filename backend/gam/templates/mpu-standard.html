@@ -3,7 +3,7 @@
   At export, branding / feed / disclaimer placeholders are baked into this
   HTML. Remaining CreativeTemplate variable (avoid bracket-percent macros in comments — GAM scans them):
     - non-Bet365: cta_url
-    - Bet365 (payload-link): OS_Type — CTA uses Bookie.Link via JS click
+    - Bet365 (payload-link): OS_Type — Pricing/Ordering baked; targeting assembled at fetch; CTA = Bookie.Link
 
   Legal footer sits outside the click <a> (nested anchors break GAM preview).
   Brazil layout uses .ad-shell.legal-band instead of :has() (unsupported in GAM).
@@ -160,7 +160,7 @@
         <div class="logo-wrap">
           <div class="logo" aria-label="[[bookmaker_name]]"></div>
         </div>
-        <div class="matches" data-feed="[[feed_url]]" data-per-slide="2" data-interval="3500" data-transition="700" data-pill-bg="[[date_pill_bg]]" data-pill-fg="[[date_pill_text_color]]"></div>
+        <div class="matches" data-feed="[[feed_url]]" [[feed_extra_attrs]] data-per-slide="2" data-interval="3500" data-transition="700" data-pill-bg="[[date_pill_bg]]" data-pill-fg="[[date_pill_text_color]]"></div>
       </div>
       <span class="cta">[[cta_text]]</span>
     </a>

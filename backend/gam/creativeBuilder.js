@@ -135,6 +135,7 @@ function buildCreative({ dbaTemplate, bookmaker, country, variant, bookieSetting
     ad_href: previewInline.ad_href,
     ad_attrs: previewInline.ad_attrs,
     feed_url: previewInline.feed_url,
+    feed_extra_attrs: previewInline.feed_extra_attrs,
   });
 
   const validation = [];
@@ -143,7 +144,7 @@ function buildCreative({ dbaTemplate, bookmaker, country, variant, bookieSetting
   if (!resolved['config.ctaText']) validation.push('cta_text has no translation for this country language');
   if (cidNumeric == null) validation.push(`feed_url cid falls back to country code "${country}" — no entry in CID_FOR_COUNTRY; AdsGeneratorService expects a numeric cid (e.g. BR→21)`);
   if (usePayloadLink) {
-    validation.push(`Bet365 payload-link: no cta_url — declare GAM variable OS_Type; live CTA from GetPayload Bookie.Link via dba-runtime click handler`);
+    validation.push(`Bet365 payload-link: OS_Type and/or User_OS; Pricing/Ordering baked (Sponsorship/Popularity); AttNw/AttCmp/maturity via GAM patterns; Scope only InList/TopList AS; live CTA from GetPayload Bookie.Link`);
   }
 
   return {

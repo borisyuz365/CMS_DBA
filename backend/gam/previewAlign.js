@@ -24,25 +24,53 @@ function buildFeedUrl({ country, bmid, cmsLangId, sizeId, feedBaseUrl, payloadLi
   const cidParam = cidNumeric != null ? cidNumeric : country;
   const lang = feedLangForCountry(country, cmsLangId);
   const placment = placementForSize(sizeId);
-  // Core feed params. Extra macros match the legacy 1X2 creative so
-  // AdsGenerator LinksManager (Bet365 Bookie.Link) and team filtering get context.
+  // Core market identity is baked. Targeting context (OS / network / campaign /
+  // price / maturity / scope / ordering) is attached separately for Bet365 so
+  // dba-runtime can encodeURIComponent each value — same as legacy dba_service_url().
   let url = `${base}/GetPayload?cid=${encodeURIComponent(cidParam)}`
     + `&bmid=${bmid}`
     + `&lang=${lang}`
-    + `&placment=${encodeURIComponent(placment)}`
-    + `&network=%%PATTERN:AttNw%%`
+    + `&placment=${encodeURIComponent(placment)}`;
+  if (payloadLink) {
+    // Bet365: base only — full targeting applied at fetch time via data-* attrs.
+    return url;
+  }
+  // Non-Bet365: keep a fully inlined feed (Bookie.Link unused; CTA is static).
+  url += `&network=%%PATTERN:AttNw%%`
     + `&campaign=%%PATTERN:AttCmp%%`
     + `&maturity=%%PATTERN:UserMaturity_Weeks%%`
     + `&scope=%%PATTERN:Scope%%`
-    + `&competitors=%%PATTERN:FollowedTeams_DBA%%`;
-  // Bet365: OS is a real CreativeTemplate variable [%OS_Type%] (legacy parity).
-  // Other bookmakers: optional pattern only (no declared variable).
-  if (payloadLink) {
-    url += '&os=[%OS_Type%]';
-  } else {
-    url += '&os=%%PATTERN:OS_Type%%';
-  }
+    + `&competitors=%%PATTERN:FollowedTeams_DBA%%`
+    + `&os=%%PATTERN:OS_Type%%`;
   return url;
+}
+
+/**
+ * Extra attrs on .matches for Bet365 — runtime builds GetPayload query with
+ * encodeURIComponent (legacy 1X2 parity).
+ * Declared CreativeTemplate var: OS_Type only (optional; User_OS pattern is
+ * preferred when the app fills it).
+ * Pricing / Top_Order_Logic are baked to ExtraLink defaults (Sponsorship /
+ * Popularity). AttNw / AttCmp / maturity / scope come from pattern key-values.
+ * Runtime only forwards Scope when it is InList AS / TopList AS — placement
+ * labels (GameCenter, News, …) would otherwise miss ExtraLinks and hit the
+ * bookie CoFallBack affiliate.
+ */
+function buildFeedTargetingAttrs(payloadLink) {
+  if (!payloadLink) return '';
+  return [
+    'data-payload-feed="1"',
+    'data-os="[%OS_Type%]"',
+    // App always sends User_OS; used when OS_Type is unset/unresolved.
+    'data-user-os="%%PATTERN:User_OS%%"',
+    'data-network="%%PATTERN:AttNw%%"',
+    'data-campaign="%%PATTERN:AttCmp%%"',
+    'data-price="Sponsorship"',
+    'data-order="Popularity"',
+    'data-maturity="%%PATTERN:UserMaturity_Weeks%%"',
+    'data-scope="%%PATTERN:Scope%%"',
+    'data-competitors="%%PATTERN:FollowedTeams_DBA%%"',
+  ].join(' ');
 }
 
 /** Anchor markup for GAM snippets — Bet365 uses JS click + Bookie.Link (no cta_url). */
@@ -130,7 +158,9 @@ function buildPreviewInlineValues({
     })
     : '';
 
-  const anchor = buildAdAnchorInline(isPayloadLinkBmid(bmid));
+  const payloadLink = isPayloadLinkBmid(bmid);
+  const anchor = buildAdAnchorInline(payloadLink);
+  const feedExtraAttrs = buildFeedTargetingAttrs(payloadLink);
 
   return {
     bookmaker_name: bookmaker?.name || '',
@@ -149,6 +179,7 @@ function buildPreviewInlineValues({
     disclaimer_text: disclaimerText,
     disclaimer_url: disclaimerUrl,
     feed_url: feedUrl,
+    feed_extra_attrs: feedExtraAttrs,
     runtime_url: runtime,
     welcome_headline: resolved['config.welcomeOffer.headline'] || cfg.welcomeOffer?.headline || '',
     welcome_subtext: resolved['config.welcomeOffer.subtext'] || cfg.welcomeOffer?.subtext || '',
@@ -282,6 +313,7 @@ async function validateFeedUrl(feedUrl, { timeoutMs = 8000 } = {}) {
 module.exports = {
   CID_FOR_COUNTRY,
   buildFeedUrl,
+  buildFeedTargetingAttrs,
   buildAdAnchorInline,
   isPayloadLinkBmid,
   feedLangForCountry,
