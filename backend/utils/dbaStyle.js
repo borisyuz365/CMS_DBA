@@ -89,6 +89,22 @@ function resolveDatePillFg(config) {
   return config?.datePillTextColor || config?.text || '#FFFFFF';
 }
 
+const ODDS_BOX_BG_DEFAULT = 'rgba(255,255,255,0.16)';
+
+function resolveOddsBoxBg(config) {
+  return config?.oddsBoxColor || ODDS_BOX_BG_DEFAULT;
+}
+
+function resolveOddsTextColor(config) {
+  return config?.oddsTextColor || config?.text || '#FFFFFF';
+}
+
+const CARD_BG_DEFAULT = 'rgba(255,255,255,0.10)';
+
+function resolveCardBg(config) {
+  return config?.cardBgColor || CARD_BG_DEFAULT;
+}
+
 module.exports = {
   bgCss,
   hexToRgba,
@@ -100,4 +116,9 @@ module.exports = {
   resolveDatePillBg,
   resolveDatePillFg,
   DATE_PILL_FILL_DEFAULT,
+  resolveOddsBoxBg,
+  ODDS_BOX_BG_DEFAULT,
+  resolveOddsTextColor,
+  resolveCardBg,
+  CARD_BG_DEFAULT,
 };

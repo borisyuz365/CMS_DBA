@@ -52,6 +52,9 @@ const INLINE_VARIABLE_NAMES = new Set([
   'welcome_cta_text',
   'date_pill_bg',
   'date_pill_text_color',
+  'odds_box_bg',
+  'odds_text_color',
+  'card_bg',
 ]);
 
 // Full authoring macro set (HTML template files use [[name]] for baked fields;
@@ -85,6 +88,9 @@ const ALL_VARIABLE_SCHEMA = [
   { uniqueName: 'welcome_cta_text',       label: 'Welcome offer CTA text', description: 'Translated CTA on the welcome slide (overrides cta_text)',type: 'STRING', isRequired: false },
   { uniqueName: 'date_pill_bg',           label: 'Date pill fill',     description: 'Background of the date/time pill (transparent when fill is off)', type: 'STRING', isRequired: false },
   { uniqueName: 'date_pill_text_color',   label: 'Date pill text',     description: 'Date/time pill text color', type: 'STRING', isRequired: false },
+  { uniqueName: 'odds_box_bg',            label: 'Odds box fill',      description: 'Background of the 1/X/2 odds boxes on interstitial cards (hex or rgba)', type: 'STRING', isRequired: false },
+  { uniqueName: 'odds_text_color',        label: 'Odds text color',   description: 'Text color of the 1/X/2 odds numbers on interstitial cards', type: 'STRING', isRequired: false },
+  { uniqueName: 'card_bg',                label: 'Game card fill',     description: 'Background of each match card on interstitial (hex or rgba)', type: 'STRING', isRequired: false },
 ];
 
 // Variables actually declared on the GAM CreativeTemplate — cta_url only.
@@ -118,6 +124,9 @@ const RAW_INLINE_NAMES = new Set([
   'runtime_url',
   'date_pill_bg',
   'date_pill_text_color',
+  'odds_box_bg',
+  'odds_text_color',
+  'card_bg',
 ]);
 
 function applyInlineValues(snippet, inlineValues) {

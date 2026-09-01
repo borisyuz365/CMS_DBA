@@ -487,6 +487,19 @@ function DbaTemplateEditorInner({ initial, allBookmakers, isNew }) {
               <Field label="Date pill text" help="Defaults to the main text color">
                 <ColorField value={config.datePillTextColor || config.text} onChange={(v) => set('datePillTextColor', v)} />
               </Field>
+              {isInterstitialSize(previewSize) && (
+                <>
+                  <Field label="Odds box color" help="Fill behind the 1/X/2 odds on interstitial cards. Defaults to a subtle white overlay.">
+                    <ColorField value={config.oddsBoxColor || '#FFFFFF'} onChange={(v) => set('oddsBoxColor', v)} />
+                  </Field>
+                  <Field label="Odds text color" help="Defaults to the main text color">
+                    <ColorField value={config.oddsTextColor || config.text} onChange={(v) => set('oddsTextColor', v)} />
+                  </Field>
+                  <Field label="Game card color" help="Fill behind each match card on interstitial. Defaults to a subtle white overlay.">
+                    <ColorField value={config.cardBgColor || '#FFFFFF'} onChange={(v) => set('cardBgColor', v)} />
+                  </Field>
+                </>
+              )}
             </Section>
 
             <Section title="Bookmaker logo">

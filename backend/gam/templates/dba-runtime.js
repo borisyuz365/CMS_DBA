@@ -114,6 +114,17 @@
     return node;
   }
 
+  // Interstitial only: crest image for the odds row (same class as the
+  // teams-row crest so the shared --dba-int-crest sizing CSS still applies).
+  function teamCrestImg(comp) {
+    var id = comp && (comp.ID != null ? comp.ID : comp.id);
+    var url = teamLogoUrl(id);
+    if (!url) return null;
+    var logoEl = el('img', { 'class': 'dba-team-logo', src: url, alt: '' });
+    logoEl.onerror = function () { logoEl.style.visibility = 'hidden'; };
+    return logoEl;
+  }
+
   function extractMatches(data) {
     if (!data) return [];
     if (Array.isArray(data.Games)) return data.Games;
@@ -163,9 +174,6 @@
     // MatchRow and the carousel viewport sizing in mpu-standard.html.
     var css =
       '.matches .dba-track { display: flex; height: 100%; will-change: transform; }' +
-      /* Each slide is one viewport wide. Track width is set in JS to
-         (slideCount * 100%) so translateX(-pos/slideCount * 100%) moves
-         exactly one slide — matching AdPreview MatchCarouselViewport. */ +
       '.matches .dba-slide {' +
         'flex: 0 0 auto; width: 100%; max-width: 100%;' +
         'display: flex; flex-direction: column; gap: 8px;' +
@@ -192,7 +200,6 @@
       '.matches .dba-teamblock-home { justify-content: flex-end; }' +
       '.matches .dba-teamblock-away { justify-content: flex-start; }' +
       '.matches .dba-team-logo { width: 20.7px; height: 20.7px; flex: 0 0 auto; object-fit: contain; border-radius: 50%; background: rgba(255,255,255,0.08); }' +
-      /* Slot takes leftover width; name shrink-wraps toward the crest. */ +
       '.matches .dba-team-name-slot {' +
         'flex: 0 1 auto; min-width: 0; overflow: hidden;' +
         'display: flex; align-items: center;' +
@@ -214,8 +221,6 @@
       '.matches .dba-odd { display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; line-height: 1.2; }' +
       '.matches .dba-odd-label { font-size: 7px; font-weight: 800; color: #FFC107; line-height: 1.2; }' +
       '.matches .dba-v-gap { display: none; }' +
-      /* Brazil MPU densify — scoped under .ad-stack so interstitial/banner
-         legal-band creatives are not crushed by MPU flex/CTA rules. */ +
       '.ad-stack .matches { margin: 0; padding-top: 0; overflow: hidden; }' +
       '.ad-shell.legal-band .ad-stack .matches .dba-slide { gap: 6px; }' +
       '.ad-shell.legal-band .ad-stack .matches .dba-card { border-radius: 11px; padding: 8px 10px 9px; gap: 4px; }' +
@@ -230,8 +235,6 @@
       '.ad-shell.legal-band .ad-stack .matches .dba-odd-slot-draw { margin: 0 10px; }' +
       '.ad-shell.legal-band .ad-stack .matches .dba-odd-slot-away { padding-left: 20px; }' +
       '.ad-shell.legal-band .ad-stack .matches .dba-odd-label { font-size: 6px; }' +
-      /* Banner (320×50): flat match block — no card chrome. Mirrors AdPreview
-         BannerMatchSection. Activated via data-layout="banner" on .matches. */ +
       '.matches[data-layout="banner"] { display: flex; align-items: stretch; overflow: hidden; }' +
       '.matches[data-layout="banner"] .dba-track { height: 100%; }' +
       '.matches[data-layout="banner"] .dba-slide { gap: 0; justify-content: flex-start; height: 100%; overflow: hidden; }' +
@@ -241,7 +244,6 @@
         'justify-content: flex-start; gap: 3px; height: 100%; box-sizing: border-box;' +
         'position: relative; overflow: hidden;' +
       '}' +
-      /* Pill sits in a fixed-height anchor; equal gaps come from card gap (not flex). */ +
       '.matches[data-layout="banner"] .dba-pill-anchor {' +
         'display: block; position: relative; height: 14px; flex-shrink: 0;' +
       '}' +
@@ -251,13 +253,11 @@
         'display: inline-flex; align-items: center; justify-content: center;' +
         'font-size: 8px; font-weight: 600; line-height: 1; white-space: nowrap;' +
       '}' +
-      /* Hide flex spacers on banner — fixed gap on .dba-card equalizes instead. */ +
       '.matches[data-layout="banner"] .dba-v-gap { display: none; }' +
       '.matches[data-layout="banner"] .dba-teams {' +
         'position: relative; justify-content: center; gap: 0; margin-top: 0; font-size: 11px;' +
         'flex-shrink: 0; width: 100%; min-width: 0; min-height: 11px;' +
       '}' +
-      /* Absolute halves around a banner-centred X (positions set in JS). */ +
       '.matches[data-layout="banner"] .dba-teamblock {' +
         'position: absolute; top: 0; bottom: 0; flex: none; min-width: 0; gap: 4px;' +
         'overflow: hidden; box-sizing: border-box;' +
@@ -278,7 +278,6 @@
         'position: absolute; top: 0; left: 0; transform: translateX(-50%); gap: 2px;' +
       '}' +
       '.matches[data-layout="banner"] .dba-odd-label { font-size: 6.5px; }' +
-      /* Banner + Brazil legal band: denser metrics (BANNER.brazil.match). */ +
       '.ad-shell.legal-band .matches[data-layout="banner"] .dba-card { gap: 2px; }' +
       '.ad-shell.legal-band .matches[data-layout="banner"] .dba-pill-anchor { height: 9px; }' +
       '.ad-shell.legal-band .matches[data-layout="banner"] .dba-pill { padding: 0 3px; font-size: 6.6px; }' +
@@ -287,7 +286,6 @@
       '.ad-shell.legal-band .matches[data-layout="banner"] .dba-x { font-size: 8.5px; }' +
       '.ad-shell.legal-band .matches[data-layout="banner"] .dba-odds { height: 9px; font-size: 7px; }' +
       '.ad-shell.legal-band .matches[data-layout="banner"] .dba-odd-label { font-size: 5.5px; }' +
-      /* Interstitial — fill middle band; card type scales with computed card height. */ +
       '.matches[data-layout="interstitial"] { flex: 1 1 0; min-height: 0; }' +
       '.matches[data-layout="interstitial"] .dba-track { min-height: 0; height: 100%; }' +
       '.matches[data-layout="interstitial"] .dba-slide {' +
@@ -298,13 +296,10 @@
       '.matches[data-layout="interstitial"] .dba-card {' +
         'flex: 0 0 auto; min-height: 0; margin: 0;' +
         'box-sizing: border-box;' +
-        /* Top padding trimmed so the date/time pill sits closer to the card's
-           top edge; that space (plus the odds-row padding below) is what
-           funds the doubled teams↔odds gap — same card height throughout. */ +
-        'border-radius: 1.4em; padding: 0.15em 3.5% 0.3em; gap: 0.65em; overflow: hidden;' +
-        'display: flex; flex-direction: column; justify-content: center;' +
+        'background: var(--dba-card-bg, rgba(255,255,255,0.10));' +
+        'border-radius: 1.4em; padding: 5px 3.5% 0.3em; gap: var(--dba-int-pillgap, 12px); overflow: hidden;' +
+        'display: flex; flex-direction: column; justify-content: flex-start;' +
       '}' +
-      /* Spacers (not margins) — GAM WebViews let margin-top overflow under the CTA. */ +
       '.matches[data-layout="interstitial"] .dba-card-sep {' +
         'flex: 0 0 auto; width: 100%; margin: 0; padding: 0; border: 0;' +
         'height: var(--dba-card-gap, 16px); min-height: 10px; pointer-events: none;' +
@@ -316,19 +311,6 @@
         'height: auto; min-height: 0; padding: 0.3em 1.4em; font-size: var(--dba-int-pill, 4.2em);' +
         'flex: 0 0 auto;' +
       '}' +
-      '.matches[data-layout="interstitial"] .dba-teams {' +
-        'flex: 0 0 auto; min-height: var(--dba-int-crest, 48px); gap: 0; margin-top: 0;' +
-        'font-size: var(--dba-int-team, 8em); font-weight: 500; align-items: center;' +
-        'display: flex; width: 100%; line-height: 1.15; overflow: visible;' +
-      '}' +
-      '.matches[data-layout="interstitial"] .dba-teamblock {' +
-        'flex: 1 1 0; min-width: 0; width: 0; gap: 0;' +
-        'display: flex; align-items: center;' +
-      '}' +
-      /* Name sits in the free space between crest and vs, centred. */ +
-      '.matches[data-layout="interstitial"] .dba-teamblock-home { justify-content: flex-start; }' +
-      '.matches[data-layout="interstitial"] .dba-teamblock-away { justify-content: flex-end; }' +
-      /* Crests: fixed px from card height (not % — collapses / clips in GAM WebViews). */ +
       '.ad-shell .matches[data-layout="interstitial"] .dba-team-logo {' +
         'flex: 0 0 var(--dba-int-crest, 48px) !important; width: var(--dba-int-crest, 48px) !important;' +
         'height: var(--dba-int-crest, 48px) !important; max-width: var(--dba-int-crest, 48px) !important;' +
@@ -340,61 +322,20 @@
         'max-width: var(--dba-int-crest, 48px); max-height: var(--dba-int-crest, 48px);' +
         'object-fit: contain; border-radius: 50%; background: rgba(255,255,255,0.08);' +
       '}' +
-      '.matches[data-layout="interstitial"] .dba-teamblock-home .dba-team-logo { margin-right: 0; }' +
-      '.matches[data-layout="interstitial"] .dba-teamblock-away .dba-team-logo { margin-left: 0; }' +
-      '.matches[data-layout="interstitial"] .dba-team-name-slot {' +
-        'flex: 1 1 0; min-width: 0; overflow: hidden;' +
-        'display: flex; align-items: center; justify-content: center; text-align: center;' +
-      '}' +
-      '.matches[data-layout="interstitial"] .dba-teamblock-home .dba-team-name-slot { justify-content: center; text-align: center; }' +
-      '.matches[data-layout="interstitial"] .dba-teamblock-away .dba-team-name-slot { justify-content: center; text-align: center; }' +
-      '.matches[data-layout="interstitial"] .dba-team-name {' +
-        'display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;' +
-        'overflow-wrap: normal; word-break: normal; line-height: 1.15;' +
-        'max-width: 100%; min-width: 0; font-size: 1em; color: inherit; text-align: center;' +
-      '}' +
-      '.matches[data-layout="interstitial"] .dba-x {' +
-        'flex: 0 0 auto; font-size: 0.6em; font-weight: 800;' +
-        'margin: 0 1.5%; opacity: 0.75; letter-spacing: 0.02em;' +
-        'text-transform: uppercase; line-height: 1;' +
-      '}' +
-      /* Odds mirror teams row: same 1fr | VS | 1fr centre column so X sits under VS. */ +
       '.matches[data-layout="interstitial"] .dba-odds {' +
-        'margin-top: 2em; font-size: var(--dba-int-odds, 4.8em); flex: 0 0 auto; font-weight: 700;' +
-        'display: flex; align-items: center; width: 100%; min-width: 0;' +
-        'overflow: visible;' +
+        'flex: 0 0 auto; min-height: var(--dba-int-crest, 48px);' +
+        'display: flex; align-items: center; justify-content: center;' +
+        'width: 100%; min-width: 0; gap: 3%; overflow: visible;' +
       '}' +
-      '.matches[data-layout="interstitial"] .dba-odd-slot {' +
-        'font-size: inherit; min-width: 0; overflow: visible;' +
+      '.matches[data-layout="interstitial"] .dba-odd-box {' +
+        'flex: 1 1 0; min-width: 0; box-sizing: border-box;' +
+        'display: flex; align-items: center; justify-content: center;' +
+        'background: var(--dba-odds-box-bg, rgba(255,255,255,0.16)); border-radius: 0.7em; padding: 0.5em 0.3em;' +
+        'font-size: var(--dba-int-odds, 4.2em);' +
       '}' +
-      '.matches[data-layout="interstitial"] .dba-odd-slot-home {' +
-        'flex: 1 1 0; justify-content: flex-end;' +
-        'padding-right: calc(var(--dba-int-crest, 32px) + 6px); padding-left: 0;' +
-        'box-sizing: border-box;' +
+      '.matches[data-layout="interstitial"] .dba-odd-box .dba-odd {' +
+        'font-size: var(--dba-int-odds-text, inherit); font-weight: 600; color: var(--dba-odds-text-color, inherit); white-space: nowrap;' +
       '}' +
-      /* Hidden "vs" spacer matches .dba-x width/margins; X odds centred on it. */ +
-      '.matches[data-layout="interstitial"] .dba-odd-slot-draw {' +
-        'position: relative; flex: 0 0 auto; margin: 0 1.5%;' +
-        'font-size: inherit; font-weight: 700; line-height: 1;' +
-      '}' +
-      '.matches[data-layout="interstitial"] .dba-odd-slot-draw:before {' +
-        'content: "VS"; visibility: hidden; display: inline-block;' +
-        /* VS spacer tracks --dba-int-team / --dba-int-odds */ +
-        'font-size: 0.95em; font-weight: 800; letter-spacing: 0.02em;' +
-        'text-transform: uppercase; line-height: 1;' +
-      '}' +
-      '.matches[data-layout="interstitial"] .dba-odd-slot-draw .dba-odd {' +
-        'position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);' +
-      '}' +
-      '.matches[data-layout="interstitial"] .dba-odd-slot-away {' +
-        'flex: 1 1 0; justify-content: flex-start;' +
-        'padding-left: calc(var(--dba-int-crest, 32px) + 6px); padding-right: 0;' +
-        'box-sizing: border-box;' +
-      '}' +
-      '.matches[data-layout="interstitial"] .dba-odd {' +
-        'gap: 0.35em; font-size: 1em; white-space: nowrap;' +
-      '}' +
-      '.matches[data-layout="interstitial"] .dba-odd-label { font-size: 0.62em; font-weight: 800; color: #FFC107; }' +
       '.ad-shell.legal-band .matches[data-layout="interstitial"] {' +
         'flex: 1 1 0; min-height: 0; margin: 0; padding-top: 0; overflow: hidden;' +
       '}' +
@@ -409,7 +350,6 @@
         'position: relative; left: auto; right: auto; bottom: auto; margin-top: 0;' +
         'border-radius: 10px;' +
       '}' +
-      /* Carousel page indicator — on .ad-shell (outside click <a>) for GAM. */ +
       '.ad .dba-dots, .ad-shell > .dba-dots-shell { display: flex; justify-content: center; align-items: center; flex-shrink: 0; pointer-events: none; color: inherit; }' +
       '.ad .dba-dot, .ad-shell > .dba-dots-shell .dba-dot { display: inline-block; border-radius: 999px; background: currentColor; opacity: 0.35; transition: width 0.3s, opacity 0.3s; }' +
       '.ad .dba-dot-active, .ad-shell > .dba-dots-shell .dba-dot-active { opacity: 1; }' +
@@ -457,6 +397,24 @@
     var pillText = fmtKickoff(m.ISOStartTime) || m.FormatedStartTime || m.STime || m.date || '';
     if (!comps) comps = [];
 
+    if (layout === 'interstitial') {
+      // Interstitial: no team names row at all \u2014 crests sit on the outer
+      // edges, with the three odds as boxed chips in between.
+      var oddBoxes = [odds[0], odds[1], odds[2]].map(function (o) {
+        return o != null ? el('div', { 'class': 'dba-odd-box' }, [
+          el('span', { 'class': 'dba-odd', text: fmtOdd(o) }),
+        ]) : null;
+      });
+      return el('div', { 'class': 'dba-card' }, [
+        el('div', { 'class': 'dba-pill-anchor' }, [
+          el('div', { 'class': 'dba-pill' }, [
+            el('span', { 'class': 'dba-pill-text', text: pillText }),
+          ]),
+        ]),
+        el('div', { 'class': 'dba-odds' }, [teamCrestImg(comps[0])].concat(oddBoxes, [teamCrestImg(comps[1])]).filter(Boolean)),
+      ]);
+    }
+
     var labels = ['1', 'X', '2'];
     var slots = ['home', 'draw', 'away'];
     var oddNodes = odds.filter(function (v) { return v != null; }).map(function (o, i) {
@@ -468,10 +426,6 @@
       ]);
     });
 
-    // Interstitial shows a stylized "VS" (smaller, heavier \u2014 see .dba-x CSS);
-    // MPU/banner keep the plain en-dash.
-    var vsText = layout === 'interstitial' ? 'VS' : '\u2013';
-
     return el('div', { 'class': 'dba-card' }, [
       el('div', { 'class': 'dba-pill-anchor' }, [
         el('div', { 'class': 'dba-pill' }, [
@@ -481,7 +435,7 @@
       el('div', { 'class': 'dba-v-gap' }),
       el('div', { 'class': 'dba-teams' }, [
         teamBlock(comps[0], 'home'),
-        el('span', { 'class': 'dba-x', text: vsText }),
+        el('span', { 'class': 'dba-x', text: '–' }),
         teamBlock(comps[1], 'away'),
       ]),
       el('div', { 'class': 'dba-v-gap' }),
@@ -711,19 +665,37 @@
 
   function applyInterstitialTypeScale(shell, cardH, w) {
     if (!shell || cardH < 1 || w < 1) return 0;
-    /* Team names 10% smaller, odds 10% larger than the previous pass — sized
-       independently now (odds is no longer capped below team). */
-    var team = Math.round(w * 0.0342);
-    team = Math.max(16, Math.min(team, Math.round(cardH * 0.117)));
-    var crest = Math.round(w * 0.057);
-    crest = Math.max(29, Math.min(crest, Math.round(cardH * 0.24)));
-    var pill = Math.max(13, Math.round(w * 0.026));
-    var odds = Math.round(w * 0.0406);
-    odds = Math.max(22, Math.min(odds, Math.round(cardH * 0.145)));
+    /* Team names bigger again (production feedback: previous pass read too
+       small); crest bigger again (crests live on the odds row now), then
+       bumped once more on top of that per later feedback. */
+    var team = Math.round(w * 0.046);
+    team = Math.max(20, Math.min(team, Math.round(cardH * 0.15)));
+    var crest = Math.round(w * 0.095);
+    crest = Math.max(46, Math.min(crest, Math.round(cardH * 0.4)));
+    /* Slightly bigger date/time pill text. */
+    var pill = Math.max(15, Math.round(w * 0.03));
+    /* Odds-box SIZE (padding/radius) — its own variable now (was briefly
+       tied to the pill's, per an earlier "same size as date/time" request;
+       a later request asked for the odds specifically to grow, then this
+       pass brought it back down 15%). .dba-odd-box sets its own font-size
+       to this value so the box's em-based radius/padding scale with it. */
+    var odds = Math.round(w * 0.046);
+    odds = Math.max(24, Math.min(odds, Math.round(cardH * 0.162)));
+    /* Odds NUMBER text — smaller than the box size above, per a request to
+       shrink just the digits without shrinking the boxes around them (10%,
+       then another 15% on top per follow-up feedback that it still read
+       too big: 0.9 * 0.85 = 0.765). */
+    var oddsText = Math.round(odds * 0.765);
+    /* Gap between the date pill and the crest/odds line below it — a share
+       of the card height so it grows with the card instead of staying a
+       near-invisible sliver on narrow slots. */
+    var pillGap = Math.max(14, Math.round(cardH * 0.2));
     shell.style.setProperty('--dba-int-team', team + 'px');
     shell.style.setProperty('--dba-int-crest', crest + 'px');
     shell.style.setProperty('--dba-int-pill', pill + 'px');
     shell.style.setProperty('--dba-int-odds', odds + 'px');
+    shell.style.setProperty('--dba-int-odds-text', oddsText + 'px');
+    shell.style.setProperty('--dba-int-pillgap', pillGap + 'px');
     return crest;
   }
 
@@ -923,12 +895,16 @@
     // gap grow with it instead of capping cards to a fixed fraction of the
     // real (narrow) width and dumping the leftover height as dead space.
     var we = shellW * (metrics.designScale || 1);
-    /* Cards ~27% of (effective) width (bwin reference +10%); gaps scale with cards. */
-    var maxCardH = Math.round(we * 0.27);
+    /* Cards ~26% of (effective) width (was 27% originally; inter-card gap
+       overshot to 12.8% last round and read as too much dead space between
+       cards, so it's pulled back close to the original ~3.8% here). The two
+       ratios are sized together (3*0.26 + 2*0.053 ≈ 3*0.27 + 2*0.038) so the
+       stack still covers the same total height. */
+    var maxCardH = Math.round(we * 0.26);
 
     if (slides.length) {
       n = slides[0].querySelectorAll('.dba-card').length;
-      gapPx = n > 1 ? Math.max(18, Math.round(we * 0.038)) : 0;
+      gapPx = n > 1 ? Math.max(20, Math.round(we * 0.053)) : 0;
       cardH = Math.max(64, Math.min(maxCardH, Math.floor((avail - gapPx * Math.max(0, n - 1)) / Math.max(1, n))));
       appliedGap = gapPx;
     }
@@ -1017,8 +993,14 @@
   function applyPillTheme(node) {
     var bg = node.getAttribute('data-pill-bg');
     var fg = node.getAttribute('data-pill-fg');
+    var oddsBoxBg = node.getAttribute('data-odds-box-bg');
+    var oddsTextColor = node.getAttribute('data-odds-text-color');
+    var cardBg = node.getAttribute('data-card-bg');
     node.style.setProperty('--dba-pill-bg', bg || 'transparent');
     if (fg) node.style.setProperty('--dba-pill-fg', fg);
+    if (oddsBoxBg) node.style.setProperty('--dba-odds-box-bg', oddsBoxBg);
+    if (oddsTextColor) node.style.setProperty('--dba-odds-text-color', oddsTextColor);
+    if (cardBg) node.style.setProperty('--dba-card-bg', cardBg);
   }
 
   function render(node, data) {

@@ -158,6 +158,24 @@ export function resolveDatePillFg(config) {
   return config?.datePillTextColor || config?.text || '#FFFFFF';
 }
 
+/** Default odds-box fill on interstitial cards — a subtle overlay that reads on any background. */
+export const ODDS_BOX_BG_DEFAULT = 'rgba(255,255,255,0.16)';
+
+export function resolveOddsBoxBg(config) {
+  return config?.oddsBoxColor || ODDS_BOX_BG_DEFAULT;
+}
+
+export function resolveOddsTextColor(config) {
+  return config?.oddsTextColor || config?.text || '#FFFFFF';
+}
+
+/** Default interstitial game-card fill — a subtle overlay that reads on any background. */
+export const CARD_BG_DEFAULT = 'rgba(255,255,255,0.10)';
+
+export function resolveCardBg(config) {
+  return config?.cardBgColor || CARD_BG_DEFAULT;
+}
+
 /** MPU (300×250) layout anchor — keep in sync with backend/gam/templates/mpu-standard.html */
 export const MPU_LAYOUT = {
   /** Fixed vertical center (px from ad top). Match carousel centers here; logo hangs above. */
