@@ -130,7 +130,7 @@ GAM creatives for Bet365 (`bmid=14`) use **payload-time** resolution (legacy 1X2
 3. `.matches` gets a baked `data-feed` base (`cid`/`bmid`/`lang`/`placment`) plus targeting `data-*` attrs (`os` / `user-os`, `network=%%PATTERN:AttNw%%`, `campaign`, baked price/order, `maturity`, `scope`, `competitors`).
 4. `dba-runtime` builds GetPayload with `encodeURIComponent` per value (legacy `dba_service_url` parity), prefers `User_OS` when `OS_Type` is empty, and only forwards `Scope` when it matches the placement (MPU→`TopList AS`, Banner→`InList AS`, Interstitial→never). Then stores `Bookie.Link` and opens `CLICK_URL + encodeURIComponent(link)` on click.
 
-Non-Bet365 creatives keep a static CMS variant affiliate as `[%cta_url%]` — unchanged.
+Non-Bet365 creatives keep a static CMS variant affiliate as `[%cta_url%]`. If that URL contains `$GUID`, on each click `dba-runtime` replaces it with `CryptoJS`-compatible `MD5(advertisingId + Date.now().toString())` — the same formula as legacy `BetanoUtils.generate_guid` / 1X2 `creative_template.html`. Bet365 `Bookie.Link` is never rewritten.
 
 | Variable | Purpose | Default |
 |----------|---------|---------|

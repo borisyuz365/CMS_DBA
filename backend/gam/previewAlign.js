@@ -81,9 +81,11 @@ function buildAdAnchorInline(payloadLink) {
       ad_attrs: 'data-payload-link="1" data-click-tracker="%%CLICK_URL_UNESC%%"',
     };
   }
+  // Non-Bet365: static cta_url. data-adv-id seeds click-time $GUID in dba-runtime
+  // (MD5(adid + Date.now()) — legacy BetanoUtils.generate_guid / CryptoJS parity).
   return {
     ad_href: '%%CLICK_URL_UNESC%%[%cta_url%]',
-    ad_attrs: 'data-cta-url="[%cta_url%]"',
+    ad_attrs: 'data-cta-url="[%cta_url%]" data-adv-id="%%ADVERTISING_IDENTIFIER_PLAIN%%"',
   };
 }
 
