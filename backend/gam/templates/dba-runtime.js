@@ -1203,11 +1203,9 @@
           e.preventDefault();
           e.stopPropagation();
           var tpl = ad.getAttribute('data-cta-template') || '';
-          var seed = cleanTargetingValue(ad.getAttribute('data-adv-id'));
-          // Unresolved GAM macros must not enter the hash (legacy empty adid).
-          if (/^%%[\w]+%%$/.test(seed)) seed = '';
-          var guid = generateClickGuid(seed);
-          var dest = replaceGuidInUrl(tpl, guid);
+          // One guid per impression (not per click) so the affiliate click and
+          // the dba_ad_view event carry the same value — legacy body.onload.
+          var dest = replaceGuidInUrl(tpl, impressionGuid(ad));
           var tracker = ad.getAttribute('data-click-prefix') || '';
           window.open(tracker + dest, '_blank');
         });
@@ -1276,7 +1274,154 @@
   window.DbaOnFeedPayload = onFeedPayload;
   window.DbaWirePayloadLinkClicks = wirePayloadLinkClicks;
 
+  // --- BI: dba_ad_view -----------------------------------------------------
+  // Field-for-field parity with the legacy 1X2 creative (betano-utils.js
+  // create_event_object / send_event). The dimensions are baked onto the ad
+  // anchor at export from the same values that build feed_url, so a creative
+  // can no longer report a bookmaker it is not actually serving — the legacy
+  // creative read bmid from a hand-set "Bookmaker" CreativeTemplate variable.
+  // Never write GAM macro syntax in this file: the runtime is inlined into the
+  // snippet, and GAM resolves the macro even inside a comment.
+  var BI_SDK_URL = 'https://staticaws.365scores.com/BettingAds/1X2/V1/tools/kinesis/aws-sdk-2.756.0.min.js';
+  var BI_STREAM = 'ads_events';
+  var BI_REGION = 'us-east-1';
+  var BI_IDENTITY_POOL = 'us-east-1:01115446-95f7-460b-9d7d-88ff0f3ead7a';
+  var BI_TABLE = '365.public.fact_events_ads';
+  // Legacy create_and_send_event samples Bet365 at 10% and sends the rest at
+  // 100%. Same rate here, otherwise bmid 14 volumes jump 10x at cutover.
+  var BI_SAMPLED_BMID = 14;
+  var BI_SAMPLE_RATE = 0.1;
+
+  // hashed_device_id: the app packs it into 15 team key-values, each 3-letter
+  // code standing for one character (legacy EncodingChars, verbatim).
+  var BI_ENCODING_CHARS = {"MTA":"0","LEE":"1","ARS":"2","FLU":"3","TOT":"4","FOR":"5","LAK":"6","ROM":"7","BRU":"8","CRZ":"9","AVL":"A","BHA":"B","LAX":"C","DOR":"D","EVE":"E","FUL":"F","PHI":"G","HUL":"H","INT":"I","JUV":"J","OAK":"K","RMA":"L","MCI":"M","NEW":"N","OLY":"O","PNE":"P","REA":"Q","UTA":"R","BOU":"S","STS":"T","QPR":"U","TBL":"V","CHE":"W","LAG":"X","WOL":"Y","GSW":"Z","NYG":"0","NYJ":"1","CEA":"2","MIN":"3","AGO":"4","CHI":"5","GRE":"6","TBG":"7","STL":"8","SFN":"9","DET":"A","NEP":"B","JAX":"C","BUF":"D","GIL":"E","HOU":"F","CBJ":"G","GUA":"H","CLB":"I","IND":"J","KCX":"K","CHL":"L","MTL":"M","NSH":"N","NOT":"O","PIT":"P","LAR":"Q","RBL":"R","CRY":"S","VIT":"T","PHX":"U","VEG":"V","BKN":"W","DAL":"X","NYI":"Y","WAS":"Z","FCB":"0","WAT":"1","FLA":"2","MAD":"3","CSK":"4","GOI":"5","CHA":"6","SEV":"7","BAR":"8","PON":"9","SAO":"A","BOT":"B","RMF":"C","BOL":"D","BAH":"E","ESP":"F","LAC":"G","INL":"H","MIL":"I","LAL":"J","BVB":"K","MCT":"L","LYO":"M","OKC":"N","LEI":"O","VAL":"P","NAP":"Q","QUE":"R","SHU":"S","WBA":"T","USA":"U","WHU":"V","LFC":"W","FIO":"X","ORL":"Y","MEM":"Z","BRE":"0","ENG":"1","ACM":"2","CTH":"3","BAY":"4","NOP":"5","PAL":"6","SCP":"7","SJS":"8","RBB":"9","PSG":"A","ATM":"B","LYN":"C","TFC":"D","NIZ":"E","LEO":"F","AJA":"G","OLM":"H","SSC":"I","SHA":"J","FRK":"K","HAC":"L","MUN":"M","NAN":"N","SCF":"O","POR":"P","LOS":"Q","LIV":"R","BES":"S","FCN":"T","VIE":"U","VCF":"V","SOU":"W","TOR":"X","YOK":"Y","ZWO":"Z"};
+
+  // Also strips %%MACRO%% forms (advertising id) that cleanTargetingValue keeps.
+  function biClean(v) {
+    v = cleanTargetingValue(v);
+    return /^%%[\w:]+%%$/.test(v) ? '' : v;
+  }
+
+  function biDecodeUid(csv) {
+    var out = '';
+    var parts = String(csv || '').split(',');
+    for (var i = 0; i < parts.length; i++) {
+      var code = biClean(parts[i]);
+      if (Object.prototype.hasOwnProperty.call(BI_ENCODING_CHARS, code)) {
+        out += BI_ENCODING_CHARS[code];
+      }
+    }
+    return out.toLowerCase();
+  }
+
+  /**
+   * One guid per impression, shared by the view event and the click URL, so
+   * views and clicks can be joined (legacy generated it once in body.onload).
+   */
+  function impressionGuid(ad) {
+    if (!ad.__dbaImpressionGuid) {
+      ad.__dbaImpressionGuid = generateClickGuid(biClean(ad.getAttribute('data-adv-id'))
+        || biClean(ad.getAttribute('data-bi-adv-id')));
+    }
+    return ad.__dbaImpressionGuid;
+  }
+
+  function biClickUrl(ad) {
+    if (ad.getAttribute('data-payload-link') === '1') {
+      // Bookie.Link is only known once the feed resolves; empty until then.
+      return biClean(ad.getAttribute('data-bookie-link'));
+    }
+    var tpl = ad.getAttribute('data-cta-template') || ad.getAttribute('data-cta-url') || '';
+    return replaceGuidInUrl(tpl, impressionGuid(ad));
+  }
+
+  function biLoadSdk(cb) {
+    if (window.AWS) { cb(); return; }
+    if (window.__dbaBiSdkLoading) { window.__dbaBiSdkLoading.push(cb); return; }
+    window.__dbaBiSdkLoading = [cb];
+    var s = document.createElement('script');
+    s.src = BI_SDK_URL;
+    s.async = true;
+    s.onload = function () {
+      var queued = window.__dbaBiSdkLoading || [];
+      window.__dbaBiSdkLoading = null;
+      for (var i = 0; i < queued.length; i++) {
+        try { queued[i](); } catch (e) { /* one bad send must not block others */ }
+      }
+    };
+    s.onerror = function () { window.__dbaBiSdkLoading = null; };
+    (document.head || document.body || document.documentElement).appendChild(s);
+  }
+
+  function biSend(params) {
+    biLoadSdk(function () {
+      var aws = window.AWS;
+      if (!aws) return;
+      if (!aws.config.region) {
+        aws.config.update({
+          region: BI_REGION,
+          credentials: new aws.CognitoIdentityCredentials({ IdentityPoolId: BI_IDENTITY_POOL }),
+        });
+      }
+      var event = { event_name: 'dba_ad_view', datekey: Date.now(), table: BI_TABLE };
+      var values = {};
+      for (var key in params) {
+        if (!Object.prototype.hasOwnProperty.call(params, key)) continue;
+        event[key] = params[key];
+        values[key] = params[key];
+      }
+      event.event_values = values;
+      try {
+        new aws.Kinesis().putRecords({
+          Records: [{ PartitionKey: String(params.guid), Data: JSON.stringify(event) }],
+          StreamName: BI_STREAM,
+        }, function (err) {
+          if (err && window.console) console.warn('[dba-runtime] bi failed:', err.message);
+        });
+      } catch (e) {
+        if (window.console) console.warn('[dba-runtime] bi failed:', e && e.message);
+      }
+    });
+  }
+
+  /** Fires once per creative load — same trigger as legacy document.body.onload. */
+  function emitAdView() {
+    if (window.__DBA_DISABLE_BI) return;
+    var ads = document.querySelectorAll('a.ad[data-bi="1"]');
+    for (var i = 0; i < ads.length; i++) {
+      (function (ad) {
+        if (ad.__dbaAdViewSent) return;
+        ad.__dbaAdViewSent = true;
+
+        var bmid = parseInt(ad.getAttribute('data-bi-bmid'), 10);
+        if (!isFinite(bmid)) return;
+        if (bmid === BI_SAMPLED_BMID && Math.random() > BI_SAMPLE_RATE) return;
+
+        biSend({
+          bmid: bmid,
+          adid: biClean(ad.getAttribute('data-bi-adv-id')),
+          country: parseInt(ad.getAttribute('data-bi-country'), 10),
+          language: parseInt(ad.getAttribute('data-bi-lang'), 10),
+          att_nw: biClean(ad.getAttribute('data-bi-network')),
+          att_cmp: biClean(ad.getAttribute('data-bi-campaign')),
+          format: biClean(ad.getAttribute('data-bi-format')),
+          user_maturity_wk: biClean(ad.getAttribute('data-bi-maturity')),
+          offer: biClean(ad.getAttribute('data-bi-offer')),
+          price: biClean(ad.getAttribute('data-bi-price')),
+          scope: biClean(ad.getAttribute('data-bi-scope')),
+          ordering: biClean(ad.getAttribute('data-bi-ordering')),
+          os_type: biClean(ad.getAttribute('data-bi-os')),
+          hashed_device_id: biDecodeUid(ad.getAttribute('data-bi-uid')),
+          guid: impressionGuid(ad),
+          click_url: biClickUrl(ad),
+        });
+      }(ads[i]));
+    }
+  }
+  window.DbaEmitAdView = emitAdView;
+
   function autoRender() {
+    emitAdView();
     wireStaticCtaGuidClicks();
     if (window.__DBA_SKIP_AUTORENDER) {
       wirePayloadLinkClicks();

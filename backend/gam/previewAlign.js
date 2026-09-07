@@ -73,19 +73,58 @@ function buildFeedTargetingAttrs(payloadLink) {
   ].join(' ');
 }
 
+// hashed_device_id is smuggled through 15 team key-values; dba-runtime maps each
+// 3-letter code back to a character (legacy BetanoUtils.get_decoded_uid).
+const BI_UID_PATTERNS = [
+  'Team_Follow_1', 'Team_Follow_2', 'Team_Follow_3', 'Team_Follow_4',
+  'Team_Follow_5', 'Team_Follow_6', 'Team_Follow_7', 'Team_Follow_8',
+  'Team_Playing_1', 'Team_Playing_2', 'Team_Playing_3', 'Team_Playing_4',
+  'Team_Playing_5', 'Team_Playing_6', 'Team_Playing_7',
+].map((name) => `%%PATTERN:${name}%%`).join(',');
+
+/**
+ * Bake the `dba_ad_view` dimensions next to feed_url so the reported bmid/format
+ * come from the same values we request the feed with. The legacy creative read
+ * them from hand-set "Bookmaker" / "Placement" CreativeTemplate variables,
+ * which is how an MPU could report a bookmaker it was not actually serving.
+ */
+function buildBiAttrs({ country, bmid, cmsLangId, sizeId, payloadLink }) {
+  if (!Number.isFinite(bmid)) return '';
+  const cidNumeric = CID_FOR_COUNTRY[country];
+  return [
+    'data-bi="1"',
+    `data-bi-bmid="${bmid}"`,
+    `data-bi-country="${cidNumeric != null ? cidNumeric : country}"`,
+    `data-bi-lang="${feedLangForCountry(country, cmsLangId)}"`,
+    `data-bi-format="${placementForSize(sizeId)}"`,
+    'data-bi-offer="1X2"',
+    // Same ExtraLink defaults the feed request is baked with.
+    'data-bi-price="Sponsorship"',
+    'data-bi-ordering="Popularity"',
+    'data-bi-network="%%PATTERN:AttNw%%"',
+    'data-bi-campaign="%%PATTERN:AttCmp%%"',
+    'data-bi-maturity="%%PATTERN:UserMaturity_Weeks%%"',
+    'data-bi-scope="%%PATTERN:Scope%%"',
+    `data-bi-os="${payloadLink ? '[%OS_Type%]' : '%%PATTERN:OS_Type%%'}"`,
+    'data-bi-adv-id="%%ADVERTISING_IDENTIFIER_PLAIN%%"',
+    `data-bi-uid="${BI_UID_PATTERNS}"`,
+  ].join(' ');
+}
+
 /** Anchor markup for GAM snippets — Bet365 uses JS click + Bookie.Link (no cta_url). */
-function buildAdAnchorInline(payloadLink) {
+function buildAdAnchorInline(payloadLink, biAttrs = '') {
+  const bi = biAttrs ? ` ${biAttrs}` : '';
   if (payloadLink) {
     return {
       ad_href: '#',
-      ad_attrs: 'data-payload-link="1" data-click-tracker="%%CLICK_URL_UNESC%%"',
+      ad_attrs: `data-payload-link="1" data-click-tracker="%%CLICK_URL_UNESC%%"${bi}`,
     };
   }
   // Non-Bet365: static cta_url. data-adv-id seeds click-time $GUID in dba-runtime
   // (MD5(adid + Date.now()) — legacy BetanoUtils.generate_guid / CryptoJS parity).
   return {
     ad_href: '%%CLICK_URL_UNESC%%[%cta_url%]',
-    ad_attrs: 'data-cta-url="[%cta_url%]" data-adv-id="%%ADVERTISING_IDENTIFIER_PLAIN%%"',
+    ad_attrs: `data-cta-url="[%cta_url%]" data-adv-id="%%ADVERTISING_IDENTIFIER_PLAIN%%"${bi}`,
   };
 }
 
@@ -161,7 +200,10 @@ function buildPreviewInlineValues({
     : '';
 
   const payloadLink = isPayloadLinkBmid(bmid);
-  const anchor = buildAdAnchorInline(payloadLink);
+  const anchor = buildAdAnchorInline(
+    payloadLink,
+    buildBiAttrs({ country, bmid, cmsLangId, sizeId: dbaTemplate.sizeId, payloadLink }),
+  );
   const feedExtraAttrs = buildFeedTargetingAttrs(payloadLink);
 
   return {
@@ -316,6 +358,7 @@ module.exports = {
   CID_FOR_COUNTRY,
   buildFeedUrl,
   buildFeedTargetingAttrs,
+  buildBiAttrs,
   buildAdAnchorInline,
   isPayloadLinkBmid,
   feedLangForCountry,
