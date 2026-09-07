@@ -27,3 +27,4 @@ docs/*
 !docs/DEVOPS-RDS-BOOTSTRAP.md
 !docs/DEVOPS-BP-RUNTIME.md
 !docs/DEVOPS-NEXT-STEPS.md
+!docs/DBA-USER-GUIDE.md
