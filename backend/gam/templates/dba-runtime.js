@@ -1296,7 +1296,8 @@
   // code standing for one character (legacy EncodingChars, verbatim).
   var BI_ENCODING_CHARS = {"MTA":"0","LEE":"1","ARS":"2","FLU":"3","TOT":"4","FOR":"5","LAK":"6","ROM":"7","BRU":"8","CRZ":"9","AVL":"A","BHA":"B","LAX":"C","DOR":"D","EVE":"E","FUL":"F","PHI":"G","HUL":"H","INT":"I","JUV":"J","OAK":"K","RMA":"L","MCI":"M","NEW":"N","OLY":"O","PNE":"P","REA":"Q","UTA":"R","BOU":"S","STS":"T","QPR":"U","TBL":"V","CHE":"W","LAG":"X","WOL":"Y","GSW":"Z","NYG":"0","NYJ":"1","CEA":"2","MIN":"3","AGO":"4","CHI":"5","GRE":"6","TBG":"7","STL":"8","SFN":"9","DET":"A","NEP":"B","JAX":"C","BUF":"D","GIL":"E","HOU":"F","CBJ":"G","GUA":"H","CLB":"I","IND":"J","KCX":"K","CHL":"L","MTL":"M","NSH":"N","NOT":"O","PIT":"P","LAR":"Q","RBL":"R","CRY":"S","VIT":"T","PHX":"U","VEG":"V","BKN":"W","DAL":"X","NYI":"Y","WAS":"Z","FCB":"0","WAT":"1","FLA":"2","MAD":"3","CSK":"4","GOI":"5","CHA":"6","SEV":"7","BAR":"8","PON":"9","SAO":"A","BOT":"B","RMF":"C","BOL":"D","BAH":"E","ESP":"F","LAC":"G","INL":"H","MIL":"I","LAL":"J","BVB":"K","MCT":"L","LYO":"M","OKC":"N","LEI":"O","VAL":"P","NAP":"Q","QUE":"R","SHU":"S","WBA":"T","USA":"U","WHU":"V","LFC":"W","FIO":"X","ORL":"Y","MEM":"Z","BRE":"0","ENG":"1","ACM":"2","CTH":"3","BAY":"4","NOP":"5","PAL":"6","SCP":"7","SJS":"8","RBB":"9","PSG":"A","ATM":"B","LYN":"C","TFC":"D","NIZ":"E","LEO":"F","AJA":"G","OLM":"H","SSC":"I","SHA":"J","FRK":"K","HAC":"L","MUN":"M","NAN":"N","SCF":"O","POR":"P","LOS":"Q","LIV":"R","BES":"S","FCN":"T","VIE":"U","VCF":"V","SOU":"W","TOR":"X","YOK":"Y","ZWO":"Z"};
 
-  // Also strips %%MACRO%% forms (advertising id) that cleanTargetingValue keeps.
+  // Also strips bare percent-macro forms (advertising id) that
+  // cleanTargetingValue keeps.
   function biClean(v) {
     v = cleanTargetingValue(v);
     return /^%%[\w:]+%%$/.test(v) ? '' : v;
