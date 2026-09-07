@@ -1271,6 +1271,9 @@
   function onFeedPayload(node, data) {
     applyBookieLinkFromPayload(node, data);
     wirePayloadLinkClicks();
+    // Bookie.Link is set now, so any event held back by biAwaitingBookieLink
+    // can go out with a populated click_url.
+    emitAdView();
   }
   window.DbaOnFeedPayload = onFeedPayload;
   window.DbaWirePayloadLinkClicks = wirePayloadLinkClicks;
@@ -1292,6 +1295,9 @@
   // 100%. Same rate here, otherwise bmid 14 volumes jump 10x at cutover.
   var BI_SAMPLED_BMID = 14;
   var BI_SAMPLE_RATE = 0.1;
+  // How long a payload-link creative waits for Bookie.Link before sending
+  // without a click_url (see biAwaitingBookieLink).
+  var BI_FEED_WAIT_MS = 3000;
 
   // hashed_device_id: the app packs it into 15 team key-values, each 3-letter
   // code standing for one character (legacy EncodingChars, verbatim).
@@ -1386,6 +1392,28 @@
     });
   }
 
+  /**
+   * Payload-link creatives (Bet365) have no baked cta_url — their click URL is
+   * Bookie.Link, known only once the feed resolves. Legacy pulled the payload
+   * in via a parser-inserted script, so it was already there when body.onload
+   * fired the event; fetch() is async, so hold the event until the feed lands.
+   */
+  function biAwaitingBookieLink(ad) {
+    return ad.getAttribute('data-payload-link') === '1'
+      && !ad.getAttribute('data-bookie-link')
+      && !window.__dbaBiWaitElapsed;
+  }
+
+  /** A dead feed must cost us the click URL, not the whole impression. */
+  function scheduleBiWaitDeadline() {
+    if (window.__dbaBiWaitScheduled) return;
+    window.__dbaBiWaitScheduled = true;
+    setTimeout(function () {
+      window.__dbaBiWaitElapsed = true;
+      emitAdView();
+    }, BI_FEED_WAIT_MS);
+  }
+
   /** Fires once per creative load — same trigger as legacy document.body.onload. */
   function emitAdView() {
     if (window.__DBA_DISABLE_BI) return;
@@ -1393,6 +1421,7 @@
     for (var i = 0; i < ads.length; i++) {
       (function (ad) {
         if (ad.__dbaAdViewSent) return;
+        if (biAwaitingBookieLink(ad)) return;
         ad.__dbaAdViewSent = true;
 
         var bmid = parseInt(ad.getAttribute('data-bi-bmid'), 10);
@@ -1424,6 +1453,7 @@
 
   function autoRender() {
     emitAdView();
+    scheduleBiWaitDeadline();
     wireStaticCtaGuidClicks();
     if (window.__DBA_SKIP_AUTORENDER) {
       wirePayloadLinkClicks();
