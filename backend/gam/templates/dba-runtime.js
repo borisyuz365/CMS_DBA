@@ -1153,7 +1153,8 @@
   // --- $GUID for non-Bet365 static cta_url only ---
   // Exact legacy formula (BetanoUtils.generate_guid / creative_template.html):
   //   CryptoJS.MD5(advertisingId + Date.now().toString()).toString()
-  // Applied at click (fresh per click). Bet365 payload-link is never rewritten.
+  // Seeded once per impression (see impressionGuid) and reused by both the
+  // click URL and dba_ad_view. Bet365 payload-link is never rewritten.
   // MD5: blueimp-md5 2.19.0 (same digest as CryptoJS / Node crypto for UTF-8).
   var md5hex = (function () {
     var root = {};
@@ -1172,8 +1173,8 @@
   }
 
   /**
-   * Non-Bet365 only: keep cta template with $GUID; on each click fill with
-   * generateClickGuid(advId) — same formula as legacy 1X2 creative.
+   * Non-Bet365 only: keep cta template with $GUID; fill it at click time with
+   * the impression guid, so the click matches the dba_ad_view already sent.
    */
   function wireStaticCtaGuidClicks() {
     var ads = document.querySelectorAll('a.ad[data-cta-url]');
