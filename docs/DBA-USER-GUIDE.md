@@ -47,6 +47,8 @@ A separate **BP Management** menu sits alongside it for Betting Promotions. That
 
 One thing you'll notice everywhere: every change is recorded against the name **D. Benvelgy**, regardless of who actually made it. The CMS has no login, so it can't tell editors apart. Don't read the "by" line as real attribution.
 
+Ignore the **365 Production** dropdown in the top-right corner as well. It offers Development, Staging and Production, but selecting one only changes the label — it does not switch which database you're editing. There is no staging environment here; every edit lands in production.
+
 ---
 
 ## Bookmakers
