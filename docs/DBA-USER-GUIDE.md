@@ -97,13 +97,18 @@ Bet365 has no editable affiliate link. The table shows *"managed externally"* an
 
 **Ad Formats** shows every creative design, as cards by default with a live thumbnail of each ad, or as a table via the view toggle. Each card shows the format name, bookmaker, target countries, size and Live/Draft status.
 
-Filters across the top: search by name, plus dropdowns for **All sizes** (MPU 300×250, Interstitial 640×1280, Banner 320×50), **All statuses**, **All bookmakers**, and **Any features** — that last one narrows to formats with a welcome offer, a custom affiliate link, or a legal disclaimer. When filters are active a **Clear {N}** button appears. There's no pagination and no column sorting.
+Filters across the top: search by name, plus dropdowns for **All sizes** (MPU 300×250, **3-Bookie MPU**, Interstitial 640×1280, Banner 320×50), **All statuses**, **All bookmakers**, and **Any features** — that last one narrows to formats with a welcome offer, a custom affiliate link, a legal disclaimer, or a 3-Bookie MPU. When filters are active a **Clear {N}** button appears. There's no pagination and no column sorting.
 
 Each format offers four actions: **Edit**, **View GAM template code**, **Duplicate** (creates a Draft named `{name} (Copy)`), and **Delete**. As with bookmakers, Live formats can't be deleted — the tooltip reads **Move to Draft first**.
 
+**Create New Format** asks which type to build:
+
+- **Standard DBA** — one bookmaker, live match cards and odds (MPU / Banner / Interstitial).
+- **3-Bookie MPU** — three stacked branding sections in a fluid 300×250. No match cards. Used when you need several bookies in one creative, including Bet365 without a separate GAM line item per network/campaign.
+
 ### The editor
 
-**Create New Format**, or Edit on an existing one, opens a two-pane editor: form on the left, live preview on the right. The preview updates as you type.
+**Create New Format** (Standard), or Edit on an existing standard format, opens a two-pane editor: form on the left, live preview on the right. The preview updates as you type.
 
 The form is a single scrolling column divided into sections:
 
@@ -166,6 +171,21 @@ This dialog is also your pre-flight check, and worth opening before every handov
 If your format targets several countries, note this warning: the HTML bakes in the branding, feed and disclaimer of the **first** market only. Every other country needs its own export.
 
 The button is disabled on a format you haven't saved yet.
+
+### 3-Bookie MPU
+
+A dedicated editor configures three sections (bookmaker, colours, logo, headline, conditions, CTA). Preview shows the stacked MPU.
+
+**Affiliate behaviour per section:**
+
+| Bookmaker | How the click URL is set |
+|---|---|
+| **Bet365** | Not baked. At impression time the creative calls `/GetPayload` with country (`cid`) plus GAM patterns for ad network (`AttNw`) and campaign (`AttCmp`). The runtime opens `%%CLICK_URL%%` + `Bookie.Link` from ExtraLinks. GAM only needs the `OS_Type` variable — **not** a `[%bet365_cta_url%]` creative var. |
+| **Other** | Affiliate from that bookmaker's country variant (or an optional override on the section). If the URL contains `$GUID`, the runtime replaces it once per impression with `MD5(advertisingId + Date.now())`. |
+
+Because Bet365 links are resolved from ExtraLinks using the impression's targeting, **one GAM line item** can cover all networks and campaigns. Do not paste prototype snippets that emit `[%bet365_cta_url%]` — that forces AdOps to maintain a URL per targeting.
+
+Handoff is the same as standard formats: save → **View GAM code** → paste into GAM. The HTML snippet is baked per country (affiliates and logos for that market); open the dialog for each country you need to ship.
 
 ---
 

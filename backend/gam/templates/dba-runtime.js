@@ -1177,7 +1177,7 @@
    * the impression guid, so the click matches the dba_ad_view already sent.
    */
   function wireStaticCtaGuidClicks() {
-    var ads = document.querySelectorAll('a.ad[data-cta-url]');
+    var ads = document.querySelectorAll('a.ad[data-cta-url], a.mpu-section[data-cta-url]');
     for (var i = 0; i < ads.length; i++) {
       (function (ad) {
         if (ad.getAttribute('data-payload-link') === '1') return;
@@ -1221,12 +1221,26 @@
   // Bookie.Link; click handler opens tracker + encodeURIComponent(link).
   // Static cta_url creatives keep baked href unless this is an older Bet365
   // snippet that still used data-cta-url (href rewrite below).
+  function applyBookieLinkToPayloadSections(link) {
+    if (!link) return;
+    var ads = document.querySelectorAll(
+      'a.ad[data-payload-link="1"], a.mpu-section[data-payload-link="1"]',
+    );
+    for (var i = 0; i < ads.length; i++) {
+      ads[i].setAttribute('data-bookie-link', link);
+    }
+  }
+  window.DbaApplyBookieLinkToPayloadSections = applyBookieLinkToPayloadSections;
+
   function applyBookieLinkFromPayload(node, data) {
     if (!data || !data.Bookie) return;
     var bookie = data.Bookie;
     var bmid = parseInt(bookie.ID, 10);
     var link = bookie.Link;
     if (!link) return;
+
+    // 3BM / multi-section: stamp every payload-link anchor (not only the .ad wrapper).
+    applyBookieLinkToPayloadSections(link);
 
     var ad = findAdAnchor(node);
     if (!ad) return;
@@ -1251,7 +1265,9 @@
   }
 
   function wirePayloadLinkClicks() {
-    var ads = document.querySelectorAll('a.ad[data-payload-link="1"]');
+    var ads = document.querySelectorAll(
+      'a.ad[data-payload-link="1"], a.mpu-section[data-payload-link="1"]',
+    );
     for (var i = 0; i < ads.length; i++) {
       (function (ad) {
         if (ad.__dbaPayloadClickWired) return;
@@ -1327,6 +1343,17 @@
    * views and clicks can be joined (legacy generated it once in body.onload).
    */
   function impressionGuid(ad) {
+    // 3-bookie MPU: one guid for the whole impression, shared by all sections
+    // (same model as the fluid MPU prototype / legacy body.onload).
+    if (ad && ad.classList && ad.classList.contains('mpu-section')) {
+      if (!window.__dbaThreeBmImpressionGuid) {
+        window.__dbaThreeBmImpressionGuid = generateClickGuid(
+          biClean(ad.getAttribute('data-adv-id'))
+          || biClean(ad.getAttribute('data-bi-adv-id')),
+        );
+      }
+      return window.__dbaThreeBmImpressionGuid;
+    }
     if (!ad.__dbaImpressionGuid) {
       ad.__dbaImpressionGuid = generateClickGuid(biClean(ad.getAttribute('data-adv-id'))
         || biClean(ad.getAttribute('data-bi-adv-id')));
@@ -1451,7 +1478,48 @@
   }
   window.DbaEmitAdView = emitAdView;
 
+  /**
+   * 3-bookie MPU: no match cards. Wire $GUID + payload-link clicks; if the
+   * root has a GetPayload feed (Bet365 section present), fetch Bookie.Link only.
+   */
+  function autoRenderThreeBm() {
+    var root = document.querySelector('.three-bm-mpu');
+    if (!root) return false;
+
+    wireStaticCtaGuidClicks();
+    wirePayloadLinkClicks();
+
+    var feed = resolveFeedUrl(root);
+    if (!feed) return true;
+
+    fetch(feed, { credentials: 'omit' })
+      .then(function (r) {
+        if (!r.ok) return null;
+        return r.text().then(function (t) {
+          if (!t || String(t).trim() === 'No Games') {
+            // Still try JSON parse — some responses may omit games but include Bookie.
+            try { return JSON.parse(t); } catch (e) { return null; }
+          }
+          try { return JSON.parse(t); } catch (e) { return null; }
+        });
+      })
+      .then(function (data) {
+        if (!data || !data.Bookie || !data.Bookie.Link) return;
+        applyBookieLinkToPayloadSections(data.Bookie.Link);
+        wirePayloadLinkClicks();
+      })
+      .catch(function (err) {
+        if (window.console) console.warn('[dba-runtime] 3bm feed failed:', err && err.message);
+      });
+    return true;
+  }
+  window.DbaAutoRenderThreeBm = autoRenderThreeBm;
+
   function autoRender() {
+    if (autoRenderThreeBm()) {
+      // 3BM has no standard .ad BI shell; skip emitAdView match-card path.
+      return;
+    }
     emitAdView();
     scheduleBiWaitDeadline();
     wireStaticCtaGuidClicks();

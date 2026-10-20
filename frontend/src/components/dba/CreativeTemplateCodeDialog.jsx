@@ -179,13 +179,17 @@ export default function CreativeTemplateCodeDialog({ open, onClose, templateId }
           </Box>
         )}
 
-        {!loading && !error && ct && (ct.remainingMacros || []).some((m) => m !== 'cta_url' && m !== 'OS_Type') && (
-          <Alert severity="error" sx={{ mb: 2 }}>
-            <strong>Snippet not fully baked:</strong> GAM will reject placeholders{' '}
-            {(ct.remainingMacros || []).filter((m) => m !== 'cta_url' && m !== 'OS_Type').map((m) => `[${m}]`).join(', ')}.
-            Assign a bookmaker and countries, then re-open this dialog and copy again.
-          </Alert>
-        )}
+        {!loading && !error && ct && (() => {
+          const ALLOWED_MACROS = new Set(['cta_url', 'OS_Type', 'Bypass']);
+          const unexpected = (ct.remainingMacros || []).filter((m) => !ALLOWED_MACROS.has(m));
+          return unexpected.length > 0 ? (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              <strong>Snippet not fully baked:</strong> GAM will reject placeholders{' '}
+              {unexpected.map((m) => `[${m}]`).join(', ')}.
+              Assign a bookmaker and countries, then re-open this dialog and copy again.
+            </Alert>
+          ) : null;
+        })()}
 
         {!loading && !error && ct && (ct.remainingMacros || []).length === 1 && ct.remainingMacros[0] === 'cta_url' && (
           <Alert severity="info" sx={{ mb: 2 }}>
@@ -194,12 +198,24 @@ export default function CreativeTemplateCodeDialog({ open, onClose, templateId }
           </Alert>
         )}
 
-        {!loading && !error && ct && (ct.remainingMacros || []).length === 1 && ct.remainingMacros[0] === 'OS_Type' && (
+        {!loading && !error && ct && (ct.remainingMacros || []).includes('OS_Type')
+          && !(ct.remainingMacros || []).some((m) => m !== 'OS_Type' && m !== 'Bypass') && (
           <Alert severity="info" sx={{ mb: 2 }}>
-            Bet365 payload-link — declare <Box component="code" sx={{ fontSize: 12 }}>OS_Type</Box> only (android / ios; optional if User_OS pattern is present).
+            Bet365 payload-link — declare <Box component="code" sx={{ fontSize: 12 }}>OS_Type</Box>
+            {(ct.remainingMacros || []).includes('Bypass') && (
+              <> and <Box component="code" sx={{ fontSize: 12 }}>Bypass</Box></>
+            )}
+            {' '}(android / ios; OS_Type optional if User_OS pattern is present).
             Pricing=Sponsorship and Top_Order_Logic=Popularity are baked; AttNw / AttCmp / maturity come from pattern key-values.
             Scope is forwarded only for InList AS / TopList AS (placement labels like GameCenter are ignored so ExtraLinks still match).
             Runtime encodes them into GetPayload; CTA is Bookie.Link.
+          </Alert>
+        )}
+
+        {!loading && !error && ct && (ct.remainingMacros || []).length === 1 && ct.remainingMacros[0] === 'Bypass' && (
+          <Alert severity="info" sx={{ mb: 2 }}>
+            3-Bookie MPU — declare <Box component="code" sx={{ fontSize: 12 }}>Bypass</Box> on the CreativeTemplate.
+            Section affiliates are baked; no CTA URL variables.
           </Alert>
         )}
 
@@ -258,9 +274,13 @@ export default function CreativeTemplateCodeDialog({ open, onClose, templateId }
               <Box>
                 <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 1 }}>
                   <Typography variant="caption" color="text.secondary">
-                    {(ct.variables || []).some((v) => v.uniqueName === 'OS_Type')
-                      ? 'Variables declared on the CreativeTemplate (OS_Type only — Pricing/Ordering baked; AttNw/AttCmp via patterns; Bookie.Link on click)'
-                      : 'Variables declared on the CreativeTemplate (only cta_url — colors, legal, and branding are baked into the HTML)'}
+                    {ct.kind === '3bm' || (ct.variables || []).some((v) => v.uniqueName === 'Bypass')
+                      ? (ct.variables || []).some((v) => v.uniqueName === 'OS_Type')
+                        ? '3-Bookie MPU — declare Bypass + OS_Type (AttNw/AttCmp/maturity via patterns; Bet365 Bookie.Link on click)'
+                        : '3-Bookie MPU — declare Bypass; section affiliates are baked into the HTML'
+                      : (ct.variables || []).some((v) => v.uniqueName === 'OS_Type')
+                        ? 'Variables declared on the CreativeTemplate (OS_Type only — Pricing/Ordering baked; AttNw/AttCmp via patterns; Bookie.Link on click)'
+                        : 'Variables declared on the CreativeTemplate (only cta_url — colors, legal, and branding are baked into the HTML)'}
                   </Typography>
                   <CopyButton getText={() => JSON.stringify(ct.variables, null, 2)} label="Copy JSON" />
                 </Stack>
