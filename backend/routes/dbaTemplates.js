@@ -11,16 +11,31 @@ const {
 } = require('./_dbaLang');
 const { upsertTerm, readTranslations, resolveTerm, findTerm } = require('./_dbaTerms');
 const { normalizeSizeId, INTERSTITIAL_SIZE_ID } = require('../utils/dbaSizes');
+const { normalizeThreeBmTemplate, isThreeBmTemplate, KIND_3BM } = require('../gam/threeBm');
 
 const router = express.Router();
 
 /** Persist canonical size id + label (legacy 640x1280 → 320x480). */
 function withCanonicalSize(tpl) {
-  const sizeId = normalizeSizeId(tpl.sizeId);
+  const normalized = isThreeBmTemplate(tpl) || tpl.kind === KIND_3BM || tpl.config?.kind === KIND_3BM
+    ? normalizeThreeBmTemplate(tpl)
+    : tpl;
+  const sizeId = normalizeSizeId(normalized.sizeId);
+  if (isThreeBmTemplate(normalized)) {
+    return {
+      ...normalized,
+      sizeId: sizeId || '300x250',
+      size: normalized.size || '3-Bookie MPU · fluid',
+      kind: KIND_3BM,
+      config: { ...normalized.config, kind: KIND_3BM },
+    };
+  }
   const size = sizeId === INTERSTITIAL_SIZE_ID
     ? 'Interstitial · 640×1280'
-    : (tpl.size || sizeId);
-  return { ...tpl, sizeId, size };
+    : (normalized.size || sizeId);
+  const config = { ...(normalized.config || {}) };
+  if (config.kind === KIND_3BM) delete config.kind;
+  return { ...normalized, sizeId, size, kind: 'standard', config };
 }
 
 // ---- helpers --------------------------------------------------------------

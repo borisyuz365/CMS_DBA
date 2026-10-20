@@ -6,17 +6,134 @@ const { templateRowToJson } = require('./_dbaShape');
 const { buildCreativeTemplate, validateFeedUrl } = require('../gam/templateBuilder');
 const { buildCreative } = require('../gam/creativeBuilder');
 const { isPayloadLinkBmid } = require('../gam/previewAlign');
+const {
+  isThreeBmTemplate,
+  buildThreeBmCreative,
+  validateThreeBmForExport,
+  KIND_3BM,
+} = require('../gam/threeBm');
 
 const router = express.Router();
 
+function bookmakerJsFromRow(bookmaker) {
+  return {
+    id: bookmaker.id,
+    name: bookmaker.name,
+    brandColor: bookmaker.brand_color,
+    secondaryColor: bookmaker.secondary_color,
+    defaultLogoImageUrl: bookmaker.default_logo_image_url,
+    useNoBgLogo: !!bookmaker.use_no_bg_logo,
+  };
+}
+
+async function buildStandardCreatives(dbaTemplate, countries, errors, req) {
+  const creatives = [];
+  if (!dbaTemplate.bookmakerId) {
+    errors.push('Template has no bookmaker_id — assign one in the editor first');
+    return creatives;
+  }
+
+  const [[bookmaker]] = await pool.query(
+    'SELECT * FROM dba_bookmakers WHERE id = ?',
+    [dbaTemplate.bookmakerId],
+  );
+  const bmid = bookmaker ? parseInt(String(bookmaker.id).replace(/^bk_/, ''), 10) : null;
+  let bookieSettings = null;
+  if (Number.isFinite(bmid)) {
+    const [[bs]] = await pool.query(
+      'SELECT * FROM dba_bookie_settings WHERE bmid = ?', [bmid],
+    );
+    bookieSettings = bs || null;
+  }
+
+  const [creativeIdRows] = await pool.query(
+    'SELECT country_code, gam_creative_id FROM dba_template_creatives WHERE dba_template_id = ? AND bookmaker_id = ?',
+    [dbaTemplate.id, dbaTemplate.bookmakerId],
+  );
+  const previousByCountry = new Map(creativeIdRows.map((r) => [r.country_code, r.gam_creative_id]));
+
+  if (!bookmaker) {
+    errors.push(`Bookmaker ${dbaTemplate.bookmakerId} not found — cannot build creatives`);
+  } else if (countries.length === 0) {
+    errors.push('Template has no countries assigned — no creatives to build');
+  } else {
+    const bmJs = bookmakerJsFromRow(bookmaker);
+    for (const cc of countries) {
+      const [[variant]] = await pool.query(
+        'SELECT * FROM dba_bookmaker_variants WHERE bookmaker_id = ? AND country_code = ?',
+        [bookmaker.id, cc],
+      );
+      creatives.push(buildCreative({
+        dbaTemplate,
+        bookmaker: bmJs,
+        country: cc,
+        variant: variant || null,
+        bookieSettings,
+        previousId: previousByCountry.get(cc) || null,
+        feedBaseUrl: req.query.feedBase || undefined,
+      }));
+    }
+  }
+  return creatives;
+}
+
+async function buildThreeBmCreatives(dbaTemplate, countries, errors, req) {
+  const creatives = [];
+  const shapeCheck = validateThreeBmForExport(dbaTemplate, countries);
+  errors.push(...shapeCheck.errors);
+  if (shapeCheck.errors.length) return creatives;
+
+  const sectionIds = (dbaTemplate.config?.sections || [])
+    .map((s) => s.bookmakerId)
+    .filter(Boolean);
+  const uniqueIds = [...new Set(sectionIds)];
+  const bookmakersById = {};
+  if (uniqueIds.length) {
+    const placeholders = uniqueIds.map(() => '?').join(', ');
+    const [rows] = await pool.query(
+      `SELECT * FROM dba_bookmakers WHERE id IN (${placeholders})`,
+      uniqueIds,
+    );
+    for (const row of rows) bookmakersById[row.id] = bookmakerJsFromRow(row);
+  }
+
+  const variantsByKey = {};
+  for (const bmId of uniqueIds) {
+    for (const cc of countries) {
+      const [[variant]] = await pool.query(
+        'SELECT * FROM dba_bookmaker_variants WHERE bookmaker_id = ? AND country_code = ?',
+        [bmId, cc],
+      );
+      if (variant) {
+        variantsByKey[`${bmId}:${cc}`] = {
+          affiliate: variant.affiliate,
+          licenseNumber: variant.license_number,
+          status: variant.status,
+        };
+      }
+    }
+  }
+
+  const [creativeIdRows] = await pool.query(
+    'SELECT country_code, gam_creative_id FROM dba_template_creatives WHERE dba_template_id = ?',
+    [dbaTemplate.id],
+  );
+  const previousByCountry = new Map(creativeIdRows.map((r) => [r.country_code, r.gam_creative_id]));
+
+  for (const cc of countries) {
+    creatives.push(buildThreeBmCreative({
+      dbaTemplate,
+      country: cc,
+      bookmakersById,
+      variantsByKey,
+      previousId: previousByCountry.get(cc) || null,
+      feedBaseUrl: req.query.feedBase || undefined,
+    }));
+  }
+  return creatives;
+}
+
 // GET /api/dba/gam/templates/:id/preview
-// Returns:
-//   {
-//     dbaTemplate: { ... original template JSON },
-//     creativeTemplate: { ... GAM CreativeTemplate payload },
-//     creatives: [ ... one Creative per (bookmaker, country) market ],
-//     validation: { errors: [...], warnings: [...] },
-//   }
 router.get('/templates/:id/preview', async (req, res, next) => {
   try {
     const [[tplRow]] = await pool.query(
@@ -37,99 +154,61 @@ router.get('/templates/:id/preview', async (req, res, next) => {
       gam_last_synced_at: tplRow.gam_last_synced_at,
     };
 
-    // Resolve the market list first: a Creative per (template.bookmakerId, country).
-    // Branding / feed / disclaimer values from the first market are then baked
-    // into the CreativeTemplate HTML snippet (they are not GAM variables).
     const errors = [];
-    const creatives = [];
-    if (dbaTemplate.bookmakerId) {
-      const [[bookmaker]] = await pool.query(
-        'SELECT * FROM dba_bookmakers WHERE id = ?',
-        [dbaTemplate.bookmakerId],
-      );
-      const bmid = bookmaker ? parseInt(String(bookmaker.id).replace(/^bk_/, ''), 10) : null;
-      let bookieSettings = null;
-      if (Number.isFinite(bmid)) {
-        const [[bs]] = await pool.query(
-          'SELECT * FROM dba_bookie_settings WHERE bmid = ?', [bmid],
-        );
-        bookieSettings = bs || null;
-      }
+    const threeBm = isThreeBmTemplate(dbaTemplate);
+    const creatives = threeBm
+      ? await buildThreeBmCreatives(dbaTemplate, countries, errors, req)
+      : await buildStandardCreatives(dbaTemplate, countries, errors, req);
 
-      // Pre-fetch existing GAM creative ids for UPDATE-vs-CREATE hint.
-      const [creativeIdRows] = await pool.query(
-        'SELECT country_code, gam_creative_id FROM dba_template_creatives WHERE dba_template_id = ? AND bookmaker_id = ?',
-        [dbaTemplate.id, dbaTemplate.bookmakerId],
-      );
-      const previousByCountry = new Map(creativeIdRows.map((r) => [r.country_code, r.gam_creative_id]));
-
-      if (!bookmaker) {
-        errors.push(`Bookmaker ${dbaTemplate.bookmakerId} not found — cannot build creatives`);
-      } else if (countries.length === 0) {
-        errors.push('Template has no countries assigned — no creatives to build');
-      } else {
-        // mysql2 returns the `default_logo_image_url` snake_cased; reshape.
-        const bookmakerJs = {
-          id: bookmaker.id,
-          name: bookmaker.name,
-          brandColor: bookmaker.brand_color,
-          secondaryColor: bookmaker.secondary_color,
-          defaultLogoImageUrl: bookmaker.default_logo_image_url,
-          useNoBgLogo: !!bookmaker.use_no_bg_logo,
-        };
-        for (const cc of countries) {
-          const [[variant]] = await pool.query(
-            'SELECT * FROM dba_bookmaker_variants WHERE bookmaker_id = ? AND country_code = ?',
-            [bookmaker.id, cc],
-          );
-          const creative = buildCreative({
-            dbaTemplate,
-            bookmaker: bookmakerJs,
-            country: cc,
-            variant: variant || null,
-            bookieSettings,
-            previousId: previousByCountry.get(cc) || null,
-            feedBaseUrl: req.query.feedBase || undefined,
-          });
-          creatives.push(creative);
-        }
-      }
-    } else {
-      errors.push('Template has no bookmaker_id — assign one in the editor first');
-    }
-
-    // Build CreativeTemplate with inlined brand/feed/disclaimer from the first
-    // market. If the layout HTML file is missing, surface that as an error.
     let creativeTemplate = null;
     const sample = creatives[0] || null;
     try {
-      const sampleBmid = sample && sample.market
-        ? parseInt(String(sample.market.bookmakerId).replace(/^bk_/, ''), 10)
-        : parseInt(String(dbaTemplate.bookmakerId || '').replace(/^bk_/, ''), 10);
+      let payloadLink = false;
+      if (threeBm) {
+        payloadLink = !!(sample && sample.payloadLink);
+      } else {
+        const sampleBmid = sample && sample.market
+          ? parseInt(String(sample.market.bookmakerId).replace(/^bk_/, ''), 10)
+          : parseInt(String(dbaTemplate.bookmakerId || '').replace(/^bk_/, ''), 10);
+        payloadLink = isPayloadLinkBmid(sampleBmid);
+      }
       creativeTemplate = buildCreativeTemplate(dbaTemplate, {
         inlineValues: sample ? sample.inlineValues : null,
         bakedMarket: sample ? sample.market : null,
-        payloadLink: isPayloadLinkBmid(sampleBmid),
+        payloadLink,
       });
     } catch (err) {
       errors.push(err.message);
     }
 
     const warnings = creatives.flatMap((c) =>
-      (c.validation || []).map((msg) => `${c.market.bookmakerId}/${c.market.country}: ${msg}`),
+      (c.validation || []).map((msg) => {
+        const mkt = c.market?.bookmakerId
+          ? `${c.market.bookmakerId}/${c.market.country}`
+          : `${KIND_3BM}/${c.market?.country || '?'}`;
+        return `${mkt}: ${msg}`;
+      }),
     );
     if (sample && creatives.length > 1) {
       warnings.push(
-        `HTML snippet branding/feed/disclaimer are inlined from the first market (${sample.market.bookmakerId}/${sample.market.country}). Other countries need their own baked export.`,
+        threeBm
+          ? `HTML snippet sections are inlined from the first country (${sample.market.country}). Other countries need their own baked export.`
+          : `HTML snippet branding/feed/disclaimer are inlined from the first market (${sample.market.bookmakerId}/${sample.market.country}). Other countries need their own baked export.`,
       );
     }
 
     let feedValidation = null;
     const feedUrl = sample?.inlineValues?.feed_url || creativeTemplate?.bakedInline?.feed_url;
-    if (feedUrl) {
+    if (feedUrl && !threeBm) {
       feedValidation = await validateFeedUrl(feedUrl);
       if (!feedValidation.ok) {
         warnings.push(`Games feed: ${feedValidation.error} (${feedUrl})`);
+      }
+    } else if (feedUrl && threeBm) {
+      // Optional ping — Bookie.Link may return "No Games" but still be useful for link.
+      feedValidation = await validateFeedUrl(feedUrl);
+      if (!feedValidation.ok) {
+        warnings.push(`Bet365 ExtraLinks feed: ${feedValidation.error} (${feedUrl})`);
       }
     }
 
@@ -138,7 +217,15 @@ router.get('/templates/:id/preview', async (req, res, next) => {
     }
 
     res.json({
-      dbaTemplate: { id: dbaTemplate.id, name: dbaTemplate.name, sizeId: dbaTemplate.sizeId, status: dbaTemplate.status, countries, bookmakerId: dbaTemplate.bookmakerId },
+      dbaTemplate: {
+        id: dbaTemplate.id,
+        name: dbaTemplate.name,
+        sizeId: dbaTemplate.sizeId,
+        status: dbaTemplate.status,
+        countries,
+        bookmakerId: dbaTemplate.bookmakerId,
+        kind: dbaTemplate.kind || dbaTemplate.config?.kind || 'standard',
+      },
       creativeTemplate,
       creatives,
       feedValidation,

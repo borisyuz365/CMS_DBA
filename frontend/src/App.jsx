@@ -37,6 +37,8 @@ import ScannerDetailsV2 from './pages/ScannerDetailsV2';
 import DbaBookmakers from './pages/dba/DbaBookmakers';
 import DbaTemplates from './pages/dba/DbaTemplates';
 import DbaTemplateEditor from './pages/dba/DbaTemplateEditor';
+import DbaThreeBmEditor from './pages/dba/DbaThreeBmEditor';
+import DbaTemplateEditRouter from './pages/dba/DbaTemplateEditRouter';
 import DbaService from './pages/dba/DbaService';
 import BpPromotions from './pages/bp/BpPromotions';
 import BpEditor from './pages/bp/BpEditor';
@@ -236,7 +238,8 @@ function App() {
             <Route path="dba/bookmakers" element={<DbaBookmakers />} />
             <Route path="dba/templates" element={<DbaTemplates />} />
             <Route path="dba/templates/new" element={<DbaTemplateEditor />} />
-            <Route path="dba/templates/:id/edit" element={<DbaTemplateEditor />} />
+            <Route path="dba/templates/new/3bm" element={<DbaThreeBmEditor />} />
+            <Route path="dba/templates/:id/edit" element={<DbaTemplateEditRouter />} />
             <Route path="dba/service" element={<DbaService />} />
             <Route path="bp/promotions" element={<BpPromotions />} />
             <Route path="bp/promotions/new" element={<BpEditor />} />

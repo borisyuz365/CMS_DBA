@@ -15,6 +15,8 @@ const TEMPLATES_DIR = path.join(__dirname, 'templates');
 // Maps a (sizeId, has-welcome-offer) shape to a template file name.
 // Add new variants as new files land in templates/.
 function templateFileFor(dbaTemplate) {
+  const kind = dbaTemplate.kind || dbaTemplate.config?.kind;
+  if (kind === '3bm') return '3bm-mpu.html';
   const sizeId = dbaTemplate.sizeId;
   const hasWelcome = !!(dbaTemplate.config && dbaTemplate.config.welcomeOffer && dbaTemplate.config.welcomeOffer.enabled);
   const map = {
@@ -59,6 +61,8 @@ const INLINE_VARIABLE_NAMES = new Set([
   'card_bg',
   'ad_href',
   'ad_attrs',
+  'sections_html',
+  'root_attrs',
 ]);
 
 // Full authoring macro set (HTML template files use [[name]] for baked fields;
@@ -79,6 +83,7 @@ const ALL_VARIABLE_SCHEMA = [
   { uniqueName: 'cta_text',               label: 'CTA text',            description: 'Translated CTA button label for the target country',         type: 'STRING', isRequired: true },
   { uniqueName: 'cta_url',                label: 'CTA / affiliate URL', description: 'Static affiliate landing URL (non-Bet365 bookmakers)',       type: 'URL',    isRequired: true },
   { uniqueName: 'OS_Type',                label: 'OS Type',             description: 'Device OS for GetPayload/LinksManager (android / ios). Required for Bet365.', type: 'STRING', isRequired: true },
+  { uniqueName: 'Bypass',                 label: 'Bypass',              description: 'Hidden AdOps bypass token (3-bookie MPU and legacy creatives).', type: 'STRING', isRequired: false },
   { uniqueName: 'disclaimer_text',        label: 'Legal disclaimer',    description: 'Responsible-gaming text shown in the footer (Brazil: full SPA/MF copy)', type: 'STRING', isRequired: false },
   { uniqueName: 'disclaimer_url',         label: 'Disclaimer URL',      description: 'Link target for the legal disclaimer',                       type: 'URL',    isRequired: false },
   { uniqueName: 'disclaimer_layout',      label: 'Disclaimer layout',   description: 'CSS class: legal-band (~10% Brazil) or legal-strip (default)', type: 'STRING', isRequired: false },
@@ -103,9 +108,18 @@ const ALL_VARIABLE_SCHEMA = [
 //   Others: cta_url only
 const CTA_URL_VAR = ALL_VARIABLE_SCHEMA.find((v) => v.uniqueName === 'cta_url');
 const OS_TYPE_VAR = ALL_VARIABLE_SCHEMA.find((v) => v.uniqueName === 'OS_Type');
+const BYPASS_VAR = ALL_VARIABLE_SCHEMA.find((v) => v.uniqueName === 'Bypass');
 const VARIABLE_SCHEMA = [CTA_URL_VAR].filter(Boolean);
 
-function variableSchemaFor({ payloadLink } = {}) {
+function variableSchemaFor({ payloadLink, kind } = {}) {
+  // 3BM: affiliates are baked per section (or Bet365 via ExtraLinks). Always
+  // declare Bypass (hidden AdOps token in the HTML). When any section is
+  // Bet365, also OS_Type — never bet365_cta_url.
+  if (kind === '3bm') {
+    const vars = [BYPASS_VAR];
+    if (payloadLink) vars.push(OS_TYPE_VAR);
+    return vars.filter(Boolean);
+  }
   if (payloadLink) return [OS_TYPE_VAR].filter(Boolean);
   return [CTA_URL_VAR].filter(Boolean);
 }
@@ -144,6 +158,8 @@ const RAW_INLINE_NAMES = new Set([
   'card_bg',
   'ad_href',
   'ad_attrs',
+  'sections_html',
+  'root_attrs',
 ]);
 
 function applyInlineValues(snippet, inlineValues) {
@@ -277,11 +293,26 @@ function __dbaGameCount(data) {
 }
 
 /**
+ * 3BM: inline dba-runtime at body end (no match-card sample). Runtime's
+ * three-bm path fetches GetPayload only for Bookie.Link when needed.
+ */
+function makeThreeBmSnippetSelfContained(snippet) {
+  snippet = snippet.replace(/<script\s+src="[^"]*"\s*defer\s*><\/script>\s*/i, '');
+  if (!snippet.includes('dba-runtime') && !snippet.includes('DbaWireStaticCtaGuidClicks')) {
+    snippet = snippet.replace('</body>', `${inlinedRuntimeScriptTag()}\n</body>`);
+  }
+  return snippet;
+}
+
+/**
  * Prepare snippet for GAM paste/preview:
  *  1. Move runtime load + feed bootstrap to end of <body> (GAM-proven pattern)
  *  2. Attach data-sample-b64 so cards render when the live feed is blocked
  */
 function makeSnippetSelfContained(snippet) {
+  if (/\bthree-bm-mpu\b/.test(snippet)) {
+    return makeThreeBmSnippetSelfContained(snippet);
+  }
   if (!/\bclass="matches"[^>]*\bdata-feed=/.test(snippet)) return snippet;
 
   snippet = snippet.replace(/<script\s+src="[^"]*"\s*defer\s*><\/script>\s*/i, '');
@@ -296,6 +327,28 @@ function makeSnippetSelfContained(snippet) {
     snippet = snippet.replace('</body>', `${gamBootstrapScripts()}\n</body>`);
   }
   return snippet;
+}
+
+function validateThreeBmSnippet(snippet, inline) {
+  const issues = [];
+  const checks = [];
+  const hasRuntime = snippet.includes('generateClickGuid') || snippet.includes('DbaWireStaticCtaGuidClicks');
+  checks.push({ key: 'runtime', label: '3BM runtime', expected: 'inlined dba-runtime.js', ok: hasRuntime });
+  if (!hasRuntime) issues.push('3BM runtime missing — snippet must inline dba-runtime.js');
+  const hasSections = snippet.includes('mpu-section') && (inline.sections_html || '').includes('mpu-section');
+  checks.push({ key: 'sections_html', label: '3 sections', expected: 'three .mpu-section anchors', ok: hasSections });
+  if (!hasSections) issues.push('sections_html missing or empty');
+  if (inline.feed_url) {
+    // data-feed may HTML-escape & as &amp; — match the GetPayload identity, not the raw string.
+    const feedOk = /data-feed="[^"]*GetPayload[^"]*"/.test(snippet)
+      && snippet.includes('data-payload-feed="1"');
+    checks.push({ key: 'feed_url', label: 'Bet365 GetPayload feed', expected: inline.feed_url, ok: feedOk });
+    if (!feedOk) issues.push('feed_url not baked into three-bm-mpu root');
+  }
+  const banned = /\[%bet365_cta_url%\]/i.test(snippet);
+  checks.push({ key: 'no_bet365_macro', label: 'No [%bet365_cta_url%]', expected: 'absent', ok: !banned });
+  if (banned) issues.push('Must not emit [%bet365_cta_url%] — use ExtraLinks via GetPayload');
+  return { ok: issues.length === 0, issues, checks };
 }
 
 // Build the CreativeTemplate payload (the "what HTML + variable schema does GAM
@@ -315,26 +368,40 @@ function buildCreativeTemplate(dbaTemplate, options = {}) {
     throw new Error(`Template file missing: ${file} (expected at ${filePath})`);
   }
   const rawSnippet = fs.readFileSync(filePath, 'utf8');
-  const inline = mergeInlineValues(dbaTemplate, options.inlineValues);
+  const kind = dbaTemplate.kind || dbaTemplate.config?.kind || 'standard';
+  const inline = kind === '3bm'
+    ? { ...(options.inlineValues || {}) }
+    : mergeInlineValues(dbaTemplate, options.inlineValues);
   let snippet = applyInlineValues(rawSnippet, inline);
-  // GAM export: body-end bootstrap + sample matches for preview.
+  // GAM export: body-end bootstrap (+ sample matches for standard formats).
   snippet = makeSnippetSelfContained(snippet);
   const macrosLeft = remainingMacros(snippet);
-  const bakeValidation = validateBakedSnippet(snippet, inline);
   const payloadLink = !!options.payloadLink;
-  const vars = variableSchemaFor({ payloadLink });
+  const bakeValidation = kind === '3bm'
+    ? validateThreeBmSnippet(snippet, inline)
+    : validateBakedSnippet(snippet, inline);
+  const vars = variableSchemaFor({ payloadLink, kind });
   const bakedFor = options.bakedMarket
-    ? ` Branding/feed/disclaimer inlined for ${options.bakedMarket.bookmakerId}/${options.bakedMarket.country}.`
+    ? (kind === '3bm'
+      ? ` 3BM sections inlined for country ${options.bakedMarket.country}.`
+      : ` Branding/feed/disclaimer inlined for ${options.bakedMarket.bookmakerId}/${options.bakedMarket.country}.`)
     : ' Branding/feed/disclaimer macros cleared (no market sample to bake).';
-  const varHint = payloadLink
+  let varHint = payloadLink
     ? ' Declared GAM variable: OS_Type (Pricing=Sponsorship, Ordering=Popularity baked; AttNw/AttCmp via patterns → Bookie.Link).'
     : ' Declared GAM variable: cta_url.';
+  if (kind === '3bm') {
+    varHint = payloadLink
+      ? ' 3BM: declare Bypass + OS_Type; static affiliates baked; Bet365 via ExtraLinks; no [%bet365_cta_url%].'
+      : ' 3BM: declare Bypass; all section affiliates baked; no CTA URL variables.';
+  }
   return {
     // Operation hint for the (future) sync layer.
     operation: dbaTemplate.gam_creative_template_id ? 'UPDATE' : 'CREATE',
     id: dbaTemplate.gam_creative_template_id || null,
-    name: `DBA: ${dbaTemplate.name} (${dbaTemplate.sizeId})`,
-    description: `Auto-generated from CMS template ${dbaTemplate.id}. Layout file: ${file}.${bakedFor}${varHint} Body-end feed bootstrap + sample matches for GAM preview.`,
+    name: kind === '3bm'
+      ? `DBA 3BM: ${dbaTemplate.name}`
+      : `DBA: ${dbaTemplate.name} (${dbaTemplate.sizeId})`,
+    description: `Auto-generated from CMS template ${dbaTemplate.id}. Layout file: ${file}.${bakedFor}${varHint}`,
     sourceFile: file,
     status: 'ACTIVE',
     type: 'USER_DEFINED',
@@ -344,6 +411,7 @@ function buildCreativeTemplate(dbaTemplate, options = {}) {
     bakeValidation,
     bakedInline: inline,
     payloadLink,
+    kind,
     isInterstitial: isInterstitialSize(dbaTemplate.sizeId),
     isNativeEligible: false,
     isSafeFrameCompatible: true,

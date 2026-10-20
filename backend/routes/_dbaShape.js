@@ -50,17 +50,22 @@ function bookmakerRowToJson(row, variantRows) {
 function templateRowToJson(row, countries = []) {
   // Legacy interstitial id 640x1280 → AdOps inventory 320x480 (preview canvas 640×1280).
   const sizeId = normalizeSizeId(row.size_id);
-  const sizeLabel = sizeId === INTERSTITIAL_SIZE_ID
-    ? 'Interstitial · 640×1280'
-    : (row.size_label || sizeId);
+  const config = parseMaybeJson(row.config) || {};
+  const kind = config.kind === '3bm' ? '3bm' : 'standard';
+  const sizeLabel = kind === '3bm'
+    ? (row.size_label || '3-Bookie MPU · fluid')
+    : (sizeId === INTERSTITIAL_SIZE_ID
+      ? 'Interstitial · 640×1280'
+      : (row.size_label || sizeId));
   return {
     id: row.id,
     name: row.name,
     sizeId,
     size: sizeLabel,
+    kind,
     status: row.status,
     bookmakerId: row.bookmaker_id,
-    config: parseMaybeJson(row.config) || {},
+    config,
     countries,
     modified: isoOrNull(row.modified),
     modifiedBy: row.modified_by,
