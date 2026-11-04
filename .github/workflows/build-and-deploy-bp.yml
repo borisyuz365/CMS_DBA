@@ -9,6 +9,7 @@ on:
         type: choice
         options:
           - cms-bp-prod
+          - cms-bp-qa
 
 jobs:
   # environment: cannot be set on a `uses:` job, so a dedicated setup job reads
