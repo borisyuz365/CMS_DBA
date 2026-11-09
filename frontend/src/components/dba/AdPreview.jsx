@@ -1112,25 +1112,18 @@ export default function AdPreview({
     return wrap(
       <>
         <Box sx={logoWrapSx}>
-          {logoUrl ? (
-            <Box
-              component="img"
-              src={logoUrl}
-              alt=""
-              style={{ height: 28, width: 'auto', display: 'block', flexShrink: 0 }}
-              sx={{
-                height: '28px !important',
-                width: 'auto',
-                minHeight: '28px',
-                objectFit: 'contain',
-                objectPosition: 'center',
-                display: 'block',
-                flexShrink: 0,
-              }}
-            />
-          ) : (
-            <LogoThumb bg={bookmaker.logoBg} fg={bookmaker.logoFg} initials={bookmaker.initials} size={34} height={28} radius={6} bare />
-          )}
+          {/* Fixed box (matches GAM .logo 51×42 scaled to 28px tall) so NoBG
+              and with-BG Cloudinary assets render at the same visual size. */}
+          <LogoThumb
+            bg={bookmaker.logoBg}
+            fg={bookmaker.logoFg}
+            initials={bookmaker.initials}
+            imageUrl={logoUrl}
+            size={34}
+            height={28}
+            radius={6}
+            bare
+          />
         </Box>
         <Box ref={mpuStackRef} sx={stackSx}>
           {renderMatchCarousel(d, {
