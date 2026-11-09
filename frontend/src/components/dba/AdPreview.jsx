@@ -66,7 +66,7 @@ const BANNER = {
     // Welcome-offer slide
     welcome: { headFont: 13, subFont: 9, ctaFont: 10 },
     // Non-Brazil corner legal strip
-    legal: { fontSize: 6, badgeSize: 11, logoH: 7 },
+    legal: { fontSize: 5, badgeSize: 10, logoH: 6 },
   },
   brazil: {
     logoSize: 52,
@@ -90,6 +90,51 @@ const BANNER = {
     legal: { fontSize: 4.5, badgeSize: 9 },
   },
 };
+
+/** Non-Brazil legal strip copy — fills leftover width, wraps to 2 lines, shrinks to fit. */
+function FitLegalStripText({ text, baseFont, minFont = 4.5, align = 'right', sx }) {
+  const ref = useRef(null);
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el || !text) return undefined;
+    const lineH = 1.15;
+    const maxH = baseFont * lineH * 2;
+    el.style.fontSize = `${baseFont}px`;
+    el.style.maxHeight = `${maxH}px`;
+    let size = baseFont;
+    // Shrink until the clamped box no longer overflows vertically/horizontally.
+    while (size > minFont && (el.scrollHeight > maxH + 0.5 || el.scrollWidth > el.clientWidth + 0.5)) {
+      size -= 0.25;
+      el.style.fontSize = `${size}px`;
+      el.style.maxHeight = `${size * lineH * 2}px`;
+    }
+    return undefined;
+  }, [text, baseFont, minFont]);
+  return (
+    <Box
+      ref={ref}
+      component="span"
+      sx={{
+        flex: '1 1 auto',
+        minWidth: 0,
+        textAlign: align,
+        fontSize: baseFont,
+        lineHeight: 1.15,
+        display: '-webkit-box',
+        WebkitBoxOrient: 'vertical',
+        WebkitLineClamp: 2,
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'normal',
+        overflowWrap: 'anywhere',
+        wordBreak: 'normal',
+        ...sx,
+      }}
+    >
+      {text}
+    </Box>
+  );
+}
 
 // 18+ age-restriction badge. The DBA repo doesn't ship a dedicated 18+ asset
 // (production uses plain text), so we render it as a styled badge in pure CSS:
@@ -414,26 +459,29 @@ function MatchRow({ match, config, d, syncFonts = false, fillHeight = false, out
   }, [match.home.name, match.away.name, d.teamFont, syncFonts]);
 
   const wrapNames = !!d.wrapNames;
+  // MPU: wrap long names onto 2 lines at a smaller font. Interstitial uses
+  // wrapNames for its own card chrome / VS layout (no name row).
+  const wrapTeamNames = !!d.wrapTeamNames || wrapNames;
   // Interstitial shows a stylized "VS" (smaller, heavier); MPU keeps the plain dash.
   const vsText = wrapNames ? 'VS' : TEAM_VS;
   const nameCrestGap = d.teamsGap;
   const xSideGap = d.xSideGap ?? Math.round(nameCrestGap * 2);
-  // Push 1 / 2 outward (toward the crests) so they don't sit on the dash.
+  // Push 1 / 2 toward the inward crests (crest + gap from the dash).
   const oddsInset = nameCrestGap + d.crest;
   const slotSx = (align) => ({
-    flex: wrapNames ? '1 1 auto' : '0 1 auto', minWidth: 0,
+    flex: wrapTeamNames ? '1 1 auto' : '0 1 auto', minWidth: 0,
     textAlign: align,
     display: 'flex', alignItems: 'center',
     justifyContent: align === 'right' ? 'flex-end' : 'flex-start',
-    minHeight: d.teamFont * 1.1,
+    minHeight: wrapTeamNames ? d.teamFont * 1.15 * 2 : d.teamFont * 1.1,
     overflow: 'hidden',
   });
   const textSx = {
     maxWidth: '100%',
     fontSize: d.teamFont, fontWeight: wrapNames ? 500 : 600, lineHeight: 1.15,
-    ...(wrapNames
+    ...(wrapTeamNames
       ? {
-          // bwin reference: wrap long names to 2 lines, then ellipsize.
+          // Long names wrap to 2 lines, then ellipsize.
           display: '-webkit-box',
           WebkitBoxOrient: 'vertical',
           WebkitLineClamp: 2,
@@ -523,7 +571,8 @@ function MatchRow({ match, config, d, syncFonts = false, fillHeight = false, out
         </Box>
       ) : (
         <>
-          {/* MPU: crests flank the names; odds sit under the crest–name clusters. */}
+          {/* MPU: names on the outer edges, crests inward toward the dash;
+              odds sit under the crest–name clusters. */}
           <Box sx={{ display: 'flex', alignItems: 'center', minWidth: 0, flexShrink: 0, width: '100%' }}>
             <Box sx={{
               flex: 1, minWidth: 0, width: 0,
@@ -531,13 +580,14 @@ function MatchRow({ match, config, d, syncFonts = false, fillHeight = false, out
               display: 'flex', alignItems: 'center', overflow: 'hidden',
             }}>
               <Box sx={{
-                display: 'flex', alignItems: 'center', gap: `${nameCrestGap}px`,
+                display: 'flex', alignItems: 'center', justifyContent: 'flex-end',
+                gap: `${nameCrestGap}px`,
                 maxWidth: '100%', minWidth: 0, width: '100%',
               }}>
-                <Box sx={{ flexShrink: 0 }}><TeamCrest team={match.home} size={d.crest} /></Box>
                 <Box sx={slotSx('right')}>
                   <Box ref={homeRef} component="span" data-team-name="home" sx={textSx}>{match.home.name}</Box>
                 </Box>
+                <Box sx={{ flexShrink: 0 }}><TeamCrest team={match.home} size={d.crest} /></Box>
               </Box>
             </Box>
             <Box sx={{
@@ -550,13 +600,14 @@ function MatchRow({ match, config, d, syncFonts = false, fillHeight = false, out
               display: 'flex', alignItems: 'center', overflow: 'hidden',
             }}>
               <Box sx={{
-                display: 'flex', alignItems: 'center', gap: `${nameCrestGap}px`,
+                display: 'flex', alignItems: 'center', justifyContent: 'flex-start',
+                gap: `${nameCrestGap}px`,
                 maxWidth: '100%', minWidth: 0, width: '100%',
               }}>
+                <Box sx={{ flexShrink: 0 }}><TeamCrest team={match.away} size={d.crest} /></Box>
                 <Box sx={slotSx('left')}>
                   <Box ref={awayRef} component="span" data-team-name="away" sx={textSx}>{match.away.name}</Box>
                 </Box>
-                <Box sx={{ flexShrink: 0 }}><TeamCrest team={match.away} size={d.crest} /></Box>
               </Box>
             </Box>
           </Box>
@@ -725,6 +776,29 @@ export default function AdPreview({
       <Box component="span" sx={{ whiteSpace: 'normal', overflow: 'hidden', letterSpacing: '0.01em', flex: 1, minWidth: 0 }}>
         {brazilLegalText}
       </Box>
+    </Box>
+  );
+
+  /** Non-Brazil corner strip — 18+ + flexible disclaimer that fits the footer slot. */
+  const renderLegalStrip = ({
+    left, right, bottom, fontSize, badgeSize, logoH, gap = '3px', text,
+  }) => (
+    <Box sx={{
+      position: 'absolute', left, right, bottom, zIndex: 2,
+      display: 'flex', alignItems: 'center', gap: '6px',
+      fontSize, color: config.legal?.color || config.text, opacity: 0.85,
+      pointerEvents: 'none',
+    }}>
+      <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', gap, flexShrink: 0 }}>
+        {config.legal?.logo && <Box component="img" src={config.legal.logo} alt="" sx={{ height: logoH ?? Math.max(7, badgeSize * 0.6), width: 'auto' }} />}
+        <Age18PlusBadge size={badgeSize} />
+      </Box>
+      <FitLegalStripText
+        text={text || config.legal?.text || '18+ · BeGambleAware.org'}
+        baseFont={fontSize}
+        minFont={Math.max(4, fontSize * 0.55)}
+        sx={{ textDecoration: 'none' }}
+      />
     </Box>
   );
 
@@ -914,9 +988,10 @@ export default function AdPreview({
     // Sizes: edit BANNER.default / BANNER.brazil at the top of this file.
     const b = useBrazilBand ? BANNER.brazil : BANNER.default;
     const hasLegalStrip = !!(config.legal?.enabled && !useBrazilBand);
+    // Non-Brazil strip can wrap to 2 lines — clear content above it.
     const footerClearance = useBrazilBand
       ? brazilBandH + b.contentGap
-      : (hasLegalStrip ? b.legal.badgeSize + 2 : 2);
+      : (hasLegalStrip ? Math.ceil(b.legal.fontSize * 1.15 * 2) + 3 : 2);
     const lift = useBrazilBand ? (b.lift || 0) : 0;
     const sideColSx = {
       display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -974,22 +1049,11 @@ export default function AdPreview({
             nothing gets clipped by the rounded corners. */}
         {config.legal && config.legal.enabled && (
           useBrazilBand ? renderBrazilLegalBand(brazilBandH, b.legal.fontSize, b.legal.badgeSize) : (
-          <Box sx={{
-            position: 'absolute', left: legalSideInset, right: legalSideInset, bottom: legalBottomInset,
-            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-            fontSize: b.legal.fontSize, color: config.legal.color || config.text, opacity: 0.85,
-            pointerEvents: 'none',
-          }}>
-            <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
-              {config.legal.logo && <Box component="img" src={config.legal.logo} alt="" sx={{ height: b.legal.logoH, width: 'auto' }} />}
-              <Age18PlusBadge size={b.legal.badgeSize} />
-            </Box>
-            {config.legal.text && (
-              <Box component="span" sx={{ maxWidth: '60%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                {config.legal.text}
-              </Box>
-            )}
-          </Box>
+            config.legal.text ? renderLegalStrip({
+              left: legalSideInset, right: legalSideInset, bottom: legalBottomInset,
+              fontSize: b.legal.fontSize, badgeSize: b.legal.badgeSize, logoH: b.legal.logoH, gap: '2px',
+              text: config.legal.text,
+            }) : null
           )
         )}
       </Box>
@@ -1000,11 +1064,11 @@ export default function AdPreview({
   const renderMPU = () => {
     const d = useBrazilBand
       ? { cardRadius: 11, cardPad: '8px 10px 9px', pillH: 14, pillFont: 8,
-          teamsGap: 5, xSideGap: 10, teamFont: 11, crest: 17.25, xFont: 11,
-          oddsGap: 10, oddsFont: 9, oddsDot: 4, rowGap: 4 }
+          teamsGap: 5, xSideGap: 10, teamFont: 9, crest: 17.25, xFont: 10,
+          oddsGap: 10, oddsFont: 9, oddsDot: 4, rowGap: 4, wrapTeamNames: true }
       : { cardRadius: 12, cardPad: '8px 12px 10px', pillH: 16, pillFont: 9,
-          teamsGap: 6, xSideGap: 12, teamFont: 12, crest: 20.7, xFont: 12,
-          oddsGap: 12, oddsFont: 10, oddsDot: 5, rowGap: 6 };
+          teamsGap: 6, xSideGap: 12, teamFont: 10, crest: 20.7, xFont: 11,
+          oddsGap: 12, oddsFont: 10, oddsDot: 5, rowGap: 5, wrapTeamNames: true };
     const sidePad = useBrazilBand ? MPU_LAYOUT.sidePad.brazil : MPU_LAYOUT.sidePad.default;
     const logoSpec = useBrazilBand ? MPU_LAYOUT.logo.brazil : MPU_LAYOUT.logo.default;
     const pillPad = useBrazilBand ? MPU_LAYOUT.pillPad.brazil : MPU_LAYOUT.pillPad.default;
@@ -1015,7 +1079,12 @@ export default function AdPreview({
     const dotsGap = 4;
     const ctaGapAboveDots = 4;
     const hasLegalStrip = !!(config.legal?.enabled && !useBrazilBand);
-    const dotsBottom = useBrazilBand ? brazilBandH + dotsGap : (hasLegalStrip ? 12 : 6);
+    // Non-Brazil strip can wrap to 2 lines — keep dots/CTA clear of that band.
+    const legalStripReserve = 18;
+    const legalStripFont = 5.5;
+    const dotsBottom = useBrazilBand
+      ? brazilBandH + dotsGap
+      : (hasLegalStrip ? legalStripReserve : 6);
     const ctaBottom = dotsBottom + dotsRowH + ctaGapAboveDots;
     const bottomPad = ctaBottom + ctaH;
     // MPU logo: hard 28px image height, centered in the mid-gap band.
@@ -1080,17 +1149,10 @@ export default function AdPreview({
         }}>{config.ctaText}</Box>
         {renderInAdDots({ rowHeight: dotsRowH, dotSize: 4, absoluteBottom: dotsBottom })}
         {config.legal && config.legal.enabled && (
-          useBrazilBand ? renderBrazilLegalBand(brazilBandH, 7, 11) : (
-          <Box sx={{ position: 'absolute', left: 6, right: 6, bottom: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 7, color: config.legal.color || config.text, opacity: 0.85 }}>
-            <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
-              {config.legal.logo && <Box component="img" src={config.legal.logo} alt="" sx={{ height: 8, width: 'auto' }} />}
-              <Age18PlusBadge size={13} />
-            </Box>
-            <Box component="span" sx={{ maxWidth: '70%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-              {config.legal.text || 'Jogue com responsabilidade'}
-            </Box>
-          </Box>
-          )
+          useBrazilBand ? renderBrazilLegalBand(brazilBandH, 7, 11) : renderLegalStrip({
+            left: 6, right: 6, bottom: 2, fontSize: legalStripFont, badgeSize: 11, logoH: 7,
+            text: config.legal.text || '18+ · BeGambleAware.org',
+          })
         )}
       </>,
       // No horizontal pad (GAM .ad padding:0). sidePad is on stack/CTA only.
@@ -1220,17 +1282,11 @@ export default function AdPreview({
         })}
         {ctaZone}
         {useBrazilBand ? renderBrazilLegalBand(brazilBandH, vw(2.0), 31, 600) : (
-          config.legal && config.legal.enabled ? (
-          <Box sx={{ position: 'absolute', bottom: '0.5%', left: '1%', right: '1%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: vw(2.4), color: config.legal.color || config.text, opacity: 0.85 }}>
-            <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-              {config.legal.logo && <Box component="img" src={config.legal.logo} alt="" sx={{ height: 22, width: 'auto' }} />}
-              <Age18PlusBadge size={31} />
-            </Box>
-            <Box component="span" sx={{ maxWidth: '70%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-              {config.legal.text || 'Jogue com responsabilidade'}
-            </Box>
-          </Box>
-          ) : null
+          config.legal && config.legal.enabled ? renderLegalStrip({
+            left: '1%', right: '1%', bottom: '0.5%',
+            fontSize: vw(2.4), badgeSize: 31, logoH: 22, gap: '8px',
+            text: config.legal.text || '18+ · BeGambleAware.org',
+          }) : null
         )}
       </>,
       `40px ${sidePad}px ${bottomPad}px`
@@ -1292,7 +1348,8 @@ export default function AdPreview({
     const ctaH = useBrazilBand ? 26 : 32;
     const gap = useBrazilBand ? 4 : 6;
     const topPad = useBrazilBand ? 8 : 10;
-    const bottomPad = useBrazilBand ? brazilBandH + 2 : 14;
+    const hasLegalStrip = !!(config.legal?.enabled && !useBrazilBand);
+    const bottomPad = useBrazilBand ? brazilBandH + 2 : (hasLegalStrip ? 20 : 14);
     return wrap(
       <>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: useBrazilBand ? '4px' : '8px' }}>
@@ -1327,15 +1384,10 @@ export default function AdPreview({
           ? { rowHeight: 7, dotSize: 3, mt: 3 }
           : { rowHeight: 10, dotSize: 4, mt: 8 })}
         {config.legal && config.legal.enabled && (
-          useBrazilBand ? renderBrazilLegalBand(brazilBandH, 7, 11) : (
-          <Box sx={{ position: 'absolute', left: 6, right: 6, bottom: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 7, color: config.legal.color || config.text, opacity: 0.85 }}>
-            <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
-              {config.legal.logo && <Box component="img" src={config.legal.logo} alt="" sx={{ height: 8, width: 'auto' }} />}
-              <Age18PlusBadge size={13} />
-            </Box>
-            <Box component="span" sx={{ maxWidth: '70%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{config.legal.text || 'Jogue com responsabilidade'}</Box>
-          </Box>
-          )
+          useBrazilBand ? renderBrazilLegalBand(brazilBandH, 7, 11) : renderLegalStrip({
+            left: 6, right: 6, bottom: 2, fontSize: 5.5, badgeSize: 11, logoH: 7,
+            text: config.legal.text || '18+ · BeGambleAware.org',
+          })
         )}
       </>,
       `0 2.5% ${bottomPad}px`,
@@ -1396,17 +1448,11 @@ export default function AdPreview({
           <Box sx={{ mt: `${vw(2)}px`, fontSize: vw(2.5), opacity: 0.55, textAlign: 'center', lineHeight: 1.3 }}>{woTerms}</Box>
         </Box>
         {useBrazilBand ? renderBrazilLegalBand(brazilBandH, vw(2.0), 31, 600) : (
-          config.legal && config.legal.enabled ? (
-          <Box sx={{ position: 'absolute', bottom: '0.5%', left: '1%', right: '1%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: vw(2.4), color: config.legal.color || config.text, opacity: 0.85 }}>
-            <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-              {config.legal.logo && <Box component="img" src={config.legal.logo} alt="" sx={{ height: 22, width: 'auto' }} />}
-              <Age18PlusBadge size={31} />
-            </Box>
-            <Box component="span" sx={{ maxWidth: '70%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-              {config.legal.text || 'Jogue com responsabilidade'}
-            </Box>
-          </Box>
-          ) : null
+          config.legal && config.legal.enabled ? renderLegalStrip({
+            left: '1%', right: '1%', bottom: '0.5%',
+            fontSize: vw(2.4), badgeSize: 31, logoH: 22, gap: '8px',
+            text: config.legal.text || '18+ · BeGambleAware.org',
+          }) : null
         )}
       </>,
       `0 2.5% ${bottomPad}px`,

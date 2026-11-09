@@ -88,10 +88,13 @@
 
   function teamLogoUrl(id) { return id != null ? (TEAM_LOGO_BASE + id) : null; }
 
-  // One side of the matchup. Crests sit on the OUTER sides of the names:
-  // home: [logo][name] · – · away: [name][logo].
+  // One side of the matchup.
+  // MPU: names on the OUTER edges, crests inward toward the dash —
+  //   home: [name][logo] · – · away: [logo][name].
+  // Banner: crests stay on the outer sides —
+  //   home: [logo][name] · – · away: [name][logo].
   // Name sits in a flex slot so long names ellipsize without stretching the ad.
-  function teamBlock(comp, side) {
+  function teamBlock(comp, side, layout) {
     var name = (comp && (comp.SName || comp.Name || comp.name)) || '';
     var id = comp && (comp.ID != null ? comp.ID : comp.id);
     var url = teamLogoUrl(id);
@@ -102,7 +105,10 @@
     if (url) {
       logoEl = el('img', { 'class': 'dba-team-logo', src: url, alt: '' });
     }
-    if (side === 'home') {
+    // Banner keeps crests outside; MPU (default) puts crests inward.
+    var crestsOutside = layout === 'banner';
+    var crestFirst = crestsOutside ? (side === 'home') : (side === 'away');
+    if (crestFirst) {
       if (logoEl) children.push(logoEl);
       children.push(nameSlot);
     } else {
@@ -195,22 +201,25 @@
         'white-space: nowrap; display: inline-flex; align-items: center; justify-content: center;' +
       '}' +
       '.matches .dba-pill-text { display: block; line-height: 1; transform: translateY(0.5px); }' +
-      '.matches .dba-teams { display: flex; align-items: center; gap: 0; margin-top: 0; font-size: 12px; font-weight: 600; min-width: 0; }' +
+      '.matches .dba-teams { display: flex; align-items: center; gap: 0; margin-top: 0; font-size: 10px; font-weight: 600; min-width: 0; }' +
       '.matches .dba-teamblock { display: flex; align-items: center; gap: 6px; flex: 1; min-width: 0; }' +
       '.matches .dba-teamblock-home { justify-content: flex-end; }' +
       '.matches .dba-teamblock-away { justify-content: flex-start; }' +
       '.matches .dba-team-logo { width: 20.7px; height: 20.7px; flex: 0 0 auto; object-fit: contain; border-radius: 50%; background: rgba(255,255,255,0.08); }' +
       '.matches .dba-team-name-slot {' +
-        'flex: 0 1 auto; min-width: 0; overflow: hidden;' +
+        'flex: 1 1 auto; min-width: 0; overflow: hidden;' +
         'display: flex; align-items: center;' +
       '}' +
       '.matches .dba-teamblock-home .dba-team-name-slot { justify-content: flex-end; }' +
       '.matches .dba-teamblock-away .dba-team-name-slot { justify-content: flex-start; }' +
+      /* MPU: smaller type + 2-line clamp so long names fit beside inward crests. */ +
       '.matches .dba-team-name {' +
-        'display: block; max-width: 100%; min-width: 0;' +
-        'overflow: hidden; text-overflow: ellipsis; white-space: nowrap;' +
+        'display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;' +
+        'max-width: 100%; min-width: 0; line-height: 1.15;' +
+        'overflow: hidden; text-overflow: ellipsis; white-space: normal;' +
+        'overflow-wrap: break-word; word-break: normal;' +
       '}' +
-      '.matches .dba-x { font-size: 12px; font-weight: 700; opacity: 0.65; flex: 0 0 auto; margin: 0 12px; }' +
+      '.matches .dba-x { font-size: 11px; font-weight: 700; opacity: 0.65; flex: 0 0 auto; margin: 0 12px; }' +
       '.matches .dba-odds { display: flex; align-items: center; margin-top: 0; min-width: 0; min-height: 14px; font-size: 10px; font-weight: 700; line-height: 1.2; overflow: visible; }' +
       '.matches .dba-odd-slot { display: flex; align-items: center; min-width: 0; }' +
       '.matches .dba-odd-slot-home { flex: 1; justify-content: flex-end; padding-right: 24px; }' +
@@ -226,10 +235,10 @@
       '.ad-shell.legal-band .ad-stack .matches .dba-card { border-radius: 11px; padding: 8px 10px 9px; gap: 4px; }' +
       '.ad-shell.legal-band .ad-stack .matches .dba-pill { padding: 0 10px; height: 14px; font-size: 8px; }' +
       '.ad-shell.legal-band .ad-stack .matches { flex: 0 0 auto; margin-top: 0; margin-bottom: 4px; padding-top: 0; overflow: hidden; }' +
-      '.ad-shell.legal-band .ad-stack .matches .dba-teams { gap: 0; margin-top: 0; font-size: 11px; }' +
+      '.ad-shell.legal-band .ad-stack .matches .dba-teams { gap: 0; margin-top: 0; font-size: 9px; }' +
       '.ad-shell.legal-band .ad-stack .matches .dba-teamblock { gap: 5px; }' +
       '.ad-shell.legal-band .ad-stack .matches .dba-team-logo { width: 17.25px; height: 17.25px; }' +
-      '.ad-shell.legal-band .ad-stack .matches .dba-x { font-size: 11px; margin: 0 10px; }' +
+      '.ad-shell.legal-band .ad-stack .matches .dba-x { font-size: 10px; margin: 0 10px; }' +
       '.ad-shell.legal-band .ad-stack .matches .dba-odds { margin-top: 0; font-size: 9px; }' +
       '.ad-shell.legal-band .ad-stack .matches .dba-odd-slot-home { padding-right: 20px; }' +
       '.ad-shell.legal-band .ad-stack .matches .dba-odd-slot-draw { margin: 0 10px; }' +
@@ -264,6 +273,11 @@
       '}' +
       '.matches[data-layout="banner"] .dba-teamblock-home { left: 0; right: 50%; }' +
       '.matches[data-layout="banner"] .dba-teamblock-away { left: 50%; right: 0; }' +
+      '.matches[data-layout="banner"] .dba-team-name-slot { flex: 0 1 auto; }' +
+      '.matches[data-layout="banner"] .dba-team-name {' +
+        'display: block; -webkit-line-clamp: unset; -webkit-box-orient: initial;' +
+        'white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1;' +
+      '}' +
       '.matches[data-layout="banner"] .dba-team-logo { width: 12.65px; height: 12.65px; flex: 0 0 auto; }' +
       '.matches[data-layout="banner"] .dba-x {' +
         'position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);' +
@@ -356,10 +370,13 @@
       '.ad-shell > .dba-dots-shell[data-layout="mpu"] { position: absolute; left: 0; right: 0; bottom: 12px; height: 10px; margin-top: 0; gap: 6px; z-index: 5; }' +
       '.ad-shell > .dba-dots-shell[data-layout="mpu"] .dba-dot { height: 4px; width: 4px; }' +
       '.ad-shell > .dba-dots-shell[data-layout="mpu"] .dba-dot-active { width: 9.6px; }' +
+      '.ad-shell.legal-strip > .dba-dots-shell[data-layout="mpu"] { bottom: 18px; }' +
       '.ad-shell.legal-band > .dba-dots-shell[data-layout="mpu"] { bottom: 29px; }' +
       '.ad .dba-dots[data-layout="mpu"] { position: absolute; left: 0; right: 0; bottom: 12px; height: 10px; margin-top: 0; gap: 6px; z-index: 2; }' +
       '.ad .dba-dots[data-layout="mpu"] .dba-dot { height: 4px; width: 4px; }' +
       '.ad .dba-dots[data-layout="mpu"] .dba-dot-active { width: 9.6px; }' +
+      '.ad-shell.legal-strip .ad .dba-dots[data-layout="mpu"] { bottom: 18px; }' +
+      '.ad-shell.legal-strip .ad-stack ~ .cta { bottom: 32px; }' +
       '.ad-shell.legal-band .ad-stack ~ .cta { position: absolute; left: 12px; right: 12px; bottom: 43px; margin-top: 0; z-index: 2; }' +
       '.ad .dba-dots[data-layout="interstitial"] { height: 2.8em; min-height: 10px; max-height: 4%; margin: 0.6% 0; gap: 0.8em; }' +
       '.ad .dba-dots[data-layout="interstitial"] .dba-dot { height: 0.8em; width: 0.8em; min-height: 4px; min-width: 4px; }' +
@@ -434,9 +451,9 @@
       ]),
       el('div', { 'class': 'dba-v-gap' }),
       el('div', { 'class': 'dba-teams' }, [
-        teamBlock(comps[0], 'home'),
+        teamBlock(comps[0], 'home', layout),
         el('span', { 'class': 'dba-x', text: '–' }),
-        teamBlock(comps[1], 'away'),
+        teamBlock(comps[1], 'away', layout),
       ]),
       el('div', { 'class': 'dba-v-gap' }),
       el('div', { 'class': 'dba-odds' }, oddNodes),
@@ -765,6 +782,29 @@
     return minLegal;
   }
 
+  // Non-Brazil legal strip: shrink disclaimer text so it fits 2 lines in the
+  // leftover width beside the 18+ mark (mirrors CMS FitLegalStripText).
+  function fitLegalStripText(shell) {
+    if (!shell || !shell.classList.contains('legal-strip')) return;
+    var text = shell.querySelector('.legal.legal-strip .text');
+    if (!text) return;
+    var cs = window.getComputedStyle(text);
+    var base = parseFloat(cs.fontSize) || 7;
+    if (!(base > 0)) return;
+    var min = Math.max(4, base * 0.55);
+    var lineH = 1.15;
+    var size = base;
+    text.style.fontSize = size + 'px';
+    text.style.maxHeight = (size * lineH * 2) + 'px';
+    var guard = 40;
+    while (guard-- > 0 && size > min) {
+      if (text.scrollHeight <= size * lineH * 2 + 0.5 && text.scrollWidth <= text.clientWidth + 0.5) break;
+      size -= 0.25;
+      text.style.fontSize = size + 'px';
+      text.style.maxHeight = (size * lineH * 2) + 'px';
+    }
+  }
+
   function applyShellMetrics() {
     var shell = document.querySelector('.ad-shell');
     if (!shell) return null;
@@ -795,6 +835,7 @@
     if (shell.classList.contains('legal-band')) {
       applyLegalBandMetrics(shell, h);
     }
+    fitLegalStripText(shell);
     return {
       cardGapPx: cardGapPx, tightGapPx: tightGapPx,
       legalBand: shell.classList.contains('legal-band'),
