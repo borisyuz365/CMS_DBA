@@ -191,10 +191,35 @@
       '}' +
       '.ad-stack .matches .dba-slide { overflow: hidden; }' +
       '.matches[data-layout="banner"] .dba-slide { overflow: hidden; }' +
-      /* Welcome offer = carousel slide 0 (baked data-welcome-* on .matches). */ +
+      /* Welcome offer = carousel slide 0 (baked data-welcome-* on .matches).
+         NOTE: never put `+` immediately after a block comment — JS parses
+         `+ '.foo'` as unary-plus → NaN and corrupts the whole stylesheet. */
       '.matches .dba-slide-welcome {' +
         'justify-content: center; align-items: stretch; gap: 6px;' +
-        'padding: 2px 2px 0; height: 100%; text-align: center;' +
+        'padding: 4px 2px 0; min-height: 120px; height: 100%; text-align: center;' +
+        'box-sizing: border-box;' +
+      '}' +
+      /* When welcome is enabled, expand the match viewport to the CTA band so
+         the offer slide (and match slides) fill the ad instead of overflowing
+         a zero-height .matches box. */
+      '.ad-shell.dba-has-welcome .ad-stack {' +
+        'top: 8px; bottom: 62px; left: 14px; right: 14px;' +
+        'transform: none; height: auto;' +
+        'display: flex; flex-direction: column;' +
+      '}' +
+      '.ad-shell.legal-band.dba-has-welcome .ad-stack {' +
+        'left: 12px; right: 12px; bottom: 69px;' +
+      '}' +
+      '.ad-shell.legal-strip.dba-has-welcome .ad-stack { bottom: 68px; }' +
+      '.ad-shell.dba-has-welcome .logo-wrap {' +
+        'position: relative; bottom: auto; left: auto; margin: 0 auto 6px;' +
+        'transform: none; flex: 0 0 auto;' +
+      '}' +
+      '.ad-shell.dba-has-welcome .ad-stack .matches {' +
+        'flex: 1 1 auto; min-height: 0; height: 100%; position: relative;' +
+      '}' +
+      '.ad-shell.dba-has-welcome .matches .dba-slide:not(.dba-slide-welcome) {' +
+        'justify-content: center; height: 100%;' +
       '}' +
       '.matches .dba-welcome-top {' +
         'display: flex; align-items: center; justify-content: space-between;' +
@@ -253,10 +278,8 @@
         'white-space: nowrap; display: inline-flex; align-items: center; justify-content: center;' +
       '}' +
       '.matches .dba-pill-text { display: block; line-height: 1; transform: translateY(0.5px); }' +
-      /* MPU team row: equal-width halves (flex-basis 0) so crests sit at the
-         same distance from the dash regardless of name length — matches
-         AdPreview MatchRow. Crest size via --dba-mpu-crest; odds inset =
-         crest + name/crest gap so 1 / X / 2 stay under the crest columns. */ +
+      /* MPU team row: equal-width halves so crests sit at the same distance
+         from the dash (AdPreview MatchRow parity). */
       '.matches {' +
         '--dba-mpu-crest: 20.7px;' +
         '--dba-mpu-crest-gap: 6px;' +
@@ -283,7 +306,7 @@
       '}' +
       '.matches .dba-teamblock-home .dba-team-name-slot { justify-content: flex-end; }' +
       '.matches .dba-teamblock-away .dba-team-name-slot { justify-content: flex-start; }' +
-      /* MPU: smaller type + 2-line clamp so long names fit beside inward crests. */ +
+      /* MPU: smaller type + 2-line clamp so long names fit beside inward crests. */
       '.matches .dba-team-name {' +
         'display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;' +
         'max-width: 100%; min-width: 0; line-height: 1.15;' +
@@ -713,24 +736,36 @@
     if (sliding) track.appendChild(slides[0].cloneNode(true));
 
     function measure() {
-      return node.clientWidth || node.offsetWidth || 0;
+      return {
+        w: node.clientWidth || node.offsetWidth || 0,
+        h: node.clientHeight || node.offsetHeight || 0,
+      };
     }
 
-    function applyLayout(w) {
+    function applyLayout(w, h) {
       if (!(w > 0)) return;
       var kids = track.children;
       var count = kids.length;
+      var fillH = h > 0 && (
+        node.getAttribute('data-welcome') === '1'
+        || node.getAttribute('data-layout') === 'interstitial'
+        || node.getAttribute('data-layout') === 'banner'
+      );
       for (var s = 0; s < count; s++) {
         kids[s].style.flex = '0 0 ' + w + 'px';
         kids[s].style.width = w + 'px';
         kids[s].style.minWidth = w + 'px';
         kids[s].style.maxWidth = w + 'px';
         kids[s].style.boxSizing = 'border-box';
-        if (!sliding && node.getAttribute('data-layout') === 'interstitial') {
+        if (fillH) {
+          kids[s].style.height = h + 'px';
+          kids[s].style.minHeight = h + 'px';
+        } else if (!sliding && node.getAttribute('data-layout') === 'interstitial') {
           kids[s].style.height = '100%';
         }
       }
       track.style.width = (count * w) + 'px';
+      if (fillH) track.style.height = h + 'px';
     }
 
     function setActive(idx, chromeDelayMs) {
@@ -753,10 +788,10 @@
     }
 
     function goTo(p, withTransition) {
-      var w = measure();
-      if (!(w > 0)) return;
-      applyLayout(w);
-      var tx = 'translate3d(-' + (p * w) + 'px, 0, 0)';
+      var m = measure();
+      if (!(m.w > 0)) return;
+      applyLayout(m.w, m.h);
+      var tx = 'translate3d(-' + (p * m.w) + 'px, 0, 0)';
       track.style.transition = withTransition
         ? ('transform ' + transitionMs + 'ms cubic-bezier(0.32, 0.72, 0.24, 1)')
         : 'none';
@@ -782,13 +817,13 @@
     }
 
     function start(attempt) {
-      var w = measure();
-      if (!(w > 0) && attempt < 60) {
+      var m = measure();
+      if (!(m.w > 0) && attempt < 60) {
         setTimeout(function () { start(attempt + 1); }, 50);
         return;
       }
-      applyLayout(Math.max(w, 1));
-      setActive(0);
+      applyLayout(Math.max(m.w, 1), m.h);
+      setActive(0, 0);
       goTo(0, false);
       scheduleAlign(node);
       if (!sliding) return;
@@ -1252,7 +1287,13 @@
     var layout = node.getAttribute('data-layout') || '';
     var slides = buildSlides(games, perSlide, layout);
     // Welcome offer is always slide 0; match pages follow (CMS AdPreview parity).
-    if (welcome) slides.unshift(welcome);
+    if (welcome) {
+      slides.unshift(welcome);
+      // Expand .ad-stack before the carousel measures heights.
+      var shell = node.closest && node.closest('.ad-shell');
+      if (shell) shell.classList.add('dba-has-welcome');
+      syncWelcomeChrome(node, 0);
+    }
     if (!slides.length) return;
     mountCarousel(node, slides, intervalMs, transitionMs);
     scheduleAlign(node);
