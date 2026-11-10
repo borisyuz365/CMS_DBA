@@ -12,18 +12,19 @@ const { isInterstitialSize } = require('../utils/dbaSizes');
 
 const TEMPLATES_DIR = path.join(__dirname, 'templates');
 
-// Maps a (sizeId, has-welcome-offer) shape to a template file name.
-// Add new variants as new files land in templates/.
+// Maps sizeId → layout HTML. Welcome offer is NOT a separate file — when
+// enabled it is baked onto `.matches` as data-welcome-* and dba-runtime
+// prepends it as carousel slide 0 (same chrome + match carousel as standard).
+// Legacy *-welcome.html files are kept for reference only.
 function templateFileFor(dbaTemplate) {
   const kind = dbaTemplate.kind || dbaTemplate.config?.kind;
   if (kind === '3bm') return '3bm-mpu.html';
   const sizeId = dbaTemplate.sizeId;
-  const hasWelcome = !!(dbaTemplate.config && dbaTemplate.config.welcomeOffer && dbaTemplate.config.welcomeOffer.enabled);
   const map = {
-    '300x250':       hasWelcome ? 'mpu-welcome.html'          : 'mpu-standard.html',
-    '320x480':       hasWelcome ? 'interstitial-welcome.html' : 'interstitial-standard.html',
-    '640x1280':      hasWelcome ? 'interstitial-welcome.html' : 'interstitial-standard.html',
-    '320x50':        hasWelcome ? 'banner-welcome.html'       : 'banner.html',
+    '300x250':  'mpu-standard.html',
+    '320x480':  'interstitial-standard.html',
+    '640x1280': 'interstitial-standard.html',
+    '320x50':   'banner.html',
   };
   return map[sizeId] || null;
 }
@@ -49,6 +50,7 @@ const INLINE_VARIABLE_NAMES = new Set([
   'disclaimer_url',
   'feed_url',
   'feed_extra_attrs',
+  'welcome_data_attrs',
   'runtime_url',
   'welcome_headline',
   'welcome_subtext',
@@ -156,6 +158,7 @@ const RAW_INLINE_NAMES = new Set([
   'disclaimer_url',
   'feed_url',
   'feed_extra_attrs',
+  'welcome_data_attrs',
   'runtime_url',
   'date_pill_bg',
   'date_pill_text_color',
@@ -384,7 +387,7 @@ function buildCreativeTemplate(dbaTemplate, options = {}) {
   snippet = makeSnippetSelfContained(snippet);
   // Visible bake stamp so ops can confirm the copied HTML is the current build
   // (GAM creatives do not auto-update when cms-dba redeploys).
-  const bakeStamp = `<!-- dba-snippet-v=2026-11-10-carousel-px sha=${String(process.env.GIT_SHA || process.env.GITHUB_SHA || 'local').slice(0, 12)} -->`;
+  const bakeStamp = `<!-- dba-snippet-v=2026-11-10-welcome-slide sha=${String(process.env.GIT_SHA || process.env.GITHUB_SHA || 'local').slice(0, 12)} -->`;
   if (snippet.includes('<!DOCTYPE html>') || snippet.includes('<!doctype html>')) {
     snippet = snippet.replace(/<!DOCTYPE html>/i, `${bakeStamp}\n<!DOCTYPE html>`);
   } else {

@@ -190,6 +190,54 @@
       '}' +
       '.ad-stack .matches .dba-slide { overflow: hidden; }' +
       '.matches[data-layout="banner"] .dba-slide { overflow: hidden; }' +
+      /* Welcome offer = carousel slide 0 (baked data-welcome-* on .matches). */ +
+      '.matches .dba-slide-welcome {' +
+        'justify-content: center; align-items: stretch; gap: 6px;' +
+        'padding: 2px 2px 0; height: 100%; text-align: center;' +
+      '}' +
+      '.matches .dba-welcome-top {' +
+        'display: flex; align-items: center; justify-content: space-between;' +
+        'flex-shrink: 0; gap: 8px;' +
+      '}' +
+      '.matches .dba-welcome-logo {' +
+        'width: 42px; height: 42px; flex-shrink: 0;' +
+        'background-size: contain; background-repeat: no-repeat; background-position: center;' +
+      '}' +
+      '.ad-shell.legal-band .matches .dba-welcome-logo { width: 32px; height: 32px; }' +
+      '.matches .dba-welcome-pill {' +
+        'padding: 3px 8px 1px; border-radius: 999px;' +
+        'font-size: 9px; font-weight: 800; line-height: 1;' +
+        'letter-spacing: 0.06em; text-indent: 0.06em;' +
+        'text-transform: uppercase; text-align: center; flex-shrink: 0;' +
+      '}' +
+      '.ad-shell.legal-band .matches .dba-welcome-pill { padding: 2px 6px 1px; font-size: 8px; }' +
+      '.matches .dba-welcome-copy {' +
+        'flex: 1 1 auto; display: flex; flex-direction: column;' +
+        'justify-content: center; align-items: center; gap: 6px;' +
+        'min-height: 0; padding: 0 4px; box-sizing: border-box;' +
+      '}' +
+      '.matches .dba-welcome-head {' +
+        'font-size: 18px; font-weight: 800; line-height: 1.05; letter-spacing: -0.02em;' +
+      '}' +
+      '.ad-shell.legal-band .matches .dba-welcome-head { font-size: 16px; }' +
+      '.matches .dba-welcome-sub { font-size: 11px; opacity: 0.8; line-height: 1.25; }' +
+      '.ad-shell.legal-band .matches .dba-welcome-sub { font-size: 10px; }' +
+      '.matches .dba-welcome-terms { font-size: 8px; opacity: 0.55; line-height: 1.2; }' +
+      '.ad-shell.legal-band .matches .dba-welcome-terms { font-size: 7px; }' +
+      '.matches[data-layout="banner"] .dba-welcome-head { font-size: 11px; }' +
+      '.matches[data-layout="banner"] .dba-welcome-sub { font-size: 8px; }' +
+      '.matches[data-layout="banner"] .dba-welcome-terms { font-size: 6px; }' +
+      '.matches[data-layout="banner"] .dba-welcome-logo { width: 22px; height: 22px; }' +
+      '.matches[data-layout="banner"] .dba-welcome-pill { font-size: 7px; padding: 2px 5px 1px; }' +
+      '.matches[data-layout="interstitial"] .dba-welcome-head { font-size: 22px; }' +
+      '.matches[data-layout="interstitial"] .dba-welcome-sub { font-size: 13px; }' +
+      '.matches[data-layout="interstitial"] .dba-welcome-terms { font-size: 10px; }' +
+      '.matches[data-layout="interstitial"] .dba-welcome-logo { width: 56px; height: 56px; }' +
+      '.ad-shell .logo-wrap {' +
+        'transition: opacity 700ms cubic-bezier(0.32, 0.72, 0.24, 1);' +
+      '}' +
+      '.ad-shell.dba-on-welcome .logo-wrap { opacity: 0; pointer-events: none; }' +
+      '.ad .cta { transition: opacity 180ms ease; }' +
       '.matches .dba-card {' +
         'background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.15);' +
         'border-radius: 12px; padding: 8px 12px 10px; position: relative;' +
@@ -474,6 +522,68 @@
     return slides;
   }
 
+  function readLogoBgUrl() {
+    var logoEl = document.querySelector('.ad .logo');
+    if (!logoEl) return '';
+    try {
+      var bg = window.getComputedStyle(logoEl).backgroundImage || '';
+      var m = bg.match(/url\(["']?(.*?)["']?\)/i);
+      return m ? m[1] : '';
+    } catch (e) {
+      return '';
+    }
+  }
+
+  /** Welcome offer as carousel slide 0 — baked via data-welcome-* on .matches. */
+  function buildWelcomeSlide(node) {
+    if (!node || node.getAttribute('data-welcome') !== '1') return null;
+    var headline = node.getAttribute('data-welcome-headline') || '';
+    var subtext = node.getAttribute('data-welcome-subtext') || '';
+    var terms = node.getAttribute('data-welcome-terms') || '';
+    var pillText = node.getAttribute('data-welcome-pill') || 'Welcome offer';
+    var pillBg = node.getAttribute('data-welcome-pill-bg') || '#FFC107';
+    var pillFg = node.getAttribute('data-welcome-pill-fg') || '#000000';
+    var logoUrl = readLogoBgUrl();
+    var logoStyle = logoUrl ? { backgroundImage: 'url("' + logoUrl + '")' } : {};
+    var top = el('div', { 'class': 'dba-welcome-top' }, [
+      el('div', { 'class': 'dba-welcome-logo', style: logoStyle }),
+      el('div', {
+        'class': 'dba-welcome-pill',
+        style: { background: pillBg, color: pillFg },
+        text: pillText,
+      }),
+    ]);
+    var copyKids = [];
+    if (headline) copyKids.push(el('div', { 'class': 'dba-welcome-head', text: headline }));
+    if (subtext) copyKids.push(el('div', { 'class': 'dba-welcome-sub', text: subtext }));
+    if (terms) copyKids.push(el('div', { 'class': 'dba-welcome-terms', text: terms }));
+    return el('div', { 'class': 'dba-slide dba-slide-welcome' }, [
+      top,
+      el('div', { 'class': 'dba-welcome-copy' }, copyKids),
+    ]);
+  }
+
+  function syncWelcomeChrome(node, activeIdx) {
+    var shell = node && node.closest ? node.closest('.ad-shell') : null;
+    var hasWelcome = !!(node && node.getAttribute('data-welcome') === '1');
+    if (shell) {
+      if (hasWelcome) shell.classList.add('dba-has-welcome');
+      else shell.classList.remove('dba-has-welcome');
+      if (hasWelcome && activeIdx === 0) shell.classList.add('dba-on-welcome');
+      else shell.classList.remove('dba-on-welcome');
+    }
+    var ad = node && node.closest ? node.closest('.ad') : null;
+    var cta = ad && ad.querySelector ? ad.querySelector('.cta') : null;
+    if (!cta) return;
+    if (!cta.getAttribute('data-cta-default')) {
+      cta.setAttribute('data-cta-default', (cta.textContent || '').trim());
+    }
+    var welcomeCta = node.getAttribute('data-welcome-cta') || '';
+    var defCta = cta.getAttribute('data-cta-default') || '';
+    if (hasWelcome && activeIdx === 0 && welcomeCta) cta.textContent = welcomeCta;
+    else if (defCta) cta.textContent = defCta;
+  }
+
   function dotLayoutKey(node) {
     var layout = node.getAttribute('data-layout');
     if (layout === 'banner') return null;
@@ -600,8 +710,23 @@
       track.style.width = (count * w) + 'px';
     }
 
-    function setActive(idx) {
-      updateDots(dotsEl, ((idx % n) + n) % n);
+    function setActive(idx, chromeDelayMs) {
+      var real = ((idx % n) + n) % n;
+      updateDots(dotsEl, real);
+      // Swap logo/CTA mid-slide so chrome keeps pace with the transform
+      // (offer↔games was snapping while match↔match stayed smooth).
+      if (node._dbaChromeTimer) {
+        clearTimeout(node._dbaChromeTimer);
+        node._dbaChromeTimer = null;
+      }
+      if (chromeDelayMs > 0) {
+        node._dbaChromeTimer = setTimeout(function () {
+          node._dbaChromeTimer = null;
+          syncWelcomeChrome(node, real);
+        }, chromeDelayMs);
+      } else {
+        syncWelcomeChrome(node, real);
+      }
     }
 
     function goTo(p, withTransition) {
@@ -619,13 +744,13 @@
     function advance() {
       if (!sliding) return;
       pos++;
-      setActive(pos);
+      setActive(pos, Math.max(0, Math.floor(transitionMs * 0.45)));
       goTo(pos, true);
       scheduleAlign(node);
       if (pos === n) {
         setTimeout(function () {
           pos = 0;
-          setActive(0);
+          setActive(0, 0);
           goTo(0, false);
           void track.offsetWidth;
           scheduleAlign(node);
@@ -1095,12 +1220,17 @@
     var transitionMs = parseInt(node.getAttribute('data-transition') || '700', 10);
 
     var games = filterUpcoming(extractMatches(data));
-    if (!games.length) return;
+    var welcome = buildWelcomeSlide(node);
+    // No games and no welcome → nothing to paint.
+    if (!games.length && !welcome) return;
     // Thin feeds (common in GAM line-item preview) pack into a single slide
     // when per-slide is 2+. Drop to 1 game/slide so the carousel can rotate.
     if (games.length >= 2 && Math.ceil(games.length / perSlide) < 2) perSlide = 1;
     var layout = node.getAttribute('data-layout') || '';
     var slides = buildSlides(games, perSlide, layout);
+    // Welcome offer is always slide 0; match pages follow (CMS AdPreview parity).
+    if (welcome) slides.unshift(welcome);
+    if (!slides.length) return;
     mountCarousel(node, slides, intervalMs, transitionMs);
     scheduleAlign(node);
   }

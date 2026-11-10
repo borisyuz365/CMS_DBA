@@ -664,6 +664,66 @@ function MatchCardColumn({ matches, config, d, sx, fillCards = false, legacyCard
 }
 
 /**
+ * Full-page horizontal carousel (welcome + match pages). Same easing / clone
+ * wrap as MatchCarouselViewport so offer→games feels like games→games.
+ */
+function PageCarouselViewport({
+  pageCount, visualPos, transitionOn, durationMs = 720, renderPage, sx,
+}) {
+  const n = Math.max(1, pageCount);
+  const viewportSx = {
+    overflow: 'hidden',
+    width: '100%',
+    height: '100%',
+    minWidth: 0,
+    minHeight: 0,
+    boxSizing: 'border-box',
+    ...sx,
+  };
+  if (n <= 1) {
+    return (
+      <Box sx={viewportSx}>
+        <Box sx={{ height: '100%', width: '100%', position: 'relative' }}>
+          {renderPage(0)}
+        </Box>
+      </Box>
+    );
+  }
+  const pos = Math.min(Math.max(0, visualPos), n);
+  const slideCount = n + 1;
+  return (
+    <Box sx={viewportSx}>
+      <Box sx={{
+        display: 'flex',
+        height: '100%',
+        width: `${slideCount * 100}%`,
+        transform: `translateX(-${(pos * 100) / slideCount}%)`,
+        transition: transitionOn ? `transform ${durationMs}ms cubic-bezier(0.32, 0.72, 0.24, 1)` : 'none',
+      }}>
+        {Array.from({ length: slideCount }).map((_, i) => {
+          const pageIdx = i < n ? i : 0;
+          return (
+            <Box
+              key={i}
+              sx={{
+                flex: `0 0 ${100 / slideCount}%`,
+                width: `${100 / slideCount}%`,
+                height: '100%',
+                overflow: 'hidden',
+                position: 'relative',
+                boxSizing: 'border-box',
+              }}
+            >
+              {renderPage(pageIdx)}
+            </Box>
+          );
+        })}
+      </Box>
+    </Box>
+  );
+}
+
+/**
  * Horizontal match carousel — only the cards slide; logo / CTA / dots / legal
  * footer stay fixed (mirrors GAM dba-runtime + production carousel.css).
  */
@@ -818,15 +878,23 @@ export default function AdPreview({
   const hasWelcome = !!wo.enabled;
   const totalSlides = (hasWelcome ? 1 : 0) + matchSlideCount;
   const safeIdx = totalSlides ? ((slideIdx % totalSlides) + totalSlides) % totalSlides : 0;
-  const showWelcome = hasWelcome && (
+  // Logical welcome page (dots / CTA). Visual slide uses pageVisualPos so the
+  // offer→games handoff animates like games→games instead of a hard cut.
+  const onWelcome = hasWelcome && (
     safeIdx === 0
     || displayPos === 0
     || (displayPos != null && displayPos === totalSlides)
   );
+  const showWelcome = onWelcome;
+  const pageVisualPos = displayPos != null
+    ? Math.min(Math.max(0, displayPos), totalSlides)
+    : safeIdx;
 
   // MPU logo: flex-center in the measured band between ad top and top card.
+  // With welcome enabled the match stack stays mounted inside the page carousel
+  // (including off-screen), so we still measure it during the offer slide.
   useLayoutEffect(() => {
-    if (!isMpu || showWelcome) {
+    if (!isMpu) {
       setMpuGapH(0);
       return undefined;
     }
@@ -855,7 +923,7 @@ export default function AdPreview({
       window.clearTimeout(t2);
       window.clearTimeout(t3);
     };
-  }, [isMpu, showWelcome, mpuLogoH, slideIdx, sizeId, useBrazilBand, scale]);
+  }, [isMpu, hasWelcome, mpuLogoH, slideIdx, sizeId, useBrazilBand, scale]);
 
 
 
@@ -1061,6 +1129,8 @@ export default function AdPreview({
   };
 
   // MPU · 300×250 — logo fixed at top-center; match cards centered in the band below.
+  // When welcome is on, offer + match pages share one PageCarouselViewport so the
+  // handoff uses the same slide easing as games→games (no hard cut).
   const renderMPU = () => {
     const d = useBrazilBand
       ? { cardRadius: 11, cardPad: '8px 10px 9px', pillH: 14, pillFont: 8,
@@ -1070,7 +1140,6 @@ export default function AdPreview({
           teamsGap: 6, xSideGap: 12, teamFont: 10, crest: 20.7, xFont: 11,
           oddsGap: 12, oddsFont: 10, oddsDot: 5, rowGap: 5, wrapTeamNames: true };
     const sidePad = useBrazilBand ? MPU_LAYOUT.sidePad.brazil : MPU_LAYOUT.sidePad.default;
-    const logoSpec = useBrazilBand ? MPU_LAYOUT.logo.brazil : MPU_LAYOUT.logo.default;
     const pillPad = useBrazilBand ? MPU_LAYOUT.pillPad.brazil : MPU_LAYOUT.pillPad.default;
     const cardGap = useBrazilBand ? MPU_LAYOUT.cardGap.brazil : MPU_LAYOUT.cardGap.default;
     const ctaH = useBrazilBand ? 26 : 30;
@@ -1109,6 +1178,127 @@ export default function AdPreview({
       right: sidePad,
       transform: 'translateY(-50%)',
     };
+    const ctaBg = onWelcome ? woCtaBg : config.cta;
+    const ctaFg = onWelcome ? woCtaFg : (config.ctaTextColor || invertText(config.cta));
+    const ctaLabel = onWelcome ? woCtaText : config.ctaText;
+    const headFont = useBrazilBand ? 18 : 22;
+    const subFont = useBrazilBand ? 10 : 11;
+    const termsFont = useBrazilBand ? 7 : 8;
+    const welcomeLogoSize = useBrazilBand ? 32 : 42;
+    const welcomeGap = useBrazilBand ? 4 : 6;
+    const welcomeTopPad = useBrazilBand ? 8 : 10;
+
+    const renderWelcomePage = () => (
+      <Box sx={{
+        height: '100%', width: '100%', boxSizing: 'border-box',
+        display: 'flex', flexDirection: 'column',
+        pt: `${welcomeTopPad}px`,
+        background: welcomeBg || undefined,
+      }}>
+        <Box sx={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          mb: useBrazilBand ? '4px' : '8px', px: `${sidePad}px`, flexShrink: 0,
+        }}>
+          <LogoThumb
+            bg={bookmaker.logoBg} fg={bookmaker.logoFg} initials={bookmaker.initials}
+            imageUrl={logoUrl} size={welcomeLogoSize} radius={6} bare
+          />
+          <Box sx={{
+            padding: useBrazilBand ? '2px 6px 1px' : '3px 8px 1px', borderRadius: 999,
+            bgcolor: woPillBg, color: woPillFg,
+            fontSize: useBrazilBand ? 8 : 9, fontWeight: 800, lineHeight: 1,
+            letterSpacing: '0.06em', textIndent: '0.06em',
+            textTransform: 'uppercase', textAlign: 'center',
+          }}>{woPillText}</Box>
+        </Box>
+        <Box sx={{
+          flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center',
+          alignItems: 'center', gap: `${welcomeGap}px`, textAlign: 'center',
+          px: `${sidePad + 4}px`, minHeight: 0, boxSizing: 'border-box',
+        }}>
+          {wo.image && (
+            <Box component="img" src={wo.image} alt="" sx={{
+              maxHeight: useBrazilBand ? 36 : 50, maxWidth: '100%', objectFit: 'contain', mb: '2px',
+            }} />
+          )}
+          <Box sx={{ fontSize: headFont, fontWeight: 800, lineHeight: 1.05, letterSpacing: '-0.02em' }}>{woHeadline}</Box>
+          <Box sx={{ fontSize: subFont, opacity: 0.8, lineHeight: 1.25 }}>{woSubtext}</Box>
+          <Box sx={{ fontSize: termsFont, opacity: 0.55, lineHeight: 1.2, mt: '2px' }}>{woTerms}</Box>
+        </Box>
+      </Box>
+    );
+
+    const renderMatchPage = (matchIdx) => {
+      const start = Math.max(0, matchIdx) * matchesPerSlide;
+      const matches = DBA_SAMPLE_MATCHES.slice(start, start + matchesPerSlide);
+      return (
+        <Box sx={{ position: 'relative', width: '100%', height: '100%' }}>
+          <Box sx={logoWrapSx}>
+            <LogoThumb
+              bg={bookmaker.logoBg} fg={bookmaker.logoFg} initials={bookmaker.initials}
+              imageUrl={logoUrl} size={34} height={28} radius={6} bare
+            />
+          </Box>
+          <Box ref={matchIdx === 0 ? mpuStackRef : undefined} sx={stackSx}>
+            <Box sx={{ pt: `${pillPad}px`, boxSizing: 'border-box', width: '100%' }}>
+              <MatchCardColumn
+                matches={matches}
+                config={config}
+                d={d}
+                sx={{
+                  display: 'flex', flexDirection: 'column',
+                  gap: `${cardGap}px`,
+                  minWidth: 0, flexShrink: 0, width: '100%',
+                }}
+              />
+            </Box>
+          </Box>
+        </Box>
+      );
+    };
+
+    const chrome = (
+      <>
+        <Box component="button" sx={{
+          background: ctaBg, color: ctaFg,
+          border: 'none', height: ctaH,
+          position: 'absolute', left: sidePad, right: sidePad, bottom: ctaBottom, zIndex: 2,
+          borderRadius: `${Math.min(radius, 6)}px`,
+          fontSize: ctaFont, fontWeight: 700, cursor: 'pointer',
+          fontFamily: 'inherit', letterSpacing: '0.01em',
+        }}>{ctaLabel}</Box>
+        {renderInAdDots({ rowHeight: dotsRowH, dotSize: 4, absoluteBottom: dotsBottom })}
+        {config.legal && config.legal.enabled && (
+          useBrazilBand ? renderBrazilLegalBand(brazilBandH, 7, 11) : renderLegalStrip({
+            left: 6, right: 6, bottom: 2, fontSize: legalStripFont, badgeSize: 11, logoH: 7,
+            text: config.legal.text || '18+ · BeGambleAware.org',
+          })
+        )}
+      </>
+    );
+
+    if (hasWelcome) {
+      return wrap(
+        <>
+          <Box sx={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: bottomPad }}>
+            <PageCarouselViewport
+              pageCount={totalSlides}
+              visualPos={pageVisualPos}
+              transitionOn={transitionOn}
+              durationMs={carouselDurationMs}
+              renderPage={(pageIdx) => (
+                pageIdx === 0 ? renderWelcomePage() : renderMatchPage(pageIdx - 1)
+              )}
+            />
+          </Box>
+          {chrome}
+        </>,
+        `0px 0px ${bottomPad}px`,
+        null,
+        mpuAdRef,
+      );
+    }
+
     return wrap(
       <>
         <Box sx={logoWrapSx}>
@@ -1132,21 +1322,7 @@ export default function AdPreview({
             pillPad,
           })}
         </Box>
-        <Box component="button" sx={{
-          background: config.cta, color: config.ctaTextColor || invertText(config.cta),
-          border: 'none', height: ctaH,
-          position: 'absolute', left: sidePad, right: sidePad, bottom: ctaBottom, zIndex: 2,
-          borderRadius: `${Math.min(radius, 6)}px`,
-          fontSize: ctaFont, fontWeight: 700, cursor: 'pointer',
-          fontFamily: 'inherit', letterSpacing: '0.01em',
-        }}>{config.ctaText}</Box>
-        {renderInAdDots({ rowHeight: dotsRowH, dotSize: 4, absoluteBottom: dotsBottom })}
-        {config.legal && config.legal.enabled && (
-          useBrazilBand ? renderBrazilLegalBand(brazilBandH, 7, 11) : renderLegalStrip({
-            left: 6, right: 6, bottom: 2, fontSize: legalStripFont, badgeSize: 11, logoH: 7,
-            text: config.legal.text || '18+ · BeGambleAware.org',
-          })
-        )}
+        {chrome}
       </>,
       // No horizontal pad (GAM .ad padding:0). sidePad is on stack/CTA only.
       // Bottom pad reserves the pinned CTA + dots stack above the legal footer.
@@ -1476,5 +1652,6 @@ export default function AdPreview({
 
   if (isBanner) return showWelcome ? renderWelcomeBanner() : renderBanner();
   if (isInterstitial) return showWelcome ? renderWelcomeInterstitial() : renderInterstitial();
-  return showWelcome ? renderWelcomeMPU() : renderMPU();
+  // MPU: welcome is slide 0 inside PageCarouselViewport (smooth offer↔games).
+  return renderMPU();
 }

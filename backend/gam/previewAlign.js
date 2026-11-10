@@ -73,6 +73,43 @@ function buildFeedTargetingAttrs(payloadLink) {
   ].join(' ');
 }
 
+function escapeAttr(value) {
+  return String(value == null ? '' : value)
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+/**
+ * When welcome offer is enabled, bake data-welcome-* onto `.matches` so
+ * dba-runtime can prepend a welcome carousel slide without swapping to a
+ * static welcome-only HTML template.
+ */
+function buildWelcomeDataAttrs({ cfg, resolved, ctaLabel }) {
+  const wo = cfg?.welcomeOffer;
+  if (!wo || !wo.enabled) return '';
+  const headline = resolved['config.welcomeOffer.headline'] || wo.headline || '';
+  const subtext = resolved['config.welcomeOffer.subtext'] || wo.subtext || '';
+  const terms = resolved['config.welcomeOffer.terms'] || wo.terms || '';
+  const ctaText = resolved['config.welcomeOffer.ctaText'] || wo.ctaText || ctaLabel || '';
+  const pillText = (
+    resolved['config.welcomeOffer.pillText'] || wo.pillText || ''
+  ).trim() || 'Welcome offer';
+  const pillBg = wo.pillColor || '#FFC107';
+  const pillFg = wo.pillTextColor || invertText(pillBg);
+  return [
+    'data-welcome="1"',
+    `data-welcome-headline="${escapeAttr(headline)}"`,
+    `data-welcome-subtext="${escapeAttr(subtext)}"`,
+    `data-welcome-terms="${escapeAttr(terms)}"`,
+    `data-welcome-cta="${escapeAttr(ctaText)}"`,
+    `data-welcome-pill="${escapeAttr(pillText)}"`,
+    `data-welcome-pill-bg="${escapeAttr(pillBg)}"`,
+    `data-welcome-pill-fg="${escapeAttr(pillFg)}"`,
+  ].join(' ');
+}
+
 // hashed_device_id is smuggled through 15 team key-values; dba-runtime maps each
 // 3-letter code back to a character (legacy BetanoUtils.get_decoded_uid).
 const BI_UID_PATTERNS = [
@@ -211,6 +248,19 @@ function buildPreviewInlineValues({
     buildBiAttrs({ country, bmid, cmsLangId, sizeId: dbaTemplate.sizeId, payloadLink }),
   );
   const feedExtraAttrs = buildFeedTargetingAttrs(payloadLink);
+  const welcomeHeadline = resolved['config.welcomeOffer.headline'] || cfg.welcomeOffer?.headline || '';
+  const welcomeSubtext = resolved['config.welcomeOffer.subtext'] || cfg.welcomeOffer?.subtext || '';
+  const welcomeTerms = resolved['config.welcomeOffer.terms'] || cfg.welcomeOffer?.terms || '';
+  const welcomeCtaText = resolved['config.welcomeOffer.ctaText']
+    || cfg.welcomeOffer?.ctaText || ctaLabel;
+  const welcomePillText = (
+    resolved['config.welcomeOffer.pillText']
+    || cfg.welcomeOffer?.pillText
+    || ''
+  ).trim() || 'Welcome offer';
+  const welcomePillBg = cfg.welcomeOffer?.pillColor || '#FFC107';
+  const welcomePillFg = cfg.welcomeOffer?.pillTextColor || invertText(welcomePillBg);
+  const welcomeDataAttrs = buildWelcomeDataAttrs({ cfg, resolved, ctaLabel });
 
   return {
     bookmaker_name: bookmaker?.name || '',
@@ -230,20 +280,15 @@ function buildPreviewInlineValues({
     disclaimer_url: disclaimerUrl,
     feed_url: feedUrl,
     feed_extra_attrs: feedExtraAttrs,
+    welcome_data_attrs: welcomeDataAttrs,
     runtime_url: runtime,
-    welcome_headline: resolved['config.welcomeOffer.headline'] || cfg.welcomeOffer?.headline || '',
-    welcome_subtext: resolved['config.welcomeOffer.subtext'] || cfg.welcomeOffer?.subtext || '',
-    welcome_terms: resolved['config.welcomeOffer.terms'] || cfg.welcomeOffer?.terms || '',
-    welcome_cta_text: resolved['config.welcomeOffer.ctaText']
-      || cfg.welcomeOffer?.ctaText || ctaLabel,
-    welcome_pill_text: (
-      resolved['config.welcomeOffer.pillText']
-      || cfg.welcomeOffer?.pillText
-      || ''
-    ).trim() || 'Welcome offer',
-    welcome_pill_bg: cfg.welcomeOffer?.pillColor || '#FFC107',
-    welcome_pill_text_color: cfg.welcomeOffer?.pillTextColor
-      || invertText(cfg.welcomeOffer?.pillColor || '#FFC107'),
+    welcome_headline: welcomeHeadline,
+    welcome_subtext: welcomeSubtext,
+    welcome_terms: welcomeTerms,
+    welcome_cta_text: welcomeCtaText,
+    welcome_pill_text: welcomePillText,
+    welcome_pill_bg: welcomePillBg,
+    welcome_pill_text_color: welcomePillFg,
     date_pill_bg: resolveDatePillBg(cfg),
     date_pill_text_color: resolveDatePillFg(cfg),
     odds_box_bg: resolveOddsBoxBg(cfg),
