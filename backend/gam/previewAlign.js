@@ -168,14 +168,20 @@ function buildPreviewInlineValues({
   const ctaLabel = resolved['config.ctaText'] || cfg.ctaText || 'Bet Now';
 
   const licenseNumber = variant?.license_number || variant?.licenseNumber || '';
-  const brazilDisclaimer =
+  // Prefer the disclaimer typed in the CMS template editor. Bookie-level
+  // disclaimer_text is only a fallback when the template left legal text blank.
+  const cmsLegalText =
     stripLegacyBrazilPrefix(resolved['config.legal.text'])
-    || stripLegacyBrazilPrefix(cfg.legal?.text)
+    || stripLegacyBrazilPrefix(cfg.legal?.text);
+  const brazilDisclaimer =
+    cmsLegalText
     || (licenseNumber ? brazilDefaultLegalText(licenseNumber) : BRAZIL_LEGAL_FALLBACK_TEXT);
 
   const legalEnabled = !!(cfg.legal && cfg.legal.enabled) || isBrazil;
   const disclaimerText = legalEnabled
-    ? (isBrazil ? brazilDisclaimer : ((bookieSettings?.disclaimer_text) || '18+ · BeGambleAware.org'))
+    ? (isBrazil
+      ? brazilDisclaimer
+      : (cmsLegalText || bookieSettings?.disclaimer_text || '18+ · BeGambleAware.org'))
     : '';
   const disclaimerUrl = legalEnabled
     ? (isBrazil
@@ -230,6 +236,14 @@ function buildPreviewInlineValues({
     welcome_terms: resolved['config.welcomeOffer.terms'] || cfg.welcomeOffer?.terms || '',
     welcome_cta_text: resolved['config.welcomeOffer.ctaText']
       || cfg.welcomeOffer?.ctaText || ctaLabel,
+    welcome_pill_text: (
+      resolved['config.welcomeOffer.pillText']
+      || cfg.welcomeOffer?.pillText
+      || ''
+    ).trim() || 'Welcome offer',
+    welcome_pill_bg: cfg.welcomeOffer?.pillColor || '#FFC107',
+    welcome_pill_text_color: cfg.welcomeOffer?.pillTextColor
+      || invertText(cfg.welcomeOffer?.pillColor || '#FFC107'),
     date_pill_bg: resolveDatePillBg(cfg),
     date_pill_text_color: resolveDatePillFg(cfg),
     odds_box_bg: resolveOddsBoxBg(cfg),

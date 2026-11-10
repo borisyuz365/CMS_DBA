@@ -179,9 +179,12 @@
     // positioning/typography. Visual tuning should track AdPreview.jsx's MPU
     // MatchRow and the carousel viewport sizing in mpu-standard.html.
     var css =
-      '.matches .dba-track { display: flex; height: 100%; will-change: transform; }' +
+      /* Track/slide widths are set in mountCarousel (slideCount-aware). Do not
+         put width/max-width:100% here — that resolves against the wide track and
+         collapses the carousel to a single non-scrolling viewport. */
+      '.matches .dba-track { display: flex; flex-wrap: nowrap; height: 100%; will-change: transform; }' +
       '.matches .dba-slide {' +
-        'flex: 0 0 auto; width: 100%; max-width: 100%;' +
+        'flex: 0 0 auto;' +
         'display: flex; flex-direction: column; gap: 8px;' +
         'box-sizing: border-box; overflow: hidden;' +
       '}' +
@@ -552,6 +555,10 @@
   // -(pos / slideCount * 100)% of the track (= one viewport per step).
   // Using translateX(-pos * 100%) is wrong — % is relative to the track itself.
   function mountCarousel(node, slides, intervalMs, transitionMs) {
+    if (node._dbaCarouselTimer) {
+      clearInterval(node._dbaCarouselTimer);
+      node._dbaCarouselTimer = null;
+    }
     while (node.firstChild) node.removeChild(node.firstChild);
     if (!slides.length) {
       removeDots(node);
@@ -570,6 +577,7 @@
       if (slides[0]) {
         slides[0].style.flex = '0 0 100%';
         slides[0].style.width = '100%';
+        slides[0].style.maxWidth = '100%';
         if (node.getAttribute('data-layout') === 'interstitial') slides[0].style.height = '100%';
       }
       return;
@@ -585,6 +593,7 @@
       kids[s].style.flex = '0 0 ' + slidePct + '%';
       kids[s].style.width = slidePct + '%';
       kids[s].style.maxWidth = slidePct + '%';
+      kids[s].style.minWidth = slidePct + '%';
       kids[s].style.boxSizing = 'border-box';
     }
 
@@ -615,7 +624,7 @@
     }
     setActive(0);
     goTo(0, false);
-    setInterval(advance, intervalMs);
+    node._dbaCarouselTimer = setInterval(advance, intervalMs);
   }
 
   // Banner only: dash / pill follow this card's centre (ad midline when the

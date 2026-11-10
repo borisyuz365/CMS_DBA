@@ -9,7 +9,8 @@
   Brazil layout uses .ad-shell.legal-band instead of :has() (unsupported in GAM).
 
   Layout mirrors CMS AdPreview renderWelcomeMPU: logo + pill row, centered
-  offer copy, CTA. No match carousel (welcome is its own creative variant).
+  offer copy. CTA is absolutely pinned to the same bottom offsets as
+  mpu-standard.html so welcome and match slides share one button placement.
 -->
 <!DOCTYPE html>
 <html>
@@ -34,21 +35,29 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    padding: 10px 14px 14px;
+    /* Bottom pad = CTA (30) + gap (4) + dots (10) + dotsBottom (6) = 50 — matches renderMPU. */
+    padding: 10px 0 50px;
     text-decoration: none;
   }
+  .ad-shell.legal-strip .ad {
+    /* dotsBottom 18 + dots 10 + gap 4 + CTA 30 = 62 */
+    padding-bottom: 62px;
+  }
   .ad-shell.legal-band .ad {
-    padding: 8px 12px 27px;
+    /* brazilBand (~25) + 4 + 10 + 4 + CTA 26 = 69 */
+    padding: 8px 0 69px;
   }
 
   .ad .top-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 8px;
+    margin: 0 14px 8px;
     flex-shrink: 0;
   }
-  .ad-shell.legal-band .ad .top-row { margin-bottom: 4px; }
+  .ad-shell.legal-band .ad .top-row {
+    margin: 0 12px 4px;
+  }
 
   .ad .logo {
     width: 42px; height: 42px;
@@ -62,7 +71,7 @@
   .ad .pill {
     padding: 3px 8px 1px;
     border-radius: 999px;
-    background: #FFC107; color: #0A0A0A;
+    background: [[welcome_pill_bg]]; color: [[welcome_pill_text_color]];
     font-size: 9px; font-weight: 800; line-height: 1;
     letter-spacing: 0.06em; text-indent: 0.06em;
     text-transform: uppercase; text-align: center;
@@ -80,9 +89,13 @@
     gap: 6px;
     text-align: center;
     min-height: 0;
-    padding: 0 4px;
+    padding: 0 18px;
+    box-sizing: border-box;
   }
-  .ad-shell.legal-band .ad .copy { gap: 4px; }
+  .ad-shell.legal-band .ad .copy {
+    gap: 4px;
+    padding: 0 16px;
+  }
 
   .ad .copy .head {
     font-size: 22px; font-weight: 800;
@@ -100,22 +113,24 @@
   }
   .ad-shell.legal-band .ad .copy .terms { font-size: 7px; }
 
+  /* Same absolute CTA geometry as mpu-standard.html */
   .ad .cta {
     background: [[cta_bg_color]];
     color: [[cta_text_color]];
-    border: none; height: 32px;
-    margin-top: 6px;
-    position: relative;
+    border: none; height: 30px;
+    position: absolute; left: 14px; right: 14px; bottom: 26px;
+    margin-top: 0; z-index: 2;
     border-radius: 6px;
-    font-size: 13px; font-weight: 800;
+    font-size: 12px; font-weight: 700;
     cursor: pointer;
     font-family: inherit;
     letter-spacing: 0.01em;
     display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
   }
+  .ad-shell.legal-strip .ad .cta { bottom: 32px; }
   .ad-shell.legal-band .ad .cta {
-    height: 26px; margin-top: 4px; font-size: 11px;
+    left: 12px; right: 12px; bottom: 43px;
+    height: 26px; font-size: 11px;
   }
 
   /* Legal footer — sibling of .ad inside .ad-shell (not nested in click link). */
@@ -180,7 +195,7 @@
     <a class="ad" href="[[ad_href]]" [[ad_attrs]] target="_blank">
       <div class="top-row">
         <div class="logo" aria-label="[[bookmaker_name]]"></div>
-        <div class="pill">Welcome offer</div>
+        <div class="pill">[[welcome_pill_text]]</div>
       </div>
       <div class="copy">
         <div class="head">[[welcome_headline]]</div>

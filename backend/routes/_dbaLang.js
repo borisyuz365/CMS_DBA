@@ -38,6 +38,7 @@ const TRANSLATABLE_PATHS = [
   'config.welcomeOffer.subtext',
   'config.welcomeOffer.terms',
   'config.welcomeOffer.ctaText',
+  'config.welcomeOffer.pillText',
   'config.legal.text',
 ];
 

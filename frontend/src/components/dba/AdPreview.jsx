@@ -1333,19 +1333,35 @@ export default function AdPreview({
   };
 
   const renderWelcomeMPU = () => {
+    // CTA / dots / legal geometry must match renderMPU so the button does not
+    // jump when the carousel moves between the offer slide and match slides.
+    const sidePad = useBrazilBand ? MPU_LAYOUT.sidePad.brazil : MPU_LAYOUT.sidePad.default;
     const logoSize = useBrazilBand ? 32 : 42;
     const headFont = useBrazilBand ? 18 : 22;
     const subFont = useBrazilBand ? 10 : 11;
     const termsFont = useBrazilBand ? 7 : 8;
     const imgMax = useBrazilBand ? 36 : 50;
-    const ctaH = useBrazilBand ? 26 : 32;
+    const ctaH = useBrazilBand ? 26 : 30;
+    const ctaFont = useBrazilBand ? 11 : 12;
     const gap = useBrazilBand ? 4 : 6;
     const topPad = useBrazilBand ? 8 : 10;
+    const dotsRowH = 10;
+    const dotsGap = 4;
+    const ctaGapAboveDots = 4;
     const hasLegalStrip = !!(config.legal?.enabled && !useBrazilBand);
-    const bottomPad = useBrazilBand ? brazilBandH + 2 : (hasLegalStrip ? 20 : 14);
+    const legalStripReserve = 18;
+    const dotsBottom = useBrazilBand
+      ? brazilBandH + dotsGap
+      : (hasLegalStrip ? legalStripReserve : 6);
+    const ctaBottom = dotsBottom + dotsRowH + ctaGapAboveDots;
+    const bottomPad = ctaBottom + ctaH;
     return wrap(
       <>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: useBrazilBand ? '4px' : '8px' }}>
+        <Box sx={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          mb: useBrazilBand ? '4px' : '8px', px: `${sidePad}px`, pt: `${topPad}px`,
+          boxSizing: 'border-box', flexShrink: 0,
+        }}>
           <LogoThumb bg={bookmaker.logoBg} fg={bookmaker.logoFg} initials={bookmaker.initials} imageUrl={resolveLogoUrl(bookmaker, config)} size={logoSize} radius={6} bare />
           {/* textIndent balances the trailing letter-spacing after the last
               glyph (otherwise the text reads as left-shifted inside the pill).
@@ -1360,7 +1376,11 @@ export default function AdPreview({
             textTransform: 'uppercase', textAlign: 'center',
           }}>{woPillText}</Box>
         </Box>
-        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: `${gap}px`, textAlign: 'center', px: '4px' }}>
+        <Box sx={{
+          flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center',
+          alignItems: 'center', gap: `${gap}px`, textAlign: 'center',
+          px: `${sidePad + 4}px`, minHeight: 0, boxSizing: 'border-box',
+        }}>
           {wo.image && <Box component="img" src={wo.image} alt="" sx={{ maxHeight: imgMax, maxWidth: '100%', objectFit: 'contain', mb: '2px' }} />}
           <Box sx={{ fontSize: headFont, fontWeight: 800, lineHeight: 1.05, letterSpacing: '-0.02em' }}>{woHeadline}</Box>
           <Box sx={{ fontSize: subFont, opacity: 0.8, lineHeight: 1.25 }}>{woSubtext}</Box>
@@ -1368,14 +1388,13 @@ export default function AdPreview({
         </Box>
         <Box component="button" sx={{
           background: woCtaBg, color: woCtaFg,
-          border: 'none', height: ctaH, mt: useBrazilBand ? '4px' : '6px',
+          border: 'none', height: ctaH,
+          position: 'absolute', left: sidePad, right: sidePad, bottom: ctaBottom, zIndex: 2,
           borderRadius: `${Math.min(radius, 6)}px`,
-          fontSize: useBrazilBand ? 11 : 13, fontWeight: 800, cursor: 'pointer',
+          fontSize: ctaFont, fontWeight: 700, cursor: 'pointer',
           fontFamily: 'inherit', letterSpacing: '0.01em',
         }}>{woCtaText}</Box>
-        {renderInAdDots(useBrazilBand
-          ? { rowHeight: 7, dotSize: 3, mt: 3 }
-          : { rowHeight: 10, dotSize: 4, mt: 8 })}
+        {renderInAdDots({ rowHeight: dotsRowH, dotSize: 4, absoluteBottom: dotsBottom })}
         {config.legal && config.legal.enabled && (
           useBrazilBand ? renderBrazilLegalBand(brazilBandH, 7, 11) : renderLegalStrip({
             left: 6, right: 6, bottom: 2, fontSize: 5.5, badgeSize: 11, logoH: 7,
@@ -1383,7 +1402,9 @@ export default function AdPreview({
           })
         )}
       </>,
-      `0 2.5% ${bottomPad}px`,
+      // No side pad on the wrap — sidePad is applied on rows / absolute CTA
+      // (same as renderMPU) so the button lines up across carousel slides.
+      `0px 0px ${bottomPad}px`,
       welcomeBg,
     );
   };
