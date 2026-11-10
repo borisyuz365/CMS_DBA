@@ -387,7 +387,7 @@ function buildCreativeTemplate(dbaTemplate, options = {}) {
   snippet = makeSnippetSelfContained(snippet);
   // Visible bake stamp so ops can confirm the copied HTML is the current build
   // (GAM creatives do not auto-update when cms-dba redeploys).
-  const bakeStamp = `<!-- dba-snippet-v=2026-11-10-odds-welcome sha=${String(process.env.GIT_SHA || process.env.GITHUB_SHA || 'local').slice(0, 12)} -->`;
+  const bakeStamp = `<!-- dba-snippet-v=2026-11-10-banner-ui sha=${String(process.env.GIT_SHA || process.env.GITHUB_SHA || 'local').slice(0, 12)} -->`;
   if (snippet.includes('<!DOCTYPE html>') || snippet.includes('<!doctype html>')) {
     snippet = snippet.replace(/<!DOCTYPE html>/i, `${bakeStamp}\n<!DOCTYPE html>`);
   } else {

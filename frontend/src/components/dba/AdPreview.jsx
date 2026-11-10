@@ -50,21 +50,22 @@ const BANNER = {
     contentGap: 0,       // px between content row and legal strip (0 = no band)
     sidePad: 8,
     colGap: 8,
-    ctaH: 30,
-    ctaFont: 10,
-    ctaPx: 8,
+    // CTA ~20% smaller than the previous 30×10 treatment.
+    ctaH: 24,
+    ctaFont: 8,
+    ctaPx: 6,
     // Center betting content (date pill · teams · odds)
     match: {
-      pillH: 14.3, pillFont: 8.8, pillPx: 7,
-      teamFont: 11, crest: 13.9, teamGap: 4.4,
-      oddsFont: 9, oddsH: 12, oddDot: 3.3,
+      pillH: 11, pillFont: 6.5, pillPx: 5,
+      teamFont: 8, crest: 14, teamGap: 3,
+      oddsFont: 7.5, oddsH: 10, oddDot: 2.8,
       // 1 / 2 sit this many px left/right of the ad centre (not on the crests).
-      oddsSpread: 38,
+      oddsSpread: 34,
       // Equal vertical gap between pill · teams · odds (fixed so it always shows)
-      rowGap: 3,
+      rowGap: 2.5,
     },
     // Welcome-offer slide
-    welcome: { headFont: 13, subFont: 9, ctaFont: 10 },
+    welcome: { headFont: 11, subFont: 7.5, ctaFont: 8 },
     // Non-Brazil corner legal strip
     legal: { fontSize: 5, badgeSize: 10, logoH: 6 },
   },
@@ -75,17 +76,17 @@ const BANNER = {
     lift: 4,             // shift logo · CTA up by this many px (match column stays pinned)
     sidePad: 6,
     colGap: 5,
-    ctaH: 20,
-    ctaFont: 8,
-    ctaPx: 6,
+    ctaH: 16,
+    ctaFont: 6.5,
+    ctaPx: 5,
     match: {
-      pillH: 8.8, pillFont: 6.6, pillPx: 3.3,
-      teamFont: 8.5, crest: 10.1, teamGap: 2.5,
-      oddsFont: 7, oddsH: 8.8, oddDot: 2.2,
-      oddsSpread: 28,
+      pillH: 7, pillFont: 5, pillPx: 2.5,
+      teamFont: 6.5, crest: 10.5, teamGap: 2,
+      oddsFont: 6, oddsH: 7.5, oddDot: 2,
+      oddsSpread: 24,
       rowGap: 2,
     },
-    welcome: { headFont: 9, subFont: 6, ctaFont: 8 },
+    welcome: { headFont: 8, subFont: 5.5, ctaFont: 6.5 },
     // Brazil full-width legal band
     legal: { fontSize: 4.5, badgeSize: 9 },
   },
@@ -287,8 +288,8 @@ function BannerMatchSection({ match, config, dense = false, alignKey = 0 }) {
         }}><Box component="span">{match.date}</Box></Box>
       </Box>
 
-      {/* Team row — dash on the banner centre line; crests sit on the outer
-          sides of the names. Names ellipsize in the leftover space. */}
+      {/* Team row — dash on the banner centre line; crests sit inward
+          toward the dash (name · crest – crest · name). Names ellipsize. */}
       <Box ref={teamRowRef} sx={{
         position: 'relative',
         width: '100%', minWidth: 0,
@@ -306,10 +307,10 @@ function BannerMatchSection({ match, config, dense = false, alignKey = 0 }) {
             display: 'flex', alignItems: 'center', gap: `${s.teamGap}px`,
             maxWidth: '100%', minWidth: 0,
           }}>
-            <Box ref={homeCrestRef} sx={{ flexShrink: 0 }}><TeamCrest team={match.home} size={s.crest} /></Box>
             <Box sx={{ minWidth: 0, overflow: 'hidden' }}>
               <Box ref={homeNameRef} component="span" sx={nameSx}>{match.home.name}</Box>
             </Box>
+            <Box ref={homeCrestRef} sx={{ flexShrink: 0 }}><TeamCrest team={match.home} size={s.crest} /></Box>
           </Box>
         </Box>
         <Box ref={xRef} component="span" sx={{
@@ -328,10 +329,10 @@ function BannerMatchSection({ match, config, dense = false, alignKey = 0 }) {
             display: 'flex', alignItems: 'center', gap: `${s.teamGap}px`,
             maxWidth: '100%', minWidth: 0,
           }}>
+            <Box ref={awayCrestRef} sx={{ flexShrink: 0 }}><TeamCrest team={match.away} size={s.crest} /></Box>
             <Box sx={{ minWidth: 0, overflow: 'hidden' }}>
               <Box ref={awayNameRef} component="span" sx={nameSx}>{match.away.name}</Box>
             </Box>
-            <Box ref={awayCrestRef} sx={{ flexShrink: 0 }}><TeamCrest team={match.away} size={s.crest} /></Box>
           </Box>
         </Box>
       </Box>
@@ -1052,14 +1053,15 @@ export default function AdPreview({
     // minimums we already use when the radius is small.
     const cornerInset = radius * (1 - 1 / Math.SQRT2);
     const legalSideInset = Math.max(4, cornerInset);
-    const legalBottomInset = Math.max(1, cornerInset);
+    // Pin legal to the bottom edge so it sits below odds / CTA.
+    const legalBottomInset = 0;
     // Sizes: edit BANNER.default / BANNER.brazil at the top of this file.
     const b = useBrazilBand ? BANNER.brazil : BANNER.default;
     const hasLegalStrip = !!(config.legal?.enabled && !useBrazilBand);
     // Non-Brazil strip can wrap to 2 lines — clear content above it.
     const footerClearance = useBrazilBand
       ? brazilBandH + b.contentGap
-      : (hasLegalStrip ? Math.ceil(b.legal.fontSize * 1.15 * 2) + 3 : 2);
+      : (hasLegalStrip ? Math.ceil(b.legal.fontSize * 1.15 * 2) + 5 : 2);
     const lift = useBrazilBand ? (b.lift || 0) : 0;
     const sideColSx = {
       display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -1465,8 +1467,15 @@ export default function AdPreview({
   // ===== Welcome offer slides =====
   const renderWelcomeBanner = () => {
     // Sizes: edit BANNER.default / BANNER.brazil at the top of this file.
+    // Legal footer + 18+ must match renderBanner (offer slide was missing them).
     const b = useBrazilBand ? BANNER.brazil : BANNER.default;
-    const footerClearance = useBrazilBand ? brazilBandH + b.contentGap : 0;
+    const cornerInset = radius * (1 - 1 / Math.SQRT2);
+    const legalSideInset = Math.max(4, cornerInset);
+    const legalBottomInset = 0;
+    const hasLegalStrip = !!(config.legal?.enabled && !useBrazilBand);
+    const footerClearance = useBrazilBand
+      ? brazilBandH + b.contentGap
+      : (hasLegalStrip ? Math.ceil(b.legal.fontSize * 1.15 * 2) + 5 : 2);
     const lift = useBrazilBand ? (b.lift || 0) : 0;
     const colSx = {
       display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -1483,7 +1492,7 @@ export default function AdPreview({
         display: 'grid', gridTemplateColumns: 'auto 1fr auto',
         alignItems: 'stretch',
         columnGap: `${b.colGap}px`,
-        padding: useBrazilBand ? `0 ${b.sidePad}px` : '4px 8px',
+        padding: `0 ${b.sidePad}px`,
         boxSizing: 'border-box', position: 'relative',
         transform: `scale(${scale})`, transformOrigin: 'top left',
       }}>
@@ -1503,7 +1512,15 @@ export default function AdPreview({
             fontFamily: 'inherit', whiteSpace: 'nowrap', letterSpacing: '0.01em',
           }}>{woCtaText}</Box>
         </Box>
-        {useBrazilBand && renderBrazilLegalBand(brazilBandH, b.legal.fontSize, b.legal.badgeSize)}
+        {config.legal && config.legal.enabled && (
+          useBrazilBand ? renderBrazilLegalBand(brazilBandH, b.legal.fontSize, b.legal.badgeSize) : (
+            config.legal.text ? renderLegalStrip({
+              left: legalSideInset, right: legalSideInset, bottom: legalBottomInset,
+              fontSize: b.legal.fontSize, badgeSize: b.legal.badgeSize, logoH: b.legal.logoH, gap: '2px',
+              text: config.legal.text,
+            }) : null
+          )
+        )}
       </Box>
     );
   };

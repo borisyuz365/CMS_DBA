@@ -28,14 +28,17 @@
     column-gap: 8px;
     text-decoration: none;
   }
+  .ad-shell.legal-strip .ad {
+    padding-bottom: 15px;
+  }
   .ad-shell.legal-band .ad {
     padding: 0 6px 18px;
     column-gap: 5px;
   }
   .ad-shell.legal-band .ad .logo { width: 52px; height: 52px; }
-  .ad-shell.legal-band .ad .cta { height: 20px; padding: 0 6px; font-size: 8px; }
-  .ad-shell.legal-band .ad .copy .head { font-size: 9px; }
-  .ad-shell.legal-band .ad .copy .sub { font-size: 6px; }
+  .ad-shell.legal-band .ad .cta { height: 16px; padding: 0 5px; font-size: 6.5px; }
+  .ad-shell.legal-band .ad .copy .head { font-size: 8px; }
+  .ad-shell.legal-band .ad .copy .sub { font-size: 5.5px; }
 
   .ad .logo {
     width: 48px; height: 48px;
@@ -51,20 +54,20 @@
     line-height: 1.1; text-align: center;
   }
   .ad .copy .head {
-    font-size: 13px; font-weight: 800; letter-spacing: -0.01em;
+    font-size: 11px; font-weight: 800; letter-spacing: -0.01em;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;
   }
   .ad .copy .sub {
-    font-size: 9px; opacity: 0.8;
+    font-size: 7.5px; opacity: 0.8;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;
   }
   .ad .cta {
     background: [[cta_bg_color]];
     color: [[cta_text_color]];
-    border: none; height: 30px; padding: 0 8px;
+    border: none; height: 24px; padding: 0 6px;
     position: relative;
     border-radius: 4px;
-    font-size: 10px; font-weight: 700;
+    font-size: 8px; font-weight: 700;
     cursor: pointer;
     font-family: inherit;
     white-space: nowrap;
@@ -75,7 +78,7 @@
   .ad-shell .legal { pointer-events: none; z-index: 10; }
   .ad-shell .legal.legal-hidden { display: none; }
   .ad-shell .legal.legal-strip {
-    position: absolute; left: 4px; right: 4px; bottom: 1px;
+    position: absolute; left: 4px; right: 4px; bottom: 0;
     display: flex; align-items: center; gap: 4px;
     font-size: 5px; opacity: 0.85;
     color: [[legal_text_color]];

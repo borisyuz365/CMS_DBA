@@ -92,8 +92,8 @@
   // One side of the matchup.
   // MPU: names on the OUTER edges, crests inward toward the dash —
   //   home: [name][logo] · – · away: [logo][name].
-  // Banner: crests stay on the outer sides —
-  //   home: [logo][name] · – · away: [name][logo].
+  // Crests sit inward toward the dash for MPU and banner —
+  //   home: [name][logo] · – · away: [logo][name].
   // Name sits in a flex slot so long names ellipsize without stretching the ad.
   function teamBlock(comp, side, layout) {
     var name = (comp && (comp.SName || comp.Name || comp.name)) || '';
@@ -106,9 +106,8 @@
     if (url) {
       logoEl = el('img', { 'class': 'dba-team-logo', src: url, alt: '' });
     }
-    // Banner keeps crests outside; MPU (default) puts crests inward.
-    var crestsOutside = layout === 'banner';
-    var crestFirst = crestsOutside ? (side === 'home') : (side === 'away');
+    // Crest first on away (and never on home) → crests face the dash.
+    var crestFirst = side === 'away';
     if (crestFirst) {
       if (logoEl) children.push(logoEl);
       children.push(nameSlot);
@@ -250,11 +249,23 @@
       '.ad-shell.legal-band .matches .dba-welcome-sub { font-size: 10px; }' +
       '.matches .dba-welcome-terms { font-size: 8px; opacity: 0.55; line-height: 1.2; margin-top: 2px; }' +
       '.ad-shell.legal-band .matches .dba-welcome-terms { font-size: 7px; }' +
+      /* Banner welcome: copy only (shell owns logo + CTA + legal). */
+      '.matches[data-layout="banner"] .dba-slide-welcome {' +
+        'justify-content: center; align-items: center; padding: 0; gap: 1px;' +
+      '}' +
+      '.matches[data-layout="banner"] .dba-welcome-top { display: none; }' +
+      '.matches[data-layout="banner"] .dba-welcome-copy {' +
+        'flex: 0 1 auto; padding: 0; gap: 1px; justify-content: center;' +
+      '}' +
       '.matches[data-layout="banner"] .dba-welcome-head { font-size: 11px; }' +
-      '.matches[data-layout="banner"] .dba-welcome-sub { font-size: 8px; }' +
-      '.matches[data-layout="banner"] .dba-welcome-terms { font-size: 6px; }' +
-      '.matches[data-layout="banner"] .dba-welcome-logo { width: 22px; height: 22px; }' +
-      '.matches[data-layout="banner"] .dba-welcome-pill { font-size: 7px; padding: 2px 5px 1px; }' +
+      '.matches[data-layout="banner"] .dba-welcome-sub { font-size: 7.5px; }' +
+      '.matches[data-layout="banner"] .dba-welcome-terms { display: none; }' +
+      '.matches[data-layout="banner"] .dba-welcome-logo { display: none; }' +
+      '.matches[data-layout="banner"] .dba-welcome-pill { display: none; }' +
+      /* Banner never shows carousel dots (format is too short). */
+      '.ad-shell .matches[data-layout="banner"] ~ .dba-dots,' +
+      '.ad-shell > .dba-dots-shell[data-layout="banner"],' +
+      '.ad .dba-dots[data-layout="banner"] { display: none !important; }' +
       '.matches[data-layout="interstitial"] .dba-welcome-head { font-size: 22px; }' +
       '.matches[data-layout="interstitial"] .dba-welcome-sub { font-size: 13px; }' +
       '.matches[data-layout="interstitial"] .dba-welcome-terms { font-size: 10px; }' +
@@ -346,21 +357,21 @@
         'position: relative; overflow: hidden;' +
       '}' +
       '.matches[data-layout="banner"] .dba-pill-anchor {' +
-        'display: block; position: relative; height: 14px; flex-shrink: 0;' +
+        'display: block; position: relative; height: 11px; flex-shrink: 0;' +
       '}' +
       '.matches[data-layout="banner"] .dba-pill {' +
         'position: absolute; top: 0; left: 50%; transform: translateX(-50%);' +
-        'height: 100%; box-sizing: border-box; padding: 0 6px; margin: 0;' +
+        'height: 100%; box-sizing: border-box; padding: 0 5px; margin: 0;' +
         'display: inline-flex; align-items: center; justify-content: center;' +
-        'font-size: 8px; font-weight: 600; line-height: 1; white-space: nowrap;' +
+        'font-size: 6.5px; font-weight: 600; line-height: 1; white-space: nowrap;' +
       '}' +
       '.matches[data-layout="banner"] .dba-v-gap { display: none; }' +
       '.matches[data-layout="banner"] .dba-teams {' +
-        'position: relative; justify-content: center; gap: 0; margin-top: 0; font-size: 11px;' +
-        'flex-shrink: 0; width: 100%; min-width: 0; min-height: 11px;' +
+        'position: relative; justify-content: center; gap: 0; margin-top: 0; font-size: 8px;' +
+        'flex-shrink: 0; width: 100%; min-width: 0; min-height: 14px;' +
       '}' +
       '.matches[data-layout="banner"] .dba-teamblock {' +
-        'position: absolute; top: 0; bottom: 0; flex: none; min-width: 0; gap: 4px;' +
+        'position: absolute; top: 0; bottom: 0; flex: none; min-width: 0; gap: 3px;' +
         'overflow: hidden; box-sizing: border-box;' +
       '}' +
       '.matches[data-layout="banner"] .dba-teamblock-home { left: 0; right: 50%; }' +
@@ -371,30 +382,30 @@
         'white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1;' +
       '}' +
       '.matches[data-layout="banner"] .dba-team-logo {' +
-        'width: 12.65px; height: 12.65px; flex: 0 0 12.65px;' +
-        'max-width: 12.65px; max-height: 12.65px; filter: none;' +
+        'width: 14px; height: 14px; flex: 0 0 14px;' +
+        'max-width: 14px; max-height: 14px; filter: none;' +
       '}' +
       '.matches[data-layout="banner"] .dba-x {' +
         'position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);' +
-        'font-size: 11px; opacity: 0.6; margin: 0; flex: 0 0 auto; z-index: 1; line-height: 1;' +
+        'font-size: 8px; opacity: 0.6; margin: 0; flex: 0 0 auto; z-index: 1; line-height: 1;' +
       '}' +
       '.matches[data-layout="banner"] .dba-odds {' +
-        'position: relative; height: 11px; display: block; margin-top: 0; font-size: 9px; flex-shrink: 0;' +
+        'position: relative; height: 10px; display: block; margin-top: 0; font-size: 7.5px; flex-shrink: 0;' +
       '}' +
       '.matches[data-layout="banner"] .dba-odd-slot { display: contents; }' +
       '.matches[data-layout="banner"] .dba-odd-slot-draw:before { content: none; }' +
       '.matches[data-layout="banner"] .dba-odd {' +
         'position: absolute; top: 0; left: 0; transform: translateX(-50%); gap: 2px;' +
       '}' +
-      '.matches[data-layout="banner"] .dba-odd-label { font-size: 6.5px; }' +
+      '.matches[data-layout="banner"] .dba-odd-label { font-size: 5.5px; }' +
       '.ad-shell.legal-band .matches[data-layout="banner"] .dba-card { gap: 2px; }' +
-      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-pill-anchor { height: 9px; }' +
-      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-pill { padding: 0 3px; font-size: 6.6px; }' +
-      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-teams { gap: 2px; font-size: 8.5px; }' +
-      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-team-logo { width: 10.35px; height: 10.35px; }' +
-      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-x { font-size: 8.5px; }' +
-      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-odds { height: 9px; font-size: 7px; }' +
-      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-odd-label { font-size: 5.5px; }' +
+      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-pill-anchor { height: 7px; }' +
+      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-pill { padding: 0 2.5px; font-size: 5px; }' +
+      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-teams { gap: 2px; font-size: 6.5px; min-height: 10.5px; }' +
+      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-team-logo { width: 10.5px; height: 10.5px; flex-basis: 10.5px; max-width: 10.5px; max-height: 10.5px; }' +
+      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-x { font-size: 6.5px; }' +
+      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-odds { height: 7.5px; font-size: 6px; }' +
+      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-odd-label { font-size: 4.5px; }' +
       '.matches[data-layout="interstitial"] { flex: 1 1 0; min-height: 0; }' +
       '.matches[data-layout="interstitial"] .dba-track { min-height: 0; height: 100%; }' +
       '.matches[data-layout="interstitial"] .dba-slide {' +
@@ -877,7 +888,7 @@
     var xRect = x.getBoundingClientRect();
     var xC = (xRect.left + xRect.width / 2 - oddsRect.left) / scaleX;
     var shell = card.closest('.ad-shell');
-    var spread = (shell && shell.classList.contains('legal-band')) ? 28 : 38;
+    var spread = (shell && shell.classList.contains('legal-band')) ? 24 : 34;
     if (pill) {
       var cardRect = card.getBoundingClientRect();
       pill.style.left = ((xRect.left + xRect.width / 2 - cardRect.left) / scaleX) + 'px';
