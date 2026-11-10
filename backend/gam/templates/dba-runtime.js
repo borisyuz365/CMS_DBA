@@ -371,12 +371,17 @@
         'flex-shrink: 0; width: 100%; min-width: 0; min-height: 14px;' +
       '}' +
       '.matches[data-layout="banner"] .dba-teamblock {' +
-        'position: absolute; top: 0; bottom: 0; flex: none; min-width: 0; gap: 3px;' +
+        /* width:auto — must override MPU `width:0` or left/right collapse the box
+           and team names render at 0px (crests alone look "missing" in GAM). */
+        'position: absolute; top: 0; bottom: 0; flex: none;' +
+        'width: auto; max-width: none; min-width: 0; gap: 3px;' +
         'overflow: hidden; box-sizing: border-box;' +
       '}' +
       '.matches[data-layout="banner"] .dba-teamblock-home { left: 0; right: 50%; }' +
       '.matches[data-layout="banner"] .dba-teamblock-away { left: 50%; right: 0; }' +
-      '.matches[data-layout="banner"] .dba-team-name-slot { flex: 0 1 auto; }' +
+      '.matches[data-layout="banner"] .dba-team-name-slot {' +
+        'flex: 1 1 auto; min-width: 0; overflow: hidden;' +
+      '}' +
       '.matches[data-layout="banner"] .dba-team-name {' +
         'display: block; -webkit-line-clamp: unset; -webkit-box-orient: initial;' +
         'white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1;' +
