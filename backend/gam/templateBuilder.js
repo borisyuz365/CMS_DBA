@@ -382,6 +382,14 @@ function buildCreativeTemplate(dbaTemplate, options = {}) {
   let snippet = applyInlineValues(rawSnippet, inline);
   // GAM export: body-end bootstrap (+ sample matches for standard formats).
   snippet = makeSnippetSelfContained(snippet);
+  // Visible bake stamp so ops can confirm the copied HTML is the current build
+  // (GAM creatives do not auto-update when cms-dba redeploys).
+  const bakeStamp = `<!-- dba-snippet-v=2026-11-10-carousel-px sha=${String(process.env.GIT_SHA || process.env.GITHUB_SHA || 'local').slice(0, 12)} -->`;
+  if (snippet.includes('<!DOCTYPE html>') || snippet.includes('<!doctype html>')) {
+    snippet = snippet.replace(/<!DOCTYPE html>/i, `${bakeStamp}\n<!DOCTYPE html>`);
+  } else {
+    snippet = `${bakeStamp}\n${snippet}`;
+  }
   const macrosLeft = remainingMacros(snippet);
   const payloadLink = !!options.payloadLink;
   const bakeValidation = kind === '3bm'
