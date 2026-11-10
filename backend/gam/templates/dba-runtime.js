@@ -214,9 +214,14 @@
       '.ad-shell.dba-on-welcome .ad-stack .matches {' +
         'height: 100%; position: relative;' +
       '}' +
-      /* Drop shell logo from layout on welcome — slide owns logo+pill. */
+      /* MPU welcome: slide owns logo+pill, so drop the shell logo.
+         Banner keeps the shell logo always (grid width must stay stable or
+         match slides sized during welcome overflow and show two halves). */
       '.ad-shell.dba-on-welcome .logo-wrap {' +
         'display: none !important;' +
+      '}' +
+      '.ad-shell.dba-on-welcome:has(.matches[data-layout="banner"]) .logo-wrap {' +
+        'display: flex !important;' +
       '}' +
       '.matches .dba-welcome-top {' +
         'display: flex; align-items: center; justify-content: space-between;' +
@@ -347,8 +352,9 @@
       '.ad-shell.legal-band .ad-stack .matches .dba-x { font-size: 10px; }' +
       '.ad-shell.legal-band .ad-stack .matches .dba-odds { margin-top: 0; font-size: 9px; }' +
       '.ad-shell.legal-band .ad-stack .matches .dba-odd-label { font-size: 6px; }' +
-      '.matches[data-layout="banner"] { display: flex; align-items: stretch; overflow: hidden; }' +
-      '.matches[data-layout="banner"] .dba-track { height: 100%; }' +
+      /* flex-start: do not center the wide track or slides sit half-off. */
+      '.matches[data-layout="banner"] { display: flex; align-items: stretch; justify-content: flex-start; overflow: hidden; }' +
+      '.matches[data-layout="banner"] .dba-track { height: 100%; margin: 0; }' +
       '.matches[data-layout="banner"] .dba-slide { gap: 0; justify-content: flex-start; height: 100%; overflow: hidden; }' +
       '.matches[data-layout="banner"] .dba-card {' +
         'background: transparent; border: none; border-radius: 0; padding: 0;' +
@@ -799,9 +805,13 @@
         node._dbaChromeTimer = null;
       }
       syncWelcomeChrome(node, real);
+      // Logo / stack chrome toggles change matches width — force reflow so
+      // goTo() does not size slides to the pre-toggle viewport.
+      void node.offsetWidth;
     }
 
     function goTo(p, withTransition) {
+      void node.offsetWidth;
       var m = measure();
       if (!(m.w > 0)) return;
       applyLayout(m.w, m.h);
