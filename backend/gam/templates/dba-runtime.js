@@ -547,17 +547,20 @@
 
   // Mount slides into `node`. When there's more than one slide, run an
   // infinite-forward carousel: animate to a clone of slide 0 sitting at the
-  // end of the track, then drop the transition and reset translateX(0). The
-  // snap is invisible because both endpoints render the same content.
+  // end of the track, then drop the transition and reset to 0. The snap is
+  // invisible because both endpoints render the same content.
   //
-  // Transform math (must match AdPreview): track width = slideCount * 100% of
-  // the viewport; each slide is 100/slideCount of the track; translate by
-  // -(pos / slideCount * 100)% of the track (= one viewport per step).
-  // Using translateX(-pos * 100%) is wrong — % is relative to the track itself.
+  // Pixel transforms (not %) — GAM SafeFrame / line-item preview often gives
+  // the %-of-track model a 0-width first layout pass, so the carousel looks
+  // frozen even though setInterval is firing.
   function mountCarousel(node, slides, intervalMs, transitionMs) {
     if (node._dbaCarouselTimer) {
       clearInterval(node._dbaCarouselTimer);
       node._dbaCarouselTimer = null;
+    }
+    if (node._dbaCarouselRo) {
+      try { node._dbaCarouselRo.disconnect(); } catch (e) {}
+      node._dbaCarouselRo = null;
     }
     while (node.firstChild) node.removeChild(node.firstChild);
     if (!slides.length) {
@@ -571,43 +574,50 @@
 
     var n = slides.length;
     var dotsEl = mountDots(node, n);
-
-    if (n < 2) {
-      track.style.width = '100%';
-      if (slides[0]) {
-        slides[0].style.flex = '0 0 100%';
-        slides[0].style.width = '100%';
-        slides[0].style.maxWidth = '100%';
-        if (node.getAttribute('data-layout') === 'interstitial') slides[0].style.height = '100%';
-      }
-      return;
-    }
-
-    track.appendChild(slides[0].cloneNode(true));
-
-    var slideCount = n + 1;
-    var slidePct = 100 / slideCount;
-    track.style.width = (slideCount * 100) + '%';
-    var kids = track.children;
-    for (var s = 0; s < kids.length; s++) {
-      kids[s].style.flex = '0 0 ' + slidePct + '%';
-      kids[s].style.width = slidePct + '%';
-      kids[s].style.maxWidth = slidePct + '%';
-      kids[s].style.minWidth = slidePct + '%';
-      kids[s].style.boxSizing = 'border-box';
-    }
-
     var pos = 0;
+    var sliding = n >= 2;
+
+    if (sliding) track.appendChild(slides[0].cloneNode(true));
+
+    function measure() {
+      return node.clientWidth || node.offsetWidth || 0;
+    }
+
+    function applyLayout(w) {
+      if (!(w > 0)) return;
+      var kids = track.children;
+      var count = kids.length;
+      for (var s = 0; s < count; s++) {
+        kids[s].style.flex = '0 0 ' + w + 'px';
+        kids[s].style.width = w + 'px';
+        kids[s].style.minWidth = w + 'px';
+        kids[s].style.maxWidth = w + 'px';
+        kids[s].style.boxSizing = 'border-box';
+        if (!sliding && node.getAttribute('data-layout') === 'interstitial') {
+          kids[s].style.height = '100%';
+        }
+      }
+      track.style.width = (count * w) + 'px';
+    }
+
     function setActive(idx) {
       updateDots(dotsEl, ((idx % n) + n) % n);
     }
+
     function goTo(p, withTransition) {
+      var w = measure();
+      if (!(w > 0)) return;
+      applyLayout(w);
+      var tx = 'translate3d(-' + (p * w) + 'px, 0, 0)';
       track.style.transition = withTransition
         ? ('transform ' + transitionMs + 'ms cubic-bezier(0.32, 0.72, 0.24, 1)')
         : 'none';
-      track.style.transform = 'translate3d(-' + ((p * 100) / slideCount) + '%, 0, 0)';
+      track.style.webkitTransform = tx;
+      track.style.transform = tx;
     }
+
     function advance() {
+      if (!sliding) return;
       pos++;
       setActive(pos);
       goTo(pos, true);
@@ -622,9 +632,31 @@
         }, transitionMs + 30);
       }
     }
-    setActive(0);
-    goTo(0, false);
-    node._dbaCarouselTimer = setInterval(advance, intervalMs);
+
+    function start(attempt) {
+      var w = measure();
+      if (!(w > 0) && attempt < 60) {
+        setTimeout(function () { start(attempt + 1); }, 50);
+        return;
+      }
+      applyLayout(Math.max(w, 1));
+      setActive(0);
+      goTo(0, false);
+      scheduleAlign(node);
+      if (!sliding) return;
+      if (node._dbaCarouselTimer) clearInterval(node._dbaCarouselTimer);
+      node._dbaCarouselTimer = setInterval(advance, intervalMs);
+    }
+
+    if (typeof ResizeObserver !== 'undefined') {
+      node._dbaCarouselRo = new ResizeObserver(function () {
+        goTo(pos, false);
+        scheduleAlign(node);
+      });
+      node._dbaCarouselRo.observe(node);
+    }
+
+    start(0);
   }
 
   // Banner only: dash / pill follow this card's centre (ad midline when the
@@ -1064,6 +1096,9 @@
 
     var games = filterUpcoming(extractMatches(data));
     if (!games.length) return;
+    // Thin feeds (common in GAM line-item preview) pack into a single slide
+    // when per-slide is 2+. Drop to 1 game/slide so the carousel can rotate.
+    if (games.length >= 2 && Math.ceil(games.length / perSlide) < 2) perSlide = 1;
     var layout = node.getAttribute('data-layout') || '';
     var slides = buildSlides(games, perSlide, layout);
     mountCarousel(node, slides, intervalMs, transitionMs);
@@ -1098,12 +1133,32 @@
   }
 
   // Optional base64 JSON blob baked into the creative for GAM preview /
-  // offline fallback when the live feed cannot be fetched.
+  // offline fallback when the live feed cannot be fetched. Kickoffs are
+  // freshened to "now + N days" so older baked snippets still pass the
+  // upcoming filter and keep the carousel alive.
+  function pad2(n) {
+    n = String(n);
+    return n.length < 2 ? '0' + n : n;
+  }
+
+  function freshenSampleDates(data) {
+    if (!data || !Array.isArray(data.matches)) return data;
+    var now = Date.now();
+    for (var i = 0; i < data.matches.length; i++) {
+      var kickoff = new Date(now + (i + 1) * 24 * 60 * 60 * 1000);
+      kickoff.setHours(15 + (i % 3), 30, 0, 0);
+      data.matches[i].ISOStartTime = kickoff.toISOString();
+      data.matches[i].date = pad2(kickoff.getDate()) + '/' + pad2(kickoff.getMonth() + 1)
+        + ' · ' + pad2(kickoff.getHours()) + ':' + pad2(kickoff.getMinutes());
+    }
+    return data;
+  }
+
   function loadSample(node) {
     var b64 = node.getAttribute('data-sample-b64');
     if (!b64) return null;
     try {
-      return JSON.parse(atob(b64));
+      return freshenSampleDates(JSON.parse(atob(b64)));
     } catch (e) {
       if (window.console) console.warn('[dba-runtime] bad data-sample-b64');
       return null;

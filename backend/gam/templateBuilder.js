@@ -289,7 +289,8 @@ function __dbaGameCount(data) {
     .then(function (data) {
       if (!data || !window.DbaRenderMatches) return;
       if (window.DbaOnFeedPayload) window.DbaOnFeedPayload(node, data);
-      // Prefer any live feed over baked sample (sample is offline fallback only).
+      // Prefer live games when the feed returns any. Runtime drops per-slide
+      // to 1 when needed so thin feeds (GAM line-item preview) still rotate.
       if (__dbaGameCount(data) > 0) window.DbaRenderMatches(node, data);
     })
     .catch(function () {});
