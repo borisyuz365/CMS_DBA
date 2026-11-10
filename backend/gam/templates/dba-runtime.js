@@ -193,38 +193,37 @@
       '.matches[data-layout="banner"] .dba-slide { overflow: hidden; }' +
       /* Welcome offer = carousel slide 0 (baked data-welcome-* on .matches).
          NOTE: never put `+` immediately after a block comment — JS parses
-         `+ '.foo'` as unary-plus → NaN and corrupts the whole stylesheet. */
+         `+ '.foo'` as unary-plus → NaN and corrupts the whole stylesheet.
+         Geometry mirrors AdPreview renderWelcomePage: expand ONLY while the
+         welcome slide is active. Match slides keep axisY stack so cards keep
+         natural height and odds are not flex-shrunk away. */
       '.matches .dba-slide-welcome {' +
-        'justify-content: center; align-items: stretch; gap: 6px;' +
-        'padding: 4px 2px 0; min-height: 120px; height: 100%; text-align: center;' +
+        'justify-content: flex-start; align-items: stretch; gap: 0;' +
+        'padding: 10px 0 0; height: 100%; text-align: center;' +
         'box-sizing: border-box;' +
       '}' +
-      /* When welcome is enabled, expand the match viewport to the CTA band so
-         the offer slide (and match slides) fill the ad instead of overflowing
-         a zero-height .matches box. */
-      '.ad-shell.dba-has-welcome .ad-stack {' +
-        'top: 8px; bottom: 62px; left: 14px; right: 14px;' +
+      '.ad-shell.legal-band .matches .dba-slide-welcome { padding-top: 8px; }' +
+      /* Offer slide only: fill top→CTA like AdPreview page carousel. */
+      '.ad-shell.dba-on-welcome .ad-stack {' +
+        'top: 0; bottom: 62px; left: 14px; right: 14px;' +
         'transform: none; height: auto;' +
-        'display: flex; flex-direction: column;' +
       '}' +
-      '.ad-shell.legal-band.dba-has-welcome .ad-stack {' +
+      '.ad-shell.legal-band.dba-on-welcome .ad-stack {' +
         'left: 12px; right: 12px; bottom: 69px;' +
       '}' +
-      '.ad-shell.legal-strip.dba-has-welcome .ad-stack { bottom: 68px; }' +
-      '.ad-shell.dba-has-welcome .logo-wrap {' +
-        'position: relative; bottom: auto; left: auto; margin: 0 auto 6px;' +
-        'transform: none; flex: 0 0 auto;' +
+      '.ad-shell.legal-strip.dba-on-welcome .ad-stack { bottom: 68px; }' +
+      '.ad-shell.dba-on-welcome .ad-stack .matches {' +
+        'height: 100%; position: relative;' +
       '}' +
-      '.ad-shell.dba-has-welcome .ad-stack .matches {' +
-        'flex: 1 1 auto; min-height: 0; height: 100%; position: relative;' +
-      '}' +
-      '.ad-shell.dba-has-welcome .matches .dba-slide:not(.dba-slide-welcome) {' +
-        'justify-content: center; height: 100%;' +
+      /* Drop shell logo from layout on welcome — slide owns logo+pill. */
+      '.ad-shell.dba-on-welcome .logo-wrap {' +
+        'display: none !important;' +
       '}' +
       '.matches .dba-welcome-top {' +
         'display: flex; align-items: center; justify-content: space-between;' +
-        'flex-shrink: 0; gap: 8px;' +
+        'flex-shrink: 0; gap: 8px; margin-bottom: 8px;' +
       '}' +
+      '.ad-shell.legal-band .matches .dba-welcome-top { margin-bottom: 4px; }' +
       '.matches .dba-welcome-logo {' +
         'width: 42px; height: 42px; flex-shrink: 0;' +
         'background-size: contain; background-repeat: no-repeat; background-position: center;' +
@@ -242,13 +241,14 @@
         'justify-content: center; align-items: center; gap: 6px;' +
         'min-height: 0; padding: 0 4px; box-sizing: border-box;' +
       '}' +
+      '.ad-shell.legal-band .matches .dba-welcome-copy { gap: 4px; }' +
       '.matches .dba-welcome-head {' +
-        'font-size: 18px; font-weight: 800; line-height: 1.05; letter-spacing: -0.02em;' +
+        'font-size: 22px; font-weight: 800; line-height: 1.05; letter-spacing: -0.02em;' +
       '}' +
-      '.ad-shell.legal-band .matches .dba-welcome-head { font-size: 16px; }' +
+      '.ad-shell.legal-band .matches .dba-welcome-head { font-size: 18px; }' +
       '.matches .dba-welcome-sub { font-size: 11px; opacity: 0.8; line-height: 1.25; }' +
       '.ad-shell.legal-band .matches .dba-welcome-sub { font-size: 10px; }' +
-      '.matches .dba-welcome-terms { font-size: 8px; opacity: 0.55; line-height: 1.2; }' +
+      '.matches .dba-welcome-terms { font-size: 8px; opacity: 0.55; line-height: 1.2; margin-top: 2px; }' +
       '.ad-shell.legal-band .matches .dba-welcome-terms { font-size: 7px; }' +
       '.matches[data-layout="banner"] .dba-welcome-head { font-size: 11px; }' +
       '.matches[data-layout="banner"] .dba-welcome-sub { font-size: 8px; }' +
@@ -259,15 +259,13 @@
       '.matches[data-layout="interstitial"] .dba-welcome-sub { font-size: 13px; }' +
       '.matches[data-layout="interstitial"] .dba-welcome-terms { font-size: 10px; }' +
       '.matches[data-layout="interstitial"] .dba-welcome-logo { width: 56px; height: 56px; }' +
-      '.ad-shell .logo-wrap {' +
-        'transition: opacity 700ms cubic-bezier(0.32, 0.72, 0.24, 1);' +
-      '}' +
-      '.ad-shell.dba-on-welcome .logo-wrap { opacity: 0; pointer-events: none; }' +
       '.ad .cta { transition: opacity 180ms ease; }' +
+      /* Never flex-shrink MPU cards — that was clipping the odds row. */
       '.matches .dba-card {' +
         'background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.15);' +
         'border-radius: 12px; padding: 8px 12px 10px; position: relative;' +
         'display: flex; flex-direction: column; gap: 6px; overflow: hidden;' +
+        'flex: 0 0 auto; box-sizing: border-box;' +
       '}' +
       '.matches .dba-pill-anchor { display: flex; justify-content: center; flex-shrink: 0; }' +
       '.matches .dba-pill {' +
@@ -314,7 +312,7 @@
         'overflow-wrap: break-word; word-break: normal;' +
       '}' +
       '.matches .dba-x { font-size: 11px; font-weight: 700; opacity: 0.65; flex: 0 0 auto; margin: 0 var(--dba-mpu-x-gap); }' +
-      '.matches .dba-odds { display: flex; align-items: center; margin-top: 0; min-width: 0; min-height: 14px; font-size: 10px; font-weight: 700; line-height: 1.2; overflow: visible; width: 100%; }' +
+      '.matches .dba-odds { display: flex; align-items: center; margin-top: 0; min-width: 0; min-height: 14px; font-size: 10px; font-weight: 700; line-height: 1.2; overflow: visible; width: 100%; flex-shrink: 0; }' +
       '.matches .dba-odd-slot { display: flex; align-items: center; min-width: 0; }' +
       '.matches .dba-odd-slot-home { flex: 1 1 0; width: 0; justify-content: flex-end; padding-right: var(--dba-mpu-odds-inset); box-sizing: border-box; }' +
       '.matches .dba-odd-slot-draw { position: relative; flex: 0 0 auto; margin: 0 var(--dba-mpu-x-gap); font-size: 10px; font-weight: 700; line-height: 1.2; }' +
@@ -746,8 +744,12 @@
       if (!(w > 0)) return;
       var kids = track.children;
       var count = kids.length;
+      var shell = node.closest && node.closest('.ad-shell');
+      // Fill height only while the welcome slide is active (expanded stack),
+      // or for interstitial/banner. Match MPU slides stay content-sized so
+      // cards are not flex-shrunk and odds stay visible.
       var fillH = h > 0 && (
-        node.getAttribute('data-welcome') === '1'
+        (shell && shell.classList.contains('dba-on-welcome'))
         || node.getAttribute('data-layout') === 'interstitial'
         || node.getAttribute('data-layout') === 'banner'
       );
@@ -762,29 +764,25 @@
           kids[s].style.minHeight = h + 'px';
         } else if (!sliding && node.getAttribute('data-layout') === 'interstitial') {
           kids[s].style.height = '100%';
+        } else {
+          kids[s].style.height = '';
+          kids[s].style.minHeight = '';
         }
       }
       track.style.width = (count * w) + 'px';
-      if (fillH) track.style.height = h + 'px';
+      track.style.height = fillH ? (h + 'px') : '';
     }
 
-    function setActive(idx, chromeDelayMs) {
+    function setActive(idx) {
       var real = ((idx % n) + n) % n;
       updateDots(dotsEl, real);
-      // Swap logo/CTA mid-slide so chrome keeps pace with the transform
-      // (offer↔games was snapping while match↔match stayed smooth).
+      // Sync stack geometry immediately (welcome expand on/off) so the next
+      // measure() sees the correct matches height before goTo.
       if (node._dbaChromeTimer) {
         clearTimeout(node._dbaChromeTimer);
         node._dbaChromeTimer = null;
       }
-      if (chromeDelayMs > 0) {
-        node._dbaChromeTimer = setTimeout(function () {
-          node._dbaChromeTimer = null;
-          syncWelcomeChrome(node, real);
-        }, chromeDelayMs);
-      } else {
-        syncWelcomeChrome(node, real);
-      }
+      syncWelcomeChrome(node, real);
     }
 
     function goTo(p, withTransition) {
@@ -802,13 +800,13 @@
     function advance() {
       if (!sliding) return;
       pos++;
-      setActive(pos, Math.max(0, Math.floor(transitionMs * 0.45)));
+      setActive(pos);
       goTo(pos, true);
       scheduleAlign(node);
       if (pos === n) {
         setTimeout(function () {
           pos = 0;
-          setActive(0, 0);
+          setActive(0);
           goTo(0, false);
           void track.offsetWidth;
           scheduleAlign(node);
@@ -817,13 +815,14 @@
     }
 
     function start(attempt) {
+      // Apply welcome chrome before first measure so offer slide fills top→CTA.
+      setActive(0);
       var m = measure();
       if (!(m.w > 0) && attempt < 60) {
         setTimeout(function () { start(attempt + 1); }, 50);
         return;
       }
       applyLayout(Math.max(m.w, 1), m.h);
-      setActive(0, 0);
       goTo(0, false);
       scheduleAlign(node);
       if (!sliding) return;
