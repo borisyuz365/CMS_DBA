@@ -30,10 +30,11 @@
 
   var ROOT_SEL = '.matches[data-feed]';
 
-  // Cloudinary team-logo source. 42×42 = 2× retina for the ~21 px MPU crest;
-  // c_limit means "no upscale"; d_countries:default.png yields a transparent
-  // placeholder when a team has no logo configured.
-  var TEAM_LOGO_BASE = 'https://res.cloudinary.com/scores365/image/upload/w_42,h_42,c_limit,d_countries:default.png/Competitors/';
+  // Cloudinary team-logo source. 64×64 = ~3× retina for the ~21 px MPU crest.
+  // c_pad + transparent canvas forces club crests AND country flags into the
+  // same square frame so object-fit:contain reads as equal size in the ad.
+  // d_countries:default.png yields a transparent placeholder when missing.
+  var TEAM_LOGO_BASE = 'https://res.cloudinary.com/scores365/image/upload/w_64,h_64,c_pad,b_transparent,d_countries:default.png/Competitors/';
 
   function el(tag, props, children) {
     var n = document.createElement(tag);
@@ -252,11 +253,30 @@
         'white-space: nowrap; display: inline-flex; align-items: center; justify-content: center;' +
       '}' +
       '.matches .dba-pill-text { display: block; line-height: 1; transform: translateY(0.5px); }' +
-      '.matches .dba-teams { display: flex; align-items: center; gap: 0; margin-top: 0; font-size: 10px; font-weight: 600; min-width: 0; }' +
-      '.matches .dba-teamblock { display: flex; align-items: center; gap: 6px; flex: 1; min-width: 0; }' +
+      /* MPU team row: equal-width halves (flex-basis 0) so crests sit at the
+         same distance from the dash regardless of name length — matches
+         AdPreview MatchRow. Crest size via --dba-mpu-crest; odds inset =
+         crest + name/crest gap so 1 / X / 2 stay under the crest columns. */ +
+      '.matches {' +
+        '--dba-mpu-crest: 20.7px;' +
+        '--dba-mpu-crest-gap: 6px;' +
+        '--dba-mpu-x-gap: 12px;' +
+        '--dba-mpu-odds-inset: calc(var(--dba-mpu-crest) + var(--dba-mpu-crest-gap));' +
+      '}' +
+      '.matches .dba-teams { display: flex; align-items: center; gap: 0; margin-top: 0; font-size: 10px; font-weight: 600; min-width: 0; width: 100%; }' +
+      '.matches .dba-teamblock {' +
+        'display: flex; align-items: center; gap: var(--dba-mpu-crest-gap);' +
+        'flex: 1 1 0; width: 0; min-width: 0;' +
+      '}' +
       '.matches .dba-teamblock-home { justify-content: flex-end; }' +
       '.matches .dba-teamblock-away { justify-content: flex-start; }' +
-      '.matches .dba-team-logo { width: 20.7px; height: 20.7px; flex: 0 0 auto; object-fit: contain; border-radius: 50%; background: rgba(255,255,255,0.08); }' +
+      '.matches .dba-team-logo {' +
+        'width: var(--dba-mpu-crest); height: var(--dba-mpu-crest);' +
+        'flex: 0 0 var(--dba-mpu-crest); max-width: var(--dba-mpu-crest); max-height: var(--dba-mpu-crest);' +
+        'object-fit: contain; object-position: center; box-sizing: border-box;' +
+        'display: block; border-radius: 0; background: transparent;' +
+        'filter: drop-shadow(0 1px 1px rgba(0,0,0,0.25));' +
+      '}' +
       '.matches .dba-team-name-slot {' +
         'flex: 1 1 auto; min-width: 0; overflow: hidden;' +
         'display: flex; align-items: center;' +
@@ -270,30 +290,30 @@
         'overflow: hidden; text-overflow: ellipsis; white-space: normal;' +
         'overflow-wrap: break-word; word-break: normal;' +
       '}' +
-      '.matches .dba-x { font-size: 11px; font-weight: 700; opacity: 0.65; flex: 0 0 auto; margin: 0 12px; }' +
-      '.matches .dba-odds { display: flex; align-items: center; margin-top: 0; min-width: 0; min-height: 14px; font-size: 10px; font-weight: 700; line-height: 1.2; overflow: visible; }' +
+      '.matches .dba-x { font-size: 11px; font-weight: 700; opacity: 0.65; flex: 0 0 auto; margin: 0 var(--dba-mpu-x-gap); }' +
+      '.matches .dba-odds { display: flex; align-items: center; margin-top: 0; min-width: 0; min-height: 14px; font-size: 10px; font-weight: 700; line-height: 1.2; overflow: visible; width: 100%; }' +
       '.matches .dba-odd-slot { display: flex; align-items: center; min-width: 0; }' +
-      '.matches .dba-odd-slot-home { flex: 1; justify-content: flex-end; padding-right: 24px; }' +
-      '.matches .dba-odd-slot-draw { position: relative; flex: 0 0 auto; margin: 0 12px; font-size: 10px; font-weight: 700; line-height: 1.2; }' +
+      '.matches .dba-odd-slot-home { flex: 1 1 0; width: 0; justify-content: flex-end; padding-right: var(--dba-mpu-odds-inset); box-sizing: border-box; }' +
+      '.matches .dba-odd-slot-draw { position: relative; flex: 0 0 auto; margin: 0 var(--dba-mpu-x-gap); font-size: 10px; font-weight: 700; line-height: 1.2; }' +
       '.matches .dba-odd-slot-draw:before { content: "\\2013"; visibility: hidden; }' +
       '.matches .dba-odd-slot-draw .dba-odd { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }' +
-      '.matches .dba-odd-slot-away { flex: 1; justify-content: flex-start; padding-left: 24px; }' +
+      '.matches .dba-odd-slot-away { flex: 1 1 0; width: 0; justify-content: flex-start; padding-left: var(--dba-mpu-odds-inset); box-sizing: border-box; }' +
       '.matches .dba-odd { display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; line-height: 1.2; }' +
       '.matches .dba-odd-label { font-size: 7px; font-weight: 800; color: #FFC107; line-height: 1.2; }' +
       '.matches .dba-v-gap { display: none; }' +
       '.ad-stack .matches { margin: 0; padding-top: 0; overflow: hidden; }' +
+      '.ad-shell.legal-band .ad-stack .matches {' +
+        '--dba-mpu-crest: 17.25px;' +
+        '--dba-mpu-crest-gap: 5px;' +
+        '--dba-mpu-x-gap: 10px;' +
+      '}' +
       '.ad-shell.legal-band .ad-stack .matches .dba-slide { gap: 6px; }' +
       '.ad-shell.legal-band .ad-stack .matches .dba-card { border-radius: 11px; padding: 8px 10px 9px; gap: 4px; }' +
       '.ad-shell.legal-band .ad-stack .matches .dba-pill { padding: 0 10px; height: 14px; font-size: 8px; }' +
       '.ad-shell.legal-band .ad-stack .matches { flex: 0 0 auto; margin-top: 0; margin-bottom: 4px; padding-top: 0; overflow: hidden; }' +
       '.ad-shell.legal-band .ad-stack .matches .dba-teams { gap: 0; margin-top: 0; font-size: 9px; }' +
-      '.ad-shell.legal-band .ad-stack .matches .dba-teamblock { gap: 5px; }' +
-      '.ad-shell.legal-band .ad-stack .matches .dba-team-logo { width: 17.25px; height: 17.25px; }' +
-      '.ad-shell.legal-band .ad-stack .matches .dba-x { font-size: 10px; margin: 0 10px; }' +
+      '.ad-shell.legal-band .ad-stack .matches .dba-x { font-size: 10px; }' +
       '.ad-shell.legal-band .ad-stack .matches .dba-odds { margin-top: 0; font-size: 9px; }' +
-      '.ad-shell.legal-band .ad-stack .matches .dba-odd-slot-home { padding-right: 20px; }' +
-      '.ad-shell.legal-band .ad-stack .matches .dba-odd-slot-draw { margin: 0 10px; }' +
-      '.ad-shell.legal-band .ad-stack .matches .dba-odd-slot-away { padding-left: 20px; }' +
       '.ad-shell.legal-band .ad-stack .matches .dba-odd-label { font-size: 6px; }' +
       '.matches[data-layout="banner"] { display: flex; align-items: stretch; overflow: hidden; }' +
       '.matches[data-layout="banner"] .dba-track { height: 100%; }' +
@@ -329,7 +349,10 @@
         'display: block; -webkit-line-clamp: unset; -webkit-box-orient: initial;' +
         'white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1;' +
       '}' +
-      '.matches[data-layout="banner"] .dba-team-logo { width: 12.65px; height: 12.65px; flex: 0 0 auto; }' +
+      '.matches[data-layout="banner"] .dba-team-logo {' +
+        'width: 12.65px; height: 12.65px; flex: 0 0 12.65px;' +
+        'max-width: 12.65px; max-height: 12.65px; filter: none;' +
+      '}' +
       '.matches[data-layout="banner"] .dba-x {' +
         'position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);' +
         'font-size: 11px; opacity: 0.6; margin: 0; flex: 0 0 auto; z-index: 1; line-height: 1;' +
