@@ -255,9 +255,6 @@
       '.matches .dba-welcome-terms { font-size: 8px; opacity: 0.55; line-height: 1.2; margin-top: 2px; }' +
       '.ad-shell.legal-band .matches .dba-welcome-terms { font-size: 7px; }' +
       /* Banner welcome: copy only (shell owns logo + CTA + legal). */
-      '.matches[data-layout="banner"] .dba-slide-welcome {' +
-        'justify-content: center; align-items: center; padding: 0; gap: 1px;' +
-      '}' +
       '.matches[data-layout="banner"] .dba-welcome-top { display: none; }' +
       '.matches[data-layout="banner"] .dba-welcome-copy {' +
         'flex: 0 1 auto; padding: 0; gap: 1px; justify-content: center;' +
@@ -353,9 +350,18 @@
       '.ad-shell.legal-band .ad-stack .matches .dba-odds { margin-top: 0; font-size: 9px; }' +
       '.ad-shell.legal-band .ad-stack .matches .dba-odd-label { font-size: 6px; }' +
       /* flex-start: do not center the wide track or slides sit half-off. */
-      '.matches[data-layout="banner"] { display: flex; align-items: stretch; justify-content: flex-start; overflow: hidden; }' +
+      '.matches[data-layout="banner"] {' +
+        'display: flex; align-items: stretch; justify-content: flex-start;' +
+        'overflow: hidden; min-height: 0; height: 100%;' +
+      '}' +
       '.matches[data-layout="banner"] .dba-track { height: 100%; margin: 0; }' +
       '.matches[data-layout="banner"] .dba-slide { gap: 0; justify-content: flex-start; height: 100%; overflow: hidden; }' +
+      /* Higher specificity than `.dba-slide` so welcome stays vertically centered
+         (same band as logo / CTA). Drop match-only top pad while on welcome. */
+      '.matches[data-layout="banner"] .dba-slide.dba-slide-welcome {' +
+        'justify-content: center; align-items: center; padding: 0; gap: 1px;' +
+      '}' +
+      '.ad-shell.dba-on-welcome .matches[data-layout="banner"] { padding-top: 0; }' +
       '.matches[data-layout="banner"] .dba-card {' +
         'background: transparent; border: none; border-radius: 0; padding: 0;' +
         'display: flex; flex-direction: column; align-items: stretch;' +
@@ -401,14 +407,27 @@
         'font-size: 8px; opacity: 0.6; margin: 0; flex: 0 0 auto; z-index: 1; line-height: 1;' +
       '}' +
       '.matches[data-layout="banner"] .dba-odds {' +
-        'position: relative; height: 10px; display: block; margin-top: 0; font-size: 7.5px; flex-shrink: 0;' +
+        'position: relative; height: 10px; display: block; margin-top: 0;' +
+        'font-size: 7.5px; font-weight: 700; line-height: 1; flex-shrink: 0;' +
       '}' +
       '.matches[data-layout="banner"] .dba-odd-slot { display: contents; }' +
+      /* Kill MPU draw-slot font-size:10px — with display:contents it still
+         inherits onto the X odd and makes it larger than 1 / 2. */
+      '.matches[data-layout="banner"] .dba-odd-slot-draw {' +
+        'font-size: inherit; font-weight: inherit; line-height: inherit; margin: 0;' +
+      '}' +
       '.matches[data-layout="banner"] .dba-odd-slot-draw:before { content: none; }' +
       '.matches[data-layout="banner"] .dba-odd {' +
-        'position: absolute; top: 0; left: 0; transform: translateX(-50%); gap: 2px;' +
+        'position: absolute; top: 0; left: 0; transform: translateX(-50%);' +
+        'gap: 2px; font-size: 7.5px; font-weight: 700; line-height: 1;' +
+        'align-items: baseline;' +
       '}' +
-      '.matches[data-layout="banner"] .dba-odd-label { font-size: 5.5px; }' +
+      '.matches[data-layout="banner"] .dba-odd-val {' +
+        'font-size: 7.5px; font-weight: 700; line-height: 1;' +
+      '}' +
+      '.matches[data-layout="banner"] .dba-odd-label {' +
+        'font-size: 5.5px; font-weight: 800; line-height: 1;' +
+      '}' +
       '.ad-shell.legal-band .matches[data-layout="banner"] .dba-card { gap: 2px; }' +
       '.ad-shell.legal-band .matches[data-layout="banner"] .dba-pill-anchor { height: 7px; }' +
       '.ad-shell.legal-band .matches[data-layout="banner"] .dba-pill { padding: 0 2.5px; font-size: 5px; }' +
@@ -416,6 +435,8 @@
       '.ad-shell.legal-band .matches[data-layout="banner"] .dba-team-logo { width: 10.5px; height: 10.5px; flex-basis: 10.5px; max-width: 10.5px; max-height: 10.5px; }' +
       '.ad-shell.legal-band .matches[data-layout="banner"] .dba-x { font-size: 6.5px; }' +
       '.ad-shell.legal-band .matches[data-layout="banner"] .dba-odds { height: 7.5px; font-size: 6px; }' +
+      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-odd,' +
+      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-odd-val { font-size: 6px; }' +
       '.ad-shell.legal-band .matches[data-layout="banner"] .dba-odd-label { font-size: 4.5px; }' +
       '.matches[data-layout="interstitial"] { flex: 1 1 0; min-height: 0; }' +
       '.matches[data-layout="interstitial"] .dba-track { min-height: 0; height: 100%; }' +
