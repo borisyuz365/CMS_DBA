@@ -328,7 +328,9 @@
       '.matches .dba-odds { display: flex; align-items: center; margin-top: 0; min-width: 0; min-height: 14px; font-size: 10px; font-weight: 700; line-height: 1.2; overflow: visible; width: 100%; flex-shrink: 0; }' +
       '.matches .dba-odd-slot { display: flex; align-items: center; min-width: 0; }' +
       '.matches .dba-odd-slot-home { flex: 1 1 0; width: 0; justify-content: flex-end; padding-right: var(--dba-mpu-odds-inset); box-sizing: border-box; }' +
-      '.matches .dba-odd-slot-draw { position: relative; flex: 0 0 auto; margin: 0 var(--dba-mpu-x-gap); font-size: 10px; font-weight: 700; line-height: 1.2; }' +
+      /* No font-size here — inherit from .dba-odds. A fixed 10px leaked through
+         banner `display:contents` and made the draw (X) odd larger than 1/2. */
+      '.matches .dba-odd-slot-draw { position: relative; flex: 0 0 auto; margin: 0 var(--dba-mpu-x-gap); font-weight: 700; line-height: 1.2; }' +
       '.matches .dba-odd-slot-draw:before { content: "\\2013"; visibility: hidden; }' +
       '.matches .dba-odd-slot-draw .dba-odd { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }' +
       '.matches .dba-odd-slot-away { flex: 1 1 0; width: 0; justify-content: flex-start; padding-left: var(--dba-mpu-odds-inset); box-sizing: border-box; }' +
@@ -356,13 +358,13 @@
       '}' +
       '.matches[data-layout="banner"] .dba-track { height: 100%; margin: 0; }' +
       '.matches[data-layout="banner"] .dba-slide { gap: 0; justify-content: flex-start; height: 100%; overflow: hidden; }' +
-      /* Higher specificity than `.dba-slide` so welcome stays vertically centered
-         (same band as logo / CTA). Drop match-only top pad while on welcome. */
+      /* Welcome: center in the band ABOVE the legal strip (not the full 50px
+         shell). Slide bottom pad = --dba-banner-legal-clear (set in JS). */
       '.matches[data-layout="banner"] .dba-slide.dba-slide-welcome {' +
-        'justify-content: center; align-items: center; padding: 0; gap: 1px;' +
+        'justify-content: center; align-items: center; gap: 1px;' +
+        'padding: 0 0 var(--dba-banner-legal-clear, 10px) 0;' +
+        'box-sizing: border-box;' +
       '}' +
-      /* Welcome shares the ad’s legal clearance — zero matches padding so the
-         copy centers on the same midline as logo / CTA (~24px in a 50px shell). */
       '.ad-shell.dba-on-welcome .matches[data-layout="banner"] {' +
         'padding-top: 0; padding-bottom: 0;' +
       '}' +
@@ -415,21 +417,22 @@
         'font-size: 7.5px; font-weight: 700; line-height: 1; flex-shrink: 0;' +
       '}' +
       '.matches[data-layout="banner"] .dba-odd-slot { display: contents; }' +
-      /* Kill MPU draw-slot font-size:10px — with display:contents it still
-         inherits onto the X odd and makes it larger than 1 / 2. */
       '.matches[data-layout="banner"] .dba-odd-slot-draw {' +
         'font-size: inherit; font-weight: inherit; line-height: inherit; margin: 0;' +
       '}' +
       '.matches[data-layout="banner"] .dba-odd-slot-draw:before { content: none; }' +
-      '.matches[data-layout="banner"] .dba-odd {' +
+      '.matches[data-layout="banner"] .dba-odd,' +
+      '.matches[data-layout="banner"] .dba-odd-slot-draw .dba-odd {' +
         'position: absolute; top: 0; left: 0; transform: translateX(-50%);' +
         'gap: 2px; font-size: 7.5px; font-weight: 700; line-height: 1;' +
         'align-items: baseline;' +
       '}' +
-      '.matches[data-layout="banner"] .dba-odd-val {' +
+      '.matches[data-layout="banner"] .dba-odd-val,' +
+      '.matches[data-layout="banner"] .dba-odd-slot-draw .dba-odd-val {' +
         'font-size: 7.5px; font-weight: 700; line-height: 1;' +
       '}' +
-      '.matches[data-layout="banner"] .dba-odd-label {' +
+      '.matches[data-layout="banner"] .dba-odd-label,' +
+      '.matches[data-layout="banner"] .dba-odd-slot-draw .dba-odd-label {' +
         'font-size: 5.5px; font-weight: 800; line-height: 1;' +
       '}' +
       '.ad-shell.legal-band .matches[data-layout="banner"] .dba-card { gap: 2px; }' +
@@ -654,6 +657,23 @@
     ]);
   }
 
+  function syncBannerLegalClear(node) {
+    if (!node || node.getAttribute('data-layout') !== 'banner') return;
+    var shell = node.closest ? node.closest('.ad-shell') : null;
+    if (!shell) return;
+    var legal = shell.querySelector('.legal');
+    var clear = 10;
+    if (legal && !legal.classList.contains('legal-hidden')) {
+      var lh = legal.getBoundingClientRect().height;
+      if (lh > 0) clear = Math.ceil(lh);
+      else if (shell.classList.contains('legal-strip')) clear = 10;
+      else if (shell.classList.contains('legal-band')) clear = Math.max(12, Math.round(shell.clientHeight * 0.1));
+    } else {
+      clear = 0;
+    }
+    node.style.setProperty('--dba-banner-legal-clear', clear + 'px');
+  }
+
   function syncWelcomeChrome(node, activeIdx) {
     var shell = node && node.closest ? node.closest('.ad-shell') : null;
     var hasWelcome = !!(node && node.getAttribute('data-welcome') === '1');
@@ -663,6 +683,7 @@
       if (hasWelcome && activeIdx === 0) shell.classList.add('dba-on-welcome');
       else shell.classList.remove('dba-on-welcome');
     }
+    syncBannerLegalClear(node);
     var ad = node && node.closest ? node.closest('.ad') : null;
     var cta = ad && ad.querySelector ? ad.querySelector('.cta') : null;
     if (!cta) return;
