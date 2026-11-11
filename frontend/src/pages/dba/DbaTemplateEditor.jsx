@@ -157,7 +157,7 @@ function DbaTemplateEditorInner({ initial, allBookmakers, isNew }) {
 
   useEffect(() => {
     if (!playing) return;
-    const interval = isInterstitialSize(previewSize) ? 3500 : 3000;
+    const interval = isInterstitialSize(previewSize) ? 3500 : previewSize === '320x50' ? 2000 : 3000;
     const tid = setInterval(() => {
       // Advance the visual position past the last real slide onto the clone,
       // and bump the logical slideIdx straight to its wrapped successor so

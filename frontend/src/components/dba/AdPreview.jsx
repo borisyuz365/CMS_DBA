@@ -46,7 +46,7 @@ function datePillSx({ height, fontSize, px, bgcolor, color }) {
 const BANNER = {
   default: {
     logoSize: 48,
-    topPad: 2.5,         // px from ad top edge to date pill
+    topPad: 1.5,         // px from ad top edge to date pill
     contentGap: 0,       // px between content row and legal strip (0 = no band)
     sidePad: 8,
     colGap: 8,
@@ -54,17 +54,16 @@ const BANNER = {
     ctaH: 24,
     ctaFont: 8,
     ctaPx: 6,
-    // Center betting content (date pill · teams · odds)
+    // Match column: date pill left · teams · odds
     match: {
-      pillH: 9, pillFont: 6, pillPx: 5,
-      teamFont: 7, crest: 16, teamGap: 3,
-      // Odds smaller than team names; same weight as names.
-      oddsFont: 5, oddsH: 6, oddDot: 2,
+      pillH: 8, pillFont: 6, pillPx: 5,
+      teamFont: 7, crest: 19, teamGap: 3,
+      oddsFont: 6.5, oddsH: 7.5, oddDot: 2,
       oddsWeight: 600,
       // 1 / 2 sit this many px left/right of the ad centre (not on the crests).
       oddsSpread: 34,
-      // Equal vertical gap between pill · teams · odds (fixed so it always shows)
-      rowGap: 1.5,
+      // Tight gap so names sit higher under the pill
+      rowGap: 0.5,
       wrapTeamNames: true,
     },
     // Welcome-offer slide
@@ -74,7 +73,7 @@ const BANNER = {
   },
   brazil: {
     logoSize: 52,
-    topPad: 2.5,
+    topPad: 1.5,
     contentGap: 4,       // px between odds and Brazil legal band
     lift: 4,             // shift logo · CTA up by this many px (match column stays pinned)
     sidePad: 6,
@@ -84,11 +83,11 @@ const BANNER = {
     ctaPx: 5,
     match: {
       pillH: 7, pillFont: 5, pillPx: 2.5,
-      teamFont: 6, crest: 13, teamGap: 2,
-      oddsFont: 4.5, oddsH: 5.5, oddDot: 2,
+      teamFont: 6, crest: 15, teamGap: 2,
+      oddsFont: 5.5, oddsH: 6.5, oddDot: 2,
       oddsWeight: 600,
       oddsSpread: 24,
-      rowGap: 1.5,
+      rowGap: 0.5,
       wrapTeamNames: true,
     },
     welcome: { headFont: 8, subFont: 5.5, ctaFont: 6.5 },
@@ -232,14 +231,14 @@ function BannerMatchSection({ match, config, dense = false, alignKey = 0 }) {
 
       // Pill / odds: getBoundingClientRect so absolute team blocks don't break
       // offsetLeft coordinate sharing.
-      const pillBox = pill.offsetParent?.getBoundingClientRect?.() || root.getBoundingClientRect();
       const oddsBox = oddsRow.getBoundingClientRect();
       const scaleX = rowRect.width / row.offsetWidth;
       const xRect = x.getBoundingClientRect();
-      const xC = (xRect.left + xRect.width / 2 - pillBox.left) / scaleX;
       const drawC = (xRect.left + xRect.width / 2 - oddsBox.left) / scaleX;
       const spread = s.oddsSpread;
-      pill.style.left = `${xC}px`;
+      // Date pill stays left-aligned in the match column.
+      pill.style.left = '0px';
+      pill.style.transform = 'none';
       ho.style.left = `${drawC - spread}px`;
       to.style.left = `${drawC}px`;
       ao.style.left = `${drawC + spread}px`;
@@ -289,10 +288,10 @@ function BannerMatchSection({ match, config, dense = false, alignKey = 0 }) {
       minHeight: 0,
       boxSizing: 'border-box',
     }}>
-      {/* Date pill — centred on the banner midline (same as X). */}
+      {/* Date pill — left edge of the match column. */}
       <Box sx={{ position: 'relative', height: s.pillH, flexShrink: 0 }}>
         <Box ref={pillRef} sx={{
-          position: 'absolute', top: 0, left: 0, transform: 'translateX(-50%)',
+          position: 'absolute', top: 0, left: 0, transform: 'none',
           flexShrink: 0,
           ...datePillSx({
             height: s.pillH,

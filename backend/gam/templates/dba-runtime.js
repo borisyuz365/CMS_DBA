@@ -183,8 +183,9 @@
          put width/max-width:100% here — that resolves against the wide track and
          collapses the carousel to a single non-scrolling viewport. */
       '.matches .dba-track { display: flex; flex-wrap: nowrap; flex-shrink: 0; height: 100%; will-change: transform; }' +
-      /* Allow horizontal swipe without the parent <a> stealing the gesture. */
-      '.matches { touch-action: pan-y; }' +
+      /* Horizontal swipe owns the gesture; stop the wrapping <a> from treating it as a drag-nav. */
+      '.ad-shell, .ad-shell .ad, .matches { touch-action: pan-y; }' +
+      '.ad-shell .ad { -webkit-user-drag: none; }' +
       '.matches .dba-slide {' +
         'flex: 0 0 auto;' +
         'display: flex; flex-direction: column; gap: 8px;' +
@@ -371,15 +372,16 @@
       '.matches[data-layout="banner"] .dba-card {' +
         'background: transparent; border: none; border-radius: 0; padding: 0;' +
         'display: flex; flex-direction: column; align-items: stretch;' +
-        /* Tight stack — 2-line names + odds must fit above legal (~35px). */
-        'justify-content: flex-start; gap: 1.5px; height: 100%; box-sizing: border-box;' +
+        /* Tight stack — names sit high; crests + odds fill the band above legal. */
+        'justify-content: flex-start; gap: 0.5px; height: 100%; box-sizing: border-box;' +
         'position: relative; overflow: hidden;' +
       '}' +
       '.matches[data-layout="banner"] .dba-pill-anchor {' +
-        'display: block; position: relative; height: 9px; flex-shrink: 0;' +
+        'display: block; position: relative; height: 8px; flex-shrink: 0;' +
       '}' +
+      /* Date pill: left edge of the match column (not centred on the dash). */
       '.matches[data-layout="banner"] .dba-pill {' +
-        'position: absolute; top: 0; left: 50%; transform: translateX(-50%);' +
+        'position: absolute; top: 0; left: 0; transform: none;' +
         'height: 100%; box-sizing: border-box; padding: 0 5px; margin: 0;' +
         'display: inline-flex; align-items: center; justify-content: center;' +
         'font-size: 6px; font-weight: 600; line-height: 1; white-space: nowrap;' +
@@ -387,8 +389,7 @@
       '.matches[data-layout="banner"] .dba-v-gap { display: none; }' +
       '.matches[data-layout="banner"] .dba-teams {' +
         'position: relative; justify-content: center; gap: 0; margin-top: 0; font-size: 7px;' +
-        /* Room for larger crests + a 2-line wrap (line-height 1.05 × 2). */
-        'flex-shrink: 0; width: 100%; min-width: 0; min-height: 16px;' +
+        'flex-shrink: 0; width: 100%; min-width: 0; min-height: 19px;' +
       '}' +
       '.matches[data-layout="banner"] .dba-teamblock {' +
         /* width:auto — must override MPU `width:0` or left/right collapse the box
@@ -410,17 +411,16 @@
         'overflow-wrap: break-word; word-break: normal;' +
       '}' +
       '.matches[data-layout="banner"] .dba-team-logo {' +
-        'width: 16px; height: 16px; flex: 0 0 16px;' +
-        'max-width: 16px; max-height: 16px; filter: none;' +
+        'width: 19px; height: 19px; flex: 0 0 19px;' +
+        'max-width: 19px; max-height: 19px; filter: none;' +
       '}' +
       '.matches[data-layout="banner"] .dba-x {' +
         'position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);' +
         'font-size: 7.5px; opacity: 0.6; margin: 0; flex: 0 0 auto; z-index: 1; line-height: 1;' +
       '}' +
-      /* Odds smaller than team names (7px), same weight (600). */
       '.matches[data-layout="banner"] .dba-odds {' +
-        'position: relative; height: 6px; display: block; margin-top: 0;' +
-        'font-size: 5px; font-weight: 600; line-height: 1; flex-shrink: 0;' +
+        'position: relative; height: 7.5px; display: block; margin-top: 0;' +
+        'font-size: 6.5px; font-weight: 600; line-height: 1; flex-shrink: 0;' +
       '}' +
       '.matches[data-layout="banner"] .dba-odd-slot { display: contents; }' +
       '.matches[data-layout="banner"] .dba-odd-slot-draw {' +
@@ -430,27 +430,27 @@
       '.matches[data-layout="banner"] .dba-odd,' +
       '.matches[data-layout="banner"] .dba-odd-slot-draw .dba-odd {' +
         'position: absolute; top: 0; left: 0; transform: translateX(-50%);' +
-        'gap: 1.5px; font-size: 5px; font-weight: 600; line-height: 1;' +
+        'gap: 1.5px; font-size: 6.5px; font-weight: 600; line-height: 1;' +
         'align-items: baseline;' +
       '}' +
       '.matches[data-layout="banner"] .dba-odd-val,' +
       '.matches[data-layout="banner"] .dba-odd-slot-draw .dba-odd-val {' +
-        'font-size: 5px; font-weight: 600; line-height: 1;' +
+        'font-size: 6.5px; font-weight: 600; line-height: 1;' +
       '}' +
       '.matches[data-layout="banner"] .dba-odd-label,' +
       '.matches[data-layout="banner"] .dba-odd-slot-draw .dba-odd-label {' +
-        'font-size: 4px; font-weight: 600; line-height: 1;' +
+        'font-size: 5px; font-weight: 600; line-height: 1;' +
       '}' +
-      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-card { gap: 1.5px; }' +
+      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-card { gap: 0.5px; }' +
       '.ad-shell.legal-band .matches[data-layout="banner"] .dba-pill-anchor { height: 7px; }' +
-      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-pill { padding: 0 2.5px; font-size: 5px; }' +
-      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-teams { gap: 2px; font-size: 6px; min-height: 13px; }' +
-      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-team-logo { width: 13px; height: 13px; flex-basis: 13px; max-width: 13px; max-height: 13px; }' +
+      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-pill { padding: 0 2.5px; font-size: 5px; left: 0; transform: none; }' +
+      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-teams { gap: 2px; font-size: 6px; min-height: 15px; }' +
+      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-team-logo { width: 15px; height: 15px; flex-basis: 15px; max-width: 15px; max-height: 15px; }' +
       '.ad-shell.legal-band .matches[data-layout="banner"] .dba-x { font-size: 6px; }' +
-      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-odds { height: 5.5px; font-size: 4.5px; font-weight: 600; }' +
+      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-odds { height: 6.5px; font-size: 5.5px; font-weight: 600; }' +
       '.ad-shell.legal-band .matches[data-layout="banner"] .dba-odd,' +
-      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-odd-val { font-size: 4.5px; font-weight: 600; }' +
-      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-odd-label { font-size: 3.5px; font-weight: 600; }' +
+      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-odd-val { font-size: 5.5px; font-weight: 600; }' +
+      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-odd-label { font-size: 4px; font-weight: 600; }' +
       '.matches[data-layout="interstitial"] { flex: 1 1 0; min-height: 0; }' +
       '.matches[data-layout="interstitial"] .dba-track { min-height: 0; height: 100%; }' +
       '.matches[data-layout="interstitial"] .dba-slide {' +
@@ -790,6 +790,13 @@
       try { node._dbaCarouselRo.disconnect(); } catch (e) {}
       node._dbaCarouselRo = null;
     }
+    // Drop swipe listeners from a prior mount (sample → live feed remount).
+    // Stale closures otherwise advance a detached track and swipe looks dead.
+    if (typeof node._dbaSwipeCleanup === 'function') {
+      try { node._dbaSwipeCleanup(); } catch (e) {}
+      node._dbaSwipeCleanup = null;
+    }
+    node._dbaSwipeBound = false;
     while (node.firstChild) node.removeChild(node.firstChild);
     if (!slides.length) {
       removeDots(node);
@@ -969,63 +976,78 @@
       bindSwipe();
     }
 
-    // Touch / pointer swipe — same gesture as production 1X2 carousel.js so
-    // users can flick banner (and MPU/interstitial) slides by hand.
+    // Touch / mouse swipe — mirrors production 1X2 carousel.js (document-level
+    // touch listeners). Must rebind on every mountCarousel (sample→feed).
     var animating = false;
     var swipeX = null;
     var swipeY = null;
     var swiped = false;
-    var SWIPE_MIN = 28;
+    var swipeArmed = false;
+    var SWIPE_MIN = 24;
+
+    function pointInShell(clientX, clientY) {
+      var shell = node.closest && node.closest('.ad-shell');
+      var box = (shell || node).getBoundingClientRect();
+      return clientX >= box.left && clientX <= box.right
+        && clientY >= box.top && clientY <= box.bottom;
+    }
 
     function onSwipeStart(clientX, clientY) {
+      if (!pointInShell(clientX, clientY)) {
+        swipeArmed = false;
+        return;
+      }
+      swipeArmed = true;
       swipeX = clientX;
       swipeY = clientY;
       swiped = false;
     }
 
     function onSwipeMove(clientX, clientY, evt) {
-      if (swipeX == null || swipeY == null) return;
+      if (!swipeArmed || swipeX == null || swipeY == null) return;
       var dx = swipeX - clientX;
       var dy = swipeY - clientY;
       if (Math.abs(dx) < SWIPE_MIN && Math.abs(dy) < SWIPE_MIN) return;
       if (Math.abs(dx) <= Math.abs(dy)) {
         swipeX = null;
         swipeY = null;
+        swipeArmed = false;
         return;
       }
       if (evt && evt.cancelable) {
         try { evt.preventDefault(); } catch (e) {}
       }
       swiped = true;
+      swipeArmed = false;
+      swipeX = null;
+      swipeY = null;
       if (node._dbaCarouselTimer) clearInterval(node._dbaCarouselTimer);
       if (dx > 0) advance();
       else retreat();
       restartTimer();
-      swipeX = null;
-      swipeY = null;
     }
 
     function bindSwipe() {
       if (node._dbaSwipeBound) return;
       node._dbaSwipeBound = true;
-      node.addEventListener('touchstart', function (e) {
+
+      function onTouchStart(e) {
         if (!e.touches || !e.touches.length) return;
         onSwipeStart(e.touches[0].clientX, e.touches[0].clientY);
-      }, { passive: true });
-      node.addEventListener('touchmove', function (e) {
+      }
+      function onTouchMove(e) {
         if (!e.touches || !e.touches.length) return;
         onSwipeMove(e.touches[0].clientX, e.touches[0].clientY, e);
-      }, { passive: false });
-      // Mouse drag (desktop GAM preview) — listen on window so move events
-      // keep flowing even when the cursor leaves the tiny banner hit area.
-      node.addEventListener('mousedown', function (e) {
+      }
+      function onMouseDown(e) {
         if (e.button != null && e.button !== 0) return;
         onSwipeStart(e.clientX, e.clientY);
         function onMove(ev) {
-          if (swipeX == null) return;
+          if (!swipeArmed) return;
           onSwipeMove(ev.clientX, ev.clientY, ev);
         }
         function onUp() {
+          swipeArmed = false;
           swipeX = null;
           swipeY = null;
           window.removeEventListener('mousemove', onMove, true);
@@ -1033,14 +1055,31 @@
         }
         window.addEventListener('mousemove', onMove, true);
         window.addEventListener('mouseup', onUp, true);
-      });
-      // Swallow the click that follows a swipe so the wrapping <a> does not navigate.
-      node.addEventListener('click', function (e) {
+      }
+      function onClickCapture(e) {
         if (!swiped) return;
         swiped = false;
         e.preventDefault();
         e.stopPropagation();
-      }, true);
+      }
+
+      // Document-level touch like production — survives SafeFrame + remounts.
+      document.addEventListener('touchstart', onTouchStart, { passive: true, capture: true });
+      document.addEventListener('touchmove', onTouchMove, { passive: false, capture: true });
+      node.addEventListener('mousedown', onMouseDown);
+      var shell = node.closest && node.closest('.ad-shell');
+      var ad = shell && shell.querySelector && shell.querySelector('a.ad');
+      if (ad) ad.addEventListener('click', onClickCapture, true);
+      else node.addEventListener('click', onClickCapture, true);
+
+      node._dbaSwipeCleanup = function () {
+        document.removeEventListener('touchstart', onTouchStart, true);
+        document.removeEventListener('touchmove', onTouchMove, true);
+        node.removeEventListener('mousedown', onMouseDown);
+        if (ad) ad.removeEventListener('click', onClickCapture, true);
+        else node.removeEventListener('click', onClickCapture, true);
+        node._dbaSwipeBound = false;
+      };
     }
 
     if (typeof ResizeObserver !== 'undefined') {
@@ -1054,9 +1093,8 @@
     start(0);
   }
 
-  // Banner only: dash / pill follow this card's centre (ad midline when the
-  // slide is on screen). Odds stay at a fixed offset from that centre — not
-  // under crests — so 1 / X / 2 do not jump when team names change.
+  // Banner only: dash on the card centre. Odds at a fixed offset from that
+  // centre. Date pill stays left-aligned in the match column (CSS).
   function alignBannerOdds(card) {
     var homeBlock = card.querySelector('.dba-teamblock-home');
     var awayBlock = card.querySelector('.dba-teamblock-away');
@@ -1092,8 +1130,8 @@
     var shell = card.closest('.ad-shell');
     var spread = (shell && shell.classList.contains('legal-band')) ? 24 : 34;
     if (pill) {
-      var cardRect = card.getBoundingClientRect();
-      pill.style.left = ((xRect.left + xRect.width / 2 - cardRect.left) / scaleX) + 'px';
+      pill.style.left = '0px';
+      pill.style.transform = 'none';
     }
     odds[0].style.left = (xC - spread) + 'px';
     odds[1].style.left = xC + 'px';
