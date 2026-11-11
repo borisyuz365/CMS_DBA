@@ -56,13 +56,14 @@ const BANNER = {
     ctaPx: 6,
     // Center betting content (date pill · teams · odds)
     match: {
-      pillH: 11, pillFont: 6.5, pillPx: 5,
-      teamFont: 8, crest: 14, teamGap: 3,
-      oddsFont: 7.5, oddsH: 10, oddDot: 2.8,
+      pillH: 9, pillFont: 6, pillPx: 5,
+      teamFont: 7, crest: 13, teamGap: 3,
+      oddsFont: 6, oddsH: 7, oddDot: 2.5,
       // 1 / 2 sit this many px left/right of the ad centre (not on the crests).
       oddsSpread: 34,
       // Equal vertical gap between pill · teams · odds (fixed so it always shows)
-      rowGap: 2.5,
+      rowGap: 1.5,
+      wrapTeamNames: true,
     },
     // Welcome-offer slide
     welcome: { headFont: 11, subFont: 7.5, ctaFont: 8 },
@@ -81,10 +82,11 @@ const BANNER = {
     ctaPx: 5,
     match: {
       pillH: 7, pillFont: 5, pillPx: 2.5,
-      teamFont: 6.5, crest: 10.5, teamGap: 2,
-      oddsFont: 6, oddsH: 7.5, oddDot: 2,
+      teamFont: 6, crest: 10, teamGap: 2,
+      oddsFont: 5.5, oddsH: 7, oddDot: 2,
       oddsSpread: 24,
-      rowGap: 2,
+      rowGap: 1.5,
+      wrapTeamNames: true,
     },
     welcome: { headFont: 8, subFont: 5.5, ctaFont: 6.5 },
     // Brazil full-width legal band
@@ -256,10 +258,21 @@ function BannerMatchSection({ match, config, dense = false, alignKey = 0 }) {
     lineHeight: 1,
   };
 
-  const nameSx = {
-    display: 'inline-block', maxWidth: '100%',
-    whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-  };
+  const wrapNames = !!s.wrapTeamNames;
+  const nameSx = wrapNames
+    ? {
+        display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 2,
+        maxWidth: '100%', minWidth: 0, lineHeight: 1.05,
+        overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'normal',
+        overflowWrap: 'break-word', wordBreak: 'normal',
+      }
+    : {
+        display: 'inline-block', maxWidth: '100%',
+        whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+      };
+  const teamRowH = wrapNames
+    ? Math.max(s.crest, Math.ceil(s.teamFont * 1.05 * 2))
+    : Math.max(s.crest, s.teamFont);
 
   return (
     <Box ref={rootRef} sx={{
@@ -289,11 +302,12 @@ function BannerMatchSection({ match, config, dense = false, alignKey = 0 }) {
       </Box>
 
       {/* Team row — dash on the banner centre line; crests sit inward
-          toward the dash (name · crest – crest · name). Names ellipsize. */}
+          toward the dash (name · crest – crest · name). Long names wrap
+          to 2 lines when wrapTeamNames is on. */}
       <Box ref={teamRowRef} sx={{
         position: 'relative',
         width: '100%', minWidth: 0,
-        height: Math.max(s.crest, s.teamFont),
+        height: teamRowH,
         fontSize: s.teamFont, fontWeight: 600, lineHeight: 1,
         flexShrink: 0,
       }}>
@@ -307,7 +321,7 @@ function BannerMatchSection({ match, config, dense = false, alignKey = 0 }) {
             display: 'flex', alignItems: 'center', gap: `${s.teamGap}px`,
             maxWidth: '100%', minWidth: 0,
           }}>
-            <Box sx={{ minWidth: 0, overflow: 'hidden' }}>
+            <Box sx={{ minWidth: 0, overflow: 'hidden', display: 'flex', alignItems: 'center' }}>
               <Box ref={homeNameRef} component="span" sx={nameSx}>{match.home.name}</Box>
             </Box>
             <Box ref={homeCrestRef} sx={{ flexShrink: 0 }}><TeamCrest team={match.home} size={s.crest} /></Box>
@@ -330,7 +344,7 @@ function BannerMatchSection({ match, config, dense = false, alignKey = 0 }) {
             maxWidth: '100%', minWidth: 0,
           }}>
             <Box ref={awayCrestRef} sx={{ flexShrink: 0 }}><TeamCrest team={match.away} size={s.crest} /></Box>
-            <Box sx={{ minWidth: 0, overflow: 'hidden' }}>
+            <Box sx={{ minWidth: 0, overflow: 'hidden', display: 'flex', alignItems: 'center' }}>
               <Box ref={awayNameRef} component="span" sx={nameSx}>{match.away.name}</Box>
             </Box>
           </Box>

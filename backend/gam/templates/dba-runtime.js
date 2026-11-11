@@ -369,23 +369,24 @@
       '.matches[data-layout="banner"] .dba-card {' +
         'background: transparent; border: none; border-radius: 0; padding: 0;' +
         'display: flex; flex-direction: column; align-items: stretch;' +
-        /* gap 2 + compact rows — must fit in shellH − legal − topPad (~35px). */
-        'justify-content: flex-start; gap: 2px; height: 100%; box-sizing: border-box;' +
+        /* Tight stack — 2-line names + odds must fit above legal (~35px). */
+        'justify-content: flex-start; gap: 1.5px; height: 100%; box-sizing: border-box;' +
         'position: relative; overflow: hidden;' +
       '}' +
       '.matches[data-layout="banner"] .dba-pill-anchor {' +
-        'display: block; position: relative; height: 10px; flex-shrink: 0;' +
+        'display: block; position: relative; height: 9px; flex-shrink: 0;' +
       '}' +
       '.matches[data-layout="banner"] .dba-pill {' +
         'position: absolute; top: 0; left: 50%; transform: translateX(-50%);' +
         'height: 100%; box-sizing: border-box; padding: 0 5px; margin: 0;' +
         'display: inline-flex; align-items: center; justify-content: center;' +
-        'font-size: 6.5px; font-weight: 600; line-height: 1; white-space: nowrap;' +
+        'font-size: 6px; font-weight: 600; line-height: 1; white-space: nowrap;' +
       '}' +
       '.matches[data-layout="banner"] .dba-v-gap { display: none; }' +
       '.matches[data-layout="banner"] .dba-teams {' +
-        'position: relative; justify-content: center; gap: 0; margin-top: 0; font-size: 8px;' +
-        'flex-shrink: 0; width: 100%; min-width: 0; min-height: 12px;' +
+        'position: relative; justify-content: center; gap: 0; margin-top: 0; font-size: 7px;' +
+        /* Room for a 2-line wrap (line-height 1.05 × 2). */
+        'flex-shrink: 0; width: 100%; min-width: 0; min-height: 15px;' +
       '}' +
       '.matches[data-layout="banner"] .dba-teamblock {' +
         /* width:auto — must override MPU `width:0` or left/right collapse the box
@@ -398,22 +399,25 @@
       '.matches[data-layout="banner"] .dba-teamblock-away { left: 50%; right: 0; }' +
       '.matches[data-layout="banner"] .dba-team-name-slot {' +
         'flex: 1 1 auto; min-width: 0; overflow: hidden;' +
+        'display: flex; align-items: center;' +
       '}' +
       '.matches[data-layout="banner"] .dba-team-name {' +
-        'display: block; -webkit-line-clamp: unset; -webkit-box-orient: initial;' +
-        'white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1;' +
+        'display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;' +
+        'max-width: 100%; min-width: 0; line-height: 1.05;' +
+        'overflow: hidden; text-overflow: ellipsis; white-space: normal;' +
+        'overflow-wrap: break-word; word-break: normal;' +
       '}' +
       '.matches[data-layout="banner"] .dba-team-logo {' +
-        'width: 14px; height: 14px; flex: 0 0 14px;' +
-        'max-width: 14px; max-height: 14px; filter: none;' +
+        'width: 13px; height: 13px; flex: 0 0 13px;' +
+        'max-width: 13px; max-height: 13px; filter: none;' +
       '}' +
       '.matches[data-layout="banner"] .dba-x {' +
         'position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);' +
-        'font-size: 8px; opacity: 0.6; margin: 0; flex: 0 0 auto; z-index: 1; line-height: 1;' +
+        'font-size: 7.5px; opacity: 0.6; margin: 0; flex: 0 0 auto; z-index: 1; line-height: 1;' +
       '}' +
       '.matches[data-layout="banner"] .dba-odds {' +
-        'position: relative; height: 9px; display: block; margin-top: 0;' +
-        'font-size: 7.5px; font-weight: 700; line-height: 1; flex-shrink: 0;' +
+        'position: relative; height: 7px; display: block; margin-top: 0;' +
+        'font-size: 6px; font-weight: 700; line-height: 1; flex-shrink: 0;' +
       '}' +
       '.matches[data-layout="banner"] .dba-odd-slot { display: contents; }' +
       '.matches[data-layout="banner"] .dba-odd-slot-draw {' +
@@ -423,27 +427,27 @@
       '.matches[data-layout="banner"] .dba-odd,' +
       '.matches[data-layout="banner"] .dba-odd-slot-draw .dba-odd {' +
         'position: absolute; top: 0; left: 0; transform: translateX(-50%);' +
-        'gap: 2px; font-size: 7.5px; font-weight: 700; line-height: 1;' +
+        'gap: 1.5px; font-size: 6px; font-weight: 700; line-height: 1;' +
         'align-items: baseline;' +
       '}' +
       '.matches[data-layout="banner"] .dba-odd-val,' +
       '.matches[data-layout="banner"] .dba-odd-slot-draw .dba-odd-val {' +
-        'font-size: 7.5px; font-weight: 700; line-height: 1;' +
+        'font-size: 6px; font-weight: 700; line-height: 1;' +
       '}' +
       '.matches[data-layout="banner"] .dba-odd-label,' +
       '.matches[data-layout="banner"] .dba-odd-slot-draw .dba-odd-label {' +
-        'font-size: 5.5px; font-weight: 800; line-height: 1;' +
+        'font-size: 4.5px; font-weight: 800; line-height: 1;' +
       '}' +
-      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-card { gap: 2px; }' +
+      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-card { gap: 1.5px; }' +
       '.ad-shell.legal-band .matches[data-layout="banner"] .dba-pill-anchor { height: 7px; }' +
       '.ad-shell.legal-band .matches[data-layout="banner"] .dba-pill { padding: 0 2.5px; font-size: 5px; }' +
-      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-teams { gap: 2px; font-size: 6.5px; min-height: 10.5px; }' +
-      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-team-logo { width: 10.5px; height: 10.5px; flex-basis: 10.5px; max-width: 10.5px; max-height: 10.5px; }' +
-      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-x { font-size: 6.5px; }' +
-      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-odds { height: 7.5px; font-size: 6px; }' +
+      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-teams { gap: 2px; font-size: 6px; min-height: 13px; }' +
+      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-team-logo { width: 10px; height: 10px; flex-basis: 10px; max-width: 10px; max-height: 10px; }' +
+      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-x { font-size: 6px; }' +
+      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-odds { height: 7px; font-size: 5.5px; }' +
       '.ad-shell.legal-band .matches[data-layout="banner"] .dba-odd,' +
-      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-odd-val { font-size: 6px; }' +
-      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-odd-label { font-size: 4.5px; }' +
+      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-odd-val { font-size: 5.5px; }' +
+      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-odd-label { font-size: 4px; }' +
       '.matches[data-layout="interstitial"] { flex: 1 1 0; min-height: 0; }' +
       '.matches[data-layout="interstitial"] .dba-track { min-height: 0; height: 100%; }' +
       '.matches[data-layout="interstitial"] .dba-slide {' +
