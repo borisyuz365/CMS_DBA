@@ -58,7 +58,9 @@ const BANNER = {
     match: {
       pillH: 9, pillFont: 6, pillPx: 5,
       teamFont: 7, crest: 13, teamGap: 3,
-      oddsFont: 6, oddsH: 7, oddDot: 2.5,
+      // Odds smaller + lighter than team names so crests are not clipped.
+      oddsFont: 5, oddsH: 6, oddDot: 2,
+      oddsWeight: 500,
       // 1 / 2 sit this many px left/right of the ad centre (not on the crests).
       oddsSpread: 34,
       // Equal vertical gap between pill · teams · odds (fixed so it always shows)
@@ -83,7 +85,8 @@ const BANNER = {
     match: {
       pillH: 7, pillFont: 5, pillPx: 2.5,
       teamFont: 6, crest: 10, teamGap: 2,
-      oddsFont: 5.5, oddsH: 7, oddDot: 2,
+      oddsFont: 4.5, oddsH: 5.5, oddDot: 2,
+      oddsWeight: 500,
       oddsSpread: 24,
       rowGap: 1.5,
       wrapTeamNames: true,
@@ -252,8 +255,8 @@ function BannerMatchSection({ match, config, dense = false, alignKey = 0 }) {
   }, [match.home.name, match.away.name, dense, match.date, alignKey]);
 
   const oddLabelSx = {
-    fontSize: s.oddsFont * 0.72,
-    fontWeight: 800,
+    fontSize: s.oddsFont * 0.8,
+    fontWeight: 600,
     color: ODD_LABEL_COLOR,
     lineHeight: 1,
   };
@@ -355,18 +358,18 @@ function BannerMatchSection({ match, config, dense = false, alignKey = 0 }) {
       <Box ref={oddsRowRef} sx={{
         position: 'relative',
         height: s.oddsH,
-        fontSize: s.oddsFont, fontWeight: 700, lineHeight: 1,
+        fontSize: s.oddsFont, fontWeight: s.oddsWeight || 500, lineHeight: 1,
         flexShrink: 0,
       }}>
-        <Box ref={homeOddRef} sx={{ position: 'absolute', top: 0, transform: 'translateX(-50%)', display: 'inline-flex', alignItems: 'center', gap: '2px', whiteSpace: 'nowrap', lineHeight: 1 }}>
+        <Box ref={homeOddRef} sx={{ position: 'absolute', top: 0, transform: 'translateX(-50%)', display: 'inline-flex', alignItems: 'center', gap: '1.5px', whiteSpace: 'nowrap', lineHeight: 1 }}>
           <Box component="span" sx={oddLabelSx}>{ODD_OUTCOME_LABELS[0]}</Box>
           <Box component="span">{match.odds[0]}</Box>
         </Box>
-        <Box ref={tieOddRef} sx={{ position: 'absolute', top: 0, transform: 'translateX(-50%)', display: 'inline-flex', alignItems: 'center', gap: '2px', whiteSpace: 'nowrap', lineHeight: 1 }}>
+        <Box ref={tieOddRef} sx={{ position: 'absolute', top: 0, transform: 'translateX(-50%)', display: 'inline-flex', alignItems: 'center', gap: '1.5px', whiteSpace: 'nowrap', lineHeight: 1 }}>
           <Box component="span" sx={oddLabelSx}>{ODD_OUTCOME_LABELS[1]}</Box>
           <Box component="span">{match.odds[1]}</Box>
         </Box>
-        <Box ref={awayOddRef} sx={{ position: 'absolute', top: 0, transform: 'translateX(-50%)', display: 'inline-flex', alignItems: 'center', gap: '2px', whiteSpace: 'nowrap', lineHeight: 1 }}>
+        <Box ref={awayOddRef} sx={{ position: 'absolute', top: 0, transform: 'translateX(-50%)', display: 'inline-flex', alignItems: 'center', gap: '1.5px', whiteSpace: 'nowrap', lineHeight: 1 }}>
           <Box component="span" sx={oddLabelSx}>{ODD_OUTCOME_LABELS[2]}</Box>
           <Box component="span">{match.odds[2]}</Box>
         </Box>
