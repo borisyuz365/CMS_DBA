@@ -358,11 +358,9 @@
       '}' +
       '.matches[data-layout="banner"] .dba-track { height: 100%; margin: 0; }' +
       '.matches[data-layout="banner"] .dba-slide { gap: 0; justify-content: flex-start; height: 100%; overflow: hidden; }' +
-      /* Welcome: center in the band ABOVE the legal strip (not the full 50px
-         shell). Slide bottom pad = --dba-banner-legal-clear (set in JS). */
+      /* Welcome: JS sizes the slide to (shell − legal); center inside that box. */
       '.matches[data-layout="banner"] .dba-slide.dba-slide-welcome {' +
-        'justify-content: center; align-items: center; gap: 1px;' +
-        'padding: 0 0 var(--dba-banner-legal-clear, 10px) 0;' +
+        'justify-content: center; align-items: center; gap: 1px; padding: 0;' +
         'box-sizing: border-box;' +
       '}' +
       '.ad-shell.dba-on-welcome .matches[data-layout="banner"] {' +
@@ -371,11 +369,12 @@
       '.matches[data-layout="banner"] .dba-card {' +
         'background: transparent; border: none; border-radius: 0; padding: 0;' +
         'display: flex; flex-direction: column; align-items: stretch;' +
-        'justify-content: flex-start; gap: 3px; height: 100%; box-sizing: border-box;' +
+        /* gap 2 + compact rows — must fit in shellH − legal − topPad (~35px). */
+        'justify-content: flex-start; gap: 2px; height: 100%; box-sizing: border-box;' +
         'position: relative; overflow: hidden;' +
       '}' +
       '.matches[data-layout="banner"] .dba-pill-anchor {' +
-        'display: block; position: relative; height: 11px; flex-shrink: 0;' +
+        'display: block; position: relative; height: 10px; flex-shrink: 0;' +
       '}' +
       '.matches[data-layout="banner"] .dba-pill {' +
         'position: absolute; top: 0; left: 50%; transform: translateX(-50%);' +
@@ -386,7 +385,7 @@
       '.matches[data-layout="banner"] .dba-v-gap { display: none; }' +
       '.matches[data-layout="banner"] .dba-teams {' +
         'position: relative; justify-content: center; gap: 0; margin-top: 0; font-size: 8px;' +
-        'flex-shrink: 0; width: 100%; min-width: 0; min-height: 14px;' +
+        'flex-shrink: 0; width: 100%; min-width: 0; min-height: 12px;' +
       '}' +
       '.matches[data-layout="banner"] .dba-teamblock {' +
         /* width:auto — must override MPU `width:0` or left/right collapse the box
@@ -413,7 +412,7 @@
         'font-size: 8px; opacity: 0.6; margin: 0; flex: 0 0 auto; z-index: 1; line-height: 1;' +
       '}' +
       '.matches[data-layout="banner"] .dba-odds {' +
-        'position: relative; height: 10px; display: block; margin-top: 0;' +
+        'position: relative; height: 9px; display: block; margin-top: 0;' +
         'font-size: 7.5px; font-weight: 700; line-height: 1; flex-shrink: 0;' +
       '}' +
       '.matches[data-layout="banner"] .dba-odd-slot { display: contents; }' +
@@ -804,18 +803,29 @@
     function measure() {
       var w = node.clientWidth || node.offsetWidth || 0;
       var h = node.clientHeight || node.offsetHeight || 0;
-      // Banner: logo wordmark can inflate the grid row; clamp matches to the ad.
       if (node.getAttribute('data-layout') === 'banner') {
-        var ad = node.closest && node.closest('.ad');
-        if (ad) {
-          var maxH = ad.clientHeight || 0;
-          if (maxH > 0) {
-            node.style.maxHeight = maxH + 'px';
-            if (h > maxH) h = maxH;
-          }
+        var shell = node.closest && node.closest('.ad-shell');
+        var shellH = shell ? (shell.clientHeight || 0) : 0;
+        // Cap at the shell — logo wordmarks must not inflate the grid row.
+        if (shellH > 0) {
+          node.style.maxHeight = shellH + 'px';
+          if (h > shellH) h = shellH;
         }
       }
       return { w: w, h: h };
+    }
+
+    function bannerSlideHeight() {
+      syncBannerLegalClear(node);
+      var shell = node.closest && node.closest('.ad-shell');
+      var shellH = shell ? (shell.clientHeight || 50) : 50;
+      var clear = parseFloat(getComputedStyle(node).getPropertyValue('--dba-banner-legal-clear')) || 0;
+      var onWelcome = !!(shell && shell.classList.contains('dba-on-welcome'));
+      // Match slides keep top pad (date pill); welcome drops it via CSS.
+      var padT = onWelcome ? 0 : (parseFloat(getComputedStyle(node).paddingTop) || 0);
+      // Matches bottom pad clears the legal strip so odds never sit under it.
+      node.style.paddingBottom = onWelcome ? '0px' : (clear + 'px');
+      return Math.max(1, Math.round(shellH - clear - padT));
     }
 
     function applyLayout(w, h) {
@@ -832,6 +842,7 @@
         || node.getAttribute('data-layout') === 'interstitial'
         || isBanner
       );
+      var bannerH = isBanner ? bannerSlideHeight() : 0;
       for (var s = 0; s < count; s++) {
         kids[s].style.flex = '0 0 ' + w + 'px';
         kids[s].style.width = w + 'px';
@@ -839,11 +850,11 @@
         kids[s].style.maxWidth = w + 'px';
         kids[s].style.boxSizing = 'border-box';
         if (isBanner) {
-          // Fill the clamped matches box (see measure maxHeight) — not an
-          // independent px height that can re-inflate the grid row.
-          kids[s].style.height = '100%';
-          kids[s].style.minHeight = '0';
-          kids[s].style.maxHeight = '100%';
+          // Explicit px height (not %) so welcome justify-content:center works
+          // and match cards get a box that ends above the legal strip.
+          kids[s].style.height = bannerH + 'px';
+          kids[s].style.minHeight = bannerH + 'px';
+          kids[s].style.maxHeight = bannerH + 'px';
         } else if (fillH) {
           kids[s].style.height = h + 'px';
           kids[s].style.minHeight = h + 'px';
@@ -856,7 +867,7 @@
       }
       track.style.width = (count * w) + 'px';
       if (isBanner) {
-        track.style.height = '100%';
+        track.style.height = bannerH + 'px';
       } else {
         track.style.height = fillH ? (h + 'px') : '';
       }

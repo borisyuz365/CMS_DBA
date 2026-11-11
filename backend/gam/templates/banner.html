@@ -70,11 +70,14 @@
     padding-top: 5px;
     padding-bottom: 2px;
   }
-  .ad-shell.legal-strip .ad .matches,
   .ad-shell.legal-strip .ad .logo-wrap,
   .ad-shell.legal-strip .ad .cta-wrap {
-    /* Clear the footer so odds / CTA never sit on the legal strip. */
-    padding-bottom: 15px;
+    /* Clear the footer so CTA never sits on the legal strip. */
+    padding-bottom: 10px;
+  }
+  .ad-shell.legal-strip .ad .matches {
+    /* Runtime sets the exact legal-clearance pb; keep a safe fallback. */
+    padding-bottom: 10px;
   }
   .ad .cta-wrap {
     display: flex; align-items: center; justify-content: center;
