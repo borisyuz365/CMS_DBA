@@ -46,7 +46,7 @@ function datePillSx({ height, fontSize, px, bgcolor, color }) {
 const BANNER = {
   default: {
     logoSize: 48,
-    topPad: 5,           // px from ad top edge to date pill
+    topPad: 2.5,         // px from ad top edge to date pill
     contentGap: 0,       // px between content row and legal strip (0 = no band)
     sidePad: 8,
     colGap: 8,
@@ -57,10 +57,10 @@ const BANNER = {
     // Center betting content (date pill · teams · odds)
     match: {
       pillH: 9, pillFont: 6, pillPx: 5,
-      teamFont: 7, crest: 13, teamGap: 3,
-      // Odds smaller + lighter than team names so crests are not clipped.
+      teamFont: 7, crest: 16, teamGap: 3,
+      // Odds smaller than team names; same weight as names.
       oddsFont: 5, oddsH: 6, oddDot: 2,
-      oddsWeight: 500,
+      oddsWeight: 600,
       // 1 / 2 sit this many px left/right of the ad centre (not on the crests).
       oddsSpread: 34,
       // Equal vertical gap between pill · teams · odds (fixed so it always shows)
@@ -74,7 +74,7 @@ const BANNER = {
   },
   brazil: {
     logoSize: 52,
-    topPad: 5,
+    topPad: 2.5,
     contentGap: 4,       // px between odds and Brazil legal band
     lift: 4,             // shift logo · CTA up by this many px (match column stays pinned)
     sidePad: 6,
@@ -84,9 +84,9 @@ const BANNER = {
     ctaPx: 5,
     match: {
       pillH: 7, pillFont: 5, pillPx: 2.5,
-      teamFont: 6, crest: 10, teamGap: 2,
+      teamFont: 6, crest: 13, teamGap: 2,
       oddsFont: 4.5, oddsH: 5.5, oddDot: 2,
-      oddsWeight: 500,
+      oddsWeight: 600,
       oddsSpread: 24,
       rowGap: 1.5,
       wrapTeamNames: true,
@@ -358,7 +358,7 @@ function BannerMatchSection({ match, config, dense = false, alignKey = 0 }) {
       <Box ref={oddsRowRef} sx={{
         position: 'relative',
         height: s.oddsH,
-        fontSize: s.oddsFont, fontWeight: s.oddsWeight || 500, lineHeight: 1,
+        fontSize: s.oddsFont, fontWeight: s.oddsWeight || 600, lineHeight: 1,
         flexShrink: 0,
       }}>
         <Box ref={homeOddRef} sx={{ position: 'absolute', top: 0, transform: 'translateX(-50%)', display: 'inline-flex', alignItems: 'center', gap: '1.5px', whiteSpace: 'nowrap', lineHeight: 1 }}>
@@ -1085,7 +1085,7 @@ export default function AdPreview({
       pb: `${footerClearance}px`, boxSizing: 'border-box', minWidth: 0,
       transform: lift ? `translateY(-${lift}px)` : undefined,
     };
-    // Match column: pill sits 5px from the ad top; BannerMatchSection uses a
+    // Match column: pill sits ~2–3px from the ad top; BannerMatchSection uses a
     // fixed equal gap between pill · teams · odds.
     const matchColSx = {
       display: 'flex', alignItems: 'stretch', justifyContent: 'flex-start',

@@ -385,8 +385,8 @@
       '.matches[data-layout="banner"] .dba-v-gap { display: none; }' +
       '.matches[data-layout="banner"] .dba-teams {' +
         'position: relative; justify-content: center; gap: 0; margin-top: 0; font-size: 7px;' +
-        /* Room for a 2-line wrap (line-height 1.05 × 2). */
-        'flex-shrink: 0; width: 100%; min-width: 0; min-height: 15px;' +
+        /* Room for larger crests + a 2-line wrap (line-height 1.05 × 2). */
+        'flex-shrink: 0; width: 100%; min-width: 0; min-height: 16px;' +
       '}' +
       '.matches[data-layout="banner"] .dba-teamblock {' +
         /* width:auto — must override MPU `width:0` or left/right collapse the box
@@ -408,17 +408,17 @@
         'overflow-wrap: break-word; word-break: normal;' +
       '}' +
       '.matches[data-layout="banner"] .dba-team-logo {' +
-        'width: 13px; height: 13px; flex: 0 0 13px;' +
-        'max-width: 13px; max-height: 13px; filter: none;' +
+        'width: 16px; height: 16px; flex: 0 0 16px;' +
+        'max-width: 16px; max-height: 16px; filter: none;' +
       '}' +
       '.matches[data-layout="banner"] .dba-x {' +
         'position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);' +
         'font-size: 7.5px; opacity: 0.6; margin: 0; flex: 0 0 auto; z-index: 1; line-height: 1;' +
       '}' +
-      /* Odds lighter + smaller than team names (7px / 600) so crests keep room. */
+      /* Odds smaller than team names (7px), same weight (600). */
       '.matches[data-layout="banner"] .dba-odds {' +
         'position: relative; height: 6px; display: block; margin-top: 0;' +
-        'font-size: 5px; font-weight: 500; line-height: 1; flex-shrink: 0;' +
+        'font-size: 5px; font-weight: 600; line-height: 1; flex-shrink: 0;' +
       '}' +
       '.matches[data-layout="banner"] .dba-odd-slot { display: contents; }' +
       '.matches[data-layout="banner"] .dba-odd-slot-draw {' +
@@ -428,12 +428,12 @@
       '.matches[data-layout="banner"] .dba-odd,' +
       '.matches[data-layout="banner"] .dba-odd-slot-draw .dba-odd {' +
         'position: absolute; top: 0; left: 0; transform: translateX(-50%);' +
-        'gap: 1.5px; font-size: 5px; font-weight: 500; line-height: 1;' +
+        'gap: 1.5px; font-size: 5px; font-weight: 600; line-height: 1;' +
         'align-items: baseline;' +
       '}' +
       '.matches[data-layout="banner"] .dba-odd-val,' +
       '.matches[data-layout="banner"] .dba-odd-slot-draw .dba-odd-val {' +
-        'font-size: 5px; font-weight: 500; line-height: 1;' +
+        'font-size: 5px; font-weight: 600; line-height: 1;' +
       '}' +
       '.matches[data-layout="banner"] .dba-odd-label,' +
       '.matches[data-layout="banner"] .dba-odd-slot-draw .dba-odd-label {' +
@@ -443,11 +443,11 @@
       '.ad-shell.legal-band .matches[data-layout="banner"] .dba-pill-anchor { height: 7px; }' +
       '.ad-shell.legal-band .matches[data-layout="banner"] .dba-pill { padding: 0 2.5px; font-size: 5px; }' +
       '.ad-shell.legal-band .matches[data-layout="banner"] .dba-teams { gap: 2px; font-size: 6px; min-height: 13px; }' +
-      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-team-logo { width: 10px; height: 10px; flex-basis: 10px; max-width: 10px; max-height: 10px; }' +
+      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-team-logo { width: 13px; height: 13px; flex-basis: 13px; max-width: 13px; max-height: 13px; }' +
       '.ad-shell.legal-band .matches[data-layout="banner"] .dba-x { font-size: 6px; }' +
-      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-odds { height: 5.5px; font-size: 4.5px; font-weight: 500; }' +
+      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-odds { height: 5.5px; font-size: 4.5px; font-weight: 600; }' +
       '.ad-shell.legal-band .matches[data-layout="banner"] .dba-odd,' +
-      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-odd-val { font-size: 4.5px; font-weight: 500; }' +
+      '.ad-shell.legal-band .matches[data-layout="banner"] .dba-odd-val { font-size: 4.5px; font-weight: 600; }' +
       '.ad-shell.legal-band .matches[data-layout="banner"] .dba-odd-label { font-size: 3.5px; font-weight: 600; }' +
       '.matches[data-layout="interstitial"] { flex: 1 1 0; min-height: 0; }' +
       '.matches[data-layout="interstitial"] .dba-track { min-height: 0; height: 100%; }' +
