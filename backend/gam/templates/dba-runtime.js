@@ -182,7 +182,9 @@
       /* Track/slide widths are set in mountCarousel (slideCount-aware). Do not
          put width/max-width:100% here — that resolves against the wide track and
          collapses the carousel to a single non-scrolling viewport. */
-      '.matches .dba-track { display: flex; flex-wrap: nowrap; height: 100%; will-change: transform; }' +
+      '.matches .dba-track { display: flex; flex-wrap: nowrap; flex-shrink: 0; height: 100%; will-change: transform; }' +
+      /* Allow horizontal swipe without the parent <a> stealing the gesture. */
+      '.matches { touch-action: pan-y; }' +
       '.matches .dba-slide {' +
         'flex: 0 0 auto;' +
         'display: flex; flex-direction: column; gap: 8px;' +
@@ -906,8 +908,15 @@
       track.style.transform = tx;
     }
 
-    function advance() {
+    function restartTimer() {
       if (!sliding) return;
+      if (node._dbaCarouselTimer) clearInterval(node._dbaCarouselTimer);
+      node._dbaCarouselTimer = setInterval(advance, intervalMs);
+    }
+
+    function advance() {
+      if (!sliding || animating) return;
+      animating = true;
       pos++;
       setActive(pos);
       goTo(pos, true);
@@ -919,8 +928,29 @@
           goTo(0, false);
           void track.offsetWidth;
           scheduleAlign(node);
+          animating = false;
         }, transitionMs + 30);
+      } else {
+        setTimeout(function () { animating = false; }, transitionMs + 30);
       }
+    }
+
+    // Infinite-carousel previous: from slide 0, jump to the end clone then
+    // animate onto the last real slide (mirrors production carousel.js).
+    function retreat() {
+      if (!sliding || animating) return;
+      animating = true;
+      if (pos <= 0) {
+        goTo(n, false);
+        void track.offsetWidth;
+        pos = n - 1;
+      } else {
+        pos--;
+      }
+      setActive(pos);
+      goTo(pos, true);
+      scheduleAlign(node);
+      setTimeout(function () { animating = false; }, transitionMs + 30);
     }
 
     function start(attempt) {
@@ -935,8 +965,82 @@
       goTo(0, false);
       scheduleAlign(node);
       if (!sliding) return;
+      restartTimer();
+      bindSwipe();
+    }
+
+    // Touch / pointer swipe — same gesture as production 1X2 carousel.js so
+    // users can flick banner (and MPU/interstitial) slides by hand.
+    var animating = false;
+    var swipeX = null;
+    var swipeY = null;
+    var swiped = false;
+    var SWIPE_MIN = 28;
+
+    function onSwipeStart(clientX, clientY) {
+      swipeX = clientX;
+      swipeY = clientY;
+      swiped = false;
+    }
+
+    function onSwipeMove(clientX, clientY, evt) {
+      if (swipeX == null || swipeY == null) return;
+      var dx = swipeX - clientX;
+      var dy = swipeY - clientY;
+      if (Math.abs(dx) < SWIPE_MIN && Math.abs(dy) < SWIPE_MIN) return;
+      if (Math.abs(dx) <= Math.abs(dy)) {
+        swipeX = null;
+        swipeY = null;
+        return;
+      }
+      if (evt && evt.cancelable) {
+        try { evt.preventDefault(); } catch (e) {}
+      }
+      swiped = true;
       if (node._dbaCarouselTimer) clearInterval(node._dbaCarouselTimer);
-      node._dbaCarouselTimer = setInterval(advance, intervalMs);
+      if (dx > 0) advance();
+      else retreat();
+      restartTimer();
+      swipeX = null;
+      swipeY = null;
+    }
+
+    function bindSwipe() {
+      if (node._dbaSwipeBound) return;
+      node._dbaSwipeBound = true;
+      node.addEventListener('touchstart', function (e) {
+        if (!e.touches || !e.touches.length) return;
+        onSwipeStart(e.touches[0].clientX, e.touches[0].clientY);
+      }, { passive: true });
+      node.addEventListener('touchmove', function (e) {
+        if (!e.touches || !e.touches.length) return;
+        onSwipeMove(e.touches[0].clientX, e.touches[0].clientY, e);
+      }, { passive: false });
+      // Mouse drag (desktop GAM preview) — listen on window so move events
+      // keep flowing even when the cursor leaves the tiny banner hit area.
+      node.addEventListener('mousedown', function (e) {
+        if (e.button != null && e.button !== 0) return;
+        onSwipeStart(e.clientX, e.clientY);
+        function onMove(ev) {
+          if (swipeX == null) return;
+          onSwipeMove(ev.clientX, ev.clientY, ev);
+        }
+        function onUp() {
+          swipeX = null;
+          swipeY = null;
+          window.removeEventListener('mousemove', onMove, true);
+          window.removeEventListener('mouseup', onUp, true);
+        }
+        window.addEventListener('mousemove', onMove, true);
+        window.addEventListener('mouseup', onUp, true);
+      });
+      // Swallow the click that follows a swipe so the wrapping <a> does not navigate.
+      node.addEventListener('click', function (e) {
+        if (!swiped) return;
+        swiped = false;
+        e.preventDefault();
+        e.stopPropagation();
+      }, true);
     }
 
     if (typeof ResizeObserver !== 'undefined') {
