@@ -361,7 +361,11 @@
       '.matches[data-layout="banner"] .dba-slide.dba-slide-welcome {' +
         'justify-content: center; align-items: center; padding: 0; gap: 1px;' +
       '}' +
-      '.ad-shell.dba-on-welcome .matches[data-layout="banner"] { padding-top: 0; }' +
+      /* Welcome shares the ad’s legal clearance — zero matches padding so the
+         copy centers on the same midline as logo / CTA (~24px in a 50px shell). */
+      '.ad-shell.dba-on-welcome .matches[data-layout="banner"] {' +
+        'padding-top: 0; padding-bottom: 0;' +
+      '}' +
       '.matches[data-layout="banner"] .dba-card {' +
         'background: transparent; border: none; border-radius: 0; padding: 0;' +
         'display: flex; flex-direction: column; align-items: stretch;' +
@@ -777,10 +781,20 @@
     if (sliding) track.appendChild(slides[0].cloneNode(true));
 
     function measure() {
-      return {
-        w: node.clientWidth || node.offsetWidth || 0,
-        h: node.clientHeight || node.offsetHeight || 0,
-      };
+      var w = node.clientWidth || node.offsetWidth || 0;
+      var h = node.clientHeight || node.offsetHeight || 0;
+      // Banner: logo wordmark can inflate the grid row; clamp matches to the ad.
+      if (node.getAttribute('data-layout') === 'banner') {
+        var ad = node.closest && node.closest('.ad');
+        if (ad) {
+          var maxH = ad.clientHeight || 0;
+          if (maxH > 0) {
+            node.style.maxHeight = maxH + 'px';
+            if (h > maxH) h = maxH;
+          }
+        }
+      }
+      return { w: w, h: h };
     }
 
     function applyLayout(w, h) {
@@ -788,13 +802,14 @@
       var kids = track.children;
       var count = kids.length;
       var shell = node.closest && node.closest('.ad-shell');
+      var isBanner = node.getAttribute('data-layout') === 'banner';
       // Fill height only while the welcome slide is active (expanded stack),
       // or for interstitial/banner. Match MPU slides stay content-sized so
       // cards are not flex-shrunk and odds stay visible.
       var fillH = h > 0 && (
         (shell && shell.classList.contains('dba-on-welcome'))
         || node.getAttribute('data-layout') === 'interstitial'
-        || node.getAttribute('data-layout') === 'banner'
+        || isBanner
       );
       for (var s = 0; s < count; s++) {
         kids[s].style.flex = '0 0 ' + w + 'px';
@@ -802,7 +817,13 @@
         kids[s].style.minWidth = w + 'px';
         kids[s].style.maxWidth = w + 'px';
         kids[s].style.boxSizing = 'border-box';
-        if (fillH) {
+        if (isBanner) {
+          // Fill the clamped matches box (see measure maxHeight) — not an
+          // independent px height that can re-inflate the grid row.
+          kids[s].style.height = '100%';
+          kids[s].style.minHeight = '0';
+          kids[s].style.maxHeight = '100%';
+        } else if (fillH) {
           kids[s].style.height = h + 'px';
           kids[s].style.minHeight = h + 'px';
         } else if (!sliding && node.getAttribute('data-layout') === 'interstitial') {
@@ -813,7 +834,11 @@
         }
       }
       track.style.width = (count * w) + 'px';
-      track.style.height = fillH ? (h + 'px') : '';
+      if (isBanner) {
+        track.style.height = '100%';
+      } else {
+        track.style.height = fillH ? (h + 'px') : '';
+      }
     }
 
     function setActive(idx) {
