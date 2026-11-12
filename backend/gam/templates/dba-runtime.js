@@ -1057,6 +1057,8 @@
         if (!e.touches || !e.touches.length) return;
         onSwipeMove(e.touches[0].clientX, e.touches[0].clientY, e);
       }
+      // Mouse on the whole ad shell — MPU logo/CTA sit outside `.matches`, so
+      // binding only there made desktop/GAM preview feel non-swipeable.
       function onMouseDown(e) {
         if (e.button != null && e.button !== 0) return;
         onSwipeStart(e.clientX, e.clientY);
@@ -1081,19 +1083,21 @@
         e.stopPropagation();
       }
 
+      var shell = node.closest && node.closest('.ad-shell');
+      var ad = shell && shell.querySelector && shell.querySelector('a.ad');
+      var mouseTarget = shell || ad || node;
+
       // Document-level touch like production — survives SafeFrame + remounts.
       document.addEventListener('touchstart', onTouchStart, { passive: true, capture: true });
       document.addEventListener('touchmove', onTouchMove, { passive: false, capture: true });
-      node.addEventListener('mousedown', onMouseDown);
-      var shell = node.closest && node.closest('.ad-shell');
-      var ad = shell && shell.querySelector && shell.querySelector('a.ad');
+      mouseTarget.addEventListener('mousedown', onMouseDown);
       if (ad) ad.addEventListener('click', onClickCapture, true);
       else node.addEventListener('click', onClickCapture, true);
 
       node._dbaSwipeCleanup = function () {
         document.removeEventListener('touchstart', onTouchStart, true);
         document.removeEventListener('touchmove', onTouchMove, true);
-        node.removeEventListener('mousedown', onMouseDown);
+        mouseTarget.removeEventListener('mousedown', onMouseDown);
         if (ad) ad.removeEventListener('click', onClickCapture, true);
         else node.removeEventListener('click', onClickCapture, true);
         node._dbaSwipeBound = false;
