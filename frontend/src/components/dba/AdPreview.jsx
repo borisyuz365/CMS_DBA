@@ -54,11 +54,11 @@ const BANNER = {
     ctaH: 24,
     ctaFont: 8,
     ctaPx: 6,
-    // Match column: date pill left · teams · odds
+    // Match column sized to clear a 2-line legal strip (Android wraps often).
     match: {
-      pillH: 8, pillFont: 6, pillPx: 5,
-      teamFont: 7, crest: 19, teamGap: 3,
-      oddsFont: 6.5, oddsH: 7.5, oddDot: 2,
+      pillH: 7, pillFont: 5.5, pillPx: 5,
+      teamFont: 7, crest: 17, teamGap: 3,
+      oddsFont: 6, oddsH: 7, oddDot: 2,
       oddsWeight: 600,
       // 1 / 2 sit this many px left/right of the ad centre (not on the crests).
       oddsSpread: 34,

@@ -372,24 +372,24 @@
       '.matches[data-layout="banner"] .dba-card {' +
         'background: transparent; border: none; border-radius: 0; padding: 0;' +
         'display: flex; flex-direction: column; align-items: stretch;' +
-        /* Tight stack — names sit high; crests + odds fill the band above legal. */
+        /* Stack sized for a 2-line legal strip (~17px clear → ~31px content). */
         'justify-content: flex-start; gap: 0.5px; height: 100%; box-sizing: border-box;' +
         'position: relative; overflow: hidden;' +
       '}' +
       '.matches[data-layout="banner"] .dba-pill-anchor {' +
-        'display: block; position: relative; height: 8px; flex-shrink: 0;' +
+        'display: block; position: relative; height: 7px; flex-shrink: 0;' +
       '}' +
       /* Date pill: left edge of the match column (not centred on the dash). */
       '.matches[data-layout="banner"] .dba-pill {' +
         'position: absolute; top: 0; left: 0; transform: none;' +
         'height: 100%; box-sizing: border-box; padding: 0 5px; margin: 0;' +
         'display: inline-flex; align-items: center; justify-content: center;' +
-        'font-size: 6px; font-weight: 600; line-height: 1; white-space: nowrap;' +
+        'font-size: 5.5px; font-weight: 600; line-height: 1; white-space: nowrap;' +
       '}' +
       '.matches[data-layout="banner"] .dba-v-gap { display: none; }' +
       '.matches[data-layout="banner"] .dba-teams {' +
         'position: relative; justify-content: center; gap: 0; margin-top: 0; font-size: 7px;' +
-        'flex-shrink: 0; width: 100%; min-width: 0; min-height: 19px;' +
+        'flex-shrink: 0; width: 100%; min-width: 0; min-height: 17px;' +
       '}' +
       '.matches[data-layout="banner"] .dba-teamblock {' +
         /* width:auto — must override MPU `width:0` or left/right collapse the box
@@ -411,16 +411,16 @@
         'overflow-wrap: break-word; word-break: normal;' +
       '}' +
       '.matches[data-layout="banner"] .dba-team-logo {' +
-        'width: 19px; height: 19px; flex: 0 0 19px;' +
-        'max-width: 19px; max-height: 19px; filter: none;' +
+        'width: 17px; height: 17px; flex: 0 0 17px;' +
+        'max-width: 17px; max-height: 17px; filter: none;' +
       '}' +
       '.matches[data-layout="banner"] .dba-x {' +
         'position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);' +
-        'font-size: 7.5px; opacity: 0.6; margin: 0; flex: 0 0 auto; z-index: 1; line-height: 1;' +
+        'font-size: 7px; opacity: 0.6; margin: 0; flex: 0 0 auto; z-index: 1; line-height: 1;' +
       '}' +
       '.matches[data-layout="banner"] .dba-odds {' +
-        'position: relative; height: 7.5px; display: block; margin-top: 0;' +
-        'font-size: 6.5px; font-weight: 600; line-height: 1; flex-shrink: 0;' +
+        'position: relative; height: 7px; display: block; margin-top: 0;' +
+        'font-size: 6px; font-weight: 600; line-height: 1; flex-shrink: 0;' +
       '}' +
       '.matches[data-layout="banner"] .dba-odd-slot { display: contents; }' +
       '.matches[data-layout="banner"] .dba-odd-slot-draw {' +
@@ -430,16 +430,16 @@
       '.matches[data-layout="banner"] .dba-odd,' +
       '.matches[data-layout="banner"] .dba-odd-slot-draw .dba-odd {' +
         'position: absolute; top: 0; left: 0; transform: translateX(-50%);' +
-        'gap: 1.5px; font-size: 6.5px; font-weight: 600; line-height: 1;' +
+        'gap: 1.5px; font-size: 6px; font-weight: 600; line-height: 1;' +
         'align-items: baseline;' +
       '}' +
       '.matches[data-layout="banner"] .dba-odd-val,' +
       '.matches[data-layout="banner"] .dba-odd-slot-draw .dba-odd-val {' +
-        'font-size: 6.5px; font-weight: 600; line-height: 1;' +
+        'font-size: 6px; font-weight: 600; line-height: 1;' +
       '}' +
       '.matches[data-layout="banner"] .dba-odd-label,' +
       '.matches[data-layout="banner"] .dba-odd-slot-draw .dba-odd-label {' +
-        'font-size: 5px; font-weight: 600; line-height: 1;' +
+        'font-size: 4.5px; font-weight: 600; line-height: 1;' +
       '}' +
       '.ad-shell.legal-band .matches[data-layout="banner"] .dba-card { gap: 0.5px; }' +
       '.ad-shell.legal-band .matches[data-layout="banner"] .dba-pill-anchor { height: 7px; }' +
@@ -668,16 +668,42 @@
     var shell = node.closest ? node.closest('.ad-shell') : null;
     if (!shell) return;
     var legal = shell.querySelector('.legal');
-    var clear = 10;
+    var clear = 0;
     if (legal && !legal.classList.contains('legal-hidden')) {
       var lh = legal.getBoundingClientRect().height;
-      if (lh > 0) clear = Math.ceil(lh);
-      else if (shell.classList.contains('legal-strip')) clear = 10;
-      else if (shell.classList.contains('legal-band')) clear = Math.max(12, Math.round(shell.clientHeight * 0.1));
-    } else {
-      clear = 0;
+      if (shell.classList.contains('legal-band')) {
+        clear = Math.max(
+          lh > 0 ? Math.ceil(lh) : 0,
+          12,
+          Math.round((shell.clientHeight || 50) * 0.1)
+        );
+      } else if (shell.classList.contains('legal-strip')) {
+        // Always reserve two lines — Android often wraps the disclaimer and a
+        // 1-line measure leaves odds under the second line. Mirrors AdPreview
+        // footerClearance: fontSize * 1.15 * 2 + pad.
+        var text = legal.querySelector('.text');
+        var fs = 5;
+        if (text) {
+          var tfs = parseFloat(window.getComputedStyle(text).fontSize);
+          if (tfs > 0) fs = tfs;
+        }
+        var twoLine = Math.ceil(fs * 1.15 * 2) + 5;
+        clear = Math.max(lh > 0 ? Math.ceil(lh) + 1 : 0, twoLine, 14);
+      } else if (lh > 0) {
+        clear = Math.ceil(lh) + 1;
+      } else {
+        clear = 10;
+      }
     }
     node.style.setProperty('--dba-banner-legal-clear', clear + 'px');
+    // Keep logo/CTA clear of the same strip.
+    var ad = shell.querySelector('.ad');
+    if (ad && clear > 0) {
+      var logo = ad.querySelector('.logo-wrap');
+      var cta = ad.querySelector('.cta-wrap');
+      if (logo) logo.style.paddingBottom = clear + 'px';
+      if (cta) cta.style.paddingBottom = clear + 'px';
+    }
   }
 
   function syncWelcomeChrome(node, activeIdx) {
@@ -790,6 +816,7 @@
       try { node._dbaCarouselRo.disconnect(); } catch (e) {}
       node._dbaCarouselRo = null;
     }
+    node._dbaRelayout = null;
     // Drop swipe listeners from a prior mount (sample → live feed remount).
     // Stale closures otherwise advance a detached track and swipe looks dead.
     if (typeof node._dbaSwipeCleanup === 'function') {
@@ -1082,15 +1109,29 @@
       };
     }
 
+    node._dbaRelayout = function () {
+      goTo(pos, false);
+      scheduleAlign(node);
+    };
+
     if (typeof ResizeObserver !== 'undefined') {
       node._dbaCarouselRo = new ResizeObserver(function () {
         goTo(pos, false);
         scheduleAlign(node);
       });
       node._dbaCarouselRo.observe(node);
+      var shellEl = node.closest && node.closest('.ad-shell');
+      var legalEl = shellEl && shellEl.querySelector('.legal');
+      if (legalEl) node._dbaCarouselRo.observe(legalEl);
     }
 
     start(0);
+    // Fonts / 2-line legal wrap can land after first paint (esp. Android).
+    setTimeout(function () {
+      syncBannerLegalClear(node);
+      goTo(pos, false);
+      scheduleAlign(node);
+    }, 120);
   }
 
   // Banner only: dash on the card centre. Odds at a fixed offset from that
@@ -1310,6 +1351,15 @@
       applyLegalBandMetrics(shell, h);
     }
     fitLegalStripText(shell);
+    // After legal text settles (often 2 lines on Android), re-clear banner
+    // slides so odds sit above the strip instead of under it.
+    var banners = shell.querySelectorAll('.matches[data-layout="banner"]');
+    for (var bi = 0; bi < banners.length; bi++) {
+      syncBannerLegalClear(banners[bi]);
+      if (typeof banners[bi]._dbaRelayout === 'function') {
+        try { banners[bi]._dbaRelayout(); } catch (e) {}
+      }
+    }
     return {
       cardGapPx: cardGapPx, tightGapPx: tightGapPx,
       legalBand: shell.classList.contains('legal-band'),

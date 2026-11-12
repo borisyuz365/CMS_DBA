@@ -72,12 +72,12 @@
   }
   .ad-shell.legal-strip .ad .logo-wrap,
   .ad-shell.legal-strip .ad .cta-wrap {
-    /* Clear the footer so CTA never sits on the legal strip. */
-    padding-bottom: 10px;
+    /* Clear a 2-line legal strip (Android often wraps); runtime may raise this. */
+    padding-bottom: 16px;
   }
   .ad-shell.legal-strip .ad .matches {
-    /* Runtime sets the exact legal-clearance pb; keep a safe fallback. */
-    padding-bottom: 10px;
+    /* Runtime sets the exact legal-clearance pb; keep a 2-line safe fallback. */
+    padding-bottom: 16px;
   }
   .ad .cta-wrap {
     display: flex; align-items: center; justify-content: center;
