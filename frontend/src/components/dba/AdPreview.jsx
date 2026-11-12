@@ -54,11 +54,11 @@ const BANNER = {
     ctaH: 24,
     ctaFont: 8,
     ctaPx: 6,
-    // Match column sized to clear a 2-line legal strip (Android wraps often).
+    // Match column sized above a single-line legal strip (~12px).
     match: {
-      pillH: 7, pillFont: 5.5, pillPx: 5,
-      teamFont: 7, crest: 17, teamGap: 3,
-      oddsFont: 6, oddsH: 7, oddDot: 2,
+      pillH: 8, pillFont: 6, pillPx: 5,
+      teamFont: 7, crest: 18, teamGap: 3,
+      oddsFont: 6.5, oddsH: 7.5, oddDot: 2,
       oddsWeight: 600,
       // 1 / 2 sit this many px left/right of the ad centre (not on the crests).
       oddsSpread: 34,
@@ -96,25 +96,25 @@ const BANNER = {
   },
 };
 
-/** Non-Brazil legal strip copy — fills leftover width, wraps to 2 lines, shrinks to fit. */
-function FitLegalStripText({ text, baseFont, minFont = 4.5, align = 'right', sx }) {
+/** Non-Brazil legal strip copy — shrinks to fit. Banner = 1 line; others = up to 2. */
+function FitLegalStripText({ text, baseFont, minFont = 4.5, align = 'right', lines = 2, sx }) {
   const ref = useRef(null);
+  const maxLines = Math.max(1, lines);
   useLayoutEffect(() => {
     const el = ref.current;
     if (!el || !text) return undefined;
-    const lineH = 1.15;
-    const maxH = baseFont * lineH * 2;
-    el.style.fontSize = `${baseFont}px`;
-    el.style.maxHeight = `${maxH}px`;
+    const lineH = maxLines === 1 ? 1 : 1.15;
     let size = baseFont;
-    // Shrink until the clamped box no longer overflows vertically/horizontally.
-    while (size > minFont && (el.scrollHeight > maxH + 0.5 || el.scrollWidth > el.clientWidth + 0.5)) {
+    el.style.fontSize = `${size}px`;
+    el.style.maxHeight = `${size * lineH * maxLines}px`;
+    while (size > minFont && (el.scrollHeight > size * lineH * maxLines + 0.5 || el.scrollWidth > el.clientWidth + 0.5)) {
       size -= 0.25;
       el.style.fontSize = `${size}px`;
-      el.style.maxHeight = `${size * lineH * 2}px`;
+      el.style.maxHeight = `${size * lineH * maxLines}px`;
     }
     return undefined;
-  }, [text, baseFont, minFont]);
+  }, [text, baseFont, minFont, maxLines]);
+  const single = maxLines === 1;
   return (
     <Box
       ref={ref}
@@ -124,15 +124,15 @@ function FitLegalStripText({ text, baseFont, minFont = 4.5, align = 'right', sx 
         minWidth: 0,
         textAlign: align,
         fontSize: baseFont,
-        lineHeight: 1.15,
-        display: '-webkit-box',
-        WebkitBoxOrient: 'vertical',
-        WebkitLineClamp: 2,
+        lineHeight: single ? 1 : 1.15,
+        display: single ? 'block' : '-webkit-box',
+        WebkitBoxOrient: single ? undefined : 'vertical',
+        WebkitLineClamp: single ? undefined : maxLines,
         overflow: 'hidden',
         textOverflow: 'ellipsis',
-        whiteSpace: 'normal',
-        overflowWrap: 'anywhere',
-        wordBreak: 'normal',
+        whiteSpace: single ? 'nowrap' : 'normal',
+        overflowWrap: single ? 'normal' : 'anywhere',
+        wordBreak: single ? 'normal' : 'normal',
         ...sx,
       }}
     >
@@ -858,11 +858,15 @@ export default function AdPreview({
 
   /** Non-Brazil corner strip — 18+ + flexible disclaimer that fits the footer slot. */
   const renderLegalStrip = ({
-    left, right, bottom, fontSize, badgeSize, logoH, gap = '3px', text,
+    left, right, bottom, fontSize, badgeSize, logoH, gap = '3px', text, lines = 2,
   }) => (
     <Box sx={{
       position: 'absolute', left, right, bottom, zIndex: 2,
       display: 'flex', alignItems: 'center', gap: '6px',
+      height: lines === 1 ? Math.max(badgeSize, fontSize + 2) : undefined,
+      maxHeight: lines === 1 ? Math.max(badgeSize, fontSize + 2) : undefined,
+      overflow: 'hidden',
+      boxSizing: 'border-box',
       fontSize, color: config.legal?.color || config.text, opacity: 0.85,
       pointerEvents: 'none',
     }}>
@@ -873,7 +877,8 @@ export default function AdPreview({
       <FitLegalStripText
         text={text || config.legal?.text || '18+ · BeGambleAware.org'}
         baseFont={fontSize}
-        minFont={Math.max(4, fontSize * 0.55)}
+        minFont={Math.max(3.5, fontSize * 0.55)}
+        lines={lines}
         sx={{ textDecoration: 'none' }}
       />
     </Box>
@@ -1074,10 +1079,10 @@ export default function AdPreview({
     // Sizes: edit BANNER.default / BANNER.brazil at the top of this file.
     const b = useBrazilBand ? BANNER.brazil : BANNER.default;
     const hasLegalStrip = !!(config.legal?.enabled && !useBrazilBand);
-    // Non-Brazil strip can wrap to 2 lines — clear content above it.
+    // Banner legal is single-line (~12px); never reserve a second line here.
     const footerClearance = useBrazilBand
       ? brazilBandH + b.contentGap
-      : (hasLegalStrip ? Math.ceil(b.legal.fontSize * 1.15 * 2) + 5 : 2);
+      : (hasLegalStrip ? Math.max(12, Math.ceil(b.legal.fontSize) + 7) : 2);
     const lift = useBrazilBand ? (b.lift || 0) : 0;
     const sideColSx = {
       display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -1139,6 +1144,7 @@ export default function AdPreview({
               left: legalSideInset, right: legalSideInset, bottom: legalBottomInset,
               fontSize: b.legal.fontSize, badgeSize: b.legal.badgeSize, logoH: b.legal.logoH, gap: '2px',
               text: config.legal.text,
+              lines: 1,
             }) : null
           )
         )}
@@ -1491,7 +1497,7 @@ export default function AdPreview({
     const hasLegalStrip = !!(config.legal?.enabled && !useBrazilBand);
     const footerClearance = useBrazilBand
       ? brazilBandH + b.contentGap
-      : (hasLegalStrip ? Math.ceil(b.legal.fontSize * 1.15 * 2) + 5 : 2);
+      : (hasLegalStrip ? Math.max(12, Math.ceil(b.legal.fontSize) + 7) : 2);
     const lift = useBrazilBand ? (b.lift || 0) : 0;
     const colSx = {
       display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -1534,6 +1540,7 @@ export default function AdPreview({
               left: legalSideInset, right: legalSideInset, bottom: legalBottomInset,
               fontSize: b.legal.fontSize, badgeSize: b.legal.badgeSize, logoH: b.legal.logoH, gap: '2px',
               text: config.legal.text,
+              lines: 1,
             }) : null
           )
         )}

@@ -72,12 +72,12 @@
   }
   .ad-shell.legal-strip .ad .logo-wrap,
   .ad-shell.legal-strip .ad .cta-wrap {
-    /* Clear a 2-line legal strip (Android often wraps); runtime may raise this. */
-    padding-bottom: 16px;
+    /* Single-line legal strip (~11px); runtime may adjust. */
+    padding-bottom: 12px;
   }
   .ad-shell.legal-strip .ad .matches {
-    /* Runtime sets the exact legal-clearance pb; keep a 2-line safe fallback. */
-    padding-bottom: 16px;
+    /* Runtime sets the exact legal-clearance pb; single-line fallback. */
+    padding-bottom: 12px;
   }
   .ad .cta-wrap {
     display: flex; align-items: center; justify-content: center;
@@ -102,9 +102,13 @@
   .ad-shell .legal.legal-hidden { display: none; }
   .ad-shell .legal.legal-strip {
     position: absolute; left: 4px; right: 4px; bottom: 0;
+    /* One line only — a 50px banner cannot spare a second legal line for odds. */
+    height: 11px; max-height: 11px;
     display: flex; align-items: center; gap: 4px;
     font-size: 5px; opacity: 0.85;
     color: [[legal_text_color]];
+    overflow: hidden;
+    box-sizing: border-box;
   }
   .ad-shell .legal.legal-strip .marks { display: inline-flex; align-items: center; gap: 2px; flex-shrink: 0; }
   .ad-shell .legal.legal-strip .age18 {
@@ -117,10 +121,9 @@
   }
   .ad-shell .legal.legal-strip .text {
     color: inherit; text-decoration: none;
-    flex: 1 1 auto; min-width: 0; text-align: right; line-height: 1.15;
-    display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;
-    overflow: hidden; text-overflow: ellipsis; white-space: normal;
-    overflow-wrap: anywhere; word-break: normal;
+    flex: 1 1 auto; min-width: 0; text-align: right; line-height: 1;
+    display: block;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
   .ad-shell .legal.legal-band {
     position: absolute; left: 0; right: 0; bottom: 0;

@@ -377,19 +377,19 @@
         'position: relative; overflow: hidden;' +
       '}' +
       '.matches[data-layout="banner"] .dba-pill-anchor {' +
-        'display: block; position: relative; height: 7px; flex-shrink: 0;' +
+        'display: block; position: relative; height: 8px; flex-shrink: 0;' +
       '}' +
       /* Date pill: left edge of the match column (not centred on the dash). */
       '.matches[data-layout="banner"] .dba-pill {' +
         'position: absolute; top: 0; left: 0; transform: none;' +
         'height: 100%; box-sizing: border-box; padding: 0 5px; margin: 0;' +
         'display: inline-flex; align-items: center; justify-content: center;' +
-        'font-size: 5.5px; font-weight: 600; line-height: 1; white-space: nowrap;' +
+        'font-size: 6px; font-weight: 600; line-height: 1; white-space: nowrap;' +
       '}' +
       '.matches[data-layout="banner"] .dba-v-gap { display: none; }' +
       '.matches[data-layout="banner"] .dba-teams {' +
         'position: relative; justify-content: center; gap: 0; margin-top: 0; font-size: 7px;' +
-        'flex-shrink: 0; width: 100%; min-width: 0; min-height: 17px;' +
+        'flex-shrink: 0; width: 100%; min-width: 0; min-height: 18px;' +
       '}' +
       '.matches[data-layout="banner"] .dba-teamblock {' +
         /* width:auto — must override MPU `width:0` or left/right collapse the box
@@ -411,16 +411,16 @@
         'overflow-wrap: break-word; word-break: normal;' +
       '}' +
       '.matches[data-layout="banner"] .dba-team-logo {' +
-        'width: 17px; height: 17px; flex: 0 0 17px;' +
-        'max-width: 17px; max-height: 17px; filter: none;' +
+        'width: 18px; height: 18px; flex: 0 0 18px;' +
+        'max-width: 18px; max-height: 18px; filter: none;' +
       '}' +
       '.matches[data-layout="banner"] .dba-x {' +
         'position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);' +
-        'font-size: 7px; opacity: 0.6; margin: 0; flex: 0 0 auto; z-index: 1; line-height: 1;' +
+        'font-size: 7.5px; opacity: 0.6; margin: 0; flex: 0 0 auto; z-index: 1; line-height: 1;' +
       '}' +
       '.matches[data-layout="banner"] .dba-odds {' +
-        'position: relative; height: 7px; display: block; margin-top: 0;' +
-        'font-size: 6px; font-weight: 600; line-height: 1; flex-shrink: 0;' +
+        'position: relative; height: 7.5px; display: block; margin-top: 0;' +
+        'font-size: 6.5px; font-weight: 600; line-height: 1; flex-shrink: 0;' +
       '}' +
       '.matches[data-layout="banner"] .dba-odd-slot { display: contents; }' +
       '.matches[data-layout="banner"] .dba-odd-slot-draw {' +
@@ -430,16 +430,16 @@
       '.matches[data-layout="banner"] .dba-odd,' +
       '.matches[data-layout="banner"] .dba-odd-slot-draw .dba-odd {' +
         'position: absolute; top: 0; left: 0; transform: translateX(-50%);' +
-        'gap: 1.5px; font-size: 6px; font-weight: 600; line-height: 1;' +
+        'gap: 1.5px; font-size: 6.5px; font-weight: 600; line-height: 1;' +
         'align-items: baseline;' +
       '}' +
       '.matches[data-layout="banner"] .dba-odd-val,' +
       '.matches[data-layout="banner"] .dba-odd-slot-draw .dba-odd-val {' +
-        'font-size: 6px; font-weight: 600; line-height: 1;' +
+        'font-size: 6.5px; font-weight: 600; line-height: 1;' +
       '}' +
       '.matches[data-layout="banner"] .dba-odd-label,' +
       '.matches[data-layout="banner"] .dba-odd-slot-draw .dba-odd-label {' +
-        'font-size: 4.5px; font-weight: 600; line-height: 1;' +
+        'font-size: 5px; font-weight: 600; line-height: 1;' +
       '}' +
       '.ad-shell.legal-band .matches[data-layout="banner"] .dba-card { gap: 0.5px; }' +
       '.ad-shell.legal-band .matches[data-layout="banner"] .dba-pill-anchor { height: 7px; }' +
@@ -678,17 +678,8 @@
           Math.round((shell.clientHeight || 50) * 0.1)
         );
       } else if (shell.classList.contains('legal-strip')) {
-        // Always reserve two lines — Android often wraps the disclaimer and a
-        // 1-line measure leaves odds under the second line. Mirrors AdPreview
-        // footerClearance: fontSize * 1.15 * 2 + pad.
-        var text = legal.querySelector('.text');
-        var fs = 5;
-        if (text) {
-          var tfs = parseFloat(window.getComputedStyle(text).fontSize);
-          if (tfs > 0) fs = tfs;
-        }
-        var twoLine = Math.ceil(fs * 1.15 * 2) + 5;
-        clear = Math.max(lh > 0 ? Math.ceil(lh) + 1 : 0, twoLine, 14);
+        // Banner legal is forced to one line (see banner.html) so odds keep room.
+        clear = Math.max(lh > 0 ? Math.ceil(lh) + 1 : 0, 11, 12);
       } else if (lh > 0) {
         clear = Math.ceil(lh) + 1;
       } else {
@@ -1297,26 +1288,39 @@
     return minLegal;
   }
 
-  // Non-Brazil legal strip: shrink disclaimer text so it fits 2 lines in the
-  // leftover width beside the 18+ mark (mirrors CMS FitLegalStripText).
+  // Non-Brazil legal strip: shrink disclaimer so it fits beside the 18+ mark.
+  // Banner = 1 line (50px slot); MPU/interstitial = up to 2 lines.
   function fitLegalStripText(shell) {
     if (!shell || !shell.classList.contains('legal-strip')) return;
     var text = shell.querySelector('.legal.legal-strip .text');
     if (!text) return;
+    var isBanner = !!shell.querySelector('.matches[data-layout="banner"]');
     var cs = window.getComputedStyle(text);
-    var base = parseFloat(cs.fontSize) || 7;
+    var base = parseFloat(cs.fontSize) || (isBanner ? 5 : 7);
     if (!(base > 0)) return;
-    var min = Math.max(4, base * 0.55);
-    var lineH = 1.15;
+    var min = Math.max(3.5, base * 0.55);
+    var lineH = isBanner ? 1 : 1.15;
+    var lines = isBanner ? 1 : 2;
     var size = base;
+    if (isBanner) {
+      text.style.whiteSpace = 'nowrap';
+      text.style.display = 'block';
+      text.style.webkitLineClamp = '1';
+      text.style.overflow = 'hidden';
+      text.style.textOverflow = 'ellipsis';
+    }
     text.style.fontSize = size + 'px';
-    text.style.maxHeight = (size * lineH * 2) + 'px';
+    text.style.maxHeight = (size * lineH * lines) + 'px';
     var guard = 40;
     while (guard-- > 0 && size > min) {
-      if (text.scrollHeight <= size * lineH * 2 + 0.5 && text.scrollWidth <= text.clientWidth + 0.5) break;
+      var fitsH = text.scrollHeight <= size * lineH * lines + 0.5;
+      var fitsW = isBanner
+        ? (text.scrollWidth <= text.clientWidth + 0.5)
+        : (text.scrollWidth <= text.clientWidth + 0.5);
+      if (fitsH && fitsW) break;
       size -= 0.25;
       text.style.fontSize = size + 'px';
-      text.style.maxHeight = (size * lineH * 2) + 'px';
+      text.style.maxHeight = (size * lineH * lines) + 'px';
     }
   }
 
