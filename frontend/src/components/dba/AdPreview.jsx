@@ -69,7 +69,7 @@ const BANNER = {
     // Welcome-offer slide
     welcome: { headFont: 11, subFont: 7.5, ctaFont: 8 },
     // Non-Brazil corner legal strip
-    legal: { fontSize: 5, badgeSize: 10, logoH: 6 },
+    legal: { fontSize: 5, badgeSize: 9, logoH: 6 },
   },
   brazil: {
     logoSize: 52,
@@ -103,7 +103,18 @@ function FitLegalStripText({ text, baseFont, minFont = 4.5, align = 'right', lin
   useLayoutEffect(() => {
     const el = ref.current;
     if (!el || !text) return undefined;
-    const lineH = maxLines === 1 ? 1 : 1.15;
+    // Banner 1-line: paint at 10px + zoom 0.5 so Android min-font cannot clip glyphs.
+    if (maxLines === 1) {
+      el.style.webkitTextSizeAdjust = '100%';
+      el.style.textSizeAdjust = '100%';
+      el.style.fontSize = '10px';
+      el.style.lineHeight = '12px';
+      el.style.height = '12px';
+      el.style.zoom = '0.5';
+      el.style.maxHeight = '';
+      return undefined;
+    }
+    const lineH = 1.15;
     let size = baseFont;
     el.style.fontSize = `${size}px`;
     el.style.maxHeight = `${size * lineH * maxLines}px`;
@@ -863,10 +874,13 @@ export default function AdPreview({
     <Box sx={{
       position: 'absolute', left, right, bottom, zIndex: 2,
       display: 'flex', alignItems: 'center', gap: '6px',
-      height: lines === 1 ? Math.max(badgeSize, fontSize + 2) : undefined,
-      maxHeight: lines === 1 ? Math.max(badgeSize, fontSize + 2) : undefined,
+      height: lines === 1 ? 13 : undefined,
+      maxHeight: lines === 1 ? 13 : undefined,
       overflow: 'hidden',
       boxSizing: 'border-box',
+      paddingBottom: lines === 1 ? '1px' : undefined,
+      WebkitTextSizeAdjust: '100%',
+      textSizeAdjust: '100%',
       fontSize, color: config.legal?.color || config.text, opacity: 0.85,
       pointerEvents: 'none',
     }}>
@@ -1082,7 +1096,7 @@ export default function AdPreview({
     // Banner legal is single-line (~12px); never reserve a second line here.
     const footerClearance = useBrazilBand
       ? brazilBandH + b.contentGap
-      : (hasLegalStrip ? Math.max(12, Math.ceil(b.legal.fontSize) + 7) : 2);
+      : (hasLegalStrip ? Math.max(14, Math.ceil(b.legal.fontSize) + 9) : 2);
     const lift = useBrazilBand ? (b.lift || 0) : 0;
     const sideColSx = {
       display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -1497,7 +1511,7 @@ export default function AdPreview({
     const hasLegalStrip = !!(config.legal?.enabled && !useBrazilBand);
     const footerClearance = useBrazilBand
       ? brazilBandH + b.contentGap
-      : (hasLegalStrip ? Math.max(12, Math.ceil(b.legal.fontSize) + 7) : 2);
+      : (hasLegalStrip ? Math.max(14, Math.ceil(b.legal.fontSize) + 9) : 2);
     const lift = useBrazilBand ? (b.lift || 0) : 0;
     const colSx = {
       display: 'flex', alignItems: 'center', justifyContent: 'center',

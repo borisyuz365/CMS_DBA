@@ -683,7 +683,8 @@
         );
       } else if (shell.classList.contains('legal-strip')) {
         // Banner legal is forced to one line (see banner.html) so odds keep room.
-        clear = Math.max(lh > 0 ? Math.ceil(lh) + 1 : 0, 11, 12);
+        // 14px floor matches the Android-safe 13px strip + 1px pad.
+        clear = Math.max(lh > 0 ? Math.ceil(lh) + 1 : 0, 13, 14);
       } else if (lh > 0) {
         clear = Math.ceil(lh) + 1;
       } else {
@@ -1321,6 +1322,15 @@
       text.style.webkitLineClamp = '1';
       text.style.overflow = 'hidden';
       text.style.textOverflow = 'ellipsis';
+      // Defeat Android WebView min-font boost that clips descenders in the strip.
+      text.style.webkitTextSizeAdjust = '100%';
+      text.style.textSizeAdjust = '100%';
+      text.style.fontSize = '10px';
+      text.style.lineHeight = '12px';
+      text.style.height = '12px';
+      text.style.zoom = '0.5';
+      text.style.maxHeight = '';
+      return;
     }
     text.style.fontSize = size + 'px';
     text.style.maxHeight = (size * lineH * lines) + 'px';
