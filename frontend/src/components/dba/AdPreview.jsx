@@ -874,11 +874,10 @@ export default function AdPreview({
     <Box sx={{
       position: 'absolute', left, right, bottom, zIndex: 2,
       display: 'flex', alignItems: 'center', gap: '6px',
-      height: lines === 1 ? 13 : undefined,
-      maxHeight: lines === 1 ? 13 : undefined,
+      height: lines === 1 ? 12 : undefined,
+      maxHeight: lines === 1 ? 12 : undefined,
       overflow: 'hidden',
       boxSizing: 'border-box',
-      paddingBottom: lines === 1 ? '1px' : undefined,
       WebkitTextSizeAdjust: '100%',
       textSizeAdjust: '100%',
       fontSize, color: config.legal?.color || config.text, opacity: 0.85,
@@ -1089,7 +1088,7 @@ export default function AdPreview({
     const cornerInset = radius * (1 - 1 / Math.SQRT2);
     const legalSideInset = Math.max(4, cornerInset);
     // Pin legal to the bottom edge so it sits below odds / CTA.
-    const legalBottomInset = 0;
+    const legalBottomInset = 2;
     // Sizes: edit BANNER.default / BANNER.brazil at the top of this file.
     const b = useBrazilBand ? BANNER.brazil : BANNER.default;
     const hasLegalStrip = !!(config.legal?.enabled && !useBrazilBand);
@@ -1507,7 +1506,7 @@ export default function AdPreview({
     const b = useBrazilBand ? BANNER.brazil : BANNER.default;
     const cornerInset = radius * (1 - 1 / Math.SQRT2);
     const legalSideInset = Math.max(4, cornerInset);
-    const legalBottomInset = 0;
+    const legalBottomInset = 2;
     const hasLegalStrip = !!(config.legal?.enabled && !useBrazilBand);
     const footerClearance = useBrazilBand
       ? brazilBandH + b.contentGap
