@@ -184,6 +184,50 @@ function DbaTemplateEditorInner({ initial, allBookmakers, isNew }) {
     return () => clearTimeout(tid);
   }, [displayPos, totalSlides]);
 
+  const goNextSlide = () => {
+    setPlaying(false);
+    setDisplayPos((p) => p + 1);
+    setSlideIdx((i) => (i + 1) % totalSlides);
+  };
+  const goPrevSlide = () => {
+    setPlaying(false);
+    if (displayPos === 0) {
+      setTransitionOn(false);
+      setDisplayPos(totalSlides - 1);
+      setSlideIdx(totalSlides - 1);
+      requestAnimationFrame(() => requestAnimationFrame(() => setTransitionOn(true)));
+    } else {
+      setDisplayPos((p) => p - 1);
+      setSlideIdx((i) => (i - 1 + totalSlides) % totalSlides);
+    }
+  };
+
+  // Drag/swipe on the preview itself (GAM runtime parity). Arrows still work.
+  const swipeRef = useRef({ x: 0, y: 0, armed: false, swiped: false });
+  const onPreviewPointerDown = (e) => {
+    if (totalSlides < 2) return;
+    swipeRef.current = { x: e.clientX, y: e.clientY, armed: true, swiped: false };
+    try { e.currentTarget.setPointerCapture(e.pointerId); } catch (_) {}
+  };
+  const onPreviewPointerMove = (e) => {
+    const s = swipeRef.current;
+    if (!s.armed) return;
+    const dx = s.x - e.clientX;
+    const dy = s.y - e.clientY;
+    if (Math.abs(dx) < 28 && Math.abs(dy) < 28) return;
+    if (Math.abs(dx) <= Math.abs(dy)) {
+      s.armed = false;
+      return;
+    }
+    s.armed = false;
+    s.swiped = true;
+    if (dx > 0) goNextSlide();
+    else goPrevSlide();
+  };
+  const onPreviewPointerUp = () => {
+    swipeRef.current.armed = false;
+  };
+
   // Auto-scale the preview to fit available space
   const previewBoxRef = useRef(null);
   const [fitScale, setFitScale] = useState(1);
@@ -892,26 +936,11 @@ function DbaTemplateEditorInner({ initial, allBookmakers, isNew }) {
                       the clone). Backward at index 0 jumps without transition
                       to the last real slide, since there's no clone before
                       slide 0 to animate into. */}
-                  <IconButton size="small" onClick={() => {
-                    setPlaying(false);
-                    if (displayPos === 0) {
-                      setTransitionOn(false);
-                      setDisplayPos(totalSlides - 1);
-                      setSlideIdx(totalSlides - 1);
-                      requestAnimationFrame(() => requestAnimationFrame(() => setTransitionOn(true)));
-                    } else {
-                      setDisplayPos((p) => p - 1);
-                      setSlideIdx((i) => (i - 1 + totalSlides) % totalSlides);
-                    }
-                  }}>
+                  <IconButton size="small" onClick={goPrevSlide}>
                     <ChevronLeftIcon fontSize="small" />
                   </IconButton>
                   <Box sx={{ minWidth: 96, px: 0.75, fontSize: 11, fontWeight: 600, textAlign: 'center', whiteSpace: 'nowrap' }}>{slideLabel}</Box>
-                  <IconButton size="small" onClick={() => {
-                    setPlaying(false);
-                    setDisplayPos((p) => p + 1);
-                    setSlideIdx((i) => (i + 1) % totalSlides);
-                  }}>
+                  <IconButton size="small" onClick={goNextSlide}>
                     <ChevronRightIcon fontSize="small" />
                   </IconButton>
                   <Divider orientation="vertical" flexItem sx={{ mx: 0.5 }} />
@@ -932,11 +961,20 @@ function DbaTemplateEditorInner({ initial, allBookmakers, isNew }) {
             </Box>
 
             <Box sx={{ position: 'relative', display: 'inline-block' }}>
-              <Box sx={{
-                width: w * displayScale, height: h * displayScale,
-                position: 'relative', overflow: 'hidden',
-                borderRadius: `${(config.radius || 8) * displayScale}px`,
-              }}>
+              <Box
+                onPointerDown={onPreviewPointerDown}
+                onPointerMove={onPreviewPointerMove}
+                onPointerUp={onPreviewPointerUp}
+                onPointerCancel={onPreviewPointerUp}
+                sx={{
+                  width: w * displayScale, height: h * displayScale,
+                  position: 'relative', overflow: 'hidden',
+                  borderRadius: `${(config.radius || 8) * displayScale}px`,
+                  touchAction: 'pan-y',
+                  userSelect: 'none',
+                  cursor: totalSlides >= 2 ? 'grab' : 'default',
+                }}
+              >
                 <AdPreview
                   config={config}
                   sizeId={previewSize}

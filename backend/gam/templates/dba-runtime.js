@@ -185,6 +185,10 @@
       '.matches .dba-track { display: flex; flex-wrap: nowrap; flex-shrink: 0; height: 100%; will-change: transform; }' +
       /* Horizontal swipe owns the gesture; stop the wrapping <a> from treating it as a drag-nav. */
       '.ad-shell, .ad-shell .ad, .matches { touch-action: pan-y; }' +
+      /* Kill native link-drag / text-select so desktop GAM preview can swipe. */
+      '.ad-shell, .ad-shell .ad, .matches {' +
+        ' -webkit-user-drag: none; user-select: none; -webkit-user-select: none;' +
+      '}' +
       '.ad-shell .ad { -webkit-user-drag: none; }' +
       '.matches .dba-slide {' +
         'flex: 0 0 auto;' +
@@ -1061,6 +1065,10 @@
       // binding only there made desktop/GAM preview feel non-swipeable.
       function onMouseDown(e) {
         if (e.button != null && e.button !== 0) return;
+        // Block native <a> drag-ghost — otherwise mousemove never advances the track.
+        if (e.cancelable) {
+          try { e.preventDefault(); } catch (err) {}
+        }
         onSwipeStart(e.clientX, e.clientY);
         function onMove(ev) {
           if (!swipeArmed) return;
@@ -1086,6 +1094,7 @@
       var shell = node.closest && node.closest('.ad-shell');
       var ad = shell && shell.querySelector && shell.querySelector('a.ad');
       var mouseTarget = shell || ad || node;
+      if (ad && ad.getAttribute('draggable') == null) ad.setAttribute('draggable', 'false');
 
       // Document-level touch like production — survives SafeFrame + remounts.
       document.addEventListener('touchstart', onTouchStart, { passive: true, capture: true });
