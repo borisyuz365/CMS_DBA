@@ -206,15 +206,18 @@ function DbaTemplateEditorInner({ initial, allBookmakers, isNew }) {
   const swipeRef = useRef({ x: 0, y: 0, armed: false, swiped: false });
   const onPreviewPointerDown = (e) => {
     if (totalSlides < 2) return;
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
     swipeRef.current = { x: e.clientX, y: e.clientY, armed: true, swiped: false };
     try { e.currentTarget.setPointerCapture(e.pointerId); } catch (_) {}
+    // Keep native drag from eating the gesture (esp. over links/images).
+    try { e.preventDefault(); } catch (_) {}
   };
   const onPreviewPointerMove = (e) => {
     const s = swipeRef.current;
     if (!s.armed) return;
     const dx = s.x - e.clientX;
     const dy = s.y - e.clientY;
-    if (Math.abs(dx) < 28 && Math.abs(dy) < 28) return;
+    if (Math.abs(dx) < 16 && Math.abs(dy) < 16) return;
     if (Math.abs(dx) <= Math.abs(dy)) {
       s.armed = false;
       return;

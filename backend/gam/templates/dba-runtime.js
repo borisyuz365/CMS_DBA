@@ -944,31 +944,65 @@
       node._dbaCarouselTimer = setInterval(advance, intervalMs);
     }
 
-    function advance() {
-      if (!sliding || animating) return;
+    function clearAnimTimer() {
+      if (node._dbaAnimTimer) {
+        clearTimeout(node._dbaAnimTimer);
+        node._dbaAnimTimer = null;
+      }
+    }
+
+    function finishAnimLater() {
+      clearAnimTimer();
+      node._dbaAnimTimer = setTimeout(function () {
+        node._dbaAnimTimer = null;
+        animating = false;
+      }, transitionMs + 30);
+    }
+
+    function advance(fromSwipe) {
+      if (!sliding) return;
+      if (animating && !fromSwipe) return;
+      // Swipe interrupts in-flight autoplay so the carousel never feels "stuck".
+      if (animating && fromSwipe) {
+        clearAnimTimer();
+        track.style.transition = 'none';
+        goTo(pos, false);
+        void track.offsetWidth;
+        animating = false;
+      }
       animating = true;
       pos++;
       setActive(pos);
       goTo(pos, true);
       scheduleAlign(node);
       if (pos === n) {
-        setTimeout(function () {
+        clearAnimTimer();
+        node._dbaAnimTimer = setTimeout(function () {
           pos = 0;
           setActive(0);
           goTo(0, false);
           void track.offsetWidth;
           scheduleAlign(node);
           animating = false;
+          node._dbaAnimTimer = null;
         }, transitionMs + 30);
       } else {
-        setTimeout(function () { animating = false; }, transitionMs + 30);
+        finishAnimLater();
       }
     }
 
     // Infinite-carousel previous: from slide 0, jump to the end clone then
     // animate onto the last real slide (mirrors production carousel.js).
-    function retreat() {
-      if (!sliding || animating) return;
+    function retreat(fromSwipe) {
+      if (!sliding) return;
+      if (animating && !fromSwipe) return;
+      if (animating && fromSwipe) {
+        clearAnimTimer();
+        track.style.transition = 'none';
+        goTo(pos, false);
+        void track.offsetWidth;
+        animating = false;
+      }
       animating = true;
       if (pos <= 0) {
         goTo(n, false);
@@ -980,7 +1014,7 @@
       setActive(pos);
       goTo(pos, true);
       scheduleAlign(node);
-      setTimeout(function () { animating = false; }, transitionMs + 30);
+      finishAnimLater();
     }
 
     function start(attempt) {
@@ -999,14 +1033,15 @@
       bindSwipe();
     }
 
-    // Touch / mouse swipe — mirrors production 1X2 carousel.js (document-level
-    // touch listeners). Must rebind on every mountCarousel (sample→feed).
+    // Pointer swipe (mouse + touch + pen) at document capture — survives
+    // SafeFrame, <a> drag, and sample→feed remounts. Must rebind every mount.
     var animating = false;
     var swipeX = null;
     var swipeY = null;
     var swiped = false;
     var swipeArmed = false;
-    var SWIPE_MIN = 24;
+    var swipePointerId = null;
+    var SWIPE_MIN = 16;
 
     function pointInShell(clientX, clientY) {
       var shell = node.closest && node.closest('.ad-shell');
@@ -1045,8 +1080,8 @@
       swipeX = null;
       swipeY = null;
       if (node._dbaCarouselTimer) clearInterval(node._dbaCarouselTimer);
-      if (dx > 0) advance();
-      else retreat();
+      if (dx > 0) advance(true);
+      else retreat(true);
       restartTimer();
     }
 
@@ -1054,36 +1089,27 @@
       if (node._dbaSwipeBound) return;
       node._dbaSwipeBound = true;
 
-      function onTouchStart(e) {
-        if (!e.touches || !e.touches.length) return;
-        onSwipeStart(e.touches[0].clientX, e.touches[0].clientY);
-      }
-      function onTouchMove(e) {
-        if (!e.touches || !e.touches.length) return;
-        onSwipeMove(e.touches[0].clientX, e.touches[0].clientY, e);
-      }
-      // Mouse on the whole ad shell — MPU logo/CTA sit outside `.matches`, so
-      // binding only there made desktop/GAM preview feel non-swipeable.
-      function onMouseDown(e) {
-        if (e.button != null && e.button !== 0) return;
-        // Block native <a> drag-ghost — otherwise mousemove never advances the track.
+      function onPointerDown(e) {
+        if (e.isPrimary === false) return;
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+        if (!pointInShell(e.clientX, e.clientY)) return;
+        swipePointerId = e.pointerId;
+        onSwipeStart(e.clientX, e.clientY);
+        // Kill native <a> drag-ghost / text-select so desktop GAM can swipe.
         if (e.cancelable) {
           try { e.preventDefault(); } catch (err) {}
         }
-        onSwipeStart(e.clientX, e.clientY);
-        function onMove(ev) {
-          if (!swipeArmed) return;
-          onSwipeMove(ev.clientX, ev.clientY, ev);
-        }
-        function onUp() {
-          swipeArmed = false;
-          swipeX = null;
-          swipeY = null;
-          window.removeEventListener('mousemove', onMove, true);
-          window.removeEventListener('mouseup', onUp, true);
-        }
-        window.addEventListener('mousemove', onMove, true);
-        window.addEventListener('mouseup', onUp, true);
+      }
+      function onPointerMove(e) {
+        if (swipePointerId == null || e.pointerId !== swipePointerId) return;
+        onSwipeMove(e.clientX, e.clientY, e);
+      }
+      function onPointerUp(e) {
+        if (swipePointerId == null || e.pointerId !== swipePointerId) return;
+        swipePointerId = null;
+        swipeArmed = false;
+        swipeX = null;
+        swipeY = null;
       }
       function onClickCapture(e) {
         if (!swiped) return;
@@ -1094,23 +1120,29 @@
 
       var shell = node.closest && node.closest('.ad-shell');
       var ad = shell && shell.querySelector && shell.querySelector('a.ad');
-      var mouseTarget = shell || ad || node;
-      if (ad && ad.getAttribute('draggable') == null) ad.setAttribute('draggable', 'false');
+      if (ad) {
+        ad.setAttribute('draggable', 'false');
+        ad.style.webkitUserDrag = 'none';
+      }
+      if (shell) shell.setAttribute('data-dba-swipe', '1');
 
-      // Document-level touch like production — survives SafeFrame + remounts.
-      document.addEventListener('touchstart', onTouchStart, { passive: true, capture: true });
-      document.addEventListener('touchmove', onTouchMove, { passive: false, capture: true });
-      mouseTarget.addEventListener('mousedown', onMouseDown);
+      document.addEventListener('pointerdown', onPointerDown, true);
+      document.addEventListener('pointermove', onPointerMove, true);
+      document.addEventListener('pointerup', onPointerUp, true);
+      document.addEventListener('pointercancel', onPointerUp, true);
       if (ad) ad.addEventListener('click', onClickCapture, true);
       else node.addEventListener('click', onClickCapture, true);
 
       node._dbaSwipeCleanup = function () {
-        document.removeEventListener('touchstart', onTouchStart, true);
-        document.removeEventListener('touchmove', onTouchMove, true);
-        mouseTarget.removeEventListener('mousedown', onMouseDown);
+        document.removeEventListener('pointerdown', onPointerDown, true);
+        document.removeEventListener('pointermove', onPointerMove, true);
+        document.removeEventListener('pointerup', onPointerUp, true);
+        document.removeEventListener('pointercancel', onPointerUp, true);
         if (ad) ad.removeEventListener('click', onClickCapture, true);
         else node.removeEventListener('click', onClickCapture, true);
+        if (shell) shell.removeAttribute('data-dba-swipe');
         node._dbaSwipeBound = false;
+        swipePointerId = null;
       };
     }
 
