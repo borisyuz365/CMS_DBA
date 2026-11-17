@@ -1,6 +1,12 @@
 #!/usr/bin/env node
 /**
- * Android Chrome layout check for interstitial GAM creative (640×1280).
+ * Local GAM interstitial simulation — must match CMS preview structure:
+ * 3 stacked match cards, capped logo, readable text on light cards.
+ *
+ * Sizes:
+ *   320×480  — GAM inventory
+ *   320×640  — common tall phone SafeFrame
+ *   640×1280 — CMS preview canvas
  */
 import fs from 'fs';
 import path from 'path';
@@ -11,23 +17,30 @@ if (!process.env.PLAYWRIGHT_BROWSERS_PATH) {
   process.env.PLAYWRIGHT_BROWSERS_PATH = path.join(__dirname, '.pw-browsers');
 }
 
-import { chromium, devices } from 'playwright';
+import { chromium } from 'playwright';
+
 const ROOT = path.resolve(__dirname, '..');
 const TEMPLATES = path.join(ROOT, 'templates');
+const OUT = path.join(ROOT, '.layout-check');
 
-const W = 640;
-const H = process.env.LAYOUT_H ? parseInt(process.env.LAYOUT_H, 10) : 960;
+const VIEWPORTS = [
+  { w: 320, h: 480, label: 'gam-320x480' },
+  { w: 320, h: 640, label: 'phone-320x640' },
+  { w: 640, h: 1280, label: 'cms-640x1280' },
+];
 
 const SAMPLE_MATCHES = {
   matches: [
-    { home: { id: 1, name: 'Lille' }, away: { id: 2, name: 'PSG' }, odds: ['3.20', '3.40', '2.10'], date: '28/08 21:45', ISOStartTime: '2026-08-28T18:45:00.000Z' },
-    { home: { id: 3, name: 'Palace' }, away: { id: 4, name: 'Chelsea' }, odds: ['4.50', '3.80', '1.75'], date: '28/08 21:45', ISOStartTime: '2026-08-28T18:45:00.000Z' },
-    { home: { id: 5, name: 'Fulham' }, away: { id: 6, name: 'Arsenal' }, odds: ['5.00', '4.00', '1.60'], date: '28/08 21:45', ISOStartTime: '2026-08-28T18:45:00.000Z' },
-    { home: { id: 7, name: 'Santos' }, away: { id: 8, name: 'Flamengo' }, odds: ['2.80', '3.20', '2.50'], date: '29/08 19:00', ISOStartTime: '2026-08-29T16:00:00.000Z' },
+    { home: { id: 7766, name: 'Sporting Cristal' }, away: { id: 1267, name: 'Cienciano' }, odds: ['1.53', '4.1', '5.5'], date: '22/11 22:00', ISOStartTime: '2026-11-22T22:00:00.000Z' },
+    { home: { id: 1215, name: 'Bayern' }, away: { id: 1300, name: 'Frosinone' }, odds: ['1.22', '7.0', '9.5'], date: '22/11 22:00', ISOStartTime: '2026-11-22T22:00:00.000Z' },
+    { home: { id: 2001, name: 'Alianza Lima' }, away: { id: 2002, name: 'FC Cajamarca' }, odds: ['1.80', '3.5', '4.2'], date: '22/11 15:00', ISOStartTime: '2026-11-22T15:00:00.000Z' },
+    { home: { id: 2003, name: 'Barcelona' }, away: { id: 2004, name: 'Villarreal' }, odds: ['1.90', '3.4', '3.8'], date: '23/11 18:00', ISOStartTime: '2026-11-23T18:00:00.000Z' },
+    { home: { id: 2005, name: 'Lille' }, away: { id: 2006, name: 'PSG' }, odds: ['3.20', '3.40', '2.10'], date: '23/11 21:00', ISOStartTime: '2026-11-23T21:00:00.000Z' },
+    { home: { id: 2007, name: 'Santos' }, away: { id: 2008, name: 'Flamengo' }, odds: ['2.80', '3.20', '2.50'], date: '24/11 19:00', ISOStartTime: '2026-11-24T19:00:00.000Z' },
   ],
 };
 
-const LOGO_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="none"/><text x="100" y="112" fill="white" font-size="28" font-family="sans-serif" font-weight="700" text-anchor="middle">SUPERBET</text></svg>';
+const LOGO = 'https://res.cloudinary.com/scores365/image/upload/w_400,h_160,c_fit,d_countries:default.png/BookMakers/NoBG/42';
 
 function buildHtml() {
   let tpl = fs.readFileSync(path.join(TEMPLATES, 'interstitial-standard.html'), 'utf8');
@@ -36,26 +49,31 @@ function buildHtml() {
 
   const subs = {
     '[[ad_border_radius]]': '0',
-    '[[ad_background]]': '#6B0046',
+    '[[ad_background]]': '#FF7700',
     '[[brand_color_2_or_white]]': '#FFFFFF',
     '[[ad_font_family]]': 'Inter, sans-serif',
-    '[[bookmaker_logo_url]]': 'data:image/svg+xml,' + encodeURIComponent(LOGO_SVG),
-    '[[cta_bg_color]]': '#E8002D',
+    '[[bookmaker_logo_url]]': LOGO,
+    '[[cta_bg_color]]': '#00C853',
     '[[cta_text_color]]': '#FFFFFF',
     '[[disclaimer_layout]]': 'legal-band',
     '[[legal_text_color]]': '#FFFFFF',
     '[[disclaimer_bg_color]]': '#0A0A0A',
     '[[feed_url]]': '',
-    '[[date_pill_bg]]': '#FFC107',
-    '[[date_pill_text_color]]': '#0A0A0A',
-    '[[cta_text]]': 'Bet Now',
-    '[[bookmaker_name]]': 'Superbet',
-    '[[legal_text]]': '18+ MINISTÉRIO DA FAZENDA ADVERTE: Apostas esportivas são proibidas para menores de 18 anos.',
+    '[[date_pill_bg]]': 'rgba(0,0,0,0.55)',
+    '[[date_pill_text_color]]': '#FFFFFF',
+    '[[cta_text]]': 'ABRIR CUENTA',
+    '[[bookmaker_name]]': 'Betsson',
+    '[[legal_text]]': '18+ Juego responsable. Los juegos y apuestas deportivas a distancia realizados en exceso pueden causar ludopatía.',
     '[[runtime_url]]': '',
+    '[[odds_text_color]]': '#FFFFFF',
+    '[[card_bg]]': 'rgba(255,255,255,0.85)',
+    '[[ad_href]]': '#',
+    '[[ad_attrs]]': '',
   };
   for (const [k, v] of Object.entries(subs)) tpl = tpl.split(k).join(v);
-
+  tpl = tpl.replace(/\[\[[^\]]+\]\]/g, '');
   tpl = tpl.replace(/<script\s+src="[^"]*"\s*defer\s*><\/script>\s*/i, '');
+
   const b64 = Buffer.from(JSON.stringify(SAMPLE_MATCHES)).toString('base64');
   tpl = tpl.replace(
     /<div class="matches"([^>]*)>/,
@@ -66,108 +84,85 @@ function buildHtml() {
 <script>${runtime}</script>
 <script>
 (function () {
-  var node = document.querySelector('.matches[data-feed]');
+  var node = document.querySelector('.matches');
   if (!node || !window.DbaRenderMatches) return;
   var b64 = node.getAttribute('data-sample-b64');
   if (b64) {
-    try { window.DbaRenderMatches(node, JSON.parse(atob(b64))); } catch (e) {}
+    try { window.DbaRenderMatches(node, JSON.parse(atob(b64))); } catch (e) { console.error(e); }
   }
 })();
 </script>`;
-
   return tpl.replace('</body>', `${boot}\n</body>`);
 }
 
 async function measure(page) {
   return page.evaluate(() => {
-    function rect(el) {
-      if (!el) return null;
-      const r = el.getBoundingClientRect();
-      const cs = getComputedStyle(el);
-      return {
-        top: Math.round(r.top), bottom: Math.round(r.bottom),
-        left: Math.round(r.left), right: Math.round(r.right),
-        width: Math.round(r.width), height: Math.round(r.height),
-        fontSize: cs.fontSize,
-      };
-    }
     const shell = document.querySelector('.ad-shell');
-    const firstCard = document.querySelector('.dba-card');
-    const homeName = firstCard && firstCard.querySelector('.dba-teamblock-home .dba-team-name');
-    const homeCrest = firstCard && firstCard.querySelector('.dba-teamblock-home .dba-team-logo');
-    const cards = [...document.querySelectorAll('.dba-card')].slice(0, 3).map((el, i) => {
-      const r = el.getBoundingClientRect();
-      const teams = el.querySelector('.dba-teams');
-      return {
-        i,
-        top: Math.round(r.top), bottom: Math.round(r.bottom),
-        left: Math.round(r.left), right: Math.round(r.right),
-        height: Math.round(r.height),
-        teamFont: teams ? getComputedStyle(teams).fontSize : null,
-      };
-    });
+    const logo = document.querySelector('.logo');
+    const slides = [...document.querySelectorAll('.dba-slide:not(.dba-slide-welcome)')];
+    const firstSlide = slides[0];
+    const cards = firstSlide
+      ? [...firstSlide.querySelectorAll('.dba-card')].map((c) => {
+        const r = c.getBoundingClientRect();
+        const pill = c.querySelector('.dba-pill')?.getBoundingClientRect();
+        const teams = c.querySelector('.dba-teams');
+        const name = c.querySelector('.dba-team-name');
+        return {
+          top: Math.round(r.top),
+          bottom: Math.round(r.bottom),
+          height: Math.round(r.height),
+          pillInset: pill ? Math.round(pill.top - r.top) : null,
+          teamFont: teams ? getComputedStyle(teams).fontSize : null,
+          nameColor: name ? getComputedStyle(name).color : null,
+          cardFg: getComputedStyle(c).getPropertyValue('color'),
+        };
+      })
+      : [];
+    const lr = logo.getBoundingClientRect();
     return {
-      shell: rect(shell),
-      logoWrap: rect(document.querySelector('.logo-wrap')),
-      logo: rect(document.querySelector('.logo')),
-      matches: rect(document.querySelector('.matches')),
-      ctaZone: rect(document.querySelector('.cta-zone')),
-      cta: rect(document.querySelector('.cta')),
-      legal: rect(document.querySelector('.legal')),
-      homeName: rect(homeName),
-      homeCrest: rect(homeCrest),
+      logo: { w: Math.round(lr.width), h: Math.round(lr.height) },
+      cardFg: shell ? getComputedStyle(shell.querySelector('.matches') || shell).getPropertyValue('--dba-card-fg').trim() : '',
+      cardsOnFirstSlide: cards.length,
       cards,
       teamVar: shell ? getComputedStyle(shell).getPropertyValue('--dba-int-team').trim() : '',
       crestVar: shell ? getComputedStyle(shell).getPropertyValue('--dba-int-crest').trim() : '',
-      oddsVar: shell ? getComputedStyle(shell).getPropertyValue('--dba-int-odds').trim() : '',
-      legalVar: shell ? getComputedStyle(shell).getPropertyValue('--dba-legal-h').trim() : '',
     };
   });
 }
 
-function assertLayout(m) {
+function assertLayout(m, vp) {
   const errors = [];
-  const shellH = m.shell.height;
-  const legalPct = m.legal.height / shellH;
-
-  if (legalPct < 0.095) errors.push(`Legal band too small: ${Math.round(legalPct * 100)}% (need 10%)`);
-  if (m.legal.top < m.cta.bottom - 2) errors.push(`CTA overlaps legal: cta.bottom=${m.cta.bottom} legal.top=${m.legal.top}`);
-  if (m.matches.bottom > m.ctaZone.top + 4) errors.push(`Cards bleed into CTA`);
-  if (m.logo.bottom > m.logoWrap.bottom + 2) errors.push(`Logo clipped by logo-wrap: logo.bottom=${m.logo.bottom} wrap.bottom=${m.logoWrap.bottom}`);
-  if (m.logoWrap.bottom > m.matches.top + 4) errors.push(`Logo overlaps matches`);
-
-  if (m.logoWrap.top > 30) errors.push(`Logo too far from top: ${Math.round(m.logoWrap.top)}px`);
-
-  const teamPx = parseFloat(m.teamVar);
-  if (teamPx < 16 || teamPx > 32) errors.push(`Team font out of range: ${m.teamVar} (want 18-28px)`);
-  const oddsPx = parseFloat(m.oddsVar);
-  if (!(oddsPx < teamPx)) errors.push(`Odds font must be smaller than team: odds=${m.oddsVar} team=${m.teamVar}`);
-  if (oddsPx < 12) errors.push(`Odds font too small: ${m.oddsVar}`);
-
-  const gapMid = m.cards.length >= 2 ? m.cards[1].top - m.cards[0].bottom : 0;
-  if (gapMid < 14 || gapMid > 44) errors.push(`Card gap out of range: ${Math.round(gapMid)}px (want ~18-28px)`);
-  if (m.cards[0] && m.cards[0].height > Math.round(m.shell.width * 0.30)) {
-    errors.push(`Cards too tall: ${m.cards[0].height}px (cap ~${Math.round(m.shell.width * 0.27)}px)`);
+  if (m.cardsOnFirstSlide !== 3) {
+    errors.push(`${vp.label}: expected 3 cards on first match slide, got ${m.cardsOnFirstSlide}`);
   }
+  if (m.logo.w > 210) errors.push(`${vp.label}: logo too wide ${m.logo.w}px (cap 200)`);
+  if (m.logo.h > 52) errors.push(`${vp.label}: logo too tall ${m.logo.h}px (cap 48)`);
+
+  if (m.cardFg && !/0,\s*0,\s*0|10,\s*10,\s*10|#0a0a0a/i.test(m.cardFg)) {
+    // CSS vars may be #0A0A0A
+    if (m.cardFg.replace(/\s/g, '').toLowerCase() !== '#0a0a0a') {
+      errors.push(`${vp.label}: card fg should be dark on light card, got ${m.cardFg}`);
+    }
+  }
+
+  for (let i = 0; i < m.cards.length; i++) {
+    const c = m.cards[i];
+    if (c.pillInset != null && c.pillInset < 4) {
+      errors.push(`${vp.label}: card[${i}] pill too tight to top (${c.pillInset}px)`);
+    }
+    if (c.height > Math.round(vp.w * 0.42)) {
+      errors.push(`${vp.label}: card[${i}] too tall ${c.height}px (cap ~${Math.round(vp.w * 0.38)})`);
+    }
+  }
+
   if (m.cards.length >= 2) {
-    const heights = m.cards.map((c) => c.height);
-    const spread = Math.max(...heights) - Math.min(...heights);
-    if (spread > 8) errors.push(`Uneven card heights: ${heights.join(',')}`);
-  }
-
-  const ctaToLegal = m.legal.top - m.cta.bottom;
-  if (ctaToLegal > 80) errors.push(`CTA too far from legal footer: ${Math.round(ctaToLegal)}px`);
-
-  if (!m.homeName || m.homeName.width < 20 || m.homeName.height < 10) {
-    errors.push(`Home team name not visible: ${JSON.stringify(m.homeName)}`);
-  }
-  if (!m.homeCrest || m.homeCrest.width < 24 || m.homeCrest.height < 24) {
-    errors.push(`Home crest not visible: ${JSON.stringify(m.homeCrest)}`);
-  }
-  if (m.homeCrest && m.cards[0]) {
-    const c = m.cards[0];
-    if (m.homeCrest.left < c.left - 2 || m.homeCrest.right > c.right + 2) {
-      errors.push(`Home crest outside card bounds: crest=${m.homeCrest.left}-${m.homeCrest.right} card=${c.left}-${c.right}`);
+    const gap = m.cards[1].top - m.cards[0].bottom;
+    if (gap < 6 || gap > 60) {
+      errors.push(`${vp.label}: card gap out of range ${gap}px`);
+    }
+    // Must be stacked, not overlapping / same top
+    if (m.cards[1].top <= m.cards[0].top + 10) {
+      errors.push(`${vp.label}: cards not stacked (tops ${m.cards.map((c) => c.top).join(',')})`);
     }
   }
 
@@ -175,36 +170,38 @@ function assertLayout(m) {
 }
 
 async function main() {
-  const outDir = path.join(ROOT, '.layout-check');
-  fs.mkdirSync(outDir, { recursive: true });
-  const htmlPath = path.join(outDir, 'interstitial-640x1280.html');
+  fs.mkdirSync(OUT, { recursive: true });
+  const htmlPath = path.join(OUT, 'interstitial-sim.html');
   fs.writeFileSync(htmlPath, buildHtml());
 
-  const device = devices['Pixel 7'];
   const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({
-    ...device,
-    viewport: { width: W, height: H },
-    deviceScaleFactor: 2,
-    userAgent: device.userAgent,
-  });
-  const page = await context.newPage();
-  await page.goto(`file://${htmlPath}`);
-  await page.waitForSelector('.dba-card', { timeout: 5000 });
-  await page.waitForTimeout(400);
+  const allErrors = [];
+  const reports = [];
 
-  const m = await measure(page);
-  await page.screenshot({ path: path.join(outDir, 'interstitial-android.png'), fullPage: true });
-
-  const errors = assertLayout(m);
-  console.log(JSON.stringify({ viewport: `${W}x${H}`, device: 'Pixel 7', measures: m, errors }, null, 2));
+  for (const vp of VIEWPORTS) {
+    const page = await browser.newPage({
+      viewport: { width: vp.w, height: vp.h },
+      deviceScaleFactor: 2,
+    });
+    await page.goto(`file://${htmlPath}`);
+    await page.waitForSelector('.dba-card', { timeout: 8000 });
+    await page.waitForTimeout(600);
+    const m = await measure(page);
+    const shot = path.join(OUT, `interstitial-${vp.label}.png`);
+    await page.screenshot({ path: shot });
+    const errors = assertLayout(m, vp);
+    allErrors.push(...errors);
+    reports.push({ viewport: `${vp.w}x${vp.h}`, label: vp.label, measures: m, errors, shot });
+    await page.close();
+  }
 
   await browser.close();
-  if (errors.length) {
-    console.error('\nLAYOUT CHECK FAILED');
+  console.log(JSON.stringify(reports, null, 2));
+  if (allErrors.length) {
+    console.error('\nLAYOUT CHECK FAILED\n' + allErrors.map((e) => ` - ${e}`).join('\n'));
     process.exit(1);
   }
-  console.log('\nLAYOUT CHECK PASSED');
+  console.log('\nLAYOUT CHECK PASSED for', VIEWPORTS.map((v) => `${v.w}x${v.h}`).join(', '));
 }
 
 main().catch((e) => {

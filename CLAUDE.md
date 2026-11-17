@@ -140,6 +140,10 @@ Non-Bet365 creatives keep a static CMS variant affiliate as `[%cta_url%]`. If th
 
 Debug (optional Sportifier/Targetings tools, not the live CTA path): `GET /api/dba/links/resolve?bmid=14&cid=21&lang=1`.
 
+### Cross-OS creative parity (required)
+
+DBA/GAM creatives must look **identical on iOS and Android**. WebKit vs Chrome WebView differ on font metrics — the same legal copy can be one line on iOS and two on Android, which clips odds in a 320×50 banner. Always design for the worst-case OS: fixed/clamped legal height (banner = single line + ellipsis), reserve clearance for that max height, keep AdPreview and `dba-runtime` in sync, and validate with long legal copy under an Android-like viewport. See `.cursor/rules/dba-cross-os-creative-parity.mdc`.
+
 ## Deploy
 
 Has a real pipeline now — don't take "prototype" at face value here. The DBA/BP ad-template features ship a Docker + CI/CD deploy that builds and deploys this repo's backend + frontend as one image, alongside a second, split-out microservice:

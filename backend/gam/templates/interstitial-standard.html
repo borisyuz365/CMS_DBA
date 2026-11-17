@@ -27,17 +27,23 @@
     display: flex;
     flex-direction: column;
     font-size: 1vw; /* boot script overrides from shell size */
+    /* Paint once on the shell so gradient spans logo → CTA → legal. */
+    background: [[ad_background]];
+    /* Subtle iOS inset — keeps legal chrome intact, clears curved corners. */
+    padding-left: env(safe-area-inset-left, 0px);
+    padding-right: env(safe-area-inset-right, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
   }
   .ad {
     flex: 1 1 0;
     width: 100%;
     min-height: 0;
     overflow: hidden;
-    background: [[ad_background]];
+    background: transparent;
     color: [[brand_color_2_or_white]];
     font-family: [[ad_font_family]];
     box-sizing: border-box;
-    padding: 40px 2.5% 5%;
+    padding: 16px 5% 2%;
     display: flex; flex-direction: column;
     text-decoration: none;
   }
@@ -55,16 +61,24 @@
     flex: 0 0 auto;
     overflow: visible;
     min-height: 0;
+    position: relative;
+    z-index: 5;
+    /* --dba-logo-shift set in boot/runtime (safe-area + 14). Same var
+       drives the welcome pill offset so iOS + Android stay in sync —
+       raw env() inside calc() is dropped on some Android WebViews. */
+    transform: translateY(var(--dba-logo-shift, 14px));
   }
   /* Height-driven, not a forced square: real bookmaker logos are usually wide
      wordmarks (see design ref), and a fixed 1:1 box wasted vertical space that
      belonged to the match cards below. background-size:contain still keeps
      square/circular badge logos correctly proportioned inside this box. */
   .ad .logo {
-    width: 62%;
-    height: 9em;
-    min-height: 26px;
-    max-height: 64px;
+    /* Cap before JS runs — 62% of a phone-width shell + 140px CDN master = pixelated Betsson. */
+    width: 48%;
+    max-width: 200px;
+    height: 7vw;
+    min-height: 28px;
+    max-height: 48px;
     flex-shrink: 0;
     overflow: visible;
     background-image: url('[[bookmaker_logo_url]]');
@@ -92,7 +106,8 @@
     padding-bottom: 1%;
     position: relative;
     z-index: 2;
-    background: inherit; /* cover any bleed from matches */
+    /* Transparent — inherit restarts linear-gradient in this box and cuts it off. */
+    background: transparent;
   }
   .ad .dba-dots[data-layout="interstitial"] {
     height: 2.8em; min-height: 10px; max-height: 4%;
@@ -221,6 +236,21 @@
   </div>
   <script>
   (function () {
+    // Probe env(safe-area-inset-top) — many Android WebViews ignore env()
+    // inside transform/margin calc(), but still resolve it on padding.
+    function measureSafeTop() {
+      try {
+        var probe = document.createElement('div');
+        probe.setAttribute('aria-hidden', 'true');
+        probe.style.cssText = 'position:fixed;top:0;left:0;visibility:hidden;pointer-events:none;padding-top:env(safe-area-inset-top,0px)';
+        document.documentElement.appendChild(probe);
+        var pt = parseFloat(window.getComputedStyle(probe).paddingTop) || 0;
+        document.documentElement.removeChild(probe);
+        return pt > 0 && isFinite(pt) ? pt : 0;
+      } catch (e) {
+        return 0;
+      }
+    }
     // 1em = 1% of the limiting dimension (width vs height/1.5) so tall
     // full-screen slots do not oversize type relative to card height.
     function apply() {
@@ -231,9 +261,16 @@
       if (w < 1) w = 320;
       if (h < 1) h = Math.round(w * 1.5);
       var unit = Math.min(w, h / 1.5) * 0.01;
-      if (document.querySelector('.matches[data-layout="interstitial"]')) unit = w * 0.01;
+      var matches = document.querySelector('.matches');
+      if (matches && matches.getAttribute('data-layout') === 'interstitial') unit = w * 0.01;
+      if (matches) {
+        var layout = matches.getAttribute('data-layout') || '';
+        shell.className = (shell.className || '').replace(/\bdba-layout-\w+/g, '').replace(/\s+/g, ' ').trim();
+        if (layout) shell.classList.add('dba-layout-' + layout);
+      }
       var next = unit + 'px';
       if (shell.style.fontSize !== next) shell.style.fontSize = next;
+      shell.style.setProperty('--dba-logo-shift', (measureSafeTop() + 14) + 'px');
       var legal = shell.querySelector('.legal');
       if (legal && shell.classList.contains('legal-band')) {
         var lh = legal.offsetHeight;

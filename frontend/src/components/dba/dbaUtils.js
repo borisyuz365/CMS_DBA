@@ -93,7 +93,7 @@ export const INTERSTITIAL_SIZE_ALIASES = new Set(['320x480', '640x1280']);
  * Interstitial art is designed at 2:3; GAM may deliver taller slots that crop via cover.
  */
 export const INTERSTITIAL_BG_IMAGE_GUIDELINES = [
-  'Preview canvas is 640×1280 (tall device slot). GAM inventory remains 320×480 fluid.',
+  'CMS preview canvas is 640×1280. GAM traffic is 320×480 (2:3) and other tall phone slots — layout is fluid and fills the shell.',
   'Ratio for art masters: 2:3 (e.g. 640×960 or 1280×1920). Do not rely on full-phone screenshots as the master — tall slots crop via cover.',
   'Format: WebP or JPEG preferred; avoid huge PNGs. Aim under 150–200 KB (ideally under 100 KB).',
   'Applied as center / cover — keep critical art in the middle ~70%. Bottom ~10% is covered by the Brazil legal band.',
@@ -169,11 +169,30 @@ export function resolveOddsTextColor(config) {
   return config?.oddsTextColor || config?.text || '#FFFFFF';
 }
 
-/** Default interstitial game-card fill — a subtle overlay that reads on any background. */
-export const CARD_BG_DEFAULT = 'rgba(255,255,255,0.10)';
+/** Default interstitial game-card fill — near-opaque white (85%). */
+export const CARD_BG_DEFAULT = 'rgba(255,255,255,0.85)';
 
 export function resolveCardBg(config) {
-  return config?.cardBgColor || CARD_BG_DEFAULT;
+  // Color + transparency % → rgba. Default 85% white.
+  if (!config?.cardBgColor && (config?.cardBgOpacity == null)) return CARD_BG_DEFAULT;
+  const color = config?.cardBgColor || '#FFFFFF';
+  if (typeof color === 'string' && color.trim().toLowerCase().startsWith('rgba')) return color;
+  const pct = config?.cardBgOpacity != null ? Number(config.cardBgOpacity) : 85;
+  const a = Math.max(0, Math.min(100, Number.isFinite(pct) ? pct : 85)) / 100;
+  return hexToRgba(color, a);
+}
+
+/** Text/odds on interstitial cards — dark on light fills (85% white default). */
+export function resolveCardFg(config) {
+  const bg = resolveCardBg(config);
+  const m = String(bg).match(/rgba?\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)(?:\s*,\s*([\d.]+))?\s*\)/i);
+  if (m) {
+    const a = m[4] != null ? Number(m[4]) : 1;
+    if (a < 0.35) return config?.text || '#FFFFFF';
+    const lum = (0.299 * +m[1] + 0.587 * +m[2] + 0.114 * +m[3]) / 255;
+    return lum >= 0.55 ? '#0A0A0A' : '#FFFFFF';
+  }
+  return isDarkColor(config?.cardBgColor || '#FFFFFF') ? '#FFFFFF' : '#0A0A0A';
 }
 
 /** MPU (300×250) layout anchor — keep in sync with backend/gam/templates/mpu-standard.html */
@@ -222,6 +241,18 @@ export function resolveLogoUrl(bookmaker, config) {
     variant === 'bg'   ? false :
     variant === 'nobg' ? true  :
     /* auto */            (isDarkBackground(config) || !!bookmaker.useNoBgLogo);
+  // Prefer stored CDN URL when present, but always bump transforms so
+  // interstitial/MPU don't stretch a 140px master into a huge pixelated box.
+  const stored = noBg
+    ? (bookmaker.defaultLogoImageUrlNoBg || bookmaker.defaultLogoImageUrl)
+    : (bookmaker.defaultLogoImageUrl || bookmaker.defaultLogoImageUrlNoBg);
+  if (stored) {
+    let url = stored;
+    if (noBg && url.indexOf('res.cloudinary.com') !== -1) {
+      url = url.replace(/(\/BookMakers\/)(?!NoBG\/)/, '$1NoBG/');
+    }
+    return withLogoTransforms(url);
+  }
   return bookmakerLogoUrl(bookmaker.id, { noBg });
 }
 
@@ -232,11 +263,20 @@ export function autoLogoReason(bookmaker, config) {
   return { noBg: false, reason: "Bookmaker's default" };
 }
 
-// Returns the Cloudinary CDN URL for a bookmaker logo, or null if the id
-// doesn't match the expected `bk_<n>` pattern. The transforms keep the image
-// at 70×70 with `c_limit` (no upscaling) and a default fallback.
-// Pass `{ noBg: true }` to get the transparent-background variant.
-const LOGO_TRANSFORMS = 'w_140,h_140,c_limit,d_countries:default.png';
+// Bookmaker logos: request a wide retina box so interstitial wordmarks
+// (Betsson etc.) stay sharp when shown ~180–200px wide. `c_fit` may upscale
+// small masters softly; better than stretching a 140px asset in CSS.
+export const LOGO_TRANSFORMS = 'w_400,h_160,c_fit,e_sharpen:100,d_countries:default.png';
+/** Rewrite Cloudinary upload transforms on a BookMakers URL (preview + GAM). */
+export function withLogoTransforms(url, transforms = LOGO_TRANSFORMS) {
+  if (!url || typeof url !== 'string') return url;
+  if (url.indexOf('res.cloudinary.com') === -1 || url.indexOf('/image/upload/') === -1) return url;
+  return url.replace(
+    /\/image\/upload\/(?:[^/]+\/)?(?=BookMakers\/)/,
+    `/image/upload/${transforms}/`,
+  );
+}
+
 export function bookmakerLogoUrl(id, { noBg = false, transforms = LOGO_TRANSFORMS } = {}) {
   if (id == null) return null;
   const m = String(id).match(/(\d+)$/);

@@ -383,12 +383,28 @@ function validateBakedSnippet(snippet, inline) {
   return { ok: issues.length === 0, issues, checks };
 }
 
+/**
+ * GAM macros (%%PATTERN:X%% / [%X%]) make GetPayload return HTTP 500 when
+ * pinged raw. Swap them for harmless probe values so CMS feed validation
+ * reflects real cid/bmid/lang/placement health, not macro syntax.
+ * maturity / scope / os must stay numeric — blank strings still 500.
+ */
+function resolveFeedUrlForProbe(feedUrl) {
+  if (!feedUrl) return feedUrl;
+  const numericKeys = /UserMaturity_Weeks|maturity|Scope|scope|OS_Type|User_OS|os/i;
+  return String(feedUrl)
+    .replace(/%%PATTERN:([\w]+)%%/g, (_, name) => (numericKeys.test(name) ? '1' : ''))
+    .replace(/\[%([\w]+)%\]/g, (_, name) => (numericKeys.test(name) ? '1' : ''))
+    .replace(/%%[\w:]+%%/g, '');
+}
+
 async function validateFeedUrl(feedUrl, { timeoutMs = 8000 } = {}) {
   if (!feedUrl) return { ok: false, error: 'feed_url is empty', gameCount: 0 };
+  const probeUrl = resolveFeedUrlForProbe(feedUrl);
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
-    const res = await fetch(feedUrl, { signal: controller.signal, headers: { Accept: 'application/json' } });
+    const res = await fetch(probeUrl, { signal: controller.signal, headers: { Accept: 'application/json' } });
     const text = await res.text();
     if (!res.ok) return { ok: false, error: `HTTP ${res.status}`, gameCount: 0, feedUrl };
     if (text.trim() === 'No Games') {

@@ -183,8 +183,11 @@
          put width/max-width:100% here — that resolves against the wide track and
          collapses the carousel to a single non-scrolling viewport. */
       '.matches .dba-track { display: flex; flex-wrap: nowrap; flex-shrink: 0; height: 100%; will-change: transform; }' +
-      /* Horizontal swipe owns the gesture; stop the wrapping <a> from treating it as a drag-nav. */
-      '.ad-shell, .ad-shell .ad, .matches { touch-action: pan-y; }' +
+      /* Carousel owns horizontal swipes. Android GAM WebViews often ignore
+         touch-action on nested nodes and cancel pointer streams — shell-level
+         none + touch listeners (bindSwipe) keep flings from becoming link-drags. */
+      '.ad-shell, .ad-shell .ad,' +
+      '.matches, .matches .dba-track, .matches .dba-slide { touch-action: none; }' +
       /* Kill native link-drag / text-select so desktop GAM preview can swipe. */
       '.ad-shell, .ad-shell .ad, .matches {' +
         ' -webkit-user-drag: none; user-select: none; -webkit-user-select: none;' +
@@ -222,12 +225,17 @@
         'height: 100%; position: relative;' +
       '}' +
       /* MPU welcome: slide owns logo+pill, so drop the shell logo.
-         Banner keeps the shell logo always (grid width must stay stable or
-         match slides sized during welcome overflow and show two halves). */
+         Banner + interstitial keep the shell logo (same size/placement as
+         match slides — AdPreview renderWelcomeInterstitial parity). */
       '.ad-shell.dba-on-welcome .logo-wrap {' +
         'display: none !important;' +
       '}' +
-      '.ad-shell.dba-on-welcome:has(.matches[data-layout="banner"]) .logo-wrap {' +
+      /* Class (not :has) — older Android GAM WebViews lack :has() and would
+         hide the shell logo on welcome while the pill stayed put. */
+      '.ad-shell.dba-on-welcome.dba-layout-banner .logo-wrap,' +
+      '.ad-shell.dba-on-welcome.dba-layout-interstitial .logo-wrap,' +
+      '.ad-shell.dba-on-welcome:has(.matches[data-layout="banner"]) .logo-wrap,' +
+      '.ad-shell.dba-on-welcome:has(.matches[data-layout="interstitial"]) .logo-wrap {' +
         'display: flex !important;' +
       '}' +
       '.matches .dba-welcome-top {' +
@@ -235,11 +243,19 @@
         'flex-shrink: 0; gap: 8px; margin-bottom: 8px;' +
       '}' +
       '.ad-shell.legal-band .matches .dba-welcome-top { margin-bottom: 4px; }' +
+      /* Interstitial: pill clears the lowered shell logo. Same --dba-logo-shift
+         as logo transform (set in boot) so iOS + Android match. */
+      '.matches[data-layout="interstitial"] .dba-welcome-top {' +
+        'justify-content: center;' +
+        'margin-top: calc(var(--dba-logo-shift, 14px) + 12px);' +
+        'margin-bottom: 0.8em;' +
+      '}' +
       '.matches .dba-welcome-logo {' +
         'width: 42px; height: 42px; flex-shrink: 0;' +
         'background-size: contain; background-repeat: no-repeat; background-position: center;' +
       '}' +
       '.ad-shell.legal-band .matches .dba-welcome-logo { width: 32px; height: 32px; }' +
+      '.matches[data-layout="interstitial"] .dba-welcome-logo { display: none !important; }' +
       '.matches .dba-welcome-pill {' +
         'padding: 3px 8px 1px; border-radius: 999px;' +
         'font-size: 9px; font-weight: 800; line-height: 1;' +
@@ -275,10 +291,11 @@
       '.ad-shell .matches[data-layout="banner"] ~ .dba-dots,' +
       '.ad-shell > .dba-dots-shell[data-layout="banner"],' +
       '.ad .dba-dots[data-layout="banner"] { display: none !important; }' +
-      '.matches[data-layout="interstitial"] .dba-welcome-head { font-size: 22px; }' +
-      '.matches[data-layout="interstitial"] .dba-welcome-sub { font-size: 13px; }' +
-      '.matches[data-layout="interstitial"] .dba-welcome-terms { font-size: 10px; }' +
-      '.matches[data-layout="interstitial"] .dba-welcome-logo { width: 56px; height: 56px; }' +
+      /* em → scales with shell fontSize (designScale on tall slots). */
+      '.matches[data-layout="interstitial"] .dba-welcome-head { font-size: 6.2em; line-height: 1.05; }' +
+      '.matches[data-layout="interstitial"] .dba-welcome-sub { font-size: 3.8em; line-height: 1.25; }' +
+      '.matches[data-layout="interstitial"] .dba-welcome-terms { font-size: 2.4em; }' +
+      '.matches[data-layout="interstitial"] .dba-welcome-pill { font-size: 2.4em; padding: 0.35em 1em; }' +
       '.ad .cta { transition: opacity 180ms ease; }' +
       /* Never flex-shrink MPU cards — that was clipping the odds row. */
       '.matches .dba-card {' +
@@ -344,6 +361,8 @@
       '.matches .dba-odd { display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; line-height: 1.2; }' +
       '.matches .dba-odd-label { font-size: 7px; font-weight: 800; color: #FFC107; line-height: 1.2; }' +
       '.matches .dba-v-gap { display: none; }' +
+      /* Default: transparent wrapper so MPU/banner layout is unchanged. */
+      '.matches .dba-card-body { display: contents; }' +
       '.ad-stack .matches { margin: 0; padding-top: 0; overflow: hidden; }' +
       '.ad-shell.legal-band .ad-stack .matches {' +
         '--dba-mpu-crest: 17.25px;' +
@@ -460,25 +479,55 @@
       '.matches[data-layout="interstitial"] .dba-slide {' +
         'height: 100%; min-height: 0; box-sizing: border-box;' +
         'display: flex; flex-direction: column; justify-content: flex-start;' +
-        'align-items: stretch; gap: 0; overflow: hidden;' +
+        'align-items: stretch; gap: var(--dba-card-gap, 12px); overflow: hidden;' +
       '}' +
+      '.matches[data-layout="interstitial"] .dba-slide-welcome { gap: 0; }' +
       '.matches[data-layout="interstitial"] .dba-card {' +
         'flex: 0 0 auto; min-height: 0; margin: 0;' +
         'box-sizing: border-box;' +
-        'background: var(--dba-card-bg, rgba(255,255,255,0.10));' +
-        'border-radius: 1.4em; padding: 5px 3.5% 0.3em; gap: var(--dba-int-pillgap, 12px); overflow: hidden;' +
+        'background: var(--dba-card-bg, rgba(255,255,255,0.85));' +
+        'color: var(--dba-card-fg, inherit);' +
+        'border-radius: 1.4em; padding: var(--dba-int-pad-top, 8px) 3.5% 10px; gap: 0; overflow: hidden;' +
         'display: flex; flex-direction: column; justify-content: flex-start;' +
+        /* Match MPU: names outer, crests inward, odds under crests. */
+        '--dba-mpu-crest: var(--dba-int-crest, 48px);' +
+        '--dba-mpu-crest-gap: 8px;' +
+        '--dba-mpu-x-gap: 10px;' +
+        '--dba-mpu-odds-inset: calc(var(--dba-mpu-crest) + var(--dba-mpu-crest-gap));' +
       '}' +
-      '.matches[data-layout="interstitial"] .dba-card-sep {' +
-        'flex: 0 0 auto; width: 100%; margin: 0; padding: 0; border: 0;' +
-        'height: var(--dba-card-gap, 16px); min-height: 10px; pointer-events: none;' +
-      '}' +
+      /* Legacy sep nodes (older snippets) — hide so CSS gap is the only spacer. */
+      '.matches[data-layout="interstitial"] .dba-card-sep { display: none !important; height: 0 !important; min-height: 0 !important; flex: 0 0 0 !important; }' +
       '.matches[data-layout="interstitial"] .dba-card + .dba-card { margin-top: 0; }' +
       '.matches[data-layout="interstitial"] .dba-card:last-child { margin-bottom: 0; }' +
+      /* Pill height/font/pad mirror AdPreview interstitial (px, not em). */
       '.matches[data-layout="interstitial"] .dba-pill {' +
         'position: static; transform: none; top: auto; left: auto;' +
-        'height: auto; min-height: 0; padding: 0.3em 1.4em; font-size: var(--dba-int-pill, 4.2em);' +
-        'flex: 0 0 auto;' +
+        'height: var(--dba-int-pill-h, 16px); min-height: var(--dba-int-pill-h, 16px);' +
+        'max-height: var(--dba-int-pill-h, 16px);' +
+        'padding: 0 var(--dba-int-pill-pad, 11px);' +
+        'font-size: var(--dba-int-pill, 10px); font-weight: 600; line-height: 1;' +
+        'flex: 0 0 auto; box-sizing: border-box;' +
+      '}' +
+      '.matches[data-layout="interstitial"] .dba-v-gap { display: none; }' +
+      '.matches[data-layout="interstitial"] .dba-card-body {' +
+        'display: flex; flex-direction: column; justify-content: center;' +
+        'flex: 1 1 auto; min-height: 0; width: 100%;' +
+        'gap: var(--dba-int-pillgap, 8px);' +
+      '}' +
+      '.matches[data-layout="interstitial"] .dba-teams {' +
+        'font-size: var(--dba-int-team, 20px); font-weight: 600;' +
+        'color: var(--dba-card-fg, inherit);' +
+      '}' +
+
+      '.matches[data-layout="interstitial"] .dba-team-name {' +
+        'font-size: inherit; font-weight: 500; line-height: 1.15;' +
+        'display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;' +
+        'white-space: normal; overflow-wrap: break-word; overflow: hidden; text-overflow: ellipsis;' +
+        'max-height: calc(var(--dba-int-team, 16px) * 1.15 * 2);' +
+      '}' +
+      '.matches[data-layout="interstitial"] .dba-x {' +
+        'font-size: calc(var(--dba-int-team, 20px) * 0.8); font-weight: 700; opacity: 0.75;' +
+        'letter-spacing: 0.02em; color: var(--dba-card-fg, inherit);' +
       '}' +
       '.ad-shell .matches[data-layout="interstitial"] .dba-team-logo {' +
         'flex: 0 0 var(--dba-int-crest, 48px) !important; width: var(--dba-int-crest, 48px) !important;' +
@@ -492,25 +541,26 @@
         'object-fit: contain; border-radius: 0; background: transparent;' +
       '}' +
       '.matches[data-layout="interstitial"] .dba-odds {' +
-        'flex: 0 0 auto; min-height: var(--dba-int-crest, 48px);' +
-        'display: flex; align-items: center; justify-content: center;' +
-        'width: 100%; min-width: 0; gap: 3%; overflow: visible;' +
+        'flex: 0 0 auto; min-height: 0; margin-top: 0;' +
+        'display: flex; align-items: center; justify-content: stretch;' +
+        'width: 100%; min-width: 0; gap: 0; overflow: hidden;' +
+        'font-size: var(--dba-int-odds-text, 18px); font-weight: 700;' +
+        'color: var(--dba-odds-text-color, inherit);' +
       '}' +
-      '.matches[data-layout="interstitial"] .dba-odd-box {' +
-        'flex: 1 1 0; min-width: 0; box-sizing: border-box;' +
-        'display: flex; align-items: center; justify-content: center;' +
-        'background: var(--dba-odds-box-bg, rgba(255,255,255,0.16)); border-radius: 0.7em; padding: 0.5em 0.3em;' +
-        'font-size: var(--dba-int-odds, 4.2em);' +
+      '.matches[data-layout="interstitial"] .dba-odd-label {' +
+        'font-size: calc(var(--dba-int-odds-text, 18px) * 0.68);' +
       '}' +
-      '.matches[data-layout="interstitial"] .dba-odd-box .dba-odd {' +
-        'font-size: var(--dba-int-odds-text, inherit); font-weight: 600; color: var(--dba-odds-text-color, inherit); white-space: nowrap;' +
+      '.matches[data-layout="interstitial"] .dba-odd-val {' +
+        'font-size: var(--dba-int-odds-text, 18px); font-weight: 700;' +
+        'color: var(--dba-odds-text-color, inherit);' +
       '}' +
       '.ad-shell.legal-band .matches[data-layout="interstitial"] {' +
         'flex: 1 1 0; min-height: 0; margin: 0; padding-top: 0; overflow: hidden;' +
       '}' +
-      '.ad-shell.legal-band .matches[data-layout="interstitial"] .dba-card-sep {' +
-        'height: var(--dba-card-gap-tight, 18px);' +
+      '.ad-shell.legal-band .matches[data-layout="interstitial"] .dba-slide {' +
+        'gap: var(--dba-card-gap-tight, 10px);' +
       '}' +
+      '.ad-shell.legal-band .matches[data-layout="interstitial"] .dba-slide-welcome { gap: 0; }' +
       '.ad-shell.legal-band .matches[data-layout="interstitial"] .dba-card + .dba-card { margin-top: 0; }' +
       '.ad-shell.legal-band .matches[data-layout="interstitial"] ~ .cta-zone {' +
         'flex: 0 0 auto; flex-shrink: 0; position: relative; z-index: 2;' +
@@ -569,24 +619,8 @@
     var pillText = fmtKickoff(m.ISOStartTime) || m.FormatedStartTime || m.STime || m.date || '';
     if (!comps) comps = [];
 
-    if (layout === 'interstitial') {
-      // Interstitial: no team names row at all \u2014 crests sit on the outer
-      // edges, with the three odds as boxed chips in between.
-      var oddBoxes = [odds[0], odds[1], odds[2]].map(function (o) {
-        return o != null ? el('div', { 'class': 'dba-odd-box' }, [
-          el('span', { 'class': 'dba-odd', text: fmtOdd(o) }),
-        ]) : null;
-      });
-      return el('div', { 'class': 'dba-card' }, [
-        el('div', { 'class': 'dba-pill-anchor' }, [
-          el('div', { 'class': 'dba-pill' }, [
-            el('span', { 'class': 'dba-pill-text', text: pillText }),
-          ]),
-        ]),
-        el('div', { 'class': 'dba-odds' }, [teamCrestImg(comps[0])].concat(oddBoxes, [teamCrestImg(comps[1])]).filter(Boolean)),
-      ]);
-    }
-
+    // MPU / banner / interstitial share the same card geometry:
+    // names on the outer edges, crests inward, odds under the crests.
     var labels = ['1', 'X', '2'];
     var slots = ['home', 'draw', 'away'];
     var oddNodes = odds.filter(function (v) { return v != null; }).map(function (o, i) {
@@ -597,6 +631,7 @@
         ]),
       ]);
     });
+    var vsText = layout === 'interstitial' ? 'VS' : '\u2013';
 
     return el('div', { 'class': 'dba-card' }, [
       el('div', { 'class': 'dba-pill-anchor' }, [
@@ -605,13 +640,15 @@
         ]),
       ]),
       el('div', { 'class': 'dba-v-gap' }),
-      el('div', { 'class': 'dba-teams' }, [
-        teamBlock(comps[0], 'home', layout),
-        el('span', { 'class': 'dba-x', text: '–' }),
-        teamBlock(comps[1], 'away', layout),
+      el('div', { 'class': 'dba-card-body' }, [
+        el('div', { 'class': 'dba-teams' }, [
+          teamBlock(comps[0], 'home', layout),
+          el('span', { 'class': 'dba-x', text: vsText }),
+          teamBlock(comps[1], 'away', layout),
+        ]),
+        el('div', { 'class': 'dba-v-gap' }),
+        el('div', { 'class': 'dba-odds' }, oddNodes),
       ]),
-      el('div', { 'class': 'dba-v-gap' }),
-      el('div', { 'class': 'dba-odds' }, oddNodes),
     ]);
   }
 
@@ -702,10 +739,21 @@
     }
   }
 
+  function syncLayoutClass(shell, node) {
+    if (!shell) return;
+    var layout = (node && node.getAttribute && node.getAttribute('data-layout'))
+      || (shell.querySelector('.matches') && shell.querySelector('.matches').getAttribute('data-layout'))
+      || '';
+    var prev = shell.className || '';
+    shell.className = prev.replace(/\bdba-layout-\w+/g, '').replace(/\s+/g, ' ').trim();
+    if (layout) shell.classList.add('dba-layout-' + layout);
+  }
+
   function syncWelcomeChrome(node, activeIdx) {
     var shell = node && node.closest ? node.closest('.ad-shell') : null;
     var hasWelcome = !!(node && node.getAttribute('data-welcome') === '1');
     if (shell) {
+      syncLayoutClass(shell, node);
       if (hasWelcome) shell.classList.add('dba-has-welcome');
       else shell.classList.remove('dba-has-welcome');
       if (hasWelcome && activeIdx === 0) shell.classList.add('dba-on-welcome');
@@ -926,6 +974,10 @@
     }
 
     function goTo(p, withTransition) {
+      // Track is [0 .. n] where n is the end clone of slide 0. Never translate
+      // past that — empty frames (logo+CTA only) are always a programming error.
+      if (p < 0) p = 0;
+      if (p > n) p = n;
       void node.offsetWidth;
       var m = measure();
       if (!(m.w > 0)) return;
@@ -936,6 +988,17 @@
         : 'none';
       track.style.webkitTransform = tx;
       track.style.transform = tx;
+    }
+
+    /** Finish infinite-forward loop: end clone → real slide 0 (no empty frame). */
+    function snapFromClone() {
+      pos = 0;
+      setActive(0);
+      goTo(0, false);
+      void track.offsetWidth;
+      scheduleAlign(node);
+      animating = false;
+      node._dbaAnimTimer = null;
     }
 
     function restartTimer() {
@@ -962,6 +1025,15 @@
     function advance(fromSwipe) {
       if (!sliding) return;
       if (animating && !fromSwipe) return;
+      // End clone (or past it): swipe must land on real slide 0 — never step
+      // into empty frames past the track (logo+CTA only). Matches autoplay,
+      // which refuses to advance while the wrap animation is in flight.
+      if (pos >= n) {
+        clearAnimTimer();
+        snapFromClone();
+        if (fromSwipe) restartTimer();
+        return;
+      }
       // Swipe interrupts in-flight autoplay so the carousel never feels "stuck".
       if (animating && fromSwipe) {
         clearAnimTimer();
@@ -971,21 +1043,19 @@
         animating = false;
       }
       animating = true;
-      pos++;
+      pos += 1;
+      if (pos > n) {
+        snapFromClone();
+        if (fromSwipe) restartTimer();
+        return;
+      }
       setActive(pos);
       goTo(pos, true);
       scheduleAlign(node);
       if (pos === n) {
+        // Last games → first slide (clone), then snap to real index 0.
         clearAnimTimer();
-        node._dbaAnimTimer = setTimeout(function () {
-          pos = 0;
-          setActive(0);
-          goTo(0, false);
-          void track.offsetWidth;
-          scheduleAlign(node);
-          animating = false;
-          node._dbaAnimTimer = null;
-        }, transitionMs + 30);
+        node._dbaAnimTimer = setTimeout(snapFromClone, transitionMs + 30);
       } else {
         finishAnimLater();
       }
@@ -999,10 +1069,14 @@
       if (animating && fromSwipe) {
         clearAnimTimer();
         track.style.transition = 'none';
-        goTo(pos, false);
-        void track.offsetWidth;
-        animating = false;
+        if (pos >= n) snapFromClone();
+        else {
+          goTo(pos, false);
+          void track.offsetWidth;
+          animating = false;
+        }
       }
+      if (pos > n) snapFromClone();
       animating = true;
       if (pos <= 0) {
         goTo(n, false);
@@ -1033,15 +1107,20 @@
       bindSwipe();
     }
 
-    // Pointer swipe (mouse + touch + pen) at document capture — survives
-    // SafeFrame, <a> drag, and sample→feed remounts. Must rebind every mount.
+    // Swipe: touch listeners are required on Android GAM WebViews (pointer
+    // streams often get pointercancel from the wrapping <a>). Mouse/pen still
+    // use pointer events. Commit on finger-up so a cancelled mid-fling still
+    // advances when the horizontal threshold was met.
     var animating = false;
     var swipeX = null;
     var swipeY = null;
+    var swipeLastX = null;
+    var swipeLastY = null;
     var swiped = false;
     var swipeArmed = false;
     var swipePointerId = null;
-    var SWIPE_MIN = 16;
+    var swipeAxis = null; // 'x' | 'y' once decided
+    var SWIPE_MIN = 28;
 
     function pointInShell(clientX, clientY) {
       var shell = node.closest && node.closest('.ad-shell');
@@ -1050,66 +1129,144 @@
         && clientY >= box.top && clientY <= box.bottom;
     }
 
+    function resetSwipeTracking() {
+      swipeArmed = false;
+      swipeAxis = null;
+      swipeX = null;
+      swipeY = null;
+      swipeLastX = null;
+      swipeLastY = null;
+      swipePointerId = null;
+    }
+
     function onSwipeStart(clientX, clientY) {
       if (!pointInShell(clientX, clientY)) {
-        swipeArmed = false;
+        resetSwipeTracking();
         return;
       }
       swipeArmed = true;
+      swipeAxis = null;
       swipeX = clientX;
       swipeY = clientY;
+      swipeLastX = clientX;
+      swipeLastY = clientY;
       swiped = false;
     }
 
+    function commitSwipe(dx) {
+      swiped = true;
+      resetSwipeTracking();
+      if (node._dbaCarouselTimer) {
+        clearInterval(node._dbaCarouselTimer);
+        node._dbaCarouselTimer = null;
+      }
+      try {
+        if (dx > 0) advance(true);
+        else retreat(true);
+      } finally {
+        restartTimer();
+      }
+    }
+
+    /** Track move + axis lock. Does not advance — that happens on end. */
     function onSwipeMove(clientX, clientY, evt) {
-      if (!swipeArmed || swipeX == null || swipeY == null) return;
+      if (!swipeArmed || swipeX == null || swipeY == null) return false;
+      swipeLastX = clientX;
+      swipeLastY = clientY;
       var dx = swipeX - clientX;
       var dy = swipeY - clientY;
-      if (Math.abs(dx) < SWIPE_MIN && Math.abs(dy) < SWIPE_MIN) return;
-      if (Math.abs(dx) <= Math.abs(dy)) {
-        swipeX = null;
-        swipeY = null;
-        swipeArmed = false;
-        return;
+      var absX = Math.abs(dx);
+      var absY = Math.abs(dy);
+      if (swipeAxis == null) {
+        if (absX < SWIPE_MIN && absY < SWIPE_MIN) return false;
+        // Lock axis once — don't disarm on a slightly diagonal finger.
+        swipeAxis = absX >= absY ? 'x' : 'y';
+        if (swipeAxis === 'y') {
+          resetSwipeTracking();
+          return false;
+        }
       }
+      if (swipeAxis !== 'x') return false;
       if (evt && evt.cancelable) {
         try { evt.preventDefault(); } catch (e) {}
       }
-      swiped = true;
-      swipeArmed = false;
-      swipeX = null;
-      swipeY = null;
-      if (node._dbaCarouselTimer) clearInterval(node._dbaCarouselTimer);
-      if (dx > 0) advance(true);
-      else retreat(true);
-      restartTimer();
+      return true;
+    }
+
+    function onSwipeEnd(clientX, clientY) {
+      if (!swipeArmed || swipeX == null) {
+        resetSwipeTracking();
+        return;
+      }
+      var endX = clientX != null ? clientX : swipeLastX;
+      var dx = endX != null ? (swipeX - endX) : 0;
+      var absX = Math.abs(dx);
+      var horizontal = swipeAxis === 'x' || (swipeAxis == null && absX >= SWIPE_MIN);
+      if (horizontal && absX >= SWIPE_MIN) {
+        commitSwipe(dx);
+        return;
+      }
+      resetSwipeTracking();
     }
 
     function bindSwipe() {
       if (node._dbaSwipeBound) return;
       node._dbaSwipeBound = true;
 
+      var shell = node.closest && node.closest('.ad-shell');
+      var ad = shell && shell.querySelector && shell.querySelector('a.ad');
+      // Whole creative — Android often starts the gesture on logo/CTA, not .matches.
+      var swipeRoot = shell || ad || node;
+
+      function onTouchStart(e) {
+        if (!e.touches || e.touches.length !== 1) return;
+        var t = e.touches[0];
+        onSwipeStart(t.clientX, t.clientY);
+      }
+      function onTouchMove(e) {
+        if (!swipeArmed || !e.touches || !e.touches.length) return;
+        var t = e.touches[0];
+        onSwipeMove(t.clientX, t.clientY, e);
+      }
+      function onTouchEnd(e) {
+        var t = e.changedTouches && e.changedTouches[0];
+        onSwipeEnd(t ? t.clientX : swipeLastX, t ? t.clientY : swipeLastY);
+      }
+      function onTouchCancel(e) {
+        // Android often cancels mid-fling — still advance if threshold met.
+        var t = e.changedTouches && e.changedTouches[0];
+        onSwipeEnd(t ? t.clientX : swipeLastX, t ? t.clientY : swipeLastY);
+      }
+
       function onPointerDown(e) {
+        // Touch is handled by touch* listeners (avoids double-advance on Chrome).
+        if (e.pointerType === 'touch') return;
         if (e.isPrimary === false) return;
         if (e.pointerType === 'mouse' && e.button !== 0) return;
         if (!pointInShell(e.clientX, e.clientY)) return;
         swipePointerId = e.pointerId;
         onSwipeStart(e.clientX, e.clientY);
-        // Kill native <a> drag-ghost / text-select so desktop GAM can swipe.
-        if (e.cancelable) {
-          try { e.preventDefault(); } catch (err) {}
-        }
+        try {
+          if (swipeRoot.setPointerCapture) swipeRoot.setPointerCapture(e.pointerId);
+        } catch (err) { /* some WebViews */ }
       }
       function onPointerMove(e) {
+        if (e.pointerType === 'touch') return;
         if (swipePointerId == null || e.pointerId !== swipePointerId) return;
         onSwipeMove(e.clientX, e.clientY, e);
       }
       function onPointerUp(e) {
+        if (e.pointerType === 'touch') return;
         if (swipePointerId == null || e.pointerId !== swipePointerId) return;
-        swipePointerId = null;
-        swipeArmed = false;
-        swipeX = null;
-        swipeY = null;
+        try {
+          if (swipeRoot.releasePointerCapture) swipeRoot.releasePointerCapture(e.pointerId);
+        } catch (err) { /* ignore */ }
+        onSwipeEnd(e.clientX, e.clientY);
+      }
+      function onPointerCancel(e) {
+        if (e.pointerType === 'touch') return;
+        if (swipePointerId == null || e.pointerId !== swipePointerId) return;
+        onSwipeEnd(swipeLastX, swipeLastY);
       }
       function onClickCapture(e) {
         if (!swiped) return;
@@ -1118,31 +1275,38 @@
         e.stopPropagation();
       }
 
-      var shell = node.closest && node.closest('.ad-shell');
-      var ad = shell && shell.querySelector && shell.querySelector('a.ad');
       if (ad) {
         ad.setAttribute('draggable', 'false');
         ad.style.webkitUserDrag = 'none';
       }
       if (shell) shell.setAttribute('data-dba-swipe', '1');
 
-      document.addEventListener('pointerdown', onPointerDown, true);
-      document.addEventListener('pointermove', onPointerMove, true);
-      document.addEventListener('pointerup', onPointerUp, true);
-      document.addEventListener('pointercancel', onPointerUp, true);
+      var swipeOpts = { capture: true, passive: false };
+      swipeRoot.addEventListener('touchstart', onTouchStart, swipeOpts);
+      swipeRoot.addEventListener('touchmove', onTouchMove, swipeOpts);
+      swipeRoot.addEventListener('touchend', onTouchEnd, swipeOpts);
+      swipeRoot.addEventListener('touchcancel', onTouchCancel, swipeOpts);
+      swipeRoot.addEventListener('pointerdown', onPointerDown, swipeOpts);
+      swipeRoot.addEventListener('pointermove', onPointerMove, swipeOpts);
+      swipeRoot.addEventListener('pointerup', onPointerUp, swipeOpts);
+      swipeRoot.addEventListener('pointercancel', onPointerCancel, swipeOpts);
       if (ad) ad.addEventListener('click', onClickCapture, true);
-      else node.addEventListener('click', onClickCapture, true);
+      else swipeRoot.addEventListener('click', onClickCapture, true);
 
       node._dbaSwipeCleanup = function () {
-        document.removeEventListener('pointerdown', onPointerDown, true);
-        document.removeEventListener('pointermove', onPointerMove, true);
-        document.removeEventListener('pointerup', onPointerUp, true);
-        document.removeEventListener('pointercancel', onPointerUp, true);
+        swipeRoot.removeEventListener('touchstart', onTouchStart, swipeOpts);
+        swipeRoot.removeEventListener('touchmove', onTouchMove, swipeOpts);
+        swipeRoot.removeEventListener('touchend', onTouchEnd, swipeOpts);
+        swipeRoot.removeEventListener('touchcancel', onTouchCancel, swipeOpts);
+        swipeRoot.removeEventListener('pointerdown', onPointerDown, swipeOpts);
+        swipeRoot.removeEventListener('pointermove', onPointerMove, swipeOpts);
+        swipeRoot.removeEventListener('pointerup', onPointerUp, swipeOpts);
+        swipeRoot.removeEventListener('pointercancel', onPointerCancel, swipeOpts);
         if (ad) ad.removeEventListener('click', onClickCapture, true);
-        else node.removeEventListener('click', onClickCapture, true);
+        else swipeRoot.removeEventListener('click', onClickCapture, true);
         if (shell) shell.removeAttribute('data-dba-swipe');
         node._dbaSwipeBound = false;
-        swipePointerId = null;
+        resetSwipeTracking();
       };
     }
 
@@ -1234,37 +1398,31 @@
 
   function applyInterstitialTypeScale(shell, cardH, w) {
     if (!shell || cardH < 1 || w < 1) return 0;
-    /* Team names bigger again (production feedback: previous pass read too
-       small); crest bigger again (crests live on the odds row now), then
-       bumped once more on top of that per later feedback. */
-    var team = Math.round(w * 0.046);
-    team = Math.max(20, Math.min(team, Math.round(cardH * 0.15)));
-    var crest = Math.round(w * 0.095);
-    crest = Math.max(46, Math.min(crest, Math.round(cardH * 0.4)));
-    /* Slightly bigger date/time pill text. */
-    var pill = Math.max(15, Math.round(w * 0.03));
-    /* Odds-box SIZE (padding/radius) — its own variable now (was briefly
-       tied to the pill's, per an earlier "same size as date/time" request;
-       a later request asked for the odds specifically to grow, then this
-       pass brought it back down 15%). .dba-odd-box sets its own font-size
-       to this value so the box's em-based radius/padding scale with it. */
-    var odds = Math.round(w * 0.046);
-    odds = Math.max(24, Math.min(odds, Math.round(cardH * 0.162)));
-    /* Odds NUMBER text — smaller than the box size above, per a request to
-       shrink just the digits without shrinking the boxes around them (10%,
-       then another 15% on top per follow-up feedback that it still read
-       too big: 0.9 * 0.85 = 0.765). */
-    var oddsText = Math.round(odds * 0.765);
-    /* Gap between the date pill and the crest/odds line below it — a share
-       of the card height so it grows with the card instead of staying a
-       near-invisible sliver on narrow slots. */
-    var pillGap = Math.max(14, Math.round(cardH * 0.2));
+    /* `w` = true shell width (not design-scaled we) so names wrap correctly
+       on 320-wide GAM slots; vertical sizes follow cardH which fills avail.
+       Team names must read larger than odds (odds are bold — keep them ~20% smaller). */
+    var team = Math.round(w * 0.048);
+    team = Math.max(13, Math.min(team, Math.round(cardH * 0.135)));
+    var crest = Math.round(w * 0.11);
+    crest = Math.max(26, Math.min(crest, Math.round(cardH * 0.28)));
+    // Match AdPreview interstitial: separate capsule height vs type size.
+    var pillH = Math.max(16, Math.min(Math.round(w * 0.05), Math.round(cardH * 0.13)));
+    var pillFont = Math.max(10, Math.min(Math.round(w * 0.03), Math.round(cardH * 0.085)));
+    var pillPad = Math.round(pillH * 0.7);
+    var odds = Math.round(w * 0.038);
+    odds = Math.max(12, Math.min(odds, Math.round(cardH * 0.11)));
+    var oddsText = Math.min(odds, team - 1);
+    var pillGap = Math.max(4, Math.min(10, Math.round(cardH * 0.04)));
+    var padTop = Math.max(6, Math.min(12, Math.round(cardH * 0.04)));
     shell.style.setProperty('--dba-int-team', team + 'px');
     shell.style.setProperty('--dba-int-crest', crest + 'px');
-    shell.style.setProperty('--dba-int-pill', pill + 'px');
+    shell.style.setProperty('--dba-int-pill-h', pillH + 'px');
+    shell.style.setProperty('--dba-int-pill', pillFont + 'px');
+    shell.style.setProperty('--dba-int-pill-pad', pillPad + 'px');
     shell.style.setProperty('--dba-int-odds', odds + 'px');
     shell.style.setProperty('--dba-int-odds-text', oddsText + 'px');
     shell.style.setProperty('--dba-int-pillgap', pillGap + 'px');
+    shell.style.setProperty('--dba-int-pad-top', padTop + 'px');
     return crest;
   }
 
@@ -1293,15 +1451,11 @@
     if (!ad) return;
     var logoWrap = ad.querySelector('.logo-wrap');
     var logo = ad.querySelector('.logo');
-    // Height-driven, not a forced square: real bookmaker logos are usually
-    // wide wordmarks (see design ref), and boxing them at width=height wasted
-    // vertical space that belongs to the match cards below. `w` here is the
-    // design-scaled effective width (see applyShellMetrics) so the logo grows
-    // with the rest of the ad on taller-than-2:3 slots; `trueW` (the real
-    // render width) caps it so it can never overflow the actual ad width.
-    var cap = (trueW && trueW > 0 ? trueW : w) * 0.92;
-    var logoH = Math.max(26, Math.round(w * 0.09));
-    var logoW = Math.min(cap, Math.round(w * 0.62));
+    // Size from TRUE shell width and hard-cap — designScale(we) used to push
+    // wordmarks to ~500px while CDN masters are ~140–400px (pixelated Betsson).
+    var base = (trueW && trueW > 0) ? trueW : w;
+    var logoH = Math.max(28, Math.min(48, Math.round(base * 0.07)));
+    var logoW = Math.min(200, Math.round(base * 0.48));
     if (logoWrap) {
       logoWrap.style.flex = '0 0 auto';
       logoWrap.style.minHeight = logoH + 'px';
@@ -1311,11 +1465,11 @@
       logo.style.width = logoW + 'px';
       logo.style.height = logoH + 'px';
       logo.style.maxWidth = logoW + 'px';
-      // Override the CSS max-height:64px fallback (a pre-JS-paint sanity cap
-      // for the untouched case) — it would otherwise silently clip logoH back
-      // down on scaled-up (tall) slots since max-height wins over height.
       logo.style.maxHeight = logoH + 'px';
       logo.style.flexShrink = '0';
+      logo.style.backgroundSize = 'contain';
+      logo.style.backgroundRepeat = 'no-repeat';
+      logo.style.backgroundPosition = 'center';
     }
   }
 
@@ -1379,6 +1533,20 @@
     }
   }
 
+  function measureSafeAreaTop() {
+    try {
+      var probe = document.createElement('div');
+      probe.setAttribute('aria-hidden', 'true');
+      probe.style.cssText = 'position:fixed;top:0;left:0;visibility:hidden;pointer-events:none;padding-top:env(safe-area-inset-top,0px)';
+      document.documentElement.appendChild(probe);
+      var pt = parseFloat(window.getComputedStyle(probe).paddingTop) || 0;
+      document.documentElement.removeChild(probe);
+      return pt > 0 && isFinite(pt) ? pt : 0;
+    } catch (e) {
+      return 0;
+    }
+  }
+
   function applyShellMetrics() {
     var shell = document.querySelector('.ad-shell');
     if (!shell) return null;
@@ -1386,7 +1554,11 @@
     var h = shell.clientHeight || document.documentElement.clientHeight || Math.round(w * 1.5);
     if (w < 1) w = 320;
     if (h < 1) h = Math.round(w * 1.5);
-    var interstitial = !!document.querySelector('.matches[data-layout="interstitial"]');
+    var matchesNode = document.querySelector('.matches');
+    var interstitial = !!(matchesNode && matchesNode.getAttribute('data-layout') === 'interstitial');
+    syncLayoutClass(shell, matchesNode);
+    // Shared by logo translate + welcome pill margin (iOS/Android parity).
+    shell.style.setProperty('--dba-logo-shift', (measureSafeAreaTop() + 14) + 'px');
     // Interstitial content (logo/cards/CTA) is designed for a 2:3 (w:h) box.
     // Real ad slots vary — some are much taller (e.g. 640x1280 = 1:2). Rather
     // than leaving that extra height as dead space below the cards, scale the
@@ -1514,22 +1686,24 @@
     var gapPx = 0;
     var cardH = 0;
     var n = 0;
-    // Design-scaled effective width (see applyShellMetrics): on a taller-
-    // than-2:3 slot this is bigger than shellW, so the max card height and
-    // gap grow with it instead of capping cards to a fixed fraction of the
-    // real (narrow) width and dumping the leftover height as dead space.
-    var we = shellW * (metrics.designScale || 1);
-    /* Cards ~26% of (effective) width (was 27% originally; inter-card gap
-       overshot to 12.8% last round and read as too much dead space between
-       cards, so it's pulled back close to the original ~3.8% here). The two
-       ratios are sized together (3*0.26 + 2*0.053 ≈ 3*0.27 + 2*0.038) so the
-       stack still covers the same total height. */
-    var maxCardH = Math.round(we * 0.26);
-
+    // Fill avail when short (320×480); CAP by width on tall shells so cards
+    // don't become empty 300px boxes. Leftover is centered on the slide.
+    // Skip welcome (slide 0) — it has 0 cards and used to zero gapPx for every slide.
     if (slides.length) {
-      n = slides[0].querySelectorAll('.dba-card').length;
-      gapPx = n > 1 ? Math.max(20, Math.round(we * 0.053)) : 0;
-      cardH = Math.max(64, Math.min(maxCardH, Math.floor((avail - gapPx * Math.max(0, n - 1)) / Math.max(1, n))));
+      for (var si = 0; si < slides.length; si++) {
+        if (slides[si].classList.contains('dba-slide-welcome')) continue;
+        n = slides[si].querySelectorAll('.dba-card').length;
+        if (n > 0) break;
+      }
+      gapPx = n > 1 ? Math.max(10, Math.min(
+        Math.round(avail * 0.04),
+        Math.round(shellW * 0.05)
+      )) : 0;
+      var maxCardH = Math.round(shellW * 0.38);
+      cardH = Math.max(64, Math.min(
+        maxCardH,
+        Math.floor((avail - gapPx * Math.max(0, n - 1)) / Math.max(1, n))
+      ));
       appliedGap = gapPx;
     }
 
@@ -1539,7 +1713,13 @@
     root.style.minHeight = '0';
     root.style.margin = '0';
 
-    if (n > 0) crestPx = applyInterstitialTypeScale(shell, cardH, we);
+    /* True width for crest/names — wrap stays sane on 320-wide GAM. */
+    if (n > 0) crestPx = applyInterstitialTypeScale(shell, cardH, shellW);
+
+    if (shell && appliedGap) {
+      shell.style.setProperty('--dba-card-gap', appliedGap + 'px');
+      shell.style.setProperty('--dba-card-gap-tight', Math.max(8, Math.round(appliedGap * 0.75)) + 'px');
+    }
 
     for (var s = 0; s < slides.length; s++) {
       var slide = slides[s];
@@ -1550,12 +1730,14 @@
       var fitKey = avail + ':' + gapPx + ':' + slideN + ':' + cardH;
       if (slide.getAttribute('data-dba-fit') === fitKey) continue;
 
+      // Drop legacy sep nodes — spacing is CSS gap on the slide.
       var oldSeps = slide.querySelectorAll('.dba-card-sep');
       for (var o = 0; o < oldSeps.length; o++) {
         if (oldSeps[o].parentNode) oldSeps[o].parentNode.removeChild(oldSeps[o]);
       }
-      slide.style.justifyContent = 'flex-start';
-      slide.style.paddingTop = Math.max(6, Math.round(shellW * 0.01)) + 'px';
+      slide.style.justifyContent = 'center';
+      slide.style.gap = gapPx > 0 ? (gapPx + 'px') : '';
+      slide.style.paddingTop = Math.max(4, Math.round(shellW * 0.01)) + 'px';
       slide.style.paddingBottom = '0';
 
       for (var i = 0; i < cards.length; i++) {
@@ -1564,24 +1746,12 @@
         cards[i].style.maxHeight = cardH + 'px';
         cards[i].style.minHeight = '0';
         cards[i].style.margin = '0';
-        if (i < slideN - 1 && gapPx > 0) {
-          var sep = el('div', { 'class': 'dba-card-sep' });
-          sep.style.flex = '0 0 ' + gapPx + 'px';
-          sep.style.height = gapPx + 'px';
-          sep.style.minHeight = gapPx + 'px';
-          if (cards[i].nextSibling) slide.insertBefore(sep, cards[i].nextSibling);
-          else slide.appendChild(sep);
-        }
       }
       slide.setAttribute('data-dba-fit', fitKey);
     }
 
     if (crestPx) applyInterstitialCrestSizes(root, crestPx);
 
-    if (shell && appliedGap) {
-      shell.style.setProperty('--dba-card-gap', appliedGap + 'px');
-      shell.style.setProperty('--dba-card-gap-tight', Math.max(6, Math.round(appliedGap * 0.75)) + 'px');
-    }
     applyInterstitialShellLayout(root);
     return true;
   }
@@ -1614,6 +1784,38 @@
     });
   }
 
+  function parseCssAlpha(color) {
+    if (!color) return null;
+    var s = String(color).trim().toLowerCase();
+    var m = s.match(/rgba?\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)(?:\s*,\s*([\d.]+))?\s*\)/);
+    if (m) {
+      return {
+        r: +m[1], g: +m[2], b: +m[3],
+        a: m[4] != null ? +m[4] : 1,
+      };
+    }
+    if (s.charAt(0) === '#') {
+      var h = s.slice(1);
+      if (h.length === 3) h = h[0]+h[0]+h[1]+h[1]+h[2]+h[2];
+      if (h.length >= 6) {
+        return {
+          r: parseInt(h.slice(0, 2), 16),
+          g: parseInt(h.slice(2, 4), 16),
+          b: parseInt(h.slice(4, 6), 16),
+          a: 1,
+        };
+      }
+    }
+    return null;
+  }
+
+  function isLightFill(color) {
+    var c = parseCssAlpha(color);
+    if (!c || c.a < 0.35) return false; /* mostly transparent — inherit shell text */
+    var lum = (0.299 * c.r + 0.587 * c.g + 0.114 * c.b) / 255;
+    return lum >= 0.55;
+  }
+
   function applyPillTheme(node) {
     var bg = node.getAttribute('data-pill-bg');
     var fg = node.getAttribute('data-pill-fg');
@@ -1624,7 +1826,18 @@
     if (fg) node.style.setProperty('--dba-pill-fg', fg);
     if (oddsBoxBg) node.style.setProperty('--dba-odds-box-bg', oddsBoxBg);
     if (oddsTextColor) node.style.setProperty('--dba-odds-text-color', oddsTextColor);
-    if (cardBg) node.style.setProperty('--dba-card-bg', cardBg);
+    if (cardBg) {
+      node.style.setProperty('--dba-card-bg', cardBg);
+      /* 85% white cards + white shell text = invisible names (live Betsson). */
+      if (isLightFill(cardBg)) {
+        node.style.setProperty('--dba-card-fg', '#0A0A0A');
+        if (!oddsTextColor || isLightFill(oddsTextColor)) {
+          node.style.setProperty('--dba-odds-text-color', '#0A0A0A');
+        }
+      } else {
+        node.style.setProperty('--dba-card-fg', '#FFFFFF');
+      }
+    }
   }
 
   function render(node, data) {
@@ -1640,10 +1853,13 @@
     var welcome = buildWelcomeSlide(node);
     // No games and no welcome → nothing to paint.
     if (!games.length && !welcome) return;
-    // Thin feeds (common in GAM line-item preview) pack into a single slide
-    // when per-slide is 2+. Drop to 1 game/slide so the carousel can rotate.
-    if (games.length >= 2 && Math.ceil(games.length / perSlide) < 2) perSlide = 1;
     var layout = node.getAttribute('data-layout') || '';
+    // MPU/banner: thin feeds drop to 1/slide so the carousel can rotate.
+    // Interstitial must keep data-per-slide (3) — CMS preview always stacks
+    // 3 cards; forcing 1/slide made live GAM look nothing like the preview.
+    if (layout !== 'interstitial' && games.length >= 2 && Math.ceil(games.length / perSlide) < 2) {
+      perSlide = 1;
+    }
     var slides = buildSlides(games, perSlide, layout);
     // Welcome offer is always slide 0; match pages follow (CMS AdPreview parity).
     if (welcome) {

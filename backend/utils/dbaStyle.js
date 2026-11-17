@@ -49,7 +49,16 @@ function invertText(hex) {
   return lum > 0.6 ? '#0A0A0A' : '#FFFFFF';
 }
 
-const LOGO_TRANSFORMS = 'w_140,h_140,c_limit,d_countries:default.png';
+const LOGO_TRANSFORMS = 'w_400,h_160,c_fit,e_sharpen:100,d_countries:default.png';
+
+function withLogoTransforms(url, transforms) {
+  if (!url || typeof url !== 'string') return url;
+  if (url.indexOf('res.cloudinary.com') === -1 || url.indexOf('/image/upload/') === -1) return url;
+  return url.replace(
+    /\/image\/upload\/(?:[^/]+\/)?(?=BookMakers\/)/,
+    `/image/upload/${transforms || LOGO_TRANSFORMS}/`,
+  );
+}
 
 function bookmakerLogoUrl(id, { noBg = false } = {}) {
   if (id == null) return null;
@@ -67,13 +76,15 @@ function resolveLogoUrl(bookmaker, config) {
     variant === 'bg' ? false
       : variant === 'nobg' ? true
         : (isDarkBackground(config) || !!bookmaker.useNoBgLogo);
-  if (bookmaker.defaultLogoImageUrl && variant !== 'nobg' && variant !== 'bg') {
-    // Prefer stored URL when auto — apply NoBG rewrite for Cloudinary standard paths.
-    const url = bookmaker.defaultLogoImageUrl;
+  const stored = noBg
+    ? (bookmaker.defaultLogoImageUrlNoBg || bookmaker.defaultLogoImageUrl)
+    : (bookmaker.defaultLogoImageUrl || bookmaker.defaultLogoImageUrlNoBg);
+  if (stored) {
+    let url = stored;
     if (noBg && url.indexOf('res.cloudinary.com') !== -1) {
-      return url.replace(/(\/BookMakers\/)(?!NoBG\/)/, '$1NoBG/');
+      url = url.replace(/(\/BookMakers\/)(?!NoBG\/)/, '$1NoBG/');
     }
-    return url;
+    return withLogoTransforms(url);
   }
   return bookmakerLogoUrl(bookmaker.id, { noBg });
 }
@@ -99,10 +110,15 @@ function resolveOddsTextColor(config) {
   return config?.oddsTextColor || config?.text || '#FFFFFF';
 }
 
-const CARD_BG_DEFAULT = 'rgba(255,255,255,0.10)';
+const CARD_BG_DEFAULT = 'rgba(255,255,255,0.85)';
 
 function resolveCardBg(config) {
-  return config?.cardBgColor || CARD_BG_DEFAULT;
+  if (!config?.cardBgColor && (config?.cardBgOpacity == null)) return CARD_BG_DEFAULT;
+  const color = config?.cardBgColor || '#FFFFFF';
+  if (typeof color === 'string' && color.trim().toLowerCase().startsWith('rgba')) return color;
+  const pct = config?.cardBgOpacity != null ? Number(config.cardBgOpacity) : 85;
+  const a = Math.max(0, Math.min(100, Number.isFinite(pct) ? pct : 85)) / 100;
+  return hexToRgba(color, a);
 }
 
 module.exports = {
@@ -112,6 +128,7 @@ module.exports = {
   isDarkBackground,
   invertText,
   bookmakerLogoUrl,
+  withLogoTransforms,
   resolveLogoUrl,
   resolveDatePillBg,
   resolveDatePillFg,

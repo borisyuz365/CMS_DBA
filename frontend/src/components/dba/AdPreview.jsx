@@ -1,7 +1,7 @@
 import React, { useLayoutEffect, useRef, useState } from 'react';
 import { Box } from '@mui/material';
 import { LogoThumb } from './DbaPrimitives';
-import { bgCss, invertText, SIZE_DIMS, MPU_LAYOUT, resolveLogoUrl, competitorLogoUrl, BRAZIL_LEGAL_FALLBACK_TEXT, LEGAL_BAND_BG_DEFAULT, resolveDatePillBg, resolveDatePillFg, resolveOddsBoxBg, resolveOddsTextColor, resolveCardBg, isInterstitialSize } from './dbaUtils';
+import { bgCss, invertText, SIZE_DIMS, MPU_LAYOUT, resolveLogoUrl, competitorLogoUrl, BRAZIL_LEGAL_FALLBACK_TEXT, LEGAL_BAND_BG_DEFAULT, resolveDatePillBg, resolveDatePillFg, resolveOddsBoxBg, resolveOddsTextColor, resolveCardBg, resolveCardFg, isInterstitialSize } from './dbaUtils';
 import { DBA_SAMPLE_MATCHES } from '../../data/dbaData';
 
 // Constants for team-name fitting in MatchRow.
@@ -501,7 +501,9 @@ function MatchRow({ match, config, d, syncFonts = false, fillHeight = false, out
     textAlign: align,
     display: 'flex', alignItems: 'center',
     justifyContent: align === 'right' ? 'flex-end' : 'flex-start',
-    minHeight: wrapTeamNames ? d.teamFont * 1.15 * 2 : d.teamFont * 1.1,
+    // Cap name-slot height so 2-line wrap cannot shove odds out of the card.
+    minHeight: wrapTeamNames ? Math.ceil(d.teamFont * 1.15) : d.teamFont * 1.1,
+    maxHeight: wrapTeamNames ? Math.ceil(d.teamFont * 1.15 * 2) : undefined,
     overflow: 'hidden',
   });
   const textSx = {
@@ -532,17 +534,19 @@ function MatchRow({ match, config, d, syncFonts = false, fillHeight = false, out
     color: ODD_LABEL_COLOR,
     lineHeight: 1.2,
   };
+  const oddFont = d.oddsTextFont || d.oddsFont;
   const oddCell = (label, value) => (
     <Box sx={{
       display: 'inline-flex',
       alignItems: 'center',
       gap: '3px',
-      fontSize: d.oddsFont,
+      fontSize: oddFont,
       fontWeight: 700,
       lineHeight: 1.2,
       whiteSpace: 'nowrap',
+      color: wrapNames ? (resolveCardFg(config) === '#0A0A0A' ? resolveCardFg(config) : resolveOddsTextColor(config)) : undefined,
     }}>
-      <Box component="span" sx={oddLabelSx}>{label}</Box>
+      <Box component="span" sx={{ ...oddLabelSx, fontSize: Math.round(oddFont * 0.68) }}>{label}</Box>
       <Box component="span">{value}</Box>
     </Box>
   );
@@ -550,11 +554,13 @@ function MatchRow({ match, config, d, syncFonts = false, fillHeight = false, out
   return (
     <Box data-match-card sx={{
       bgcolor: wrapNames ? resolveCardBg(config) : 'rgba(255,255,255,0.06)',
+      color: wrapNames ? resolveCardFg(config) : undefined,
       border: wrapNames ? 'none' : '1px solid rgba(255,255,255,0.1)',
       borderRadius: `${d.cardRadius}px`,
       padding: d.cardPad,
       display: 'flex', flexDirection: 'column',
-      gap: `${d.rowGap}px`,
+      // Interstitial: no card-level gap — pill is pinned; body centers teams/odds.
+      gap: wrapNames ? 0 : `${d.rowGap}px`,
       justifyContent: 'flex-start',
       position: 'relative',
       overflow: 'hidden',
@@ -574,94 +580,75 @@ function MatchRow({ match, config, d, syncFonts = false, fillHeight = false, out
           color: resolveDatePillFg(config),
         })}><Box component="span">{match.date}</Box></Box>
       </Box>
-      {wrapNames ? (
-        // Interstitial: no team names — crests sit on the outer edges, with
-        // the three odds as boxed chips in between.
-        <Box sx={{
-          display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: 0,
-          flexShrink: 0, width: '100%', minHeight: d.crest, gap: '3%',
-        }}>
-          <Box sx={{ flexShrink: 0 }}><TeamCrest team={match.home} size={d.crest} flat /></Box>
-          {[0, 1, 2].map((i) => (
-            <Box key={i} sx={{
-              flex: '1 1 0', minWidth: 0, boxSizing: 'border-box',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              bgcolor: resolveOddsBoxBg(config),
-              borderRadius: `${Math.round(d.oddsFont * 0.7)}px`,
-              padding: `${Math.round(d.oddsFont * 0.5)}px ${Math.round(d.oddsFont * 0.3)}px`,
-            }}>
-              <Box component="span" sx={{ fontSize: d.oddsTextFont, fontWeight: 600, lineHeight: 1.2, whiteSpace: 'nowrap', color: resolveOddsTextColor(config) }}>
-                {match.odds[i]}
-              </Box>
-            </Box>
-          ))}
-          <Box sx={{ flexShrink: 0 }}><TeamCrest team={match.away} size={d.crest} flat /></Box>
-        </Box>
-      ) : (
-        <>
-          {/* MPU: names on the outer edges, crests inward toward the dash;
-              odds sit under the crest–name clusters. */}
-          <Box sx={{ display: 'flex', alignItems: 'center', minWidth: 0, flexShrink: 0, width: '100%' }}>
+      <Box sx={wrapNames ? {
+        flex: '1 1 auto', minHeight: 0, width: '100%',
+        display: 'flex', flexDirection: 'column',
+        justifyContent: 'center', gap: `${d.rowGap}px`,
+      } : { display: 'contents' }}>
+        {/* MPU + interstitial: names on the outer edges, crests inward;
+            odds sit under the crest–name clusters. Interstitial keeps VS. */}
+        <Box sx={{ display: 'flex', alignItems: 'center', minWidth: 0, flexShrink: 0, width: '100%' }}>
+          <Box sx={{
+            flex: 1, minWidth: 0, width: 0,
+            justifyContent: 'flex-end',
+            display: 'flex', alignItems: 'center', overflow: 'hidden',
+          }}>
             <Box sx={{
-              flex: 1, minWidth: 0, width: 0,
-              justifyContent: 'flex-end',
-              display: 'flex', alignItems: 'center', overflow: 'hidden',
+              display: 'flex', alignItems: 'center', justifyContent: 'flex-end',
+              gap: `${nameCrestGap}px`,
+              maxWidth: '100%', minWidth: 0, width: '100%',
             }}>
-              <Box sx={{
-                display: 'flex', alignItems: 'center', justifyContent: 'flex-end',
-                gap: `${nameCrestGap}px`,
-                maxWidth: '100%', minWidth: 0, width: '100%',
-              }}>
-                <Box sx={slotSx('right')}>
-                  <Box ref={homeRef} component="span" data-team-name="home" sx={textSx}>{match.home.name}</Box>
-                </Box>
-                <Box sx={{ flexShrink: 0 }}><TeamCrest team={match.home} size={d.crest} /></Box>
+              <Box sx={slotSx('right')}>
+                <Box ref={homeRef} component="span" data-team-name="home" sx={textSx}>{match.home.name}</Box>
               </Box>
-            </Box>
-            <Box sx={{
-              fontSize: d.xFont, fontWeight: 700, opacity: 0.75, flexShrink: 0,
-              mx: `${xSideGap}px`, letterSpacing: '0.02em', lineHeight: 1,
-            }}>{vsText}</Box>
-            <Box sx={{
-              flex: 1, minWidth: 0, width: 0,
-              justifyContent: 'flex-start',
-              display: 'flex', alignItems: 'center', overflow: 'hidden',
-            }}>
-              <Box sx={{
-                display: 'flex', alignItems: 'center', justifyContent: 'flex-start',
-                gap: `${nameCrestGap}px`,
-                maxWidth: '100%', minWidth: 0, width: '100%',
-              }}>
-                <Box sx={{ flexShrink: 0 }}><TeamCrest team={match.away} size={d.crest} /></Box>
-                <Box sx={slotSx('left')}>
-                  <Box ref={awayRef} component="span" data-team-name="away" sx={textSx}>{match.away.name}</Box>
-                </Box>
-              </Box>
+              <Box sx={{ flexShrink: 0 }}><TeamCrest team={match.home} size={d.crest} flat={wrapNames} /></Box>
             </Box>
           </Box>
           <Box sx={{
-            display: 'flex', alignItems: 'center', minWidth: 0,
-            minHeight: Math.ceil(d.oddsFont * 1.2),
-            overflow: 'visible', flexShrink: 0, width: '100%',
+            fontSize: d.xFont, fontWeight: 700, opacity: 0.75, flexShrink: 0,
+            mx: `${xSideGap}px`, letterSpacing: '0.02em', lineHeight: 1,
+          }}>{vsText}</Box>
+          <Box sx={{
+            flex: 1, minWidth: 0, width: 0,
+            justifyContent: 'flex-start',
+            display: 'flex', alignItems: 'center', overflow: 'hidden',
           }}>
-            <Box sx={{ flex: 1, minWidth: 0, width: 0, display: 'flex', justifyContent: 'flex-end', pr: `${oddsInset}px` }}>
-              {oddCell(ODD_OUTCOME_LABELS[0], match.odds[0])}
-            </Box>
             <Box sx={{
-              position: 'relative', flexShrink: 0, mx: `${xSideGap}px`,
-              fontSize: d.xFont, fontWeight: 700, lineHeight: 1, letterSpacing: '0.02em',
+              display: 'flex', alignItems: 'center', justifyContent: 'flex-start',
+              gap: `${nameCrestGap}px`,
+              maxWidth: '100%', minWidth: 0, width: '100%',
             }}>
-              <Box sx={{ visibility: 'hidden' }} aria-hidden>{vsText}</Box>
-              <Box sx={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>
-                {oddCell(ODD_OUTCOME_LABELS[1], match.odds[1])}
+              <Box sx={{ flexShrink: 0 }}><TeamCrest team={match.away} size={d.crest} flat={wrapNames} /></Box>
+              <Box sx={slotSx('left')}>
+                <Box ref={awayRef} component="span" data-team-name="away" sx={textSx}>{match.away.name}</Box>
               </Box>
             </Box>
-            <Box sx={{ flex: 1, minWidth: 0, width: 0, display: 'flex', justifyContent: 'flex-start', pl: `${oddsInset}px` }}>
-              {oddCell(ODD_OUTCOME_LABELS[2], match.odds[2])}
+          </Box>
+        </Box>
+        <Box sx={{
+          display: 'flex', alignItems: 'center', minWidth: 0,
+          minHeight: Math.ceil((d.oddsTextFont || d.oddsFont) * 1.2),
+          // Sit directly under the teams row (no mt:auto — that sank odds
+          // to the card floor and made them look clipped/too low).
+          overflow: 'hidden', flexShrink: 0, width: '100%',
+        }}>
+          <Box sx={{ flex: 1, minWidth: 0, width: 0, display: 'flex', justifyContent: 'flex-end', pr: `${oddsInset}px` }}>
+            {oddCell(ODD_OUTCOME_LABELS[0], match.odds[0])}
+          </Box>
+          <Box sx={{
+            position: 'relative', flexShrink: 0, mx: `${xSideGap}px`,
+            fontSize: d.xFont, fontWeight: 700, lineHeight: 1, letterSpacing: '0.02em',
+          }}>
+            <Box sx={{ visibility: 'hidden' }} aria-hidden>{vsText}</Box>
+            <Box sx={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>
+              {oddCell(ODD_OUTCOME_LABELS[1], match.odds[1])}
             </Box>
           </Box>
-        </>
-      )}
+          <Box sx={{ flex: 1, minWidth: 0, width: 0, display: 'flex', justifyContent: 'flex-start', pl: `${oddsInset}px` }}>
+            {oddCell(ODD_OUTCOME_LABELS[2], match.odds[2])}
+          </Box>
+        </Box>
+      </Box>
     </Box>
   );
 }
@@ -1066,7 +1053,8 @@ export default function AdPreview({
                 flex: '1 1 auto',
                 minHeight: 0,
                 height: '100%',
-                justifyContent: 'flex-start',
+                // Center stack when tall shells leave leftover under the card cap.
+                justifyContent: 'center',
                 gap: 0,
                 boxSizing: 'border-box',
               } : {}),
@@ -1369,94 +1357,77 @@ export default function AdPreview({
     );
   };
 
-  // INTERSTITIAL · preview canvas 640×1280 (tall device slot; inventory is 320×480).
-  // Cards ~27% of width (bwin reference +10%) with roomy inner date/teams/odds gaps.
+  // INTERSTITIAL · CMS preview 640×1280; GAM 320×480 (+ other tall slots).
+  // Cards size to available height but CAP by true width so tall preview
+  // doesn't inflate empty card chrome. Leftover height centers the stack.
   const renderInterstitial = () => {
     const vw = (pct) => Math.round(w * (pct / 100));
-    // Interstitial content (logo/cards/CTA) is designed for a 2:3 (w:h) box.
-    // Real ad slots vary — some are much taller (e.g. 640x1280 = 1:2). Rather
-    // than leaving that extra height as dead space below the cards, scale the
-    // whole ad up as if it were authored at a wider "effective" width `we`,
-    // so logo/crests/text/CTA all grow together to fill more of the slot.
-    // Purely horizontal/positional values (side padding, card width) stay
-    // tied to the true render width `w` so nothing overflows sideways.
     const designScale = Math.max(0.85, Math.min(2.2, h / (w * 1.5)));
     const we = w * designScale;
     const vwe = (pct) => Math.round(we * (pct / 100));
-    // Height-driven, not a forced square: real bookmaker logos are usually wide
-    // wordmarks (see design ref), and boxing them at width=height wasted
-    // vertical space that belongs to the match cards below.
-    const interstitialLogoW = Math.min(vw(92), vwe(62));
-    const interstitialLogoH = Math.max(26, vwe(9));
-    const logoTop = vwe(3);
-    const logoBlock = logoTop + interstitialLogoH;
-    const ctaH = Math.max(50, vwe(10));
-    const dotsH = Math.max(14, vwe(2.8));
-    const ctaBlock = dotsH + ctaH + vwe(3);
+    // Logo from TRUE width (not we) + hard px cap — inflated we made Betsson
+    // ~500px wide while Cloudinary masters are ~140–400px → pixelated.
+    const interstitialLogoW = Math.min(Math.round(w * 0.48), 200);
+    const interstitialLogoH = Math.max(28, Math.min(Math.round(w * 0.07), 48));
+    const padTop = 24;
+    const logoTop = Math.max(8, Math.round(w * 0.02));
+    const logoMb = Math.max(6, Math.round(w * 0.012));
+    const logoBlock = logoTop + interstitialLogoH + logoMb;
+    const ctaH = Math.max(44, Math.min(Math.round(w * 0.12), Math.round(h * 0.065), 64));
+    const dotsH = Math.max(12, Math.min(Math.round(w * 0.028), 18));
+    const ctaZoneExtra = Math.max(10, Math.round(w * 0.03));
+    const ctaBlock = dotsH + ctaH + ctaZoneExtra;
     const bottomPad = useBrazilBand ? brazilBandH : (config.legal?.enabled ? 48 : 0);
-    const legalH = useBrazilBand ? brazilBandH : 0;
     const sidePad = Math.round(w * 0.05);
-    const matchesEst = Math.max(200, h - logoBlock - ctaBlock - legalH - vwe(2));
+    const matchesEst = Math.max(160, h - padTop - logoBlock - ctaBlock - bottomPad - 8);
     const cardsPerSlide = 3;
-    // Cards ~26% of effective width (was 27% originally; inter-card gap
-    // overshot to 12.8% last round and read as too much dead space between
-    // cards, so it's pulled back close to the original ~3.8% here). The two
-    // ratios are sized together (3*26 + 2*5.3 ≈ 3*27 + 2*3.8) so the stack
-    // still covers the same total height.
-    const maxCardH = vwe(26);
-    const cardGap = Math.max(20, vwe(5.3));
-    const cardH = Math.max(72, Math.min(maxCardH, Math.floor((matchesEst - cardGap * (cardsPerSlide - 1)) / cardsPerSlide)));
-    // Team names 10% smaller, odds 10% larger than the previous pass — sized
-    // independently now (odds is no longer capped below team). Crest +20%,
-    // odds +15% again on top of that (crests now live on the odds row).
-    // Team names bigger again (production feedback: previous pass read too
-    // small); crest bigger again (crests live on the odds row now), then
-    // bumped once more on top of that per later feedback.
-    const teamFont = Math.max(20, Math.min(vwe(4.6), Math.round(cardH * 0.15)));
-    const crest = Math.max(46, Math.min(vwe(9.5), Math.round(cardH * 0.4)));
-    // Odds-box SIZE (radius/padding) — its own value now (was briefly tied
-    // to pillFont per an earlier "same size as date/time" request; a later
-    // request asked for the odds specifically to grow, then this pass
-    // brought it back down 15%).
-    const oddsFont = Math.max(24, Math.min(vwe(4.6), Math.round(cardH * 0.162)));
-    // Odds NUMBER text — smaller than the box size above, per a request to
-    // shrink just the digits without shrinking the boxes around them (10%,
-    // then another 15% on top per follow-up feedback that it still read too
-    // big: 0.9 * 0.85 = 0.765).
-    const oddsTextFont = Math.round(oddsFont * 0.765);
-    // Gap between the date pill and the crest/odds line below it. Capped to
-    // a share of cardH too — on a short card the font-driven value alone
-    // would overflow the fixed card box.
-    const innerGap = Math.max(14, Math.min(Math.round(teamFont * 1.6), Math.round(cardH * 0.2)));
-    const cardPadTop = 5;
-    const cardPadBottom = Math.max(6, Math.round(cardH * 0.04));
+    const cardGap = Math.max(10, Math.min(Math.round(matchesEst * 0.04), Math.round(w * 0.05)));
+    // Cap card height by width so 640×1280 doesn't make ~300px empty cards.
+    const maxCardH = Math.round(w * 0.38);
+    const cardH = Math.max(72, Math.min(
+      maxCardH,
+      Math.floor((matchesEst - cardGap * (cardsPerSlide - 1)) / cardsPerSlide),
+    ));
+    // Team names read larger than bold odds (odds ~20% smaller).
+    const teamFont = Math.max(13, Math.min(Math.round(w * 0.048), Math.round(cardH * 0.135)));
+    const crest = Math.max(28, Math.min(Math.round(w * 0.1), Math.round(cardH * 0.3)));
+    const oddsFont = Math.max(12, Math.min(Math.round(w * 0.038), Math.round(cardH * 0.11)));
+    const oddsTextFont = Math.min(oddsFont, teamFont - 1);
+    const innerGap = Math.max(5, Math.min(10, Math.round(cardH * 0.04)));
+    const cardPadTop = Math.max(6, Math.min(10, Math.round(cardH * 0.045)));
+    const cardPadBottom = Math.max(8, Math.round(cardH * 0.05));
     const d = {
-      cardRadius: vwe(2.5),
+      cardRadius: Math.max(10, Math.round(w * 0.03)),
       cardPad: `${cardPadTop}px ${Math.round(w * 0.04)}px ${cardPadBottom}px`,
-      pillH: Math.max(23, vwe(3.0)), pillFont: vwe(2.8),
-      teamsGap: vwe(1.2), xSideGap: vwe(1.6), teamFont,
-      crest, xFont: Math.round(teamFont * 0.8),
-      oddsGap: vwe(1.5), oddsFont, oddsTextFont, oddsDot: 10,
+      pillH: Math.max(16, Math.min(Math.round(w * 0.05), Math.round(cardH * 0.13))),
+      pillFont: Math.max(10, Math.min(Math.round(w * 0.03), Math.round(cardH * 0.085))),
+      teamsGap: Math.max(4, Math.round(w * 0.012)),
+      xSideGap: Math.max(6, Math.round(w * 0.016)),
+      teamFont,
+      crest, xFont: Math.round(teamFont * 0.85),
+      oddsGap: Math.max(4, Math.round(w * 0.014)),
+      oddsFont, oddsTextFont, oddsDot: Math.max(6, Math.round(w * 0.018)),
       rowGap: innerGap,
       wrapNames: true,
+      wrapTeamNames: true,
     };
-    const ctaFont = vwe(3.29);
-    const dots = renderInAdDots({ rowHeight: dotsH, dotSize: Math.max(5, vwe(0.7)), mt: 0 });
+    const ctaFont = Math.max(14, Math.min(Math.round(w * 0.045), Math.round(ctaH * 0.4)));
+    const dots = renderInAdDots({ rowHeight: dotsH, dotSize: Math.max(5, Math.round(w * 0.01)), mt: 0 });
     const ctaZone = (
       <Box sx={{
         flexShrink: 0,
         mt: 'auto',
-        pt: `${vwe(2)}px`,
-        pb: `${vwe(6)}px`,
+        pt: `${Math.max(6, Math.round(w * 0.015))}px`,
+        pb: `${Math.max(8, Math.round(w * 0.02))}px`,
         display: 'flex', flexDirection: 'column', alignItems: 'center',
-        width: '100%', gap: `${vwe(1.8)}px`,
+        width: '100%', gap: `${Math.max(6, Math.round(w * 0.015))}px`,
       }}>
         {dots}
         <Box component="button" sx={{
           background: config.cta, color: config.ctaTextColor || invertText(config.cta),
-          border: 'none', width: '95%', height: ctaH, minHeight: 50,
+          border: 'none', width: '92%', height: ctaH, minHeight: 44,
           position: 'relative', flexShrink: 0,
-          borderRadius: `${vwe(1.2)}px`,
+          borderRadius: `${Math.max(8, Math.round(w * 0.02))}px`,
           fontSize: ctaFont, fontWeight: 700, cursor: 'pointer',
           fontFamily: 'inherit', letterSpacing: '0.01em',
           boxShadow: '0 2px 4px 0 rgba(0, 32, 27, 0.69)',
@@ -1467,7 +1438,7 @@ export default function AdPreview({
       <>
         <Box sx={{
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          mt: `${logoTop}px`, mb: `${Math.round(w * 0.015)}px`, flexShrink: 0,
+          mt: `${logoTop}px`, mb: `${logoMb}px`, flexShrink: 0,
         }}>
           <LogoThumb bg={bookmaker.logoBg} fg={bookmaker.logoFg} initials={bookmaker.initials} imageUrl={resolveLogoUrl(bookmaker, config)} size={interstitialLogoW} height={interstitialLogoH} radius={vw(2)} bare />
         </Box>
@@ -1481,7 +1452,8 @@ export default function AdPreview({
             height: 'auto',
             overflow: 'hidden',
             flexShrink: 1,
-            justifyContent: 'flex-start',
+            // Center the card stack when tall slots leave leftover height.
+            justifyContent: 'center',
             pt: `${Math.max(4, Math.round(w * 0.008))}px`,
           },
           pillPad: 0,
@@ -1495,7 +1467,7 @@ export default function AdPreview({
           }) : null
         )}
       </>,
-      `40px ${sidePad}px ${bottomPad}px`
+      `${padTop}px ${sidePad}px ${bottomPad}px`
     );
   };
 
@@ -1640,55 +1612,62 @@ export default function AdPreview({
 
   const renderWelcomeInterstitial = () => {
     const vw = (pct) => Math.round(w * (pct / 100));
+    // Same 2:3 design-scale as match slides so tall preview / phone slots
+    // enlarge copy instead of leaving a sparse middle.
+    const designScale = Math.max(0.85, Math.min(2.2, h / (w * 1.5)));
+    const we = w * designScale;
+    const vwe = (pct) => Math.round(we * (pct / 100));
+    const vh = (pct) => Math.round(h * (pct / 100));
     const bottomPad = useBrazilBand ? brazilBandH : 48;
-    const ctaH = Math.max(44, Math.round(w * 0.0875));
-    const dotsH = Math.max(14, Math.round(w * 0.028));
+    const ctaH = Math.max(44, Math.min(vwe(10), vh(7.5)));
+    const dotsH = Math.max(12, Math.min(vwe(2.8), vh(2.2)));
     const ctaBtn = (
       <Box component="button" sx={{
         background: woCtaBg, color: woCtaFg,
         border: 'none', width: '92%', height: ctaH, minHeight: 40,
         position: 'relative', flexShrink: 0,
-        borderRadius: '10px',
-        fontSize: vw(4.62), fontWeight: 800, cursor: 'pointer',
+        borderRadius: `${Math.max(8, vwe(1.2))}px`,
+        fontSize: Math.max(14, Math.min(vwe(4.62), Math.round(ctaH * 0.38))),
+        fontWeight: 800, cursor: 'pointer',
         fontFamily: 'inherit', letterSpacing: '0.01em',
         boxShadow: '0 2px 4px 0 rgba(0, 32, 27, 0.69)',
       }}>{woCtaText}</Box>
     );
-    const dots = renderInAdDots({ rowHeight: dotsH, dotSize: Math.max(5, vw(0.7)), mt: 0 });
+    const dots = renderInAdDots({ rowHeight: dotsH, dotSize: Math.max(5, vwe(0.7)), mt: 0 });
     return wrap(
       <>
         <Box sx={{
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          mt: `${Math.round(w * 0.03)}px`, flexShrink: 0,
+          mt: `${vwe(3)}px`, flexShrink: 0,
         }}>
-          <LogoThumb bg={bookmaker.logoBg} fg={bookmaker.logoFg} initials={bookmaker.initials} imageUrl={resolveLogoUrl(bookmaker, config)} size={Math.round(w * 0.62)} height={Math.max(26, Math.min(64, Math.round(w * 0.09)))} radius={vw(2)} bare />
+          <LogoThumb bg={bookmaker.logoBg} fg={bookmaker.logoFg} initials={bookmaker.initials} imageUrl={resolveLogoUrl(bookmaker, config)} size={Math.min(Math.round(w * 0.48), 200)} height={Math.max(28, Math.min(Math.round(w * 0.07), 48))} radius={vw(2)} bare />
         </Box>
-        <Box sx={{ display: 'flex', justifyContent: 'center', my: `${vw(3)}px`, flexShrink: 0 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', my: `${vwe(2.5)}px`, flexShrink: 0 }}>
           <Box sx={{
-            padding: `${vw(1)}px ${vw(2.5)}px`, borderRadius: 999,
+            padding: `${Math.max(4, vwe(1))}px ${Math.max(8, vwe(2.5))}px`, borderRadius: 999,
             bgcolor: woPillBg, color: woPillFg,
-            fontSize: vw(2.5), fontWeight: 800, letterSpacing: '0.08em', textIndent: '0.08em',
+            fontSize: Math.max(10, vwe(2.5)), fontWeight: 800, letterSpacing: '0.08em', textIndent: '0.08em',
             textTransform: 'uppercase', textAlign: 'center',
           }}>{woPillText}</Box>
         </Box>
         <Box sx={{
-          flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: `${vw(2)}px`,
-          textAlign: 'center', minHeight: 0,
+          flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: `${Math.max(8, vwe(2))}px`,
+          textAlign: 'center', minHeight: 0, px: `${vw(4)}px`,
         }}>
           {wo.image && (
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-              <Box component="img" src={wo.image} alt="" sx={{ maxHeight: vw(30), maxWidth: '100%', objectFit: 'contain' }} />
+              <Box component="img" src={wo.image} alt="" sx={{ maxHeight: Math.min(vwe(30), vh(22)), maxWidth: '100%', objectFit: 'contain' }} />
             </Box>
           )}
-          <Box sx={{ fontSize: vw(6.2), fontWeight: 800, lineHeight: 0.98, letterSpacing: '-0.03em' }}>{woHeadline}</Box>
-          <Box sx={{ fontSize: vw(4), opacity: 0.85, lineHeight: 1.25, fontWeight: 500 }}>{woSubtext}</Box>
+          <Box sx={{ fontSize: Math.max(18, Math.min(vwe(6.2), vh(4.2))), fontWeight: 800, lineHeight: 1.05, letterSpacing: '-0.03em' }}>{woHeadline}</Box>
+          <Box sx={{ fontSize: Math.max(13, Math.min(vwe(4), vh(2.8))), opacity: 0.85, lineHeight: 1.25, fontWeight: 500 }}>{woSubtext}</Box>
         </Box>
         <Box sx={{
           flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%',
         }}>
           {dots}
           {ctaBtn}
-          <Box sx={{ mt: `${vw(2)}px`, fontSize: vw(2.5), opacity: 0.55, textAlign: 'center', lineHeight: 1.3 }}>{woTerms}</Box>
+          <Box sx={{ mt: `${vwe(2)}px`, fontSize: Math.max(10, vwe(2.5)), opacity: 0.55, textAlign: 'center', lineHeight: 1.3 }}>{woTerms}</Box>
         </Box>
         {useBrazilBand ? renderBrazilLegalBand(brazilBandH, vw(2.0), 31, 600) : (
           config.legal && config.legal.enabled ? renderLegalStrip({

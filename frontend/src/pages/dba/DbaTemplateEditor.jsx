@@ -33,6 +33,7 @@ const DEFAULT_CONFIG = {
   bg: '#151E22', text: '#FFFFFF', cta: '#1976D2', ctaText: 'Bet Now',
   font: '365 Sans', fontSize: 14, logoPos: 'top-left', radius: 8,
   oddsFormat: 'decimal', layout: 'horizontal',
+  cardBgOpacity: 85,
 };
 
 // Map a bookmaker's brand colors (from T_BET_BOOKMAKERS.COLOR / SECONDARY_COLOR)
@@ -151,19 +152,52 @@ function DbaTemplateEditorInner({ initial, allBookmakers, isNew }) {
   const SLIDE_DURATION_MS = 720;
   const [displayPos, setDisplayPos] = useState(0);
   const [transitionOn, setTransitionOn] = useState(true);
+  // Refs keep swipe handlers off stale displayPos (rapid iOS flings).
+  const displayPosRef = useRef(0);
+  const totalSlidesRef = useRef(totalSlides);
+  useEffect(() => { displayPosRef.current = displayPos; }, [displayPos]);
+  useEffect(() => { totalSlidesRef.current = totalSlides; }, [totalSlides]);
 
-  useEffect(() => { setDisplayPos(0); setSlideIdx(0); }, [totalSlides]);
-  useEffect(() => { if (hasWelcome) { setDisplayPos(0); setSlideIdx(0); } }, [hasWelcome]);
+  useEffect(() => {
+    setDisplayPos(0);
+    displayPosRef.current = 0;
+    setSlideIdx(0);
+  }, [totalSlides]);
+  useEffect(() => {
+    if (hasWelcome) {
+      setDisplayPos(0);
+      displayPosRef.current = 0;
+      setSlideIdx(0);
+    }
+  }, [hasWelcome]);
 
   useEffect(() => {
     if (!playing) return;
     const interval = isInterstitialSize(previewSize) ? 3500 : previewSize === '320x50' ? 2000 : 3000;
     const tid = setInterval(() => {
-      // Advance the visual position past the last real slide onto the clone,
-      // and bump the logical slideIdx straight to its wrapped successor so
-      // the dot indicator updates immediately.
-      setDisplayPos((p) => p + 1);
-      setSlideIdx((i) => (i + 1) % totalSlides);
+      // Same wrap as goNextSlide: never walk past the end clone into empty frames.
+      const p = displayPosRef.current;
+      const n = totalSlidesRef.current;
+      if (n < 2) return;
+      if (p >= n) {
+        setTransitionOn(false);
+        setDisplayPos(0);
+        displayPosRef.current = 0;
+        setSlideIdx(0);
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            setTransitionOn(true);
+            setDisplayPos(1);
+            displayPosRef.current = 1;
+            setSlideIdx(1 % n);
+          });
+        });
+        return;
+      }
+      const next = p + 1;
+      displayPosRef.current = next;
+      setDisplayPos(next);
+      setSlideIdx((i) => (i + 1) % n);
     }, interval);
     return () => clearInterval(tid);
   }, [playing, totalSlides, previewSize]);
@@ -177,6 +211,7 @@ function DbaTemplateEditorInner({ initial, allBookmakers, isNew }) {
     const tid = setTimeout(() => {
       setTransitionOn(false);
       setDisplayPos(0);
+      displayPosRef.current = 0;
       requestAnimationFrame(() => {
         requestAnimationFrame(() => setTransitionOn(true));
       });
@@ -186,26 +221,49 @@ function DbaTemplateEditorInner({ initial, allBookmakers, isNew }) {
 
   const goNextSlide = () => {
     setPlaying(false);
-    setDisplayPos((p) => p + 1);
-    setSlideIdx((i) => (i + 1) % totalSlides);
+    const n = totalSlidesRef.current;
+    if (n < 2) return;
+    const p = displayPosRef.current;
+    // On/past the end clone → finish the loop onto real slide 0 (autoplay parity).
+    // Never increment past the clone — that paints empty frames (logo+CTA only).
+    if (p >= n) {
+      setTransitionOn(false);
+      setDisplayPos(0);
+      displayPosRef.current = 0;
+      setSlideIdx(0);
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => setTransitionOn(true));
+      });
+      return;
+    }
+    const next = p + 1;
+    displayPosRef.current = next;
+    setDisplayPos(next);
+    setSlideIdx((i) => (i + 1) % n);
   };
   const goPrevSlide = () => {
     setPlaying(false);
-    if (displayPos === 0) {
+    const n = totalSlidesRef.current;
+    if (n < 2) return;
+    const p = displayPosRef.current;
+    if (p <= 0) {
       setTransitionOn(false);
-      setDisplayPos(totalSlides - 1);
-      setSlideIdx(totalSlides - 1);
+      setDisplayPos(n - 1);
+      displayPosRef.current = n - 1;
+      setSlideIdx(n - 1);
       requestAnimationFrame(() => requestAnimationFrame(() => setTransitionOn(true)));
     } else {
-      setDisplayPos((p) => p - 1);
-      setSlideIdx((i) => (i - 1 + totalSlides) % totalSlides);
+      const next = p - 1;
+      displayPosRef.current = next;
+      setDisplayPos(next);
+      setSlideIdx((i) => (i - 1 + n) % n);
     }
   };
 
   // Drag/swipe on the preview itself (GAM runtime parity). Arrows still work.
   const swipeRef = useRef({ x: 0, y: 0, armed: false, swiped: false });
   const onPreviewPointerDown = (e) => {
-    if (totalSlides < 2) return;
+    if (totalSlidesRef.current < 2) return;
     if (e.pointerType === 'mouse' && e.button !== 0) return;
     swipeRef.current = { x: e.clientX, y: e.clientY, armed: true, swiped: false };
     try { e.currentTarget.setPointerCapture(e.pointerId); } catch (_) {}
@@ -542,8 +600,11 @@ function DbaTemplateEditorInner({ initial, allBookmakers, isNew }) {
                   <Field label="Odds text color" help="Defaults to the main text color">
                     <ColorField value={config.oddsTextColor || config.text} onChange={(v) => set('oddsTextColor', v)} />
                   </Field>
-                  <Field label="Game card color" help="Fill behind each match card on interstitial. Defaults to a subtle white overlay.">
+                  <Field label="Game card color" help="Fill behind each match card on interstitial. Combined with transparency below.">
                     <ColorField value={config.cardBgColor || '#FFFFFF'} onChange={(v) => set('cardBgColor', v)} />
+                  </Field>
+                  <Field label={`Game card transparency · ${config.cardBgOpacity ?? 85}%`} help="0% = invisible card fill · 100% = solid. Baked into the GAM snippet as rgba.">
+                    <Slider min={0} max={100} value={config.cardBgOpacity ?? 85} onChange={(_, v) => set('cardBgOpacity', v)} />
                   </Field>
                 </>
               )}
@@ -973,7 +1034,7 @@ function DbaTemplateEditorInner({ initial, allBookmakers, isNew }) {
                   width: w * displayScale, height: h * displayScale,
                   position: 'relative', overflow: 'hidden',
                   borderRadius: `${(config.radius || 8) * displayScale}px`,
-                  touchAction: 'pan-y',
+                  touchAction: 'none',
                   userSelect: 'none',
                   cursor: totalSlides >= 2 ? 'grab' : 'default',
                 }}
